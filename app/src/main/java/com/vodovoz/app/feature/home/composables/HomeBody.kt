@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.vodovoz.app.design_system.model.BannerUi
 import com.vodovoz.app.design_system.model.PromotionUi
 import com.vodovoz.app.design_system.model.StoryUi
+import com.vodovoz.app.domain.general.model.ButtonAction
 import com.vodovoz.app.feature.home.model.CategoryWithProductsUi
 import com.vodovoz.app.feature.home.model.MenuItemUi
 import com.vodovoz.app.feature.home.model.OrderUi
@@ -31,17 +32,18 @@ fun HomeBody(
     sectionPromotions: SectionUi<PromotionUi>,
     sectionPopularCategories: SectionUi<PopularCategoryUi>,
     sectionNewProducts: SectionUi<ProductUi>,
+    sectionViewedProducts: SectionUi<ProductUi>,
     sectionHurryUpBuyProducts: SectionUi<ProductUi>,
     orderWithMenu: OrderWithMenuUi,
     currentCategoryWithProducts: CategoryWithProductsUi,
-    bestOffersSection: SectionUi<CategoryWithProductsUi>,
+    sectionTop: SectionUi<CategoryWithProductsUi>,
     sectionBottomProducts: SectionUi<CategoryWithProductsUi>,
     onStoryClick: (StoryUi) -> Unit,
     onCategorySelect: (CategoryWithProductsUi) -> Unit,
     onPopularSectionClick: (PopularCategoryUi) -> Unit,
     onOrderClick: (OrderUi) -> Unit,
     onMenuItemClick: (MenuItemUi) -> Unit,
-    onShowAllPromotionClick: () -> Unit,
+    onShowAllClick: (ButtonAction) -> Unit,
     onProductCardClick: (ProductUi) -> Unit,
     onPromotionClick: (PromotionUi) -> Unit,
 ) {
@@ -51,8 +53,6 @@ fun HomeBody(
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
-
         if (banners.isNotEmpty()) {
             HomeBanners(
                 banners = banners,
@@ -90,60 +90,54 @@ fun HomeBody(
             sectionPopularCategories = sectionPopularCategories
         )
 
-        //todo - put actual data
-        HomeBestOffers(
+        HomeTopProducts(
             modifier = Modifier.padding(top = 32.dp),
-            onShowAllClick = {
-
-            },
+            onShowAllClick = onShowAllClick,
             currentCategoryWithProducts = currentCategoryWithProducts,
-            sectionCategoriesWithProducts = bestOffersSection,
+            sectionCategoriesWithProducts = sectionTop,
             onCategorySelect = onCategorySelect,
             onProductClick = onProductCardClick,
             onProductLike = {}
         )
 
-        //todo - put actual data
         HomeHurryUpBuyProducts(
             modifier = Modifier.padding(top = 32.dp),
             sectionHurryUpBuyProducts = sectionHurryUpBuyProducts,
             onProductClick = onProductCardClick,
-            onShowAllClick = { },
+            onShowAllClick = onShowAllClick,
             onProductLike = { }
         )
 
-        //todo = put actual data
         HomeNewProducts(
             modifier = Modifier.padding(top = 32.dp),
             sectionNewProducts = sectionNewProducts,
             onProductClick = onProductCardClick,
             onProductLike = {},
-            onShowAllClick = {}
+            onShowAllClick = onShowAllClick
         )
 
-        //todo = put actual data
         HomePromotions(
             modifier = Modifier.padding(top = 32.dp),
-            onShowAllClick = onShowAllPromotionClick,
+            onShowAllClick = onShowAllClick,
             onPromotionClick = onPromotionClick,
             sectionPromotions = sectionPromotions
         )
 
 
-        HomeBottom(
+        HomeBottomProducts(
             modifier = Modifier.padding(top = 32.dp),
             sectionBottomProducts = sectionBottomProducts,
             onProductClick = onProductCardClick,
             onProductLike = {},
-            onShowAllClick = {}
+            onShowAllClick = onShowAllClick
         )
 
         HomeViewedProducts(
             modifier = Modifier.padding(top = 32.dp),
-            sectionViewedProducts = sectionNewProducts,
+            sectionViewedProducts = sectionViewedProducts,
             onProductClick = onProductCardClick,
             onProductLike = {},
-            onShowAllClick = {}
+            onShowAllClick = onShowAllClick
         )
 
         Spacer(modifier = Modifier.height(24.dp))

@@ -21,10 +21,10 @@
         android:label="CategoriesFragment">
         <argument
             android:name="categoryList"
-            app:argType="com.vodovoz.app.feature.home.model.PopularCategoryUi[]" />
+            app:argType="com.vodovoz.app.feature.home.model.CategoryUi[]" />
         <argument
             android:name="category"
-            app:argType="com.vodovoz.app.feature.home.model.PopularCategoryUi" />
+            app:argType="com.vodovoz.app.feature.home.model.CategoryUi" />
     </fragment>
 
     <fragment

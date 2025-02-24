@@ -15,13 +15,13 @@ sealed interface VodovozAction {
 }
 
 enum class DataAllAction : VodovozAction {
-    AllDiscount, AllNewProducts, AllPromotions, Delivery, Profile, WaterTracker, None
+    AllDiscount, AllNewProducts, AllPromotions, Delivery, Profile, WaterTracker, Unknown
 }
 
 
 sealed class ButtonAction {
 
     data class Id(val id: Int) : ButtonAction()
-    data class Action(val dataAll: DataAllAction) : ButtonAction()
+    data class Action(val value: DataAllAction) : ButtonAction()
 
 }

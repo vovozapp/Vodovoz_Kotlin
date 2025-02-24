@@ -2,16 +2,16 @@ package com.vodovoz.app.feature.home.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,15 +39,14 @@ fun HomePopularCategories(
             color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.headlineSmall
         )
-        Row(
-            modifier = Modifier
-                .padding(top = 16.dp)
-                .horizontalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp),
+
+        LazyRow(
+            modifier = Modifier.padding(top = 16.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            sectionPopularCategories.items.forEach { section ->
-                HomeSectionItem(section = section, onClick = onPopularCategoryClick)
+            items(sectionPopularCategories.items) { popularCategory ->
+                HomeSectionItem(section = popularCategory, onClick = onPopularCategoryClick)
             }
         }
     }

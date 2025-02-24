@@ -5,8 +5,8 @@ data class ProductCommentsInfoModel(
     val ratingText: String,
     val commentsCount: Int,
     val commentsCountText: String,
-){
-    companion object{
+) {
+    companion object {
         val Empty = ProductCommentsInfoModel(emptyList(), "", 0, "")
     }
 }
@@ -15,4 +15,8 @@ data class SortModel(
     val name: String,
     val value: String,
     val order: String,
-)
+) {
+    companion object {
+        val Empty = SortModel("", "", "")
+    }
+}

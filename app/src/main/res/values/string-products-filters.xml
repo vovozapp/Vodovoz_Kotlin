@@ -9,4 +9,12 @@
     <string name="price_filter_value_to_text" translatable="false">до</string>
     <string name="apply_products_filters" translatable="false">Применить</string>
     <string name="clear_products_filters" translatable="false">Сбросить</string>
+
+    <plurals name="products_quantity">
+        <item quantity="one">%d продукт</item>
+        <item quantity="few">%d продукта</item>
+        <item quantity="many">%d продуктов</item>
+        <item quantity="other">%d продуктов</item>
+    </plurals>
+
 </resources>

@@ -22,6 +22,13 @@ import kotlinx.coroutines.flow.Flow
 
 interface VodovozServiceRepository {
 
+    fun getFavoriteProducts(): Flow<Result<ProductsSectionModel>>
+
+    fun getFavoriteProductsPaged(
+        categoryId: Int = -1,
+        sort: SortModel = SortModel.Empty,
+    ): Flow<PagingData<ProductModel>>
+
     suspend fun addProductToCart(
         productId: Long,
         quantity: Int,
@@ -54,7 +61,7 @@ interface VodovozServiceRepository {
 
     fun getProductCommentsPaged(
         productId: Long,
-        sort: SortModel = SortModel("", "", ""),
+        sort: SortModel = SortModel.Empty,
     ): Flow<PagingData<CommentModel>>
 
     fun getProductDetails(productId: Long): Flow<Result<ProductDetailsScreenModel>>
@@ -73,17 +80,12 @@ interface VodovozServiceRepository {
 
     fun getPromotionDetailsProductsPaged(
         promotionId: Int,
-        page: Int = 1,
         limit: Int = 5,
     ): Flow<PagingData<ProductModel>>
 
-    fun getPromotionsWithSections(
-        page: Int = 1,
-        limit: Int = 10,
-    ): Flow<Result<SectionPromotionsWithFiltersModel>>
+    fun getPromotionsWithSections(): Flow<Result<SectionPromotionsWithFiltersModel>>
 
     fun getPromotionsPaged(
-        page: Int = 1,
         limit: Int = 10,
     ): Flow<PagingData<PromotionModel>>
 
@@ -95,8 +97,34 @@ interface VodovozServiceRepository {
 
     fun getNewProducts(): Flow<Result<SectionModel<ProductModel>>>
 
+    fun getAllNewProducts(): Flow<Result<ProductsSectionModel>>
+
+    fun getAllNewProductsPaged(
+        categoryId: Int = -1,
+        sort: SortModel = SortModel.Empty,
+    ): Flow<PagingData<ProductModel>>
+
     fun getHurryUpBuyProducts(): Flow<Result<SectionModel<ProductModel>>>
 
+    suspend fun getAllHurryUpBuyProducts(): Flow<Result<ProductsSectionModel>>
+
+    fun getAllHurryUpBuyProductsPaged(
+        categoryId: Int = -1,
+        sort: SortModel = SortModel.Empty,
+    ): Flow<PagingData<ProductModel>>
+
     fun getSuperTop(): Flow<Result<TopAndBottomSectionsModel>>
+
+    fun getAllSuperTop(
+        id: Int,
+    ): Flow<Result<ProductsSectionModel>>
+
+    fun getAllSuperTopPaged(
+        id: Int,
+        categoryId: Int = -1,
+        sort: SortModel = SortModel.Empty,
+    ): Flow<PagingData<ProductModel>>
+
+    fun getViewedProducts(): Flow<Result<SectionModel<ProductModel>>>
 
 }

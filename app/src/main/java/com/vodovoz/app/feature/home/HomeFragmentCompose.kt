@@ -32,10 +32,13 @@ import com.vodovoz.app.common.media.MediaManager
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
+import com.vodovoz.app.core.android.activate
+import com.vodovoz.app.core.android.createDataAllActivator
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.placeholders.NetworkErrorPlaceholder
+import com.vodovoz.app.domain.general.model.DataAllAction
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
 import com.vodovoz.app.feature.home.composables.HomeSkeletonPlaceholder
 import com.vodovoz.app.feature.home.popup.NewsClickListener
@@ -107,7 +110,6 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.Default)
             setContent {
@@ -131,7 +133,6 @@ class HomeFragment : Fragment() {
                             HomeScreen(
                                 viewState = viewState.data,
                                 viewModel = flowViewModel,
-                                navController = findNavController(),
                                 onNavigateToQrCodeFragment = {
                                     navigateToQrCodeFragment()
                                 }
@@ -217,6 +218,7 @@ class HomeFragment : Fragment() {
         }
     }
 
+
     internal fun ActionEntity.activate(
         navController: NavController = findNavController(),
         activity: FragmentActivity = requireActivity(),
@@ -269,11 +271,11 @@ class HomeFragment : Fragment() {
                 HomeFragmentDirections.actionToPaginatedProductsCatalogFragment(this.categoryId)
 
             is ActionEntity.Discount -> HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount
+                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.HurryBuyUpProducts
             )
 
             is ActionEntity.Novelties -> HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties
+                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.NewProducts
             )
 
             is ActionEntity.WaterApp -> {
@@ -298,65 +300,87 @@ class HomeFragment : Fragment() {
     }
 
 
-    private fun observeEvents() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                flowViewModel.observeEvent()
-                    .collect { event ->
-                        when (event) {
-                            is HomeFlowViewModel.HomeEvents.GoToPreOrder -> {
-                                if (findNavController().currentBackStackEntry?.destination?.id == R.id.preOrderBS) {
-                                    findNavController().popBackStack()
-                                }
-                                findNavController().navigate(
-                                    HomeFragmentDirections.actionToPreOrderBS(
-                                        event.id,
-                                        event.name,
-                                        event.detailPicture
+    private fun observeEvents() = lifecycleScope.launch {
+        repeatOnLifecycle(Lifecycle.State.STARTED) {
+            flowViewModel.observeEvent()
+                .collect { event ->
+                    when (event) {
+                        is HomeFlowViewModel.HomeEvents.GoToPreOrder -> {
+                            if (findNavController().currentBackStackEntry?.destination?.id == R.id.preOrderBS) {
+                                findNavController().popBackStack()
+                            }
+                            findNavController().navigate(
+                                HomeFragmentDirections.actionToPreOrderBS(
+                                    event.id,
+                                    event.name,
+                                    event.detailPicture
+                                )
+                            )
+                        }
+
+                        is HomeFlowViewModel.HomeEvents.GoToProfile -> {
+                            tabManager.setAuthRedirect(findNavController().graph.id)
+                            tabManager.selectTab(R.id.graph_profile)
+                        }
+
+                        is HomeFlowViewModel.HomeEvents.SendComment -> {
+                            if (findNavController().currentBackStackEntry?.destination?.id == R.id.sendCommentAboutShopBottomDialog) {
+                                findNavController().popBackStack()
+                            }
+                            findNavController().navigate(HomeFragmentDirections.actionToSendCommentAboutShopBottomDialog())
+                        }
+
+                        is HomeFlowViewModel.HomeEvents.GoToCart -> {
+
+                        }
+
+                        is HomeFlowViewModel.HomeEvents.GoToStories -> {
+                            val bundle = bundleOf("startHistoryId" to event.storyId)
+                            findNavController().navigate(
+                                R.id.fullScreenHistorySliderFragment,
+                                bundle
+                            )
+                        }
+
+                        is HomeFlowViewModel.HomeEvents.GoToProductDetails -> {
+                            findNavController().navigate(
+                                R.id.productDetailFragment,
+                                bundleOf("productId" to event.productId)
+                            )
+                        }
+
+                        is HomeFlowViewModel.HomeEvents.GoToPromotionDetails -> {
+                            findNavController().navigate(
+                                R.id.promotionDetailFragment,
+                                bundleOf("promotionId" to event.promotionId)
+                            )
+                        }
+
+                        is HomeFlowViewModel.HomeEvents.ActivateButtonAction -> {
+                            event.action.activate(
+                                navController = findNavController(),
+                                activators = listOf(
+                                    createDataAllActivator(DataAllAction.Profile) {
+                                        tabManager.setAuthRedirect(findNavController().graph.id)
+                                        tabManager.selectTab(R.id.graph_profile)
+                                    },
+                                    createDataAllActivator(DataAllAction.Unknown) {
+                                        //TODO("Implement snackbar")
+                                    },
+                                ),
+                                activateIdAction = { id ->
+                                    findNavController().navigate(
+                                        HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+                                            PaginatedProductsCatalogWithoutFiltersFragment.DataSource.ButtonProducts(
+                                                id
+                                            )
+                                        )
                                     )
-                                )
-                            }
-
-                            is HomeFlowViewModel.HomeEvents.GoToProfile -> {
-                                tabManager.setAuthRedirect(findNavController().graph.id)
-                                tabManager.selectTab(R.id.graph_profile)
-                            }
-
-                            is HomeFlowViewModel.HomeEvents.SendComment -> {
-                                if (findNavController().currentBackStackEntry?.destination?.id == R.id.sendCommentAboutShopBottomDialog) {
-                                    findNavController().popBackStack()
                                 }
-                                findNavController().navigate(HomeFragmentDirections.actionToSendCommentAboutShopBottomDialog())
-                            }
-
-                            is HomeFlowViewModel.HomeEvents.GoToCart -> {
-
-                            }
-
-                            is HomeFlowViewModel.HomeEvents.GoToStories -> {
-                                val bundle = bundleOf("startHistoryId" to event.storyId)
-                                findNavController().navigate(
-                                    R.id.fullScreenHistorySliderFragment,
-                                    bundle
-                                )
-                            }
-
-                            is HomeFlowViewModel.HomeEvents.GoToProductDetails -> {
-                                findNavController().navigate(
-                                    R.id.productDetailFragment,
-                                    bundleOf("productId" to event.productId)
-                                )
-                            }
-
-                            is HomeFlowViewModel.HomeEvents.GoToPromotionDetails -> {
-                                findNavController().navigate(
-                                    R.id.promotionDetailFragment,
-                                    bundleOf("promotionId" to event.promotionId)
-                                )
-                            }
+                            )
                         }
                     }
-            }
+                }
         }
     }
 
@@ -491,7 +515,7 @@ class HomeFragment : Fragment() {
                             "vsenovinki" -> {
                                 findNavController().navigate(
                                     HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                                        PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties
+                                        PaginatedProductsCatalogWithoutFiltersFragment.DataSource.NewProducts
                                     )
                                 )
                             }
@@ -499,7 +523,7 @@ class HomeFragment : Fragment() {
                             "vseskidki" -> {
                                 findNavController().navigate(
                                     HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                                        PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount
+                                        PaginatedProductsCatalogWithoutFiltersFragment.DataSource.HurryBuyUpProducts
                                     )
                                 )
                             }

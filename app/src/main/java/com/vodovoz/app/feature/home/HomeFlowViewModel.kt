@@ -21,6 +21,7 @@ import com.vodovoz.app.design_system.model.StoryUi
 import com.vodovoz.app.design_system.model.mapToUi
 import com.vodovoz.app.design_system.model.toDomain
 import com.vodovoz.app.design_system.model.toUi
+import com.vodovoz.app.domain.general.model.ButtonAction
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.home.model.CategoryWithProductsUi
 import com.vodovoz.app.feature.home.model.OrderWithMenuUi
@@ -94,7 +95,8 @@ class HomeFlowViewModel @Inject constructor(
                 vodovozServiceRepository.getStories(),
                 vodovozServiceRepository.getPopupWindowInfo()
             ),
-        ) { (promotionsWithSectionsResult, sectionPopularCategoriesResult, orderMenuResult), (sectionNewProductsResult, sectionHurryUpBuyProductsResult, superTopResult), (bannersResult, storiesResult, popupWindowInfoResult) ->
+            vodovozServiceRepository.getViewedProducts()
+        ) { (promotionsWithSectionsResult, sectionPopularCategoriesResult, orderMenuResult), (sectionNewProductsResult, sectionHurryUpBuyProductsResult, superTopResult), (bannersResult, storiesResult, popupWindowInfoResult), viewedProductsResult ->
 
 
             val sectionPopularCategories = sectionPopularCategoriesResult.getOrNull()
@@ -102,6 +104,8 @@ class HomeFlowViewModel @Inject constructor(
             val sectionNewProducts = sectionNewProductsResult.getOrNull()
             val sectionHurryBuyProducts = sectionHurryUpBuyProductsResult.getOrNull()
             val promotionsWithSections = promotionsWithSectionsResult.getOrNull()
+            val sectionViewedProducts = viewedProductsResult.getOrNull()
+
             val orderMenu = orderMenuResult.getOrNull()
             val banners = bannersResult.getOrNull()
             val stories = storiesResult.getOrNull()
@@ -111,19 +115,20 @@ class HomeFlowViewModel @Inject constructor(
             if (
                 sectionPopularCategories != null && topAndBottomSections != null && sectionNewProducts != null
                 && sectionHurryBuyProducts != null && promotionsWithSections != null && orderMenu != null
-                && banners != null && stories != null
+                && banners != null && stories != null && sectionViewedProducts != null
             ) {
 
-                val bestOffersSection = topAndBottomSections.topSection.toUi(
+                val topSection = topAndBottomSections.topSection.toUi(
                     mapItems = { items -> items.map { it.toUi() } }
                 )
 
                 uiStateListener.updateData { s ->
                     s.copy(
                         popularSections = sectionPopularCategories.toUi { items -> items.map { it.toUi() } },
-                        sectionBestOffers = bestOffersSection,
+                        sectionTop = topSection,
+                        sectionViewedProducts = sectionViewedProducts.toUi { items -> items.map { item -> item.toUi() } },
                         sectionBottom = topAndBottomSections.bottomSection.toUi { items -> items.map { it -> it.toUi() } },
-                        currentCategoryWithProducts = bestOffersSection.items.firstOrNull()
+                        currentCategoryWithProducts = topSection.items.firstOrNull()
                             ?: CategoryWithProductsUi.Empty,
                         sectionNewProducts = sectionNewProducts.toUi { productModels -> productModels.map { item -> item.toUi() } },
                         sectionHurryUpBuyProducts = sectionHurryBuyProducts.toUi { productModels -> productModels.map { item -> item.toUi() } },
@@ -1016,6 +1021,10 @@ class HomeFlowViewModel @Inject constructor(
         eventListener.emit(HomeEvents.GoToProductDetails(productId = product.id))
     }
 
+    fun handleButtonAction(action: ButtonAction) = viewModelScope.launch {
+        eventListener.emit(HomeEvents.ActivateButtonAction(action))
+    }
+
     data class PositionItem(
         val position: Int,
         val item: Item,
@@ -1032,6 +1041,7 @@ class HomeFlowViewModel @Inject constructor(
         data class GoToStories(val storyId: Long) : HomeEvents()
         data class GoToProductDetails(val productId: Long) : HomeEvents()
         data class GoToPromotionDetails(val promotionId: Long) : HomeEvents()
+        data class ActivateButtonAction(val action: ButtonAction) : HomeEvents()
     }
 
     sealed class HomeUiState {
@@ -1054,9 +1064,10 @@ class HomeFlowViewModel @Inject constructor(
         val popularSections: SectionUi<PopularCategoryUi> = SectionUi.empty(),
         val sectionNewProducts: SectionUi<ProductUi> = SectionUi.empty(),
         val sectionHurryUpBuyProducts: SectionUi<ProductUi> = SectionUi.empty(),
-        val sectionBestOffers: SectionUi<CategoryWithProductsUi> = SectionUi.empty(),
+        val sectionTop: SectionUi<CategoryWithProductsUi> = SectionUi.empty(),
         val currentCategoryWithProducts: CategoryWithProductsUi = CategoryWithProductsUi.Empty,
         val sectionBottom: SectionUi<CategoryWithProductsUi> = SectionUi.empty(),
+        val sectionViewedProducts: SectionUi<ProductUi> = SectionUi.empty(),
         val specialPromotionUi: SpecialPromotionUi = SpecialPromotionUi.Empty,
         val uiState: HomeUiState = HomeUiState.Loading,
         val showBottomSheet: Boolean = false,

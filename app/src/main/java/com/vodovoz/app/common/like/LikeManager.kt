@@ -8,8 +8,9 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -25,8 +26,14 @@ class LikeManager @Inject constructor(
         private const val FAV_IDS = "fav ids"
     }
 
+
+    private val mutex = Mutex()
+    private val versions = ConcurrentHashMap<Long, Int>()
     private val likes = ConcurrentHashMap<Long, Boolean>()
-    private val likesStateListener = MutableSharedFlow<Map<Long, Boolean>>(replay = 2, onBufferOverflow = BufferOverflow.DROP_LATEST)
+    private val likesStateListener = MutableSharedFlow<Map<Long, Boolean>>(
+        replay = 2,
+        onBufferOverflow = BufferOverflow.DROP_LATEST
+    )
 
     private val viewPool: RecyclerView.RecycledViewPool = RecyclerView.RecycledViewPool().apply {
         setMaxRecycledViews(ProductUI.PRODUCT_VIEW_TYPE, 5)
@@ -36,36 +43,45 @@ class LikeManager @Inject constructor(
 
     fun observeLikes() = likesStateListener.asSharedFlow().filter { it.isNotEmpty() }
 
-    suspend fun like(id: Long, isFavorite: Boolean) {
-
-        updateLikes(id, !isFavorite)
-
-        val userId = accountManager.fetchAccountId()
+    suspend fun like(productId: Long, isFavorite: Boolean) {
+        val (likeVersion, userId) = mutex.withLock {
+            val version = updateLikes(productId, !isFavorite)
+            val userId = accountManager.fetchAccountId()
+            version to userId
+        }
 
         if (userId != null) {
             runCatching {
-                action(id, userId, isFavorite)
+                action(productId, userId, isFavorite, likeVersion)
             }.onFailure {
-                updateLikes(id, isFavorite)
+                if (likeVersion >= versions.getOrDefault(productId, 0)) updateLikes(productId, isFavorite)
             }
         } else {
-            saveLikeLocal(id, isFavorite)
+            saveLikeLocal(productId, isFavorite)
         }
     }
 
-    private suspend fun action(productId: Long, userId: Long, isFavorite: Boolean) {
-        return if (isFavorite) {
+    private suspend fun action(productId: Long, userId: Long, isFavorite: Boolean, likeVersion: Int) {
+
+        if (isFavorite) {
+            //todo - change dislike to new rep
             repository.dislike(productId, userId)
-            updateLikes(productId, false)
         } else {
+            //todo - change like to new rep
             repository.like(listOf(productId), userId)
-            updateLikes(productId, true)
+        }
+
+        if (likeVersion >= versions.getOrDefault(productId, 0)) {
+            updateLikes(productId, !isFavorite)
         }
     }
 
-    private suspend fun updateLikes(id: Long, state: Boolean) {
+    private suspend fun updateLikes(id: Long, state: Boolean): Int {
+        val currentVersion = versions.getOrDefault(id, 0) + 1
+        versions[id] = currentVersion
         likes[id] = state
         likesStateListener.emit(likes)
+        return currentVersion
     }
 
     private suspend fun saveLikeLocal(productId: Long, isFavorite: Boolean) {
@@ -133,6 +149,7 @@ class LikeManager @Inject constructor(
         val localLikesListString = dataStoreRepository.getString(FAV_IDS)?.dropLast(1) ?: ""
 
         runCatching {
+            //todo - change to new repository
             repository.like(productIdListStr = localLikesListString, userId = userId)
             dataStoreRepository.remove(FAV_IDS)
         }

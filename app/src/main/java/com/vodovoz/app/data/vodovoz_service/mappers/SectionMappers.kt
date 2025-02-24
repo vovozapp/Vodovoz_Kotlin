@@ -23,7 +23,7 @@ fun SuperTopAndBottomSectionsDTO.toDomain(): TopAndBottomSectionsModel? {
 fun CATEGORY_WITH_PRODUCTS_DTO.toDomain(): CategoryWithProductsModel? {
     return CategoryWithProductsModel(
         id = ID ?: return null,
-        products = data?.toDomain() ?: return null,
+        products = data?.mapToDomain() ?: return null,
         name = NAME ?: return null
     )
 }

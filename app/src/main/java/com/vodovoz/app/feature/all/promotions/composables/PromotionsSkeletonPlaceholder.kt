@@ -28,7 +28,7 @@ fun PromotionsSkeletonPlaceholder(modifier: Modifier = Modifier) {
                 SkeletonBox(
                     shimmerState = shimmerState,
                     modifier = Modifier
-                        .width(50.dp)
+                        .width(80.dp)
                         .height(30.dp)
                 )
             }

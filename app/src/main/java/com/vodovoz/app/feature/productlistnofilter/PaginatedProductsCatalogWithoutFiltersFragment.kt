@@ -36,7 +36,7 @@ import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class PaginatedProductsCatalogWithoutFiltersFragment : BaseFragment() {
+class PaginatedProductsCatalogWithoutFiltersFragment1 : BaseFragment() {
 
     companion object {
         const val CATEGORY_ID = "CATEGORY_ID"

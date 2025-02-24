@@ -149,11 +149,11 @@ class CatalogFragment : BaseFragment() {
             }
 
             is ActionEntity.Discount -> CatalogFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount
+                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.HurryBuyUpProducts
             )
 
             is ActionEntity.Novelties -> CatalogFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties
+                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.NewProducts
             )
 
             is ActionEntity.WaterApp -> {

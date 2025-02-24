@@ -31,7 +31,7 @@ fun String.toDataAll(): DataAllAction {
         "dostavka" -> DataAllAction.Delivery
         "profil" -> DataAllAction.Profile
         "trekervodi" -> DataAllAction.WaterTracker
-        else -> DataAllAction.None
+        else -> DataAllAction.Unknown
     }
 }
 

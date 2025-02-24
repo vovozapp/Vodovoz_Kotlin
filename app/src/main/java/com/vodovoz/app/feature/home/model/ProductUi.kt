@@ -59,6 +59,8 @@ data class SectionUi<E>(
 
         fun <T> empty() = SectionUi("", emptyList<T>(), null)
 
+
+
     }
 
 }
@@ -90,6 +92,10 @@ data class ProductUi(
     val pricePerUnit: Int?,
     val unitOfMeasurement: String?
 )
+
+fun List<ProductModel>.mapToUi(): List<ProductUi>{
+    return mapNotNull { it.toUi() }
+}
 
 fun ProductModel.toUi(): ProductUi {
     return ProductUi(

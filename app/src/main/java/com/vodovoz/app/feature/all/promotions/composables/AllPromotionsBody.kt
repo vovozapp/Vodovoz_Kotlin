@@ -14,12 +14,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.itemKey
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.vodovoz.app.design_system.composables.chip.VodovozChip
 import com.vodovoz.app.design_system.composables.decoration.SkeletonBox
 import com.vodovoz.app.design_system.composables.tab_row.VodovozScrollableTabRow
-import com.vodovoz.app.design_system.model.PromotionSectionUi
+import com.vodovoz.app.design_system.model.PromotionCategoryUi
 import com.vodovoz.app.design_system.model.PromotionUi
 import com.vodovoz.app.util.extensions.indexOfOrNull
 import kotlin.random.Random
@@ -28,11 +29,11 @@ import kotlin.random.Random
 @Composable
 fun AllPromotionsBody(
     modifier: Modifier = Modifier,
-    sections: List<PromotionSectionUi>,
-    currentSection: PromotionSectionUi,
+    categories: List<PromotionCategoryUi>,
+    currentCategory: PromotionCategoryUi,
     lazyPagingPromotions: LazyPagingItems<PromotionUi>,
     lazyListState: LazyListState,
-    onSectionSelect: (PromotionSectionUi) -> Unit,
+    onSectionSelect: (PromotionCategoryUi) -> Unit,
     onAdvertisingClick: (PromotionUi) -> Unit,
     onPromotionClick: (PromotionUi) -> Unit,
 ) {
@@ -44,14 +45,14 @@ fun AllPromotionsBody(
             modifier = Modifier
                 .padding(top = 8.dp)
                 .fillMaxWidth(),
-            selectedTabIndex = sections.indexOfOrNull(currentSection) ?: 0,
+            selectedTabIndex = categories.indexOfOrNull(currentCategory) ?: 0,
             edgePadding = 16.dp,
             spacing = 8.dp
         ) {
-            sections.forEach { section ->
+            categories.forEach { section ->
                 VodovozChip(
                     text = section.name,
-                    selected = currentSection == section,
+                    selected = currentCategory == section,
                     onSelect = {
                         onSectionSelect(section)
                     }
@@ -75,9 +76,7 @@ fun AllPromotionsBody(
                 is LoadState.NotLoading -> {
                     items(
                         count = lazyPagingPromotions.itemCount,
-                        key = { i ->
-                            lazyPagingPromotions[i]?.id ?: Random.nextInt()
-                        }
+                        key = lazyPagingPromotions.itemKey { it.id }
                     ) { i ->
                         val promotion = lazyPagingPromotions[i]
                         if (promotion != null) {

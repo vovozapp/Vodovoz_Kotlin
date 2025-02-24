@@ -11,7 +11,7 @@ import com.vodovoz.app.design_system.composables.button.LayoutSwitchButton
 import com.vodovoz.app.design_system.composables.button.SortingButton
 
 @Composable
-fun ProductListHeader(
+fun ProductListOptionsRow(
     modifier: Modifier = Modifier,
     sortName: String,
     isGridView: Boolean,

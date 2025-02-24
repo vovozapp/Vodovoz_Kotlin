@@ -219,7 +219,7 @@ class SplashFragment : BaseFragment() {
         }
 
 
-        //todo - check block site and app update
+        //todo - check: block site, app update values
         findNavController().navigate(R.id.mainFragment)
 
 

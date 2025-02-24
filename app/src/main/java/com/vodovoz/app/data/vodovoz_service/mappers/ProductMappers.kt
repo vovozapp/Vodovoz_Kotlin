@@ -1,30 +1,64 @@
 package com.vodovoz.app.data.vodovoz_service.mappers
 
 import com.vodovoz.app.data.vodovoz_service.di.toFullUrl
+import com.vodovoz.app.data.vodovoz_service.model.AnalogsSectionDTO
+import com.vodovoz.app.data.vodovoz_service.model.CATEGORY_DTO
+import com.vodovoz.app.data.vodovoz_service.model.CategoriesDTO
 import com.vodovoz.app.data.vodovoz_service.model.EXTENDED_PRICE_DTO
 import com.vodovoz.app.data.vodovoz_service.model.NALICHIE_MORE_DTO
+import com.vodovoz.app.data.vodovoz_service.model.PODELITCA_DTO
 import com.vodovoz.app.data.vodovoz_service.model.ProductsSectionDTO
 import com.vodovoz.app.data.vodovoz_service.model.TOVAR_DATA_DTO
+import com.vodovoz.app.domain.general.model.CategoryModel
 import com.vodovoz.app.domain.general.model.LabelModel
 import com.vodovoz.app.domain.general.model.PriceModel
 import com.vodovoz.app.domain.general.model.ProductModel
 import com.vodovoz.app.domain.general.model.ProductsSectionModel
+import com.vodovoz.app.domain.general.model.ShareModel
 
 
 fun ProductsSectionDTO.toDomain(): ProductsSectionModel {
+    return ProductsSectionModel(
+        title = TITLE ?: "",
+        sortingTitle = SORTIROVKA?.NAMEGLAV ?: "",
+        productsQuantity = COUNT ?: -1,
+        sorting = SORTIROVKA?.DANNIESORT?.mapNotNull { it?.toDomain() } ?: emptyList(),
+        products = DATA?.mapToDomain() ?: emptyList(),
+        categories = RAZDEL?.LISTRAZDEL?.mapNotNull { it?.toDomain() } ?: emptyList(),
+        share = PODELITCA?.toDomain()
+    )
+}
+
+fun CATEGORY_DTO.toDomain(): CategoryModel? {
+    return CategoryModel(ID ?: return null, NAME ?: return null)
+}
+
+fun PODELITCA_DTO.toDomain(): ShareModel? {
+    return ShareModel(
+        detailPageUrlIOS?.url ?: return null,
+        detailPageUrlIOS.name ?: return null
+    )
+}
+
+fun AnalogsSectionDTO.toDomain(): ProductsSectionModel {
     val sorting =
         SORTIROVKA?.DANNIESORT?.mapNotNull { sortDto -> sortDto?.toDomain() } ?: emptyList()
+
+    val products = TOVAR?.mapNotNull { tovarDto ->
+        tovarDto.toDomain()
+    } ?: emptyList()
+
     return ProductsSectionModel(
         title = TITLE ?: "",
         sortingTitle = SORTIROVKA?.NAMEGLAV ?: "",
         sorting = sorting,
-        products = TOVAR?.mapNotNull { tovarDto ->
-            tovarDto.toDomain()
-        } ?: emptyList()
+        products = products,
+        categories = emptyList(),
+        productsQuantity = products.size
     )
 }
 
-fun List<TOVAR_DATA_DTO?>.toDomain(): List<ProductModel> {
+fun List<TOVAR_DATA_DTO?>.mapToDomain(): List<ProductModel> {
     return mapNotNull { productDTO ->
         productDTO?.toDomain()
     }

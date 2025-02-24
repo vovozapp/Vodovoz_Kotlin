@@ -2,7 +2,7 @@ package com.vodovoz.app.feature.products_collection
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.vodovoz.app.domain.general.model.toDomain
+import com.vodovoz.app.domain.general.model.toUi
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.product_comments.model.SortUi
 import com.vodovoz.app.feature.product_comments.model.toDomain
@@ -11,8 +11,9 @@ import com.vodovoz.app.feature.products_collection.model.ProductsCollectionState
 import com.vodovoz.app.ui.mvi.MviViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,14 +25,13 @@ class ProductsCollectionViewModel @Inject constructor(
 ) : MviViewModel<ProductsCollectionState, ProductsCollectionEvent>(
     ProductsCollectionState()
 ) {
-    private val productId = savedStateHandle.get<Long>("productId") ?: 105622
+    private val productId = savedStateHandle.get<Long>("productId") ?: -1
 
-    fun fetchProducts() = viewModelScope.launch {
+    fun fetchProducts() =
         vodovozServiceRepository.getProductAnalogs(productId, stateSnapshot.currentSort.toDomain())
             .onEach { result ->
-
                 result.onSuccess { productsSectionModel ->
-                    val productsSectionUi = productsSectionModel.toDomain()
+                    val productsSectionUi = productsSectionModel.toUi()
                     _state.update { s ->
                         s.copy(
                             productsSection = productsSectionUi,
@@ -44,10 +44,9 @@ class ProductsCollectionViewModel @Inject constructor(
                         )
                     }
                 }.onFailure {
-
+                    //TODO - handle fail
                 }
-            }.collect()
-    }
+            }.take(1).launchIn(viewModelScope)
 
     fun showSortOptionsBottomSheet() = viewModelScope.launch {
         _state.update { s ->

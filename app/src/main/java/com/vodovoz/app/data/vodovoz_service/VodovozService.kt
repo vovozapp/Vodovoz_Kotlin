@@ -1,5 +1,6 @@
 package com.vodovoz.app.data.vodovoz_service
 
+import com.vodovoz.app.data.vodovoz_service.model.AnalogsSectionDTO
 import com.vodovoz.app.data.vodovoz_service.model.BannerDTO
 import com.vodovoz.app.data.vodovoz_service.model.OrderMenuDTO
 import com.vodovoz.app.data.vodovoz_service.model.PopularCategoriesDTO
@@ -37,13 +38,13 @@ interface VodovozService {
 
     @GET("korzina/function/deletto/index.php?action=deletto")
     suspend fun removeProductFromCart(
-        @Query("id") productId: Long
+        @Query("id") productId: Long,
     ): Response<VodovozResponseDTO<String>>
 
     @GET("korzina/function/guaty/index.php?action=guaty")
     suspend fun updateProductInCart(
         @Query("id") productId: Long,
-        @Query("quantity") quantity: Int
+        @Query("quantity") quantity: Int,
     ): Response<VodovozResponseDTO<String>>
 
     @GET("newmobile_new/korzina/function/delkorzina/index.php?action=delkorzina")
@@ -75,12 +76,15 @@ interface VodovozService {
         @Query("userid") userId: String,
     ): Response<VodovozResponseDTO<PresentDTO>>
 
+    /**
+     * ProductsCollection screen
+     */
     @GET("details/analog.php?id=105622")
     suspend fun getProductAnalogs(
         @Query("id") productId: Long,
         @Query("sort") sort: String = "",
         @Query("ascdesc") order: String = "",
-    ): Response<VodovozResponseDTO<ProductsSectionDTO>>
+    ): Response<VodovozResponseDTO<AnalogsSectionDTO>>
 
 
     /**
@@ -102,7 +106,6 @@ interface VodovozService {
 
     /**
      * Home screen
-     *
      */
     @GET("glavnaya/slayders/index.php?action=slayder")
     suspend fun getBanners(): Response<VodovozResponseDTO<List<BannerDTO>>>
@@ -124,21 +127,69 @@ interface VodovozService {
     @GET("glavnaya/novinki.php?new=novinki")
     suspend fun getNewProducts(): Response<VodovozResponseDTO<RAZDEL_DTO>>
 
-    //todo - change return type
+    @GET("glavnaya/novinki.php?new=novinki&detail=Y")
+    suspend fun getAllNewProducts(
+        @Query("nav") page: Int = 1,
+        @Query("sect") categoryId: Int = -1,
+        @Query("sort") sort: String = "",
+        @Query("ascdesc") order: String = "",
+    ): Response<VodovozResponseDTO<ProductsSectionDTO>>
+
     @GET("glavnaya/viewedproduct/index.php?action=viewed")
     suspend fun getViewedProducts(
         @Query("userid") userId: Long,
-    ): Response<Any>
+    ): Response<VodovozResponseDTO<RAZDEL_DTO>>
+
+    @GET("glavnaya/viewedproduct/index.php?action=details")
+    suspend fun getAllViewedProducts(
+        @Query("userid") userId: Long,
+        @Query("nav") page: Int = 1,
+        @Query("sect") categoryId: Int = -1,
+        @Query("sort") sort: String = "",
+        @Query("ascdesc") order: String = "",
+    ): Response<VodovozResponseDTO<ProductsSectionDTO>>
 
     @GET("glavnaya/novinki.php?new=specpredlosh")
     suspend fun getHurryUpBuyProducts(): Response<VodovozResponseDTO<RAZDEL_DTO>>
 
+    @GET("glavnaya/novinki.php?new=specpredlosh&detail=Y")
+    suspend fun getAllHurryUpBuyProducts(
+        @Query("nav") page: Int = 1,
+        @Query("sect") categoryId: Int = -1,
+        @Query("sort") sort: String = "",
+        @Query("ascdesc") order: String = "",
+    ): Response<VodovozResponseDTO<ProductsSectionDTO>>
+
     @GET("glavnaya/super_top.php?action=topglav")
     suspend fun getSuperTop(): Response<VodovozResponseDTO<SuperTopAndBottomSectionsDTO>>
+
+    @GET("glavnaya/super_top.php?action=details")
+    suspend fun getAllSuperTop(
+        @Query("id") id: Long,
+        @Query("nav") page: Int = 1,
+        @Query("sect") categoryId: Int = -1,
+        @Query("sort") sort: String = "",
+        @Query("ascdesc") order: String = "",
+    ): Response<VodovozResponseDTO<ProductsSectionDTO>>
 
     @GET("glavnaya/okno.php?action=okno")
     suspend fun getPopupWindowInfo(
         @Query("userid") userId: Long,
     ): Response<VodovozResponseDTO<PopupWindowDTO>>
+
+    /**
+     * Favorite screen
+     * */
+    @GET("izbrannoe.php?action=izbrannoe")
+    suspend fun getFavoriteProducts(
+        @Query("userid") userId: Long,
+        @Query("nav") page: Int = 1,
+        @Query("sect") categoryId: Int = -1,
+        @Query("sort") sort: String = "",
+        @Query("ascdesc") order: String = "",
+    ): Response<VodovozResponseDTO<ProductsSectionDTO>>
+
+
+
 
 }

@@ -14,15 +14,16 @@ import androidx.compose.ui.unit.dp
 import com.vodovoz.app.design_system.composables.card.GridProductCard
 import com.vodovoz.app.design_system.composables.chip.VodovozChip
 import com.vodovoz.app.design_system.composables.tab_row.VodovozScrollableTabRow
+import com.vodovoz.app.domain.general.model.ButtonAction
 import com.vodovoz.app.feature.home.model.CategoryWithProductsUi
 import com.vodovoz.app.feature.home.model.ProductUi
 import com.vodovoz.app.feature.home.model.SectionUi
 import com.vodovoz.app.util.extensions.indexOfOrNull
 
 @Composable
-fun HomeBestOffers(
+fun HomeTopProducts(
     modifier: Modifier = Modifier,
-    onShowAllClick: () -> Unit,
+    onShowAllClick: (ButtonAction) -> Unit,
     currentCategoryWithProducts: CategoryWithProductsUi,
     sectionCategoriesWithProducts: SectionUi<CategoryWithProductsUi>,
     onCategorySelect: (CategoryWithProductsUi) -> Unit,
@@ -30,11 +31,12 @@ fun HomeBestOffers(
     onProductLike: (ProductUi) -> Unit,
 ) {
 
+    val button = sectionCategoriesWithProducts.button
     Column(modifier = modifier) {
         TitleAndButton(
             title = sectionCategoriesWithProducts.title,
-            button = sectionCategoriesWithProducts.button,
-            onShowAllClick = { onShowAllClick() }
+            button = button,
+            onShowAllClick = { onShowAllClick(it) }
         )
 
         VodovozScrollableTabRow(

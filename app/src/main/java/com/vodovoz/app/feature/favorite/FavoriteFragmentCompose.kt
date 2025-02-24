@@ -27,7 +27,7 @@ import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.placeholders.NetworkErrorPlaceholder
-import com.vodovoz.app.feature.home.model.PopularCategoryUi
+import com.vodovoz.app.feature.home.model.CategoryUi
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -56,7 +56,9 @@ class FavoriteFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        findNavController().currentBackStackEntry?.savedStateHandle?.get<PopularCategoryUi>("category")?.let { category ->
+        viewModel.fetchFavoriteProducts()
+
+        findNavController().currentBackStackEntry?.savedStateHandle?.get<CategoryUi>("category")?.let { category ->
             viewModel.selectCategory(category)
         }
 
@@ -69,7 +71,7 @@ class FavoriteFragment : Fragment() {
 
                     when (data.uiState) {
                         FavoriteFlowViewModel.FavoriteUiState.Error -> {
-                            NetworkErrorPlaceholder(onTryAgainClick = { })
+                            NetworkErrorPlaceholder(onTryAgainClick = { viewModel.fetchFavoriteProducts() })
                         }
 
                         else -> {

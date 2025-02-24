@@ -14,3 +14,10 @@ class WebsiteErrorException(
 ): IllegalStateException(
     message, cause
 )
+
+class FavoriteNotFoundException(
+    message: String = "",
+    cause: Throwable? = null
+): IllegalStateException(
+    message, cause
+)

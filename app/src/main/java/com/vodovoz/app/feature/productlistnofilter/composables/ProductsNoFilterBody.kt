@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.favorite.composables
+package com.vodovoz.app.feature.productlistnofilter.composables
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -9,43 +9,53 @@ import androidx.paging.compose.LazyPagingItems
 import com.vodovoz.app.design_system.composables.list.ProductLazyPagingList
 import com.vodovoz.app.design_system.composables.list.ProductListCategoriesRow
 import com.vodovoz.app.design_system.composables.list.ProductListOptionsRow
+import com.vodovoz.app.design_system.composables.list.ProductListTitle
 import com.vodovoz.app.feature.home.model.CategoryUi
 import com.vodovoz.app.feature.home.model.ProductUi
 import com.vodovoz.app.feature.product_comments.model.SortUi
 
 @Suppress("NonSkippableComposable")
 @Composable
-fun FavoriteBody(
+fun ProductsNoFilterBody(
     modifier: Modifier = Modifier,
-    lazyPagingProducts: LazyPagingItems<ProductUi>,
+    title: String,
     categories: List<CategoryUi>,
+    productsQuantity: Int,
     currentCategory: CategoryUi,
     currentSort: SortUi,
+    lazyPagingProducts: LazyPagingItems<ProductUi>,
     isGridView: Boolean,
-    onCategoriesListClick: () -> Unit,
-    onLayoutViewSwitch: () -> Unit,
     onSortingClick: () -> Unit,
+    onSwitchLayoutClick: () -> Unit,
+    onCategoryClick: (CategoryUi) -> Unit
 ) {
     Column(modifier = modifier) {
+        ProductListTitle(
+            modifier = Modifier.padding(top = 16.dp),
+            productsQuantity = productsQuantity,
+            title = title,
+            onShareClick = { }
+        )
 
         ProductListCategoriesRow(
-            modifier = Modifier.padding(top = 8.dp),
+            modifier = Modifier.padding(top = 16.dp),
             categories = categories,
             currentCategory = currentCategory,
-            onCategoryClick = { },
-            onCategoriesListClick = { onCategoriesListClick() })
-
-
+            onCategoryClick = { category ->
+                onCategoryClick(category)
+            },
+            onCategoriesListClick = {}
+        )
 
         ProductListOptionsRow(
             modifier = Modifier.padding(top = 24.dp),
             sortName = currentSort.name,
             isGridView = isGridView,
-            onSwitchClick = {
-                onLayoutViewSwitch()
-            },
             onSortingClick = {
                 onSortingClick()
+            },
+            onSwitchClick = {
+                onSwitchLayoutClick()
             }
         )
 
@@ -53,12 +63,8 @@ fun FavoriteBody(
         ProductLazyPagingList(
             lazyPagingProducts = lazyPagingProducts,
             isGridView = isGridView,
-            onProductClick = {
-
-            },
-            onProductLike = {
-
-            }
+            onProductClick = { },
+            onProductLike = { }
         )
     }
 }

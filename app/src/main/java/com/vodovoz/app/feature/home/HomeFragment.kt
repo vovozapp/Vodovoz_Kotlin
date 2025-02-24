@@ -383,7 +383,7 @@ class HomeFragment1 : BaseFragment() {
                             "vsenovinki" -> {
                                 findNavController().navigate(
                                     HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                                        PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties
+                                        PaginatedProductsCatalogWithoutFiltersFragment.DataSource.NewProducts
                                     )
                                 )
                             }
@@ -391,7 +391,7 @@ class HomeFragment1 : BaseFragment() {
                             "vseskidki" -> {
                                 findNavController().navigate(
                                     HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                                        PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount
+                                        PaginatedProductsCatalogWithoutFiltersFragment.DataSource.HurryBuyUpProducts
                                     )
                                 )
                             }
@@ -713,7 +713,7 @@ class HomeFragment1 : BaseFragment() {
             override fun showAllDiscountProducts(id: Long) {
                 findNavController().navigate(
                     HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                        PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount
+                        PaginatedProductsCatalogWithoutFiltersFragment.DataSource.HurryBuyUpProducts
                     )
                 )
             }
@@ -729,7 +729,7 @@ class HomeFragment1 : BaseFragment() {
             override fun showAllNoveltiesProducts(id: Long) {
                 findNavController().navigate(
                     HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                        PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties
+                        PaginatedProductsCatalogWithoutFiltersFragment.DataSource.NewProducts
                     )
                 )
             }
@@ -781,7 +781,7 @@ class HomeFragment1 : BaseFragment() {
                     DISCOUNT_TITLE -> {
                         findNavController().navigate(
                             HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount
+                                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.HurryBuyUpProducts
                             )
                         )
                     }
@@ -793,7 +793,7 @@ class HomeFragment1 : BaseFragment() {
                     NOVELTIES_TITLE -> {
                         findNavController().navigate(
                             HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties
+                                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.NewProducts
                             )
                         )
                     }
@@ -1082,11 +1082,11 @@ class HomeFragment1 : BaseFragment() {
                 HomeFragmentDirections.actionToPaginatedProductsCatalogFragment(this.categoryId)
 
             is ActionEntity.Discount -> HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount
+                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.HurryBuyUpProducts
             )
 
             is ActionEntity.Novelties -> HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties
+                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.NewProducts
             )
 
             is ActionEntity.WaterApp -> {

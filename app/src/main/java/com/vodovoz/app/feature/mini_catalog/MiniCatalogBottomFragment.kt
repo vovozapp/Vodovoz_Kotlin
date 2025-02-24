@@ -13,6 +13,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.databinding.BsCatalogMiniBinding
 import com.vodovoz.app.feature.mini_catalog.adapter.MiniCatalogAdapter
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
+import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment1
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 
 class MiniCatalogBottomFragment : BottomSheetDialogFragment() {
@@ -69,7 +70,7 @@ class MiniCatalogBottomFragment : BottomSheetDialogFragment() {
         binding.btnChoose.setOnClickListener {
             findNavController().previousBackStackEntry
                 ?.savedStateHandle?.set(
-                    PaginatedProductsCatalogWithoutFiltersFragment.CATEGORY_ID,
+                    PaginatedProductsCatalogWithoutFiltersFragment1.CATEGORY_ID,
                     miniCatalogAdapter.selectedCategoryId
                 )
             dialog?.dismiss()

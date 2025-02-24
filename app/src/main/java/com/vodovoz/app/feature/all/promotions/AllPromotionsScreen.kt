@@ -53,8 +53,8 @@ fun AllPromotionsScreen(
             }
             AllPromotionsFlowViewModel.UiState.Success -> {
                 AllPromotionsBody(
-                    sections = viewState.sections,
-                    currentSection = viewState.currentSection,
+                    categories = viewState.categories,
+                    currentCategory = viewState.currentCategory,
                     lazyPagingPromotions = lazyPagingPromotions,
                     lazyListState = lazyListState,
                     onSectionSelect = { section ->

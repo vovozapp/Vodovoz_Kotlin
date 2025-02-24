@@ -23,6 +23,8 @@ abstract class PagingStateViewModel<S : State>(
     protected val state
         get() = uiStateListener.value
 
+    protected val dataState get() = state.data
+
     fun observeUiState() = uiStateListener.asStateFlow()
 }
 

@@ -186,11 +186,11 @@ class FullScreenHistoriesSliderFlowFragment1 : BaseFragment(),
                 )
 
             is ActionEntity.Discount -> FullScreenHistoriesSliderFlowFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount
+                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.HurryBuyUpProducts
             )
 
             is ActionEntity.Novelties -> FullScreenHistoriesSliderFlowFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties
+                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.NewProducts
             )
 
             is ActionEntity.WaterApp -> {

@@ -1,6 +1,5 @@
 package com.vodovoz.app.feature.productlist
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.account.data.AccountManager
@@ -110,65 +109,64 @@ class ProductsListFlowViewModel @Inject constructor(
                         filterMap = state.data.filterBundle.filterUIList.buildFilterRangeQuery()
                     )
                 )
-            }
-                .onEach { response ->
-                    if (response is ResponseEntity.Success) {
-                        val data = response.data.mapToUI()
-                        val mappedFeed = FavoritesMapper.mapFavoritesListByManager(
-                            state.data.layoutManager,
-                            data.productList
+            }.onEach { response ->
+                if (response is ResponseEntity.Success) {
+                    val data = response.data.mapToUI()
+                    val mappedFeed = FavoritesMapper.mapFavoritesListByManager(
+                        state.data.layoutManager,
+                        data.productList
+                    )
+
+                    uiStateListener.value = if (data.productList.isEmpty() && !state.loadMore) {
+                        state.copy(
+                            error = ErrorState.Empty(),
+                            data = state.data.copy(
+                                itemsList = emptyList(),
+                                categoryHeader = if (state.page == 1) data else state.data.categoryHeader,
+                            ),
+                            loadingPage = false,
+                            loadMore = false,
+                            bottomItem = null,
+                            page = 1
                         )
-
-                        uiStateListener.value = if (data.productList.isEmpty() && !state.loadMore) {
-                            state.copy(
-                                error = ErrorState.Empty(),
-                                data = state.data.copy(
-                                    itemsList = emptyList(),
-                                    categoryHeader = if(state.page == 1) data else state.data.categoryHeader,
-                                ),
-                                loadingPage = false,
-                                loadMore = false,
-                                bottomItem = null,
-                                page = 1
-                            )
+                    } else {
+                        val itemsList = if (state.loadMore) {
+                            state.data.itemsList + mappedFeed
                         } else {
-                            val itemsList = if (state.loadMore) {
-                                state.data.itemsList + mappedFeed
-                            } else {
-                                mappedFeed
-                            }
-
-                            state.copy(
-                                page = if (mappedFeed.isEmpty()) null else state.page?.plus(1),
-                                loadingPage = false,
-                                data = state.data.copy(
-                                    itemsList = itemsList,
-                                    categoryHeader = if(state.page == 1) data else state.data.categoryHeader,
-                                    categoryId = categoryId,
-                                    showCategoryContainer = catalogManager.hasRootItems(categoryId),
-                                    filterCode = data.filterCode.ifEmpty {
-                                        state.data.filterCode
-                                    },
-                                    sortType = data.sortTypeList?.sortTypeList?.firstOrNull { it.value == state.data.sortType.value && it.orientation == state.data.sortType.orientation }
-                                        ?: SortTypeUI(sortName = "По популярности", value = "default"),
-                                    scrollToTop = state.page == 1,
-                                ),
-                                error = null,
-                                loadMore = false,
-                                bottomItem = null
-                            )
+                            mappedFeed
                         }
 
-                    } else {
-                        uiStateListener.value =
-                            state.copy(
-                                loadingPage = false,
-                                error = ErrorState.Error(),
-                                page = 1,
-                                loadMore = false
-                            )
+                        state.copy(
+                            page = if (mappedFeed.isEmpty()) null else state.page?.plus(1),
+                            loadingPage = false,
+                            data = state.data.copy(
+                                itemsList = itemsList,
+                                categoryHeader = if (state.page == 1) data else state.data.categoryHeader,
+                                categoryId = categoryId,
+                                showCategoryContainer = catalogManager.hasRootItems(categoryId),
+                                filterCode = data.filterCode.ifEmpty {
+                                    state.data.filterCode
+                                },
+                                sortType = data.sortTypeList?.sortTypeList?.firstOrNull { it.value == state.data.sortType.value && it.orientation == state.data.sortType.orientation }
+                                    ?: SortTypeUI(sortName = "По популярности", value = "default"),
+                                scrollToTop = state.page == 1,
+                            ),
+                            error = null,
+                            loadMore = false,
+                            bottomItem = null
+                        )
                     }
+
+                } else {
+                    uiStateListener.value =
+                        state.copy(
+                            loadingPage = false,
+                            error = ErrorState.Error(),
+                            page = 1,
+                            loadMore = false
+                        )
                 }
+            }
                 .flowOn(Dispatchers.Default)
                 .catch {
                     debugLog { "fetch products by category sorted error ${it.localizedMessage}" }
@@ -215,7 +213,11 @@ class ProductsListFlowViewModel @Inject constructor(
             if (it.limit < it.totalCount) {
                 if (state.bottomItem == null && state.page != null) {
                     uiStateListener.value =
-                        state.copy(loadMore = true, bottomItem = BottomProgressItem(), data = state.data.copy(scrollToTop = false))
+                        state.copy(
+                            loadMore = true,
+                            bottomItem = BottomProgressItem(),
+                            data = state.data.copy(scrollToTop = false)
+                        )
                     fetchProductsByCategory()
                 }
             }

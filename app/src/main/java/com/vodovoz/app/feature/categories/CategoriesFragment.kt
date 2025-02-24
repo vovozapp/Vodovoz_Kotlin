@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.effects.LifecycleEffect
 import com.vodovoz.app.feature.categories.model.CategoriesEvent
+import com.vodovoz.app.feature.home.model.CategoryUi
 import com.vodovoz.app.feature.home.model.PopularCategoryUi
 
 class CategoriesFragment : Fragment() {
@@ -23,7 +24,7 @@ class CategoriesFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val categories = arguments?.getParcelableArray("categoryList") as? Array<PopularCategoryUi>
+        val categories = arguments?.getParcelableArray("categoryList") as? Array<CategoryUi>
         val currentCategory = arguments?.getParcelable("category") ?: categories?.firstOrNull()
 
         if (categories != null && currentCategory != null) {

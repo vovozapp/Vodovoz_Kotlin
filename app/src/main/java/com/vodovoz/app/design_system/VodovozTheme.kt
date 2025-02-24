@@ -74,7 +74,7 @@ private val VodovozShimmerTheme
     @Composable
     get() = defaultShimmerTheme.copy(
         blendMode = BlendMode.DstAtop,
-        shimmerWidth = 150.dp,
+        shimmerWidth = 180.dp,
         shaderColors = listOf(
             Color.Transparent,
             MaterialTheme.colorScheme.background,
@@ -87,7 +87,7 @@ private val VodovozShimmerTheme
         ),
         animationSpec = infiniteRepeatable(
             animation = tween(
-                1200,
+                1000,
                 easing = LinearEasing,
                 delayMillis = 300,
             ),

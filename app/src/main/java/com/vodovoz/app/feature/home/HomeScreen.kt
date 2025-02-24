@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.vodovoz.app.design_system.composables.top_bar.SearchTopBar
-import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
 import com.vodovoz.app.feature.home.composables.HomeBody
 import com.vodovoz.app.feature.home.composables.SpecialPromotionBottomSheet
 
@@ -18,8 +17,7 @@ import com.vodovoz.app.feature.home.composables.SpecialPromotionBottomSheet
 fun HomeScreen(
     viewState: HomeFlowViewModel.HomeState,
     viewModel: HomeFlowViewModel,
-    navController: NavController,
-    onNavigateToQrCodeFragment: () -> Unit
+    onNavigateToQrCodeFragment: () -> Unit,
 ) {
 
     Scaffold(
@@ -44,8 +42,9 @@ fun HomeScreen(
             sectionPopularCategories = viewState.popularSections,
             sectionNewProducts = viewState.sectionNewProducts,
             sectionHurryUpBuyProducts = viewState.sectionHurryUpBuyProducts,
-            bestOffersSection = viewState.sectionBestOffers,
+            sectionTop = viewState.sectionTop,
             sectionBottomProducts = viewState.sectionBottom,
+            sectionViewedProducts = viewState.sectionViewedProducts,
             currentCategoryWithProducts = viewState.currentCategoryWithProducts,
             onCategorySelect = { categoryWithProductsUi ->
                 viewModel.selectCategory(categoryWithProductsUi)
@@ -56,18 +55,14 @@ fun HomeScreen(
             onStoryClick = { story ->
                 viewModel.navigateToStories(story)
             },
-            onShowAllPromotionClick = {
-                navController.navigate(
-                    HomeFragmentDirections.actionToAllPromotionsFragment(
-                        AllPromotionsFragment.DataSource.All
-                    )
-                )
-            },
             onPromotionClick = { promotion ->
                 viewModel.navigateToPromotionDetails(promotion)
             },
             onProductCardClick = { product ->
                 viewModel.navigateToProductDetails(product)
+            },
+            onShowAllClick = { action ->
+                viewModel.handleButtonAction(action)
             }
         )
     }
@@ -76,7 +71,7 @@ fun HomeScreen(
         SpecialPromotionBottomSheet(
             specialPromotionUi = viewState.specialPromotionUi,
             onDismissRequest = { viewModel.closeBottomSheet() },
-            onButtonClick = {  }
+            onButtonClick = { }
         )
     }
 }

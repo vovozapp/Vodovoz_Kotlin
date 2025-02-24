@@ -105,14 +105,14 @@ data class AboutAdvertisingUi(
 }
 
 @Immutable
-data class PromotionSectionUi(
+data class PromotionCategoryUi(
     val id: Int,
     val code: String,
     val name: String,
 ) {
 
     companion object {
-        val Empty = PromotionSectionUi(
+        val Empty = PromotionCategoryUi(
             -1, "", ""
         )
     }
@@ -121,12 +121,12 @@ data class PromotionSectionUi(
 
 
 @JvmName("mapPromotionSectionListToUi")
-fun List<PromotionFilterModel>.toUi(): List<PromotionSectionUi> {
+fun List<PromotionFilterModel>.toUi(): List<PromotionCategoryUi> {
     return map { it.toUi() }
 }
 
-fun PromotionFilterModel.toUi(): PromotionSectionUi {
-    return PromotionSectionUi(
+fun PromotionFilterModel.toUi(): PromotionCategoryUi {
+    return PromotionCategoryUi(
         id = id,
         code = code,
         name = name

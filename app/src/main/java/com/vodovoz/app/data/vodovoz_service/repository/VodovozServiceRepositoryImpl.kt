@@ -4,12 +4,15 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.vodovoz.app.common.account.data.AccountManager
+import com.vodovoz.app.core.network.messageWithCode
 import com.vodovoz.app.data.vodovoz_service.VodovozService
 import com.vodovoz.app.data.vodovoz_service.mappers.executeRequest
+import com.vodovoz.app.data.vodovoz_service.mappers.mapToDomain
 import com.vodovoz.app.data.vodovoz_service.mappers.toDomain
 import com.vodovoz.app.domain.general.VodovozPagingSource
 import com.vodovoz.app.domain.general.model.BannerModel
 import com.vodovoz.app.domain.general.model.CommentModel
+import com.vodovoz.app.domain.general.model.FavoriteNotFoundException
 import com.vodovoz.app.domain.general.model.OrderWithMenuModel
 import com.vodovoz.app.domain.general.model.PopularCategoryModel
 import com.vodovoz.app.domain.general.model.PopupWindowInfoModel
@@ -20,6 +23,7 @@ import com.vodovoz.app.domain.general.model.ProductsSectionModel
 import com.vodovoz.app.domain.general.model.ProductsTitle
 import com.vodovoz.app.domain.general.model.PromotionDetailsModel
 import com.vodovoz.app.domain.general.model.PromotionModel
+import com.vodovoz.app.domain.general.model.RequestException
 import com.vodovoz.app.domain.general.model.SectionModel
 import com.vodovoz.app.domain.general.model.SectionPromotionsWithFiltersModel
 import com.vodovoz.app.domain.general.model.SortModel
@@ -34,6 +38,47 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     private val vodovozService: VodovozService,
     private val accountManager: AccountManager,
 ) : VodovozServiceRepository {
+
+    override fun getFavoriteProducts(): Flow<Result<ProductsSectionModel>> = executeRequest(
+        request = {
+            val userId = accountManager.fetchAccountId() ?: -1L
+            vodovozService.getFavoriteProducts(userId)
+        },
+        mapper = { responseDTO ->
+            responseDTO.data?.toDomain()
+                ?: throw IllegalArgumentException("Favorite products can't be null")
+        },
+        onFail = { response ->
+            val exception = when (response.code()) {
+                404 -> FavoriteNotFoundException(response.messageWithCode())
+                else -> RequestException(response.messageWithCode())
+            }
+            Result.failure(exception)
+        }
+    )
+
+    override fun getFavoriteProductsPaged(
+        categoryId: Int,
+        sort: SortModel,
+    ): Flow<PagingData<ProductModel>> {
+        return Pager(
+            config = PagingConfig(pageSize = 4, initialLoadSize = 4),
+            pagingSourceFactory = {
+                VodovozPagingSource(
+                    request = { page, _ ->
+                        val userId = accountManager.fetchAccountId() ?: -1L
+                        vodovozService.getFavoriteProducts(userId, page)
+                    },
+                    mapper = { response ->
+                        response.data?.DATA?.mapNotNull { it.toDomain() }
+                            ?: throw IllegalArgumentException("Paged favorite products can't be null")
+                    }
+                )
+            }
+        ).flow
+    }
+
+
     override suspend fun addProductToCart(productId: Long, quantity: Int): Flow<Result<String>> =
         executeRequest(
             request = { vodovozService.addProductToCart(productId, quantity) },
@@ -72,7 +117,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         },
         mapper = { response ->
             response.data?.toDomain()
-                ?: throw IllegalArgumentException("ProductSectionDTO can't be null")
+                ?: throw IllegalArgumentException("ProductAnalogsDTO can't be null")
         }
     )
 
@@ -178,18 +223,17 @@ class VodovozServiceRepositoryImpl @Inject constructor(
 
     override fun getPromotionDetailsProductsPaged(
         promotionId: Int,
-        page: Int,
         limit: Int,
     ): Flow<PagingData<ProductModel>> {
         return Pager(
-            config = PagingConfig(limit, initialLoadSize = limit),
+            config = PagingConfig(pageSize = limit, initialLoadSize = limit),
             pagingSourceFactory = {
                 VodovozPagingSource(
                     request = { page, limit ->
                         vodovozService.getPromotionDetails(promotionId, page, limit)
                     },
                     mapper = { promotionDetailsDTOVodovozResponseDTO ->
-                        promotionDetailsDTOVodovozResponseDTO.data?.TOVAR?.DATA?.toDomain()
+                        promotionDetailsDTOVodovozResponseDTO.data?.TOVAR?.DATA?.mapToDomain()
                             ?: emptyList()
                     }
                 )
@@ -198,17 +242,15 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     }
 
 
-    override fun getPromotionsWithSections(
-        page: Int,
-        limit: Int,
-    ): Flow<Result<SectionPromotionsWithFiltersModel>> = executeRequest(
-        request = { vodovozService.getPromotionsWithSections(page, limit) },
-        mapper = { response ->
-            response.data!!.toDomain()
-        },
-    )
+    override fun getPromotionsWithSections(): Flow<Result<SectionPromotionsWithFiltersModel>> =
+        executeRequest(
+            request = { vodovozService.getPromotionsWithSections() },
+            mapper = { response ->
+                response.data!!.toDomain()
+            },
+        )
 
-    override fun getPromotionsPaged(page: Int, limit: Int): Flow<PagingData<PromotionModel>> {
+    override fun getPromotionsPaged(limit: Int): Flow<PagingData<PromotionModel>> {
         return Pager(
             config = PagingConfig(limit, initialLoadSize = limit),
             pagingSourceFactory = {
@@ -254,6 +296,40 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         }
     )
 
+    override fun getAllNewProducts(): Flow<Result<ProductsSectionModel>> = executeRequest(
+        request = {
+            vodovozService.getAllNewProducts()
+        },
+        mapper = { response ->
+            response.data?.toDomain()
+                ?: throw IllegalArgumentException("NewProductsDTO can't be null")
+        }
+    )
+
+    override fun getAllNewProductsPaged(
+        categoryId: Int,
+        sort: SortModel,
+    ): Flow<PagingData<ProductModel>> {
+        return Pager(
+            config = PagingConfig(4, 4),
+            pagingSourceFactory = {
+                VodovozPagingSource(
+                    request = { page, _ ->
+                        vodovozService.getAllHurryUpBuyProducts(
+                            page = page,
+                            categoryId = categoryId,
+                            sort = sort.value,
+                            order = sort.order
+                        )
+                    },
+                    mapper = { response ->
+                        response.data?.DATA?.mapToDomain() ?: emptyList()
+                    }
+                )
+            }
+        ).flow
+    }
+
 
     override fun getHurryUpBuyProducts(): Flow<Result<SectionModel<ProductModel>>> = executeRequest(
         request = {
@@ -264,12 +340,98 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         }
     )
 
+    override suspend fun getAllHurryUpBuyProducts(): Flow<Result<ProductsSectionModel>> =
+        executeRequest(
+            request = {
+                vodovozService.getAllHurryUpBuyProducts()
+            },
+            mapper = { responseDto ->
+                responseDto.data?.toDomain()
+                    ?: throw IllegalArgumentException("ProductSectionDTO can't be null")
+            }
+        )
+
+    override fun getAllHurryUpBuyProductsPaged(
+        categoryId: Int,
+        sort: SortModel,
+    ): Flow<PagingData<ProductModel>> {
+        return Pager(
+            config = PagingConfig(4, 4),
+            pagingSourceFactory = {
+                VodovozPagingSource(
+                    request = { page, _ ->
+                        vodovozService.getAllHurryUpBuyProducts(
+                            page = page,
+                            categoryId = categoryId,
+                            sort = sort.value,
+                            order = sort.order
+                        )
+                    },
+                    mapper = { response ->
+                        response.data?.DATA?.mapToDomain() ?: emptyList()
+                    }
+                )
+            }
+        ).flow
+    }
+
     override fun getSuperTop(): Flow<Result<TopAndBottomSectionsModel>> = executeRequest(
         request = {
             vodovozService.getSuperTop()
         },
         mapper = { topAndBottomDTO ->
-            topAndBottomDTO.data!!.toDomain()!!
+            topAndBottomDTO.data?.toDomain()
+                ?: throw IllegalArgumentException("SuperTop can't be null")
         }
     )
+
+
+    override fun getAllSuperTop(id: Int): Flow<Result<ProductsSectionModel>> = executeRequest(
+        request = {
+            vodovozService.getAllSuperTop(id.toLong())
+        },
+        mapper = { superTopResponse ->
+            superTopResponse.data?.toDomain()
+                ?: throw IllegalArgumentException("AllSuperTop can't be null")
+        }
+    )
+
+    override fun getAllSuperTopPaged(
+        id: Int,
+        categoryId: Int,
+        sort: SortModel,
+    ): Flow<PagingData<ProductModel>> {
+        return Pager(
+            config = PagingConfig(4, 4),
+            pagingSourceFactory = {
+                VodovozPagingSource(
+                    request = { page, _ ->
+                        vodovozService.getAllSuperTop(
+                            id = id.toLong(),
+                            page = page,
+                            categoryId = categoryId,
+                            sort = sort.value,
+                            order = sort.order
+                        )
+                    },
+                    mapper = { response ->
+                        response.data?.DATA?.mapToDomain() ?: emptyList()
+                    }
+                )
+            }
+        ).flow
+    }
+
+    override fun getViewedProducts(): Flow<Result<SectionModel<ProductModel>>> {
+        return executeRequest(
+            request = {
+                val userId = accountManager.fetchAccountId() ?: -1
+                vodovozService.getViewedProducts(userId)
+            },
+            mapper = {
+                it.data?.toDomain()
+                    ?: throw IllegalArgumentException("Viewed products can't be null")
+            }
+        )
+    }
 }

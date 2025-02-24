@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.vodovoz.app.design_system.composables.card.GridProductCard
+import com.vodovoz.app.domain.general.model.ButtonAction
 import com.vodovoz.app.feature.home.model.ProductUi
 import com.vodovoz.app.feature.home.model.SectionUi
 
@@ -16,13 +17,13 @@ fun HomeNewProducts(
     sectionNewProducts: SectionUi<ProductUi>,
     onProductClick: (ProductUi) -> Unit,
     onProductLike: (ProductUi) -> Unit,
-    onShowAllClick: () -> Unit,
+    onShowAllClick: (ButtonAction) -> Unit,
 ) {
     Column(modifier = modifier) {
         TitleAndButton(
             title = sectionNewProducts.title,
             button = sectionNewProducts.button,
-            onShowAllClick = { onShowAllClick() }
+            onShowAllClick = { onShowAllClick(it) }
         )
 
         HomeRow(modifier = Modifier.padding(top = 16.dp)) { itemWidth ->

@@ -1,6 +1,9 @@
 package com.vodovoz.app.feature.favorite
 
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.map
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.ErrorState
@@ -15,10 +18,17 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.domain.general.model.FavoriteNotFoundException
 import com.vodovoz.app.domain.general.model.ProductsSectionUi
+import com.vodovoz.app.domain.general.model.toUi
+import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
-import com.vodovoz.app.feature.home.model.PopularCategoryUi
+import com.vodovoz.app.feature.home.model.CategoryUi
+import com.vodovoz.app.feature.home.model.LabelWithColorUi
+import com.vodovoz.app.feature.home.model.ProductUi
+import com.vodovoz.app.feature.home.model.toUi
 import com.vodovoz.app.feature.product_comments.model.SortUi
+import com.vodovoz.app.feature.product_comments.model.toDomain
 import com.vodovoz.app.mapper.FavoriteProductsHeaderBundleMapper.mapToUI
 import com.vodovoz.app.mapper.ProductMapper.mapToUI
 import com.vodovoz.app.ui.model.CategoryDetailUI
@@ -28,13 +38,17 @@ import com.vodovoz.app.ui.model.SortTypeUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.singleOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -45,6 +59,7 @@ class FavoriteFlowViewModel @Inject constructor(
     private val likeManager: LikeManager,
     private val ratingProductManager: RatingProductManager,
     private val accountManager: AccountManager,
+    private val vodovozServiceRepository: VodovozServiceRepository,
 ) : PagingContractViewModel<FavoriteFlowViewModel.FavoriteState, FavoriteFlowViewModel.FavoriteEvents>(
     FavoriteState()
 ) {
@@ -64,7 +79,51 @@ class FavoriteFlowViewModel @Inject constructor(
         }
     }
 
+
+    fun fetchFavoriteProducts() = viewModelScope.launch {
+        val currentProductsSection = dataState.productsSection
+        val favoriteProductsResult =
+            if (currentProductsSection == ProductsSectionUi.Empty) {
+                vodovozServiceRepository.getFavoriteProducts().singleOrNull()
+                    ?.map { section -> section.toUi() } ?: Result.failure(NoSuchElementException())
+            } else {
+                Result.success(currentProductsSection)
+            }
+
+
+        favoriteProductsResult.onSuccess { productsSectionUi ->
+            uiStateListener.updateData { s ->
+                s.copy(
+                    productsSection = productsSectionUi,
+                    pagedProducts = vodovozServiceRepository.getFavoriteProductsPaged(
+                        categoryId = dataState.currentCategory.id,
+                        sort = dataState.currentSort.toDomain()
+                    ).map { pagingData ->
+                        pagingData.map { productModel -> productModel.toUi() }
+                    }
+                )
+            }
+        }.onFailure { error ->
+            when (error) {
+                is FavoriteNotFoundException -> {
+                    uiStateListener.updateData { s ->
+                        s.copy(uiState = FavoriteUiState.Empty)
+                    }
+                }
+
+                else -> {
+                    uiStateListener.updateData { s ->
+                        s.copy(uiState = FavoriteUiState.Error)
+                    }
+                }
+            }
+        }
+    }
+
+
+
     fun firstLoad() {
+        fetchFavoriteProducts()
         if (!state.isFirstLoad) {
             uiStateListener.value = state.copy(isFirstLoad = true, loadingPage = true)
             fetchFavoriteProductsHeader()
@@ -374,20 +433,34 @@ class FavoriteFlowViewModel @Inject constructor(
 
     fun navigateToCategories() = viewModelScope.launch {
         eventListener.emit(
-            FavoriteEvents.GoToCategories(dataState.categories, dataState.currentCategory)
+            FavoriteEvents.GoToCategories(
+                dataState.productsSection.categories,
+                dataState.currentCategory
+            )
         )
     }
 
-    fun showSortOptionsBottomSheet() = viewModelScope.launch {
-        TODO("Not yet implemented")
+    fun showSortBottomSheet() = viewModelScope.launch {
+        uiStateListener.updateData { s -> s.copy(showSortBottomSheet = true) }
     }
 
-    fun switchLayoutView() = viewModelScope.launch {
-        TODO("Not yet implemented")
+    fun hideSortBottomSheet() = viewModelScope.launch {
+        uiStateListener.updateData { s -> s.copy(showSortBottomSheet = false) }
     }
 
-    fun selectCategory(category: PopularCategoryUi) = viewModelScope.launch {
+
+    fun switchLayout() = viewModelScope.launch {
+        uiStateListener.updateData { s -> s.copy(isGridView = !s.isGridView) }
+    }
+
+    fun selectCategory(category: CategoryUi) = viewModelScope.launch {
         uiStateListener.updateData { s -> s.copy(currentCategory = category) }
+        fetchFavoriteProducts()
+    }
+
+    fun selectSort(sort: SortUi) = viewModelScope.launch {
+        uiStateListener.updateData { s -> s.copy(currentSort = sort, showSortBottomSheet = false) }
+        fetchFavoriteProducts()
     }
 
     sealed class FavoriteEvents : Event {
@@ -396,8 +469,8 @@ class FavoriteFlowViewModel @Inject constructor(
 
         data object GoToProfile : FavoriteEvents()
         data class GoToCategories(
-            val categories: List<PopularCategoryUi>,
-            val category: PopularCategoryUi,
+            val categories: List<CategoryUi>,
+            val category: CategoryUi,
         ) : FavoriteEvents()
     }
 
@@ -416,19 +489,13 @@ class FavoriteFlowViewModel @Inject constructor(
         val emptyMessage: String? = null,
         val scrollToTop: Boolean = false,
 
-        val categories: List<PopularCategoryUi> = listOf(
-            PopularCategoryUi(
-                "dwq",
-                "wdqdwq",
-                id = 23L
-            )
-        ),
         val productsSection: ProductsSectionUi = ProductsSectionUi.Empty,
         val currentSort: SortUi = SortUi.Empty,
-        val currentCategory: PopularCategoryUi = PopularCategoryUi.Empty,
-        val showSortOptionsBottomSheet: Boolean = false,
+        val currentCategory: CategoryUi = CategoryUi.Empty,
         val isGridView: Boolean = true,
+        val showSortBottomSheet: Boolean = false,
         val uiState: FavoriteUiState = FavoriteUiState.Success,
+        val pagedProducts: Flow<PagingData<ProductUi>> = emptyFlow(),
     ) : State
 
     sealed interface FavoriteUiState {

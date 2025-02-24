@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.vodovoz.app.design_system.composables.card.GridProductCard
+import com.vodovoz.app.domain.general.model.ButtonAction
 import com.vodovoz.app.feature.home.model.ProductUi
 import com.vodovoz.app.feature.home.model.SectionUi
 
@@ -14,7 +15,7 @@ import com.vodovoz.app.feature.home.model.SectionUi
 fun HomeHurryUpBuyProducts(
     modifier: Modifier = Modifier,
     sectionHurryUpBuyProducts: SectionUi<ProductUi>,
-    onShowAllClick: () -> Unit,
+    onShowAllClick: (ButtonAction) -> Unit,
     onProductClick: (ProductUi) -> Unit,
     onProductLike: (ProductUi) -> Unit,
 ) {
@@ -22,7 +23,7 @@ fun HomeHurryUpBuyProducts(
         TitleAndButton(
             title = sectionHurryUpBuyProducts.title,
             button = sectionHurryUpBuyProducts.button,
-            onShowAllClick = { onShowAllClick() }
+            onShowAllClick = { onShowAllClick(it) }
         )
 
         HomeRow(

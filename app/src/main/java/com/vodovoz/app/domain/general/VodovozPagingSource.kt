@@ -4,6 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.vodovoz.app.data.vodovoz_service.mappers.executeRequest
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.singleOrNull
 import retrofit2.Response
 
 class VodovozPagingSource<T : Any, R : Any>(
@@ -21,10 +22,10 @@ class VodovozPagingSource<T : Any, R : Any>(
             mapper = { body ->
                 mapper(body)
             }
-        ).firstOrNull() ?: return LoadResult.Error(NoSuchElementException("No elements received from the flow"))
+        ).singleOrNull() ?: return LoadResult.Error(NoSuchElementException("No elements received from the flow"))
 
         result.onSuccess { list ->
-            val nextKey = if (list.size < params.loadSize) null else page + 1
+            val nextKey = if (list.size < 2) null else page + 1
 
             return LoadResult.Page(
                 data = list,

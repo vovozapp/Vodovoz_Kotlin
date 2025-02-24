@@ -7,24 +7,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.vodovoz.app.design_system.model.PromotionUi
+import com.vodovoz.app.domain.general.model.ButtonAction
 import com.vodovoz.app.feature.home.model.SectionUi
 
 @Composable
 fun HomePromotions(
     modifier: Modifier = Modifier,
-    onShowAllClick: () -> Unit,
+    onShowAllClick: (ButtonAction) -> Unit,
     sectionPromotions: SectionUi<PromotionUi>,
     onPromotionClick: (PromotionUi) -> Unit,
 ) {
     val pagerState = rememberPagerState {
         sectionPromotions.items.count()
     }
+    val btn = sectionPromotions.button
 
     Column(modifier = modifier) {
         TitleAndButton(
             title = sectionPromotions.title,
             button = sectionPromotions.button,
-            onShowAllClick = { onShowAllClick() }
+            onShowAllClick = { buttonAction -> onShowAllClick(buttonAction) }
         )
 
         AuthScrollImagePager(
