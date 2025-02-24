@@ -13,9 +13,11 @@ import com.vodovoz.app.domain.general.VodovozPagingSource
 import com.vodovoz.app.domain.general.model.BannerModel
 import com.vodovoz.app.domain.general.model.CommentModel
 import com.vodovoz.app.domain.general.model.FavoriteNotFoundException
+import com.vodovoz.app.domain.general.model.FieldModel
 import com.vodovoz.app.domain.general.model.OrderWithMenuModel
 import com.vodovoz.app.domain.general.model.PopularCategoryModel
 import com.vodovoz.app.domain.general.model.PopupWindowInfoModel
+import com.vodovoz.app.domain.general.model.PreOrderSectionModel
 import com.vodovoz.app.domain.general.model.ProductCommentsInfoModel
 import com.vodovoz.app.domain.general.model.ProductDetailsScreenModel
 import com.vodovoz.app.domain.general.model.ProductModel
@@ -38,6 +40,29 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     private val vodovozService: VodovozService,
     private val accountManager: AccountManager,
 ) : VodovozServiceRepository {
+
+    override fun getPreorderFields(productId: Long): Flow<Result<PreOrderSectionModel>> {
+        return executeRequest(
+            request = {
+                val userId = accountManager.fetchAccountId() ?: -1L
+                vodovozService.getPreOrderFields(userId, productId)
+            },
+            mapper = {
+                it.data?.toDomain() ?: throw IllegalArgumentException("PreorderDTO can't be null")
+            }
+        )
+    }
+
+    override fun sendPreorder(productId: Long, fields: List<FieldModel>): Flow<Result<Unit>> {
+        return executeRequest(
+            request = {
+                val userId = accountManager.fetchAccountId() ?: -1L
+                val queries = fields.associate { it.id to it.value }
+                vodovozService.sendPreorder(userId, productId, queries)
+            },
+            mapper = {}
+        )
+    }
 
     override fun getFavoriteProducts(): Flow<Result<ProductsSectionModel>> = executeRequest(
         request = {

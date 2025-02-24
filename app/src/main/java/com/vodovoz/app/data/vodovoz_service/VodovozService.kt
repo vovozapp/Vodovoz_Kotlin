@@ -5,6 +5,7 @@ import com.vodovoz.app.data.vodovoz_service.model.BannerDTO
 import com.vodovoz.app.data.vodovoz_service.model.OrderMenuDTO
 import com.vodovoz.app.data.vodovoz_service.model.PopularCategoriesDTO
 import com.vodovoz.app.data.vodovoz_service.model.PopupWindowDTO
+import com.vodovoz.app.data.vodovoz_service.model.PreOrderDTO
 import com.vodovoz.app.data.vodovoz_service.model.PresentDTO
 import com.vodovoz.app.data.vodovoz_service.model.ProductCommentsDTO
 import com.vodovoz.app.data.vodovoz_service.model.ProductsSectionDTO
@@ -15,12 +16,29 @@ import com.vodovoz.app.data.vodovoz_service.model.StoriesDTO
 import com.vodovoz.app.data.vodovoz_service.model.SuperTopAndBottomSectionsDTO
 import com.vodovoz.app.data.vodovoz_service.model.VodovozResponseDTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.ProductDetailsDTO
+import com.vodovoz.app.domain.general.model.PreOrderSectionModel
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
+import retrofit2.http.QueryMap
 
 interface VodovozService {
 
+    /**
+     * PreOrder screen
+     * */
+    @GET("osnova/predzakaz.php?action=predzakaz")
+    suspend fun getPreOrderFields(
+        @Query("userid") userId: Long,
+        @Query("tovar") productId: Long,
+    ): Response<VodovozResponseDTO<PreOrderDTO>>
+
+    @GET("osnova/predzakaz.php?action=otpravka")
+    suspend fun sendPreorder(
+        @Query("userid") userId: Long,
+        @Query("tovar") productId: Long,
+        @QueryMap queries: Map<String, String>,
+    ): Response<Unit>
 
     /**
      * Cart requests
@@ -188,8 +206,6 @@ interface VodovozService {
         @Query("sort") sort: String = "",
         @Query("ascdesc") order: String = "",
     ): Response<VodovozResponseDTO<ProductsSectionDTO>>
-
-
 
 
 }

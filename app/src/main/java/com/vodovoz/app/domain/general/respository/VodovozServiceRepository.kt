@@ -3,9 +3,11 @@ package com.vodovoz.app.domain.general.respository
 import androidx.paging.PagingData
 import com.vodovoz.app.domain.general.model.BannerModel
 import com.vodovoz.app.domain.general.model.CommentModel
+import com.vodovoz.app.domain.general.model.FieldModel
 import com.vodovoz.app.domain.general.model.OrderWithMenuModel
 import com.vodovoz.app.domain.general.model.PopularCategoryModel
 import com.vodovoz.app.domain.general.model.PopupWindowInfoModel
+import com.vodovoz.app.domain.general.model.PreOrderSectionModel
 import com.vodovoz.app.domain.general.model.ProductCommentsInfoModel
 import com.vodovoz.app.domain.general.model.ProductDetailsScreenModel
 import com.vodovoz.app.domain.general.model.ProductModel
@@ -21,6 +23,10 @@ import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
 import kotlinx.coroutines.flow.Flow
 
 interface VodovozServiceRepository {
+
+    fun getPreorderFields(productId: Long): Flow<Result<PreOrderSectionModel>>
+
+    fun sendPreorder(productId: Long, fields: List<FieldModel>): Flow<Result<Unit>>
 
     fun getFavoriteProducts(): Flow<Result<ProductsSectionModel>>
 
