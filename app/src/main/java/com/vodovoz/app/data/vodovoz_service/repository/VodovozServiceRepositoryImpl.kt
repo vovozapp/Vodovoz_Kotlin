@@ -3,12 +3,14 @@ package com.vodovoz.app.data.vodovoz_service.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.squareup.moshi.Moshi
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.core.network.messageWithCode
 import com.vodovoz.app.data.vodovoz_service.VodovozService
 import com.vodovoz.app.data.vodovoz_service.mappers.executeRequest
 import com.vodovoz.app.data.vodovoz_service.mappers.mapToDomain
 import com.vodovoz.app.data.vodovoz_service.mappers.toDomain
+import com.vodovoz.app.data.vodovoz_service.model.PreOrderResponseDTO
 import com.vodovoz.app.domain.general.VodovozPagingSource
 import com.vodovoz.app.domain.general.model.BannerModel
 import com.vodovoz.app.domain.general.model.CommentModel
@@ -31,6 +33,7 @@ import com.vodovoz.app.domain.general.model.SectionPromotionsWithFiltersModel
 import com.vodovoz.app.domain.general.model.SortModel
 import com.vodovoz.app.domain.general.model.StoryModel
 import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
+import com.vodovoz.app.domain.general.model.ValidationException
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -53,14 +56,22 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         )
     }
 
-    override fun sendPreorder(productId: Long, fields: List<FieldModel>): Flow<Result<Unit>> {
+    override fun sendPreorder(productId: Long, fields: List<FieldModel>): Flow<Result<String>> {
         return executeRequest(
             request = {
                 val userId = accountManager.fetchAccountId() ?: -1L
-                val queries = fields.associate { it.id to it.value }
+                val queries = fields.filter { it.value.isNotEmpty() }.associate { it.id to it.value }
                 vodovozService.sendPreorder(userId, productId, queries)
             },
-            mapper = {}
+            mapper = { response -> response.message ?: "" },
+            onFail = { response ->
+                val moshi = Moshi.Builder().build()
+                val adapter = moshi.adapter(PreOrderResponseDTO::class.java)
+                val body = (response.errorBody() ?: response.raw().body)?.string() ?: ""
+                val responseBody = adapter.fromJson(body)
+
+                Result.failure(ValidationException(responseBody?.message ?: ""))
+            }
         )
     }
 

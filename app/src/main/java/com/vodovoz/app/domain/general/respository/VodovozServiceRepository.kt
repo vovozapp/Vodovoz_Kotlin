@@ -26,7 +26,7 @@ interface VodovozServiceRepository {
 
     fun getPreorderFields(productId: Long): Flow<Result<PreOrderSectionModel>>
 
-    fun sendPreorder(productId: Long, fields: List<FieldModel>): Flow<Result<Unit>>
+    fun sendPreorder(productId: Long, fields: List<FieldModel>): Flow<Result<String>>
 
     fun getFavoriteProducts(): Flow<Result<ProductsSectionModel>>
 

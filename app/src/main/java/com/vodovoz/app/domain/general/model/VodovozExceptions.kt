@@ -21,3 +21,10 @@ class FavoriteNotFoundException(
 ): IllegalStateException(
     message, cause
 )
+
+class ValidationException(
+    message: String = "",
+    cause: Throwable? = null
+): IllegalStateException(
+    message, cause
+)

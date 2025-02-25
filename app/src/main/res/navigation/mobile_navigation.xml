@@ -5,6 +5,9 @@
     android:id="@+id/dgraph_home"
     app:startDestination="@id/homeFragment">
     <!-- Todo change name -->
+
+
+
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.vodovoz.app.feature.home.HomeFragment"

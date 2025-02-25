@@ -1,14 +1,17 @@
 package com.vodovoz.app.data.vodovoz_service.model
 
+
 import com.squareup.moshi.Json
+import androidx.annotation.Keep
 import com.squareup.moshi.JsonClass
 
+@Keep
 @JsonClass(generateAdapter = true)
-data class VodovozResponseDTO<T>(
-    @Json(name = "status")
-    val status: String?,
+data class PreOrderResponseDTO(
     @Json(name = "message")
     val message: String?,
-    @Json(name = "data")
-    val data: T?
+    @Json(name = "status")
+    val status: String?,
+    @Json(name = "title")
+    val title: String?
 )

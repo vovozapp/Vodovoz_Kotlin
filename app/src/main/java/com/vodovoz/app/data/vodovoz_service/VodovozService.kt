@@ -6,6 +6,7 @@ import com.vodovoz.app.data.vodovoz_service.model.OrderMenuDTO
 import com.vodovoz.app.data.vodovoz_service.model.PopularCategoriesDTO
 import com.vodovoz.app.data.vodovoz_service.model.PopupWindowDTO
 import com.vodovoz.app.data.vodovoz_service.model.PreOrderDTO
+import com.vodovoz.app.data.vodovoz_service.model.PreOrderResponseDTO
 import com.vodovoz.app.data.vodovoz_service.model.PresentDTO
 import com.vodovoz.app.data.vodovoz_service.model.ProductCommentsDTO
 import com.vodovoz.app.data.vodovoz_service.model.ProductsSectionDTO
@@ -38,7 +39,7 @@ interface VodovozService {
         @Query("userid") userId: Long,
         @Query("tovar") productId: Long,
         @QueryMap queries: Map<String, String>,
-    ): Response<Unit>
+    ): Response<PreOrderResponseDTO>
 
     /**
      * Cart requests

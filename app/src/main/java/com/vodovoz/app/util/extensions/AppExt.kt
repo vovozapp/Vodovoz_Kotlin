@@ -16,7 +16,6 @@ import android.util.Base64
 import android.view.ContextThemeWrapper
 import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.EditText
 import android.widget.FrameLayout
@@ -31,8 +30,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.core.view.updateLayoutParams
-import androidx.core.view.updatePadding
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -66,6 +63,7 @@ fun Context.dipF(value: Int): Float = (value * resources.displayMetrics.density)
 fun Context.dipF(value: Float): Float = (value * resources.displayMetrics.density)
 fun Context.dip(value: Int): Int = dipF(value).toInt()
 fun Context.dip(value: Float): Int = dipF(value).toInt()
+
 //fun Context.sp(value: Int): Int = (value * resources.displayMetrics.scaledDensity).toInt()
 fun Context.dimen(@DimenRes resource: Int): Int = resources.getDimensionPixelSize(resource)
 
@@ -330,8 +328,7 @@ fun String.getColorWithAlpha(): Int {
 fun Activity.enableFullScreen() {
     WindowCompat.setDecorFitsSystemWindows(window, false)
     val insetsController = WindowCompat.getInsetsController(window, window.decorView)
-    insetsController.systemBarsBehavior =
-        WindowInsetsControllerCompat.BEHAVIOR_DEFAULT
+    insetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_DEFAULT
     //insetsController.hide(WindowInsetsCompat.Type.statusBars())
     insetsController.hide(WindowInsetsCompat.Type.navigationBars())
 }

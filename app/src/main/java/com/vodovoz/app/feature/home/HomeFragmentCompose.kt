@@ -103,6 +103,9 @@ class HomeFragment : Fragment() {
         observeTabReselect()
         observeUiState()
 
+        //todo - change
+        findNavController().navigate(R.id.preOrderFragment, bundleOf("productId" to 661L))
+
     }
 
     override fun onCreateView(

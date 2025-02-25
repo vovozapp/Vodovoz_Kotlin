@@ -12,5 +12,6 @@ data class FieldModel(
     val value: String,
     val valueType: String,
     val isRequired: Boolean,
-    val canEdit: Boolean,
+    val readOnly: Boolean,
+    val supportingText: String
 )

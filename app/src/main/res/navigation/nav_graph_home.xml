@@ -9,6 +9,7 @@
         android:id="@+id/homeFragment"
         android:name="com.vodovoz.app.feature.home.HomeFragment"
         android:label="fragment_home">
+
         <action
             android:id="@+id/action_to_rateBottomFragment"
             app:destination="@+id/rateBottomFragment" />
@@ -1027,6 +1028,16 @@
             android:defaultValue="-1L"
             app:argType="long" />
     </dialog>
+
+    <fragment
+        android:id="@+id/preOrderFragment"
+        android:name="com.vodovoz.app.feature.preorder.PreOrderFragment"
+        android:label="PreOrderFragment">
+        <argument
+            android:name="productId"
+            app:argType="long" />
+    </fragment>
+
     <dialog
         android:id="@+id/preOrderBS"
         android:name="com.vodovoz.app.feature.preorder.PreOrderBS"

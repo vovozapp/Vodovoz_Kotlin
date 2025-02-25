@@ -256,4 +256,6 @@
     <string name="product_not_found">Товар не найден</string>
     <string name="product_not_found_details">Перейдите в каталог и выберите необходимый товар</string>
 
+    <string name="error_message_send_failed">Не удалось отправить сообщение</string>
+
 </resources>

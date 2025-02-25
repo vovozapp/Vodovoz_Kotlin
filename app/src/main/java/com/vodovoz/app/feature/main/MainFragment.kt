@@ -12,6 +12,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -28,7 +29,8 @@ import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.common.update.AppUpdateController
 import com.vodovoz.app.core.navigation.setupWithNavController
 import com.vodovoz.app.databinding.FragmentMainBinding
-import com.vodovoz.app.feature.preorder.PreOrderBS
+import com.vodovoz.app.feature.home.HomeFragment
+import com.vodovoz.app.feature.preorder.PreOrderFragment
 import com.vodovoz.app.util.extensions.disableFullScreen
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -87,6 +89,7 @@ class MainFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         observeTabState()
         observeCartState()
         observeProfileState()

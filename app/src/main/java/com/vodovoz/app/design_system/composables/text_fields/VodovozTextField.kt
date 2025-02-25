@@ -1,5 +1,6 @@
 package com.vodovoz.app.design_system.composables.text_fields
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -14,6 +15,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -42,7 +44,7 @@ fun VodovozTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
-    singleLine: Boolean = false,
+    singleLine: Boolean = true,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     minLines: Int = 1,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
@@ -56,7 +58,7 @@ fun VodovozTextField(
         enabled = enabled,
         readOnly = readOnly,
         textStyle = textStyle,
-        cursorBrush = SolidColor(MaterialTheme.colorScheme.background),
+        cursorBrush = SolidColor(MaterialTheme.colorScheme.onBackground),
         visualTransformation = visualTransformation,
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
@@ -69,7 +71,7 @@ fun VodovozTextField(
             label?.let {
                 Text(
                     text = label,
-                    color = MaterialTheme.colorScheme.surfaceTint,
+                    color = if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceTint,
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.padding(bottom = 4.dp)
                 )
@@ -77,25 +79,26 @@ fun VodovozTextField(
             Box(
                 Modifier
                     .fillMaxWidth()
+                    .animateContentSize()
                     .heightIn(48.dp)
                     .border(
                         width = 1.dp,
-                        color = if (isFocused) MaterialTheme.colorScheme.primary else if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceVariant,
+                        color = if (isError) MaterialTheme.colorScheme.error else if (isFocused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
                         shape = MaterialTheme.shapes.medium
                     )
                     .padding(horizontal = 16.dp, vertical = 10.dp),
                 contentAlignment = Alignment.CenterStart
             ) {
                 if (value.isEmpty() && !isFocused) {
+
                     Text(
                         text = hint,
                         color = MaterialTheme.colorScheme.surfaceTint,
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier
                     )
-                } else {
-                    innerTextField()
                 }
+                innerTextField()
             }
             supportingText?.let {
                 Text(

@@ -5,6 +5,15 @@
     android:id="@+id/graph_cart"
     app:startDestination="@id/cartFragment">
 
+    <fragment
+        android:id="@+id/preOrderFragment"
+        android:name="com.vodovoz.app.feature.preorder.PreOrderFragment"
+        android:label="PreOrderFragment">
+        <argument
+            android:name="productId"
+            app:argType="long" />
+    </fragment>
+
     <fragment android:id="@+id/productsCollectionFragment"
         android:name="com.vodovoz.app.feature.products_collection.ProductsCollectionFragment"
         android:label="fragment_product_collection">
