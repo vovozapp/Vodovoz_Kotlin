@@ -46,9 +46,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks, E
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen().apply {
-            setKeepOnScreenCondition {
-                viewModel.isLoading.value
-            }
+            setKeepOnScreenCondition { viewModel.isLoading.value }
         }
         super.onCreate(savedInstanceState)
 

@@ -29,7 +29,8 @@ import com.vodovoz.app.domain.general.model.PromotionDetailsModel
 import com.vodovoz.app.domain.general.model.PromotionModel
 import com.vodovoz.app.domain.general.model.RequestException
 import com.vodovoz.app.domain.general.model.SectionModel
-import com.vodovoz.app.domain.general.model.SectionPromotionsWithFiltersModel
+import com.vodovoz.app.domain.general.model.PromotionsSectionModel
+import com.vodovoz.app.domain.general.model.SiteStateModel
 import com.vodovoz.app.domain.general.model.SortModel
 import com.vodovoz.app.domain.general.model.StoryModel
 import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
@@ -43,6 +44,17 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     private val vodovozService: VodovozService,
     private val accountManager: AccountManager,
 ) : VodovozServiceRepository {
+
+    override fun getSiteState(): Flow<Result<SiteStateModel>> {
+        return executeRequest(
+            request = {
+                vodovozService.getSiteState()
+            },
+            mapper = { response ->
+                response.toDomain()
+            }
+        )
+    }
 
     override fun getPreorderFields(productId: Long): Flow<Result<PreOrderSectionModel>> {
         return executeRequest(
@@ -235,7 +247,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         }
     )
 
-    override fun getPromotions(): Flow<Result<SectionPromotionsWithFiltersModel>> = executeRequest(
+    override fun getPromotions(): Flow<Result<PromotionsSectionModel>> = executeRequest(
         request = {
             vodovozService.getPromotions()
         },
@@ -278,7 +290,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     }
 
 
-    override fun getPromotionsWithSections(): Flow<Result<SectionPromotionsWithFiltersModel>> =
+    override fun getPromotionsWithSections(): Flow<Result<PromotionsSectionModel>> =
         executeRequest(
             request = { vodovozService.getPromotionsWithSections() },
             mapper = { response ->

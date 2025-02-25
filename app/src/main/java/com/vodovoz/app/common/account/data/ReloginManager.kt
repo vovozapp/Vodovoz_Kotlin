@@ -19,6 +19,7 @@ class ReloginManager @Inject constructor(
     private val repository: MainRepository,
     private val accountManager: AccountManager,
     private val cookieManager: CookieManager,
+    //private val vodovozService
 ) {
 
     private val _userReloginEnded = MutableStateFlow<ReloginState>(ReloginState.ReloginInitial)
@@ -35,6 +36,7 @@ class ReloginManager @Inject constructor(
                     _userReloginEnded.value = ReloginState.ReloginError(it.message.toString())
                 }.collect { reloginResponse ->
                     if (reloginResponse.isSuccessful) {
+                        val oldCookie = cookieManager.fetchCookieSessionId()
                         val userRelogin = reloginResponse.body() ?: UserReloginEntity(false)
                         debugLog { userRelogin.toString() }
                         if (userRelogin.isAuthorized) {

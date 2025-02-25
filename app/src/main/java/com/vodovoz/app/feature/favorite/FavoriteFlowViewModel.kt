@@ -103,8 +103,8 @@ class FavoriteFlowViewModel @Inject constructor(
                     }
                 )
             }
-        }.onFailure { error ->
-            when (error) {
+        }.onFailure { t ->
+            when (t) {
                 is FavoriteNotFoundException -> {
                     uiStateListener.updateData { s ->
                         s.copy(uiState = FavoriteUiState.Empty)

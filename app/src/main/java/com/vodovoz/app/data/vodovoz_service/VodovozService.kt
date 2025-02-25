@@ -1,5 +1,6 @@
 package com.vodovoz.app.data.vodovoz_service
 
+import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.data.vodovoz_service.model.AnalogsSectionDTO
 import com.vodovoz.app.data.vodovoz_service.model.BannerDTO
 import com.vodovoz.app.data.vodovoz_service.model.OrderMenuDTO
@@ -13,17 +14,47 @@ import com.vodovoz.app.data.vodovoz_service.model.ProductsSectionDTO
 import com.vodovoz.app.data.vodovoz_service.model.PromotionDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.PromotionsDTO
 import com.vodovoz.app.data.vodovoz_service.model.RAZDEL_DTO
+import com.vodovoz.app.data.vodovoz_service.model.RegistrationSectionDTO
+import com.vodovoz.app.data.vodovoz_service.model.SiteStateResponseDTO
 import com.vodovoz.app.data.vodovoz_service.model.StoriesDTO
 import com.vodovoz.app.data.vodovoz_service.model.SuperTopAndBottomSectionsDTO
 import com.vodovoz.app.data.vodovoz_service.model.VodovozResponseDTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.ProductDetailsDTO
-import com.vodovoz.app.domain.general.model.PreOrderSectionModel
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 import retrofit2.http.QueryMap
 
 interface VodovozService {
+
+
+    /**
+     * Login requests
+     * */
+    @GET("reg.php?action=glav")
+    suspend fun getRegisterFields(): Response<VodovozResponseDTO<RegistrationSectionDTO>>
+
+    @GET("reg.php?action=otpravka")
+    suspend fun register(
+        @Query("name") name: String,
+        @Query("lastname") lastName: String,
+        @Query("phone") phone: String,
+        @Query("email") email: String,
+        @Query("pass") code: Int,
+    ): Response<Unit>
+
+    //TODO - change return type
+    @GET("config/openuserid.php?&android=${BuildConfig.VERSION_NAME}")
+    suspend fun relogin(
+        @Query("userid") userId: Long,
+        @Query("token") token: String
+    ): Response<Unit>
+
+    /**
+     * Main requests
+     * */
+    @GET("config/closesait.php?action=saitosnova&android=${BuildConfig.VERSION_NAME}")
+    suspend fun getSiteState(): Response<SiteStateResponseDTO>
 
     /**
      * PreOrder screen
@@ -122,15 +153,45 @@ interface VodovozService {
         @Query("limit") limit: Int = 5,
     ): Response<VodovozResponseDTO<PromotionDetailsDTO>>
 
-
     /**
      * Home screen
      */
-    @GET("glavnaya/slayders/index.php?action=slayder")
-    suspend fun getBanners(): Response<VodovozResponseDTO<List<BannerDTO>>>
+    @GET("glavnaya/slayders/index.php?action=slayder&android=${BuildConfig.VERSION_NAME}")
+    suspend fun getBanners(
+    ): Response<VodovozResponseDTO<List<BannerDTO>>>
+
+    @GET("https://vodovoz.net/newmobile_new/glavnaya/slayders/index.php?action=detailaction&android=${BuildConfig.VERSION_NAME}")
+    suspend fun getBannersPromotions(
+        @Query("id") bannerId: Long,
+        @Query("nav") page: Int = 1,
+    )
+
+    @GET("https://vodovoz.net/newmobile_new/glavnaya/slayders/index.php?action=detailtovar&android=${BuildConfig.VERSION_NAME}")
+    suspend fun getBannersProducts(
+        @Query("id") bannerId: Long,
+        @Query("nav") page: Int = 1,
+        @Query("sect") categoryId: Int = -1,
+        @Query("sort") sort: String = "",
+        @Query("ascdesc") order: String = "",
+    )
 
     @GET("glavnaya/stories/index.php?iblock_id=12&action=stories&platforma=android")
     suspend fun getStories(): Response<VodovozResponseDTO<StoriesDTO>>
+
+    @GET("glavnaya/stories/index.php?iblock_id=12&action=storisdetailtovary&platforma=android")
+    suspend fun getStoriesProducts(
+        @Query("id") productsId: Long,
+        @Query("nav") page: Int = 1,
+        @Query("sect") categoryId: Int = -1,
+        @Query("sort") sort: String = "",
+        @Query("ascdesc") order: String = "",
+    ): Response<VodovozResponseDTO<ProductsSectionDTO>>
+
+    @GET("glavnaya/stories/index.php?iblock_id=12&action=storisdetailactions&platforma=android")
+    suspend fun getStoriesPromotions(
+        @Query("id") promotionsId: Long,
+        @Query("nav") page: Int = 1,
+    ): Response<VodovozResponseDTO<PromotionsDTO>>
 
     @GET("glavnaya/menushka.php?action=glavnaya")
     suspend fun getOrderMenu(
@@ -168,10 +229,10 @@ interface VodovozService {
         @Query("ascdesc") order: String = "",
     ): Response<VodovozResponseDTO<ProductsSectionDTO>>
 
-    @GET("glavnaya/novinki.php?new=specpredlosh")
+    @GET("glavnaya/novinki.php?new=specpredlosh&android=${BuildConfig.VERSION_NAME}")
     suspend fun getHurryUpBuyProducts(): Response<VodovozResponseDTO<RAZDEL_DTO>>
 
-    @GET("glavnaya/novinki.php?new=specpredlosh&detail=Y")
+    @GET("glavnaya/novinki.php?new=specpredlosh&detail=Y&android=${BuildConfig.VERSION_NAME}")
     suspend fun getAllHurryUpBuyProducts(
         @Query("nav") page: Int = 1,
         @Query("sect") categoryId: Int = -1,
@@ -191,7 +252,7 @@ interface VodovozService {
         @Query("ascdesc") order: String = "",
     ): Response<VodovozResponseDTO<ProductsSectionDTO>>
 
-    @GET("glavnaya/okno.php?action=okno")
+    @GET("glavnaya/okno.php?action=okno&android=${BuildConfig.VERSION_NAME}")
     suspend fun getPopupWindowInfo(
         @Query("userid") userId: Long,
     ): Response<VodovozResponseDTO<PopupWindowDTO>>
@@ -208,5 +269,10 @@ interface VodovozService {
         @Query("ascdesc") order: String = "",
     ): Response<VodovozResponseDTO<ProductsSectionDTO>>
 
+    @GET("izbrannoe.php?action=izbrannoe")
+    suspend fun addFavoriteProducts(
+        @Query("userid") userId: Long,
+        @Query("id") ids: String,
+    ): Response<VodovozResponseDTO<ProductsSectionDTO>>
 
 }

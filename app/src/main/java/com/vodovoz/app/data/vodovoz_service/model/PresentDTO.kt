@@ -9,7 +9,7 @@ data class PresentDTO(
     @Json(name = "PEREXOD")
     val PEREXOD: Any?,
     @Json(name = "POLOSKA")
-    val POLOSKA: POLOSKA?,
+    val POLOSKA: POLOSKA_DTO?,
     @Json(name = "SYMMAZAKAZA")
     val SYMMAZAKAZA: Any?,
     @Json(name = "TEXT")

@@ -3,15 +3,15 @@ package com.vodovoz.app.domain.general.model
 import java.time.ZonedDateTime
 
 
-data class SectionPromotionsWithFiltersModel(
+data class PromotionsSectionModel(
     val title: String,
-    val filters: List<PromotionFilterModel>,
+    val categories: List<PromotionCategoryModel>,
     val promotions: List<PromotionModel>,
     val button: ButtonModel?
 )
 
 
-data class PromotionFilterModel(
+data class PromotionCategoryModel(
     val id: Int,
     val name: String,
     val code: String,

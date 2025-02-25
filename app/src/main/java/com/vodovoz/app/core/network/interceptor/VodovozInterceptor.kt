@@ -15,6 +15,8 @@ class VodovozInterceptor @Inject constructor(
 
         debugLog { "LogSettings.NETWORK_LOG: ${chain.request()}" }
 
+        debugLog { "LogSettings.NETWORK_LOG: ${chain.request().headers.toString()}" }
+
         val builder = chain.request().newBuilder()
         cookieManager.fetchCookieSessionId()?.let { cookieSessionId ->
             debugLog { "Cookie added: $cookieSessionId" }

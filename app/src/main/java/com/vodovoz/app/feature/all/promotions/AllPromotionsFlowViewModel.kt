@@ -17,7 +17,10 @@ import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.design_system.model.AboutAdvertisingUi
 import com.vodovoz.app.design_system.model.PromotionCategoryUi
 import com.vodovoz.app.design_system.model.PromotionUi
+import com.vodovoz.app.design_system.model.mapToDomain
+import com.vodovoz.app.design_system.model.mapToUi
 import com.vodovoz.app.design_system.model.toUi
+import com.vodovoz.app.domain.general.model.PromotionsSectionModel
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.mapper.AllPromotionBundleMapper.mapToUI
 import com.vodovoz.app.ui.model.PromotionFilterUI
@@ -25,18 +28,15 @@ import com.vodovoz.app.ui.model.custom.AllPromotionBundleUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.singleOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -54,34 +54,45 @@ class AllPromotionsFlowViewModel @Inject constructor(
         ?: AllPromotionsFragment.DataSource.All
 
 
-    private fun loadAllPromotions() = vodovozServiceRepository.getPromotionsWithSections().onStart {
+    private fun fetchPromotions() = viewModelScope.launch {
         uiStateListener.updateData { s ->
             s.copy(uiState = UiState.Loading)
         }
-    }.onEach { promotionsWithSectionsModelResult ->
 
-        promotionsWithSectionsModelResult.onSuccess { promotionsWithSectionsModel ->
+        val sectionPromotions = with(dataState) {
+            if (categories.isEmpty() && title.isEmpty()) {
+                vodovozServiceRepository.getPromotionsWithSections().singleOrNull()?.getOrNull()
+            } else PromotionsSectionModel(title, categories.mapToDomain(), emptyList(), null)
+        }
+
+        if (sectionPromotions != null) {
             uiStateListener.updateData { s ->
-                val sections = promotionsWithSectionsModel.filters.toUi()
-                val promotions = vodovozServiceRepository.getPromotionsPaged()
+                val categories = sectionPromotions.categories.mapToUi()
+                val currentCategory =
+                    if (s.currentCategory == PromotionCategoryUi.Empty) (categories.firstOrNull()
+                        ?: PromotionCategoryUi.Empty) else s.currentCategory
+                val pagedPromotionsFlow = vodovozServiceRepository.getPromotionsPaged()
                     .map { pagingData ->
-                        pagingData.map { promotionModel -> promotionModel.toUi() }
+                        pagingData.map { promotionModel ->
+                            promotionModel.toUi()
+                        }.filter {
+                            it.categoryId == currentCategory.id || currentCategory.id == 0
+                        }
                     }
+                val title = sectionPromotions.title
 
                 s.copy(
-                    categories = sections,
-                    currentCategory = sections.firstOrNull() ?: PromotionCategoryUi.Empty,
-                    pagedPromotions = promotions,
-                    initialPagedPromotions = promotions,
+                    title = title,
+                    categories = categories,
+                    currentCategory = currentCategory,
+                    pagedPromotions = pagedPromotionsFlow,
                     uiState = UiState.Success
                 )
             }
-
-        }.onFailure {
+        } else {
             uiStateListener.updateData { s -> s.copy(uiState = UiState.Error) }
         }
-
-    }.take(1).launchIn(viewModelScope)
+    }
 
     //old method
     private fun fetchAllPromotions(filterChanged: Boolean = false) {
@@ -152,7 +163,7 @@ class AllPromotionsFlowViewModel @Inject constructor(
     }
 
     fun firstLoadSorted() {
-        loadAllPromotions()
+        fetchPromotions()
         if (!state.isFirstLoad) {
             uiStateListener.value =
                 state.copy(isFirstLoad = true, loadingPage = true)
@@ -173,18 +184,14 @@ class AllPromotionsFlowViewModel @Inject constructor(
         }
     }
 
-    fun selectSection(section: PromotionCategoryUi) = viewModelScope.launch {
-        if (section == uiStateListener.value.data.currentCategory) return@launch
+    fun selectSection(category: PromotionCategoryUi) = viewModelScope.launch {
+        if (category == dataState.currentCategory) return@launch
 
         eventListener.emit(AllPromotionsEvent.ScrollTop)
         uiStateListener.updateData { s ->
-            s.copy(
-                currentCategory = section,
-                pagedPromotions = s.initialPagedPromotions.map { pagingData ->
-                    pagingData.filter { it.sectionId == section.id || section.id == 0 }
-                }
-            )
+            s.copy(currentCategory = category)
         }
+        fetchPromotions()
     }
 
     fun closeAdvertisingBottomSheet() = viewModelScope.launch {
@@ -225,8 +232,8 @@ class AllPromotionsFlowViewModel @Inject constructor(
         val scrollToTop: Boolean = false,
         val categories: List<PromotionCategoryUi> = emptyList(),
         val currentCategory: PromotionCategoryUi = PromotionCategoryUi.Empty,
+        val title: String = "",
         val pagedPromotions: Flow<PagingData<PromotionUi>> = emptyFlow(),
-        val initialPagedPromotions: Flow<PagingData<PromotionUi>> = emptyFlow(),
         val showAdvertisingBottomSheet: Boolean = false,
         val currentAdvertising: AboutAdvertisingUi = AboutAdvertisingUi.Empty,
         val uiState: UiState = UiState.Loading,

@@ -4,10 +4,12 @@ import com.vodovoz.app.common.agreement.AgreementController
 import com.vodovoz.app.common.jivochat.JivoChatController
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.parser.common.safeString
+import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.sitestate.model.SiteStateResponse
 import com.vodovoz.app.util.extensions.debugLog
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.single
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -15,6 +17,7 @@ import javax.inject.Singleton
 @Singleton
 class SiteStateManager @Inject constructor(
     private val repository: MainRepository,
+    private val vodovozServiceRepository: VodovozServiceRepository,
 ) {
 
     var showRateBottom: Boolean? = null
@@ -31,14 +34,19 @@ class SiteStateManager @Inject constructor(
     suspend fun requestSiteState() {
         if (siteStateListener.value == null) {
             runCatching {
+                val siteState = vodovozServiceRepository.getSiteState().single().getOrThrow()
+                val siteAgreement = siteState.agreement
+                val jivoChat = siteState.jivoChat
+
+                //TODO - change to new api if all correctly
                 siteStateListener.value = repository.fetchSiteState()
                 AgreementController.setAgreement(
-                    text = siteStateListener.value?.agreement?.text,
-                    titles = siteStateListener.value?.agreement?.titles,
+                    text = siteAgreement.htmlText,
+                    titles = siteAgreement.titles,
                 )
                 JivoChatController.setParams(
-                    siteStateListener.value?.jivoChat?.active ?: false,
-                    siteStateListener.value?.jivoChat?.url ?: "",
+                    active = jivoChat.isActive,
+                    link = jivoChat.url,
                 )
             }.onFailure {
                 siteStateListener.value = null

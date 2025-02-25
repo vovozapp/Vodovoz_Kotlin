@@ -3,7 +3,7 @@ package com.vodovoz.app.design_system.model
 import androidx.compose.runtime.Immutable
 import com.vodovoz.app.domain.general.model.AboutAdvertisingModel
 import com.vodovoz.app.domain.general.model.PromotionDetailsModel
-import com.vodovoz.app.domain.general.model.PromotionFilterModel
+import com.vodovoz.app.domain.general.model.PromotionCategoryModel
 import com.vodovoz.app.domain.general.model.PromotionModel
 import com.vodovoz.app.domain.general.model.SpecialPromotionModel
 import com.vodovoz.app.feature.home.model.LabelWithColorUi
@@ -79,7 +79,7 @@ data class PromotionUi(
     val id: Long,
     val picture: String,
     val label: LabelWithColorUi?,
-    val sectionId: Int,
+    val categoryId: Int,
     val blockId: Int,
     val timeLeft: String,
     val name: String,
@@ -120,12 +120,26 @@ data class PromotionCategoryUi(
 }
 
 
+@JvmName("mapPromotionSectionListToDomain")
+fun List<PromotionCategoryUi>.mapToDomain(): List<PromotionCategoryModel> {
+    return map { promotionCategoryUi -> promotionCategoryUi.toDomain() }
+}
+
+fun PromotionCategoryUi.toDomain(): PromotionCategoryModel {
+    return PromotionCategoryModel(
+        id = id,
+        code = code,
+        name = name
+    )
+}
+
+
 @JvmName("mapPromotionSectionListToUi")
-fun List<PromotionFilterModel>.toUi(): List<PromotionCategoryUi> {
+fun List<PromotionCategoryModel>.mapToUi(): List<PromotionCategoryUi> {
     return map { it.toUi() }
 }
 
-fun PromotionFilterModel.toUi(): PromotionCategoryUi {
+fun PromotionCategoryModel.toUi(): PromotionCategoryUi {
     return PromotionCategoryUi(
         id = id,
         code = code,
@@ -148,7 +162,7 @@ fun PromotionModel.toUi(): PromotionUi {
         id = id,
         picture = detailPicture,
         label = label.toUi(),
-        sectionId = sectionId,
+        categoryId = sectionId,
         blockId = blockId,
         timeLeft = timeRemainingToEnd(endDate),
         name = name,

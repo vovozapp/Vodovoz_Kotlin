@@ -43,14 +43,15 @@ fun AllPromotionsScreen(
     ) {
         VodovozTopBar(
             onBack = { viewModel.navigateBack() },
-            title = stringResource(id = R.string.promotions)
+            title = viewState.title.ifEmpty { stringResource(id = R.string.promotions) }
         )
 
-        when(viewState.uiState){
+        when (viewState.uiState) {
             AllPromotionsFlowViewModel.UiState.Error -> {}
             AllPromotionsFlowViewModel.UiState.Loading -> {
                 PromotionsSkeletonPlaceholder()
             }
+
             AllPromotionsFlowViewModel.UiState.Success -> {
                 AllPromotionsBody(
                     categories = viewState.categories,

@@ -5,9 +5,9 @@ import com.squareup.moshi.Json
 import androidx.annotation.Keep
 
 @Keep
-data class POLOSKA(
+data class POLOSKA_DTO(
     @Json(name = "BACKROUND")
-    val T_BACKROUND: String?,
+    val BACKROUND: String?,
     @Json(name = "TEXTCOLOR")
-    val T_TEXTCOLOR: String?
+    val TEXTCOLOR: String?
 )

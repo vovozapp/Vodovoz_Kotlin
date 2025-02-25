@@ -16,13 +16,16 @@ import com.vodovoz.app.domain.general.model.ProductsTitle
 import com.vodovoz.app.domain.general.model.PromotionDetailsModel
 import com.vodovoz.app.domain.general.model.PromotionModel
 import com.vodovoz.app.domain.general.model.SectionModel
-import com.vodovoz.app.domain.general.model.SectionPromotionsWithFiltersModel
+import com.vodovoz.app.domain.general.model.PromotionsSectionModel
+import com.vodovoz.app.domain.general.model.SiteStateModel
 import com.vodovoz.app.domain.general.model.SortModel
 import com.vodovoz.app.domain.general.model.StoryModel
 import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
 import kotlinx.coroutines.flow.Flow
 
 interface VodovozServiceRepository {
+
+    fun getSiteState(): Flow<Result<SiteStateModel>>
 
     fun getPreorderFields(productId: Long): Flow<Result<PreOrderSectionModel>>
 
@@ -78,7 +81,7 @@ interface VodovozServiceRepository {
 
     fun getBanners(): Flow<Result<List<BannerModel>>>
 
-    fun getPromotions(): Flow<Result<SectionPromotionsWithFiltersModel>>
+    fun getPromotions(): Flow<Result<PromotionsSectionModel>>
 
     fun getPromotionDetails(
         promotionId: Int,
@@ -89,7 +92,7 @@ interface VodovozServiceRepository {
         limit: Int = 5,
     ): Flow<PagingData<ProductModel>>
 
-    fun getPromotionsWithSections(): Flow<Result<SectionPromotionsWithFiltersModel>>
+    fun getPromotionsWithSections(): Flow<Result<PromotionsSectionModel>>
 
     fun getPromotionsPaged(
         limit: Int = 10,
