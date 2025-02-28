@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material3.CircularProgressIndicator
@@ -118,7 +119,10 @@ fun ProductCommentsScreen(
             if (loadState.append is LoadState.Loading) {
                 item {
                     CircularProgressIndicator(
-                        modifier = Modifier.size(30.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentSize(align = Alignment.Center)
+                            .size(30.dp),
                         strokeWidth = 3.dp,
                         color = MaterialTheme.colorScheme.primary,
                         trackColor = Color.Transparent

@@ -40,6 +40,5 @@ class AddOrIncrementCartItemUseCase @Inject constructor(
         }
     }.catch { e ->
         emit(Result.failure(e))
-
     }
 }

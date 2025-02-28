@@ -11,11 +11,11 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dagger.multibindings.IntoSet
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -61,7 +61,13 @@ abstract class VodovozServiceModule {
         fun providesOkHttpClient(
             cookieHandlerInterceptor: CookieHandlerInterceptor,
         ): OkHttpClient {
-            return OkHttpClient.Builder().addInterceptor(cookieHandlerInterceptor).build()
+            return OkHttpClient.Builder()
+                .addInterceptor(cookieHandlerInterceptor)
+                .addInterceptor(HttpLoggingInterceptor())
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
+                .build()
         }
 
 

@@ -22,12 +22,10 @@ fun ProductDetailsScreen(
     viewState: ProductDetailsFlowViewModel.ProductDetailsState,
     viewModel: ProductDetailsFlowViewModel,
     onFloatingButtonChange: (Boolean) -> Unit,
-    onNavigateBack: () -> Unit,
     onLikeClick: () -> Unit,
     onShareClick: () -> Unit,
     onAllPropertiesShow: () -> Unit,
     onDetailPreviewTextShowOrHide: () -> Unit,
-    onProductImageClick: () -> Unit,
     onAddToCart: () -> Unit,
     onNavigateToCart: () -> Unit,
 ) {
@@ -36,7 +34,9 @@ fun ProductDetailsScreen(
     Scaffold(
         topBar = {
             ProductDetailTopBar(
-                onNavigationClick = onNavigateBack,
+                onNavigationClick = {
+                    viewModel.navigateBack()
+                },
                 onLikeClick = onLikeClick,
                 onShareClick = onShareClick,
                 isFavoriteProduct = productDetails.isFavorite
@@ -85,7 +85,7 @@ fun ProductDetailsScreen(
             onAllPropertiesShow = onAllPropertiesShow,
             onDetailPreviewTextShowOrHide = onDetailPreviewTextShowOrHide,
             onProductImageClick = {
-                onProductImageClick()
+                //TODO - make viewmodel func
             },
             onProductPlus = {
                 viewModel.incrementCart()
@@ -103,7 +103,9 @@ fun ProductDetailsScreen(
             onAnalogButtonClick = {
                 viewModel.navigateToProductsCollection()
             },
-            onPreOrderButtonClick = {},
+            onPreOrderButtonClick = {
+                viewModel.navigateToPreOrder()
+            },
             onPresentButtonClick = {
                 viewModel.showPresentBottomSheet()
             },
@@ -138,7 +140,6 @@ fun ProductDetailsScreen(
             },
             onPlus = {
                 viewModel.incrementCart()
-
             },
             onMinus = {
                 viewModel.decrementCart()

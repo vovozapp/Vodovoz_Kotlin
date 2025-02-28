@@ -12,13 +12,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
-import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
@@ -29,8 +30,7 @@ import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.common.update.AppUpdateController
 import com.vodovoz.app.core.navigation.setupWithNavController
 import com.vodovoz.app.databinding.FragmentMainBinding
-import com.vodovoz.app.feature.home.HomeFragment
-import com.vodovoz.app.feature.preorder.PreOrderFragment
+import com.vodovoz.app.feature.preorder.PreOrderFragmentDirections
 import com.vodovoz.app.util.extensions.disableFullScreen
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -227,8 +227,7 @@ class MainFragment : BaseFragment() {
     /**
      * Called on first creation and when restoring state.
      */
-    private fun setupBottomNavigationBar() {
-
+    private fun setupBottomNavigationBar() = lifecycleScope.launch {
         viewModel.isBottomBarInited = true
 
         val navGraphIds = listOfNotNull(

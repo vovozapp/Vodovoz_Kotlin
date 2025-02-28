@@ -31,7 +31,6 @@ import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowCon
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
-import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment1
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.SortTypeListUI
 import com.vodovoz.app.ui.model.SortTypeUI
@@ -277,17 +276,17 @@ class PastPurchasesFragment : BaseFragment() {
     }
 
     private fun observeResultLiveData() {
-        findNavController().currentBackStackEntry?.savedStateHandle
-            ?.getLiveData<Long>(PaginatedProductsCatalogWithoutFiltersFragment1.CATEGORY_ID)
-            ?.observe(viewLifecycleOwner) { categoryId ->
-                viewModel.onTabClick(categoryId)
-            }
+//        findNavController().currentBackStackEntry?.savedStateHandle
+//            ?.getLiveData<Long>(PaginatedProductsCatalogWithoutFiltersFragment1.CATEGORY_ID)
+//            ?.observe(viewLifecycleOwner) { categoryId ->
+//                viewModel.onTabClick(categoryId)
+//            }
 
-        findNavController().currentBackStackEntry?.savedStateHandle
-            ?.getLiveData<SortTypeUI>(PaginatedProductsCatalogWithoutFiltersFragment1.SORT_TYPE)
-            ?.observe(viewLifecycleOwner) { sortType ->
-                viewModel.updateBySortType(sortType)
-            }
+//        findNavController().currentBackStackEntry?.savedStateHandle
+//            ?.getLiveData<SortTypeUI>(PaginatedProductsCatalogWithoutFiltersFragment1.SORT_TYPE)
+//            ?.observe(viewLifecycleOwner) { sortType ->
+//                viewModel.updateBySortType(sortType)
+//            }
     }
 
     private fun getProductsClickListener(): ProductsClickListener {

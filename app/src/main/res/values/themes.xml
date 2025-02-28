@@ -9,6 +9,7 @@
         <item name="bottomSheetDialogTheme">@style/BottomSheetDialog</item>
         <item name="materialAlertDialogTheme">@style/AlertDialog</item>
         <item name="android:statusBarColor">@color/white</item>
+        <item name="popupMenuStyle">@style/Vodovoz.PopupMenu</item>
     </style>
 
     <style name="Theme.AppSplash" parent="Theme.SplashScreen">
@@ -17,6 +18,12 @@
         <item name="windowSplashScreenIconBackgroundColor">@android:color/transparent</item>
         <item name="windowSplashScreenAnimationDuration">0</item>
         <item name="postSplashScreenTheme">@style/Theme.Vodovoz</item>
+
+        <item name="popupMenuStyle">@style/Vodovoz.PopupMenu</item>
+    </style>
+
+    <style name="Vodovoz.PopupMenu" parent="android:Widget.Material.PopupMenu">
+        <item name="android:popupElevation">0dp</item>
     </style>
 
     <style name="Theme.Vodovoz.DarkStatusBar" parent="Theme.Vodovoz">

@@ -24,6 +24,7 @@ private val lightColors = lightColorScheme(
     background = white,
     surfaceVariant = grey,
     surface = lightGrey,
+    onSurface = lightDeepGrey,
     surfaceTint = deepGrey,
     error = red,
     tertiary = yellow,

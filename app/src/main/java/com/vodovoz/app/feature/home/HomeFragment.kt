@@ -719,11 +719,11 @@ class HomeFragment1 : BaseFragment() {
             }
 
             override fun showAllTopProducts(id: Long) {
-                findNavController().navigate(
-                    HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                        PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Slider(id)
-                    )
-                )
+//                findNavController().navigate(
+//                    HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+//                        PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Slider(id)
+//                    )
+//                )
             }
 
             override fun showAllNoveltiesProducts(id: Long) {
@@ -735,11 +735,11 @@ class HomeFragment1 : BaseFragment() {
             }
 
             override fun showAllBottomProducts(id: Long) {
-                findNavController().navigate(
-                    HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                        PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Slider(id)
-                    )
-                )
+//                findNavController().navigate(
+//                    HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+//                        PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Slider(id)
+//                    )
+//                )
             }
         }
     }
@@ -819,15 +819,15 @@ class HomeFragment1 : BaseFragment() {
                     }
 
                     SLIDER_TITLE -> {
-                        if (item.titleId != null) {
-                            findNavController().navigate(
-                                HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Slider(
-                                        item.titleId
-                                    )
-                                )
-                            )
-                        }
+//                        if (item.titleId != null) {
+//                            findNavController().navigate(
+//                                HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+//                                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Slider(
+//                                        item.titleId
+//                                    )
+//                                )
+//                            )
+//                        }
                     }
                 }
             }

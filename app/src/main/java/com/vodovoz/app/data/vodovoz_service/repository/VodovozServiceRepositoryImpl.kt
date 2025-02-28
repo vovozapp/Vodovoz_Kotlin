@@ -10,10 +10,12 @@ import com.vodovoz.app.data.vodovoz_service.VodovozService
 import com.vodovoz.app.data.vodovoz_service.mappers.executeRequest
 import com.vodovoz.app.data.vodovoz_service.mappers.mapToDomain
 import com.vodovoz.app.data.vodovoz_service.mappers.toDomain
+import com.vodovoz.app.data.vodovoz_service.model.ErrorMessageResponseDTO
 import com.vodovoz.app.data.vodovoz_service.model.PreOrderResponseDTO
 import com.vodovoz.app.domain.general.VodovozPagingSource
 import com.vodovoz.app.domain.general.model.BannerModel
 import com.vodovoz.app.domain.general.model.CommentModel
+import com.vodovoz.app.domain.general.model.EmptyResultException
 import com.vodovoz.app.domain.general.model.FavoriteNotFoundException
 import com.vodovoz.app.domain.general.model.FieldModel
 import com.vodovoz.app.domain.general.model.OrderWithMenuModel
@@ -27,9 +29,10 @@ import com.vodovoz.app.domain.general.model.ProductsSectionModel
 import com.vodovoz.app.domain.general.model.ProductsTitle
 import com.vodovoz.app.domain.general.model.PromotionDetailsModel
 import com.vodovoz.app.domain.general.model.PromotionModel
-import com.vodovoz.app.domain.general.model.RequestException
-import com.vodovoz.app.domain.general.model.SectionModel
 import com.vodovoz.app.domain.general.model.PromotionsSectionModel
+import com.vodovoz.app.domain.general.model.RequestException
+import com.vodovoz.app.domain.general.model.SearchRecommendationsModel
+import com.vodovoz.app.domain.general.model.SectionModel
 import com.vodovoz.app.domain.general.model.SiteStateModel
 import com.vodovoz.app.domain.general.model.SortModel
 import com.vodovoz.app.domain.general.model.StoryModel
@@ -44,6 +47,82 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     private val vodovozService: VodovozService,
     private val accountManager: AccountManager,
 ) : VodovozServiceRepository {
+
+
+    override fun getSearchProductsPaged(
+        query: String,
+        categoryId: Int,
+        sort: SortModel,
+    ): Flow<PagingData<ProductModel>> {
+        return Pager(
+            config = PagingConfig(pageSize = 5, initialLoadSize = 5),
+            pagingSourceFactory = {
+                VodovozPagingSource(
+                    request = { page, _ ->
+                        vodovozService.getSearchProducts(
+                            query = query,
+                            page = page,
+                            categoryId = if (categoryId == -1) null else categoryId,
+                            sort = sort.value,
+                            order = sort.order
+                        )
+                    },
+                    mapper = { response ->
+                        response.data?.TOVAR?.mapNotNull { product -> product.toDomain() }
+                            ?: throw IllegalArgumentException("Paged search products can't be null")
+                    }
+                )
+            }
+        ).flow
+    }
+
+    override fun getSearchProducts(query: String): Flow<Result<ProductsSectionModel>> {
+        return executeRequest(
+            request = {
+                vodovozService.getSearchProducts(query = query)
+            },
+            mapper = { response ->
+                response.data?.toDomain()!!
+            }
+        )
+    }
+
+    override fun getSearchRecommendations(): Flow<Result<SearchRecommendationsModel>> {
+        return executeRequest(
+            request = {
+                vodovozService.getSearchRecommendations()
+            },
+            mapper = { responseDTO ->
+                responseDTO.data?.toDomain()!!
+            }
+        )
+    }
+
+    override fun getMiniSearchRecommendations(query: String): Flow<Result<SearchRecommendationsModel>> {
+        return executeRequest(
+            request = {
+                vodovozService.getMiniSearchRecommendations(query)
+            },
+            mapper = { responseDTO ->
+                responseDTO.data?.toDomain()!!
+            },
+            onFail = { response ->
+                val moshi = Moshi.Builder().build()
+                val adapter = moshi.adapter(ErrorMessageResponseDTO::class.java)
+                val body = (response.errorBody() ?: response.raw().body)?.string() ?: ""
+                val errorMessageResponseDTO= adapter.fromJson(body)
+
+                val throwable = when (response.code()) {
+                    404 -> EmptyResultException(
+                        htmlText = errorMessageResponseDTO?.message ?: "",
+                        message = response.messageWithCode()
+                    )
+                    else -> RequestException(response.messageWithCode())
+                }
+                Result.failure(throwable)
+            }
+        )
+    }
 
     override fun getSiteState(): Flow<Result<SiteStateModel>> {
         return executeRequest(
@@ -72,7 +151,8 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         return executeRequest(
             request = {
                 val userId = accountManager.fetchAccountId() ?: -1L
-                val queries = fields.filter { it.value.isNotEmpty() }.associate { it.id to it.value }
+                val queries =
+                    fields.filter { it.value.isNotEmpty() }.associate { it.id to it.value }
                 vodovozService.sendPreorder(userId, productId, queries)
             },
             mapper = { response -> response.message ?: "" },
@@ -363,7 +443,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
             pagingSourceFactory = {
                 VodovozPagingSource(
                     request = { page, _ ->
-                        vodovozService.getAllHurryUpBuyProducts(
+                        vodovozService.getAllNewProducts(
                             page = page,
                             categoryId = categoryId,
                             sort = sort.value,

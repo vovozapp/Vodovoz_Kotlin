@@ -58,6 +58,9 @@ class PromotionDetailFlowViewModel @Inject constructor(
     }
 
     private fun loadData() {
+        uiStateListener.updateData { s ->
+            s.copy(uiState = UiState.Loading)
+        }
         vodovozServiceRepository.getPromotionDetails(promotionId)
             .onEach { promotionDetailsResult ->
                 promotionDetailsResult.onSuccess { titleAndPromotionDetails ->
@@ -74,8 +77,13 @@ class PromotionDetailFlowViewModel @Inject constructor(
                         s.copy(
                             promotionDetails = titleAndPromotionDetails.second.toUi(),
                             products = products,
-                            productsTitle = titleAndPromotionDetails.first.title
+                            productsTitle = titleAndPromotionDetails.first.title,
+                            uiState = UiState.Success
                         )
+                    }
+                }.onFailure {
+                    uiStateListener.updateData { s ->
+                        s.copy(uiState = UiState.Error)
                     }
                 }
             }.launchIn(viewModelScope)
@@ -164,7 +172,14 @@ class PromotionDetailFlowViewModel @Inject constructor(
         val promotionDetails: PromotionDetailsUi = PromotionDetailsUi.Empty,
         val productsTitle: String = "",
         val products: Flow<PagingData<ProductUi>> = emptyFlow(),
+        val uiState: UiState = UiState.Loading,
     ) : State
+
+    sealed interface UiState {
+        data object Loading : UiState
+        data object Error : UiState
+        data object Success : UiState
+    }
 
     sealed class PromotionDetailEvent : Event {
 

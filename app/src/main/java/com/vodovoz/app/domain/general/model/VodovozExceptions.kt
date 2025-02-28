@@ -28,3 +28,17 @@ class ValidationException(
 ): IllegalStateException(
     message, cause
 )
+
+class EmptyResultException(
+    val htmlText: String,
+    message: String = "",
+    cause: Throwable? = null
+): IllegalStateException(
+    message, cause
+)
+
+data class ErrorPlaceholder(
+    val title: String,
+    val text: String,
+    val image: String
+)

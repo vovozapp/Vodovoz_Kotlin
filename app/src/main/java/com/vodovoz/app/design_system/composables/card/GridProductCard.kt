@@ -34,6 +34,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.design_system.ExtendedTheme
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.button.QuantityButtonSmall
+import com.vodovoz.app.design_system.composables.button.VodovozButtonDefaults
 import com.vodovoz.app.design_system.composables.button.VodovozButtonSmall
 import com.vodovoz.app.design_system.composables.chip.VodovozColorChipSmall
 import com.vodovoz.app.feature.home.model.LabelWithColorUi
@@ -50,6 +51,7 @@ fun GridProductCard(
     product: ProductUi,
     onClick: (ProductUi) -> Unit,
     onLike: (ProductUi) -> Unit,
+    onAnalogsClick: (ProductUi) -> Unit = {},
 ) {
     val percentLabels =
         product.labels.filter { labelEntity -> labelEntity.name.any { s -> s == '%' } }
@@ -60,7 +62,7 @@ fun GridProductCard(
         contentPadding = PaddingValues(8.dp),
         onClick = { onClick(product) }
     ) {
-        Box {
+        Box(modifier = Modifier) {
             AsyncImage(
                 model = product.image,
                 contentDescription = null,
@@ -181,20 +183,33 @@ fun GridProductCard(
 
 
         val buttonIsLoading = product.cartLoading
-        if (buttonIsLoading || product.cartQuantity > 0) {
-            QuantityButtonSmall(
-                modifier = Modifier.padding(top = 8.dp),
-                isLoading = buttonIsLoading,
-                quantity = product.cartQuantity,
-                onPlus = { },
-                onMinus = { }
-            )
-        } else {
-            VodovozButtonSmall(
-                modifier = Modifier.padding(top = 8.dp),
-                text = stringResource(id = R.string.to_cart),
-                onClick = { onClick(product) },
-            )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        when {
+            !product.isAvailable -> {
+                VodovozButtonSmall(
+                    text = stringResource(id = R.string.analogs),
+                    onClick = { onAnalogsClick(product) },
+                    colors = VodovozButtonDefaults.secondaryColors()
+                )
+            }
+
+            product.cartQuantity > 0 -> {
+                QuantityButtonSmall(
+                    isLoading = buttonIsLoading,
+                    quantity = product.cartQuantity,
+                    onPlus = { },
+                    onMinus = { }
+                )
+            }
+
+            else -> {
+                VodovozButtonSmall(
+                    text = stringResource(id = R.string.to_cart),
+                    onClick = { onClick(product) },
+                )
+            }
         }
     }
 }
@@ -211,19 +226,19 @@ private fun GridProductCardPreview() {
             price = 2900009.99f,
             oldPrice = 349000000230.99f,
             name = "Смартфон Galaxy S21Смартфон Galaxy S21Смартфон Galaxy S21Смартфон Galaxy S21Смартфон Galaxy S21Смартфон Galaxy S21Смартфон Galaxy S21Смартфон Galaxy S21Смартфон Galaxy S21",
-            cartQuantity = 1,
+            cartQuantity = 0,
             cartLoading = false,
             image = "https://vodovoz.net/upload/iblock/9ed/ec5cfujet9sztz077mtdzofrzjqzn0zj.jpeg",
             labels = listOf(
                 LabelWithColorUi("Новинка", Color.Red),
                 LabelWithColorUi("Хит продаж", Color.Green)
             ),
-            isAvailable = true,
+            isAvailable = false,
             pricePerUnit = null,
             unitOfMeasurement = null
         )
 
-        GridProductCard(product = sampleProduct, onClick = {}, modifier = Modifier) {
+        GridProductCard(product = sampleProduct, onClick = {}, modifier = Modifier, onLike = {}) {
 
         }
     }

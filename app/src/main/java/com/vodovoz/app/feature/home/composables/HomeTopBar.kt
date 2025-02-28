@@ -1,4 +1,4 @@
-package com.vodovoz.app.design_system.composables.top_bar
+package com.vodovoz.app.feature.home.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -26,13 +25,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.vodovoz.app.R
-import com.vodovoz.app.design_system.VodovozTheme
 
 @Composable
-fun SearchTopBar(
+fun HomeTopBar(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
@@ -62,9 +59,10 @@ fun SearchTopBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(46.dp)
-                .background(MaterialTheme.colorScheme.surface, MaterialTheme.shapes.large),
+                .background(MaterialTheme.colorScheme.surface, MaterialTheme.shapes.large)
+                .clickable { onFocus() },
             singleLine = true,
-            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.onBackground),
             interactionSource = interactionSource,
             decorationBox = { innerTextField ->
                 Row(
@@ -119,22 +117,9 @@ fun SearchTopBar(
     }
 
     LaunchedEffect(isFocused) {
-        if (isFocused) onFocus()
+        if (isFocused) {
+            onFocus()
+        }
     }
 
-}
-
-@Preview
-@Composable
-private fun SearchTopBarPreview() {
-    VodovozTheme {
-        SearchTopBar(
-            value = "",
-            onValueChange = {},
-            onFocus = { },
-            onMicClick = {},
-            onScanClick = { /*TODO*/ },
-            onSearchClick = {}
-        )
-    }
 }

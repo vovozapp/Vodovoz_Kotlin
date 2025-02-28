@@ -28,7 +28,7 @@ data class SpecialPromotionUi(
 }
 
 
-fun SpecialPromotionModel.toDomain(): SpecialPromotionUi {
+fun SpecialPromotionModel.toUi(): SpecialPromotionUi {
     return SpecialPromotionUi(
         id = id,
         name = name,

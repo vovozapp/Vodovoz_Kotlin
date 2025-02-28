@@ -10,8 +10,10 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.vodovoz.app.feature.preorder.PreOrderFragmentDirections
 import com.vodovoz.app.ui.view.ExtendedBottomNavigationView
 import java.util.LinkedList
 
@@ -20,6 +22,15 @@ import java.util.LinkedList
  *
  * This sample is a workaround until the Navigation Component supports multiple back stacks.
  */
+
+fun NavController.tryNavigate(navDirections: NavDirections, updatedNavController: () -> NavController) {
+    kotlin.runCatching {
+        navigate(navDirections)
+    }.onFailure {
+        updatedNavController().tryNavigate(navDirections, updatedNavController)
+    }
+}
+
 fun ExtendedBottomNavigationView.setupWithNavController(
     navGraphIds: List<Int>,
     fragmentManager: FragmentManager,

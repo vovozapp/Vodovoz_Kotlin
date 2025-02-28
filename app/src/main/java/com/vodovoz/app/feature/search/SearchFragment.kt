@@ -46,7 +46,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SearchFragment : BaseFragment() {
+class SearchFragment1 : BaseFragment() {
 
     companion object {
         const val CATEGORY_ID = "CATEGORY_ID"
@@ -206,6 +206,7 @@ class SearchFragment : BaseFragment() {
                                 )
                             }
 
+                            else -> {}
                         }
                     }
             }

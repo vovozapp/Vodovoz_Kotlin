@@ -5,12 +5,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -68,42 +69,69 @@ fun BaseQuantityButton(
                 .fillMaxSize(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(Modifier.clickable {
-                if (!isLoading && minusEnabled) {
+
+            CounterButton(
+                painter = painterResource(id = R.drawable.ic_minus),
+                iconModifier = iconModifier,
+                enabled = minusEnabled,
+                isLoading = isLoading,
+                color = colors.contentColor,
+                disabledColor = colors.disabledContentColor,
+                onClick = {
                     onMinus()
                 }
-            }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_minus),
-                    contentDescription = null,
-                    modifier = iconModifier,
-                    tint = if (minusEnabled) {
-                        colors.contentColor
-                    } else colors.disabledContentColor
-                )
-            }
+            )
+
             Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
                 content()
             }
 
-            Box(Modifier.clickable {
-                if (!isLoading && plusEnabled) {
+            CounterButton(
+                painter = painterResource(id = R.drawable.ic_minus),
+                iconModifier = iconModifier,
+                enabled = plusEnabled,
+                isLoading = isLoading,
+                color = colors.contentColor,
+                disabledColor = colors.disabledContentColor,
+                onClick = {
                     onPlus()
                 }
-            }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_plus),
-                    contentDescription = null,
-                    modifier = iconModifier,
-                    tint = if (plusEnabled) {
-                        colors.contentColor
-                    } else colors.disabledContentColor
-
-                )
-            }
+            )
         }
     }
 
+}
+
+@Composable
+private fun CounterButton(
+    painter: Painter,
+    modifier: Modifier = Modifier,
+    iconModifier: Modifier = Modifier,
+    enabled: Boolean,
+    isLoading: Boolean,
+    color: Color,
+    disabledColor: Color,
+    onClick: () -> Unit,
+) {
+    Box(
+        modifier
+            .fillMaxHeight()
+            .clickable {
+                if (!isLoading && enabled) {
+                    onClick()
+                }
+            }, contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            painter = painter,
+            contentDescription = null,
+            modifier = iconModifier,
+            tint = if (enabled) {
+                color
+            } else disabledColor
+
+        )
+    }
 }
 
 @Composable
@@ -124,6 +152,7 @@ fun QuantityButtonSmall(
     ) {
         if (isLoading) {
             CircularProgressIndicator(
+                modifier = Modifier.size(18.dp),
                 color = MaterialTheme.colorScheme.background,
                 trackColor = Color.Transparent,
                 strokeWidth = 1.5.dp
@@ -160,7 +189,7 @@ fun ProductQuantityButton(
                 modifier = Modifier.size(24.dp),
                 color = MaterialTheme.colorScheme.background,
                 trackColor = Color.Transparent,
-                strokeWidth = 1.dp
+                strokeWidth = 1.5.dp
             )
         } else {
             Text(text = priceAnnotatedString, color = MaterialTheme.colorScheme.background)

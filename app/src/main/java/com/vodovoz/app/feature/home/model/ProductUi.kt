@@ -75,6 +75,13 @@ fun <E, E2> SectionModel<E>.toUi(
     )
 }
 
+fun SectionModel<ProductModel>.toUi(): SectionUi<ProductUi> {
+    return SectionUi(
+        title = title,
+        items = items.mapToUi(),
+        button = button?.toUi()
+    )
+}
 
 @Immutable
 data class ProductUi(

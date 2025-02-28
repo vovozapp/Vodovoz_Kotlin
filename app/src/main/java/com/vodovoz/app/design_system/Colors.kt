@@ -9,6 +9,7 @@ val blueDisable = Color(0xFF96D9FF)
 val greyBlue = Color(0xFFDCECF6)
 val lightBlue = Color(0xFFEEF8FE)
 
+val lightDeepGrey = Color(0xFFBCBECB)
 val white = Color(0xFFFFFFFF)
 val lightGrey = Color(0xFFF3F3F3)
 val grey = Color(0xFFEAEAEA)

@@ -23,6 +23,7 @@ import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
 import com.vodovoz.app.design_system.VodovozTheme
+import com.vodovoz.app.design_system.composables.placeholders.NetworkErrorPlaceholder
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
@@ -62,13 +63,26 @@ class PromotionDetailsFragment : Fragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.Default)
             setContent {
                 VodovozTheme {
-                    val viewState by viewModel.observeUiState().collectAsStateWithLifecycle()
+                    val pagingState by viewModel.observeUiState().collectAsStateWithLifecycle()
+                    val viewState = pagingState.data
 
-                    PromotionDetailsScreen(
-                        viewModel = viewModel,
-                        viewState = viewState.data,
-                        navController = navController
-                    )
+
+                    when(viewState.uiState){
+                        PromotionDetailFlowViewModel.UiState.Error -> {
+                            NetworkErrorPlaceholder(
+                                onTryAgainClick = {
+
+                                }
+                            )
+                        }
+                        else -> {
+                            PromotionDetailsScreen(
+                                viewModel = viewModel,
+                                viewState = viewState,
+                                navController = navController
+                            )
+                        }
+                    }
                 }
             }
         }

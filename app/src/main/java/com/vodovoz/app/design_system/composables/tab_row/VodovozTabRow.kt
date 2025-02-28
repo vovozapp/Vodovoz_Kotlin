@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import com.vodovoz.app.design_system.VodovozTheme
 import kotlinx.coroutines.delay
 
+
 @Composable
 fun VodovozTabRow(
     modifier: Modifier = Modifier,
@@ -69,30 +70,31 @@ fun VodovozTabRow(
                 layout(constraints.maxWidth, 0) {}
             }
 
-            val maxIntrinsicWidth = preMeasured.maxOf { it.width }
-            val maxItemHeight = preMeasured.maxOf { it.height }
             val spacingPx = tabSpacing.roundToPx()
-
+            val tabsWidth = preMeasured.map { placeable -> placeable.width }
             val totalSpacing = if (tabsCount > 1) (tabsCount - 1) * spacingPx else 0
+            val paddingWidth = (constraints.maxWidth - tabsWidth.sum() - totalSpacing) / tabsCount
+            val maxItemHeight = preMeasured.maxOf { it.height }
 
-            val totalMinWidth = tabsCount * maxIntrinsicWidth + totalSpacing
 
-            val finalTabWidth = if (totalMinWidth > constraints.maxWidth) {
-                (constraints.maxWidth - totalSpacing) / tabsCount
-            } else {
-                maxIntrinsicWidth + (constraints.maxWidth - totalMinWidth) / tabsCount
+            val tabPositions = tabsWidth.mapIndexed { index, tabWidth ->
+                val currentTabWidth = tabWidth + paddingWidth
+
+                val x = if (index == 0) 0
+                else tabsWidth.take(index).sum() + (spacingPx + paddingWidth) * index
+
+                TabPosition(
+                    left = x.toDp(),
+                    width = currentTabWidth.toDp(),
+                    contentWidth = Dp.Unspecified
+                )
             }
 
-            val tabPositions = List(tabsCount) { index ->
-                val x = index * (finalTabWidth + spacingPx)
-                TabPosition(x.toDp(), finalTabWidth.toDp(), contentWidth = Dp.Unspecified)
-            }
-
-            val tabPlaceables = subcompose("Tabs", tabItems).map { measurable ->
+            val tabPlaceables = subcompose("Tabs", tabItems).mapIndexed { index, measurable ->
                 measurable.measure(
                     constraints.copy(
-                        minWidth = finalTabWidth,
-                        maxWidth = finalTabWidth,
+                        minWidth = tabPositions[index].width.roundToPx(),
+                        maxWidth = tabPositions[index].width.roundToPx(),
                         minHeight = maxItemHeight,
                         maxHeight = maxItemHeight
                     )
@@ -114,21 +116,20 @@ fun VodovozTabRow(
                             )
                     )
                 }.forEach { measurable ->
-                    measurable.measure(Constraints.fixed(layoutWidth, maxItemHeight))
-                        .place(0, 0)
+                    measurable.measure(Constraints.fixed(layoutWidth, maxItemHeight)).place(0, 0)
                 }
 
-                var xPos = 0
                 tabPlaceables.forEachIndexed { index, placeable ->
-                    placeable.place(x = xPos, y = 0)
-                    xPos += finalTabWidth + spacingPx
+                    val currentTab = tabPositions[index]
+                    placeable.place(x = currentTab.left.roundToPx(), y = 0)
                 }
             }
         }
     }
 }
 
-fun Modifier.tabIndicator(
+
+private fun Modifier.tabIndicator(
     tabPosition: TabPosition,
     animationSpec: AnimationSpec<Dp>,
 ): Modifier = composed(
@@ -162,12 +163,12 @@ fun TabTitle(
     Text(
         text = title,
         Modifier
-            .wrapContentWidth(Alignment.CenterHorizontally)
-            .padding(vertical = 6.dp, horizontal = 9.dp)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
-            ) { onClick(position) },
+            ) { onClick(position) }
+            .wrapContentSize(Alignment.Center)
+            .padding(vertical = 6.dp),
         color = if (selected) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.surfaceTint,
         style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium),
         maxLines = 1,
@@ -182,7 +183,7 @@ private fun TabView() {
 
     VodovozTheme {
 
-        var selectedTabPosition by remember { mutableIntStateOf(0) }
+        var selectedTabPosition by remember { mutableIntStateOf(1) }
 
         val items = listOf(
             "Описание", "Характеристики", "Документы",

@@ -8,6 +8,8 @@ import androidx.paging.map
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.ErrorState
+import com.vodovoz.app.common.content.Event
+import com.vodovoz.app.common.content.PagingContractViewModel
 import com.vodovoz.app.common.content.PagingStateViewModel
 import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.itemadapter.Item
@@ -61,7 +63,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
     private val likeManager: LikeManager,
     private val ratingProductManager: RatingProductManager,
     private val vodovozServiceRepository: VodovozServiceRepository,
-) : PagingStateViewModel<ProductsListNoFilterFlowViewModel.ProductListNoFilterState>(
+) : PagingContractViewModel<ProductsListNoFilterFlowViewModel.ProductListNoFilterState, ProductsListNoFilterFlowViewModel.ProductListNoFilterEvent>(
     ProductListNoFilterState()
 ) {
 
@@ -70,7 +72,11 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
     private val changeLayoutManager = MutableStateFlow(LINEAR)
     fun observeChangeLayoutManager() = changeLayoutManager.asStateFlow()
 
-    private fun fetchProductListData() = viewModelScope.launch {
+    fun fetchProductListData() = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(uiState = UiState.Loading)
+        }
+
         val categoryId = dataState.currentCategory.id
         val sortModel = dataState.currentSort.toDomain()
 
@@ -96,11 +102,6 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
 
             is DataSource.Country -> {
                 TODO()
-
-            }
-
-            is DataSource.Slider -> {
-                TODO()
             }
 
             DataSource.HurryBuyUpProducts -> {
@@ -115,10 +116,6 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
                         )
                     }
                 )
-            }
-
-            DataSource.Missing -> {
-                TODO()
             }
 
             DataSource.NewProducts -> {
@@ -136,6 +133,30 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
             }
 
             DataSource.ViewedProducts -> {
+                TODO()
+            }
+
+            is DataSource.Products -> {
+                TODO()
+
+            }
+
+            is DataSource.Search -> {
+                fetchProductsData(
+                    fetchProductsSection = {
+                        vodovozServiceRepository.getSearchProducts(dataSource.query).single()
+                    },
+                    fetchPagedProductsFlow = {
+                        vodovozServiceRepository.getSearchProductsPaged(
+                            dataSource.query,
+                            categoryId,
+                            sortModel
+                        )
+                    }
+                )
+            }
+
+            DataSource.Missing -> {
                 TODO()
             }
         }
@@ -190,254 +211,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
         }
     }
 
-    private fun fetchHeaderByDataSource() {
-        viewModelScope.launch {
-            val dataSource = dataSource
-            flow {
-                when (dataSource) {
-                    is DataSource.Brand -> emit(repository.fetchBrandHeader(dataSource.brandId))
-                    is DataSource.Country -> emit(repository.fetchCountryHeader(dataSource.countryId))
-                    is DataSource.HurryBuyUpProducts -> emit(repository.fetchDiscountHeader())
-                    is DataSource.NewProducts -> emit(repository.fetchNoveltiesHeader())
-                    is DataSource.Slider -> emit(repository.fetchDoubleSliderHeader(dataSource.categoryId))
-                    is DataSource.ButtonProducts -> {
 
-                    }
-
-                    DataSource.ViewedProducts -> {
-
-                    }
-
-                    DataSource.Missing -> {
-
-                    }
-                }
-            }
-                .onEach { response ->
-                    if (response is ResponseEntity.Success) {
-                        val data = response.data.mapToUI()
-                        uiStateListener.value = state.copy(
-                            data = state.data.copy(
-                                categoryHeader = checkSelectedFilter(data),
-                                categoryId = data.id ?: -1,
-                                sortType = data.sortTypeList?.sortTypeList?.firstOrNull {
-                                    it.value == state.data.sortType.value && it.orientation == state.data.sortType.orientation
-                                } ?: SortTypeUI(sortName = "По популярности", value = "default")
-                            ),
-                            loadingPage = false,
-                            error = null
-                        )
-                    } else {
-                        uiStateListener.value =
-                            state.copy(loadingPage = false, error = ErrorState.Error())
-                    }
-                }
-                .flowOn(Dispatchers.Default)
-                .catch {
-                    debugLog { "fetch header error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
-                .collect()
-        }
-    }
-
-    private fun fetchProductsByDataSource() {
-        viewModelScope.launch {
-            val dataSource = dataSource ?: return@launch
-            flow {
-                when (dataSource) {
-                    is DataSource.Brand -> emit(
-                        repository.fetchProductsByBrand(
-                            brandId = dataSource.brandId,
-                            code = null,
-                            categoryId = when (state.data.selectedCategoryId) {
-                                -1L -> null
-                                else -> state.data.selectedCategoryId
-                            },
-                            sort = state.data.sortType.value,
-                            orientation = state.data.sortType.orientation,
-                            page = state.page
-                        )
-                    )
-
-                    is DataSource.Country -> emit(
-                        repository.fetchProductsByCountry(
-                            countryId = dataSource.countryId,
-                            categoryId = when (state.data.selectedCategoryId) {
-                                -1L -> null
-                                else -> state.data.selectedCategoryId
-                            },
-                            sort = state.data.sortType.value,
-                            orientation = state.data.sortType.orientation,
-                            page = state.page
-                        )
-                    )
-
-                    is DataSource.HurryBuyUpProducts -> emit(
-                        repository.fetchProductsByDiscount(
-                            categoryId = when (state.data.selectedCategoryId) {
-                                -1L -> null
-                                else -> state.data.selectedCategoryId
-                            },
-                            sort = state.data.sortType.value,
-                            orientation = state.data.sortType.orientation,
-                            page = state.page
-                        )
-                    )
-
-                    is DataSource.NewProducts -> emit(
-                        repository.fetchProductsByNovelties(
-                            categoryId = when (state.data.selectedCategoryId) {
-                                -1L -> null
-                                else -> state.data.selectedCategoryId
-                            },
-                            sort = state.data.sortType.value,
-                            orientation = state.data.sortType.orientation,
-                            page = state.page
-                        )
-                    )
-
-                    is DataSource.Slider -> {
-                        emit(
-                            repository.fetchProductsByDoubleSlider(
-                                categoryId = dataSource.categoryId,
-                                sectionId = when (state.data.selectedCategoryId) {
-                                    -1L -> null
-                                    else -> state.data.selectedCategoryId
-                                },
-                                sort = state.data.sortType.value,
-                                orientation = state.data.sortType.orientation,
-                                page = state.page
-                            )
-                        )
-                    }
-
-                    is DataSource.ButtonProducts -> {
-
-                    }
-
-                    DataSource.ViewedProducts -> {
-
-                    }
-
-                    DataSource.Missing -> TODO()
-                }
-            }
-                .onEach { response ->
-                    if (response is ResponseEntity.Success) {
-                        val data = response.data.mapToUI()
-                        val mappedFeed = FavoritesMapper.mapFavoritesListByManager(
-                            state.data.layoutManager,
-                            data
-                        )
-
-                        uiStateListener.value = if (data.isEmpty() && !state.loadMore) {
-                            state.copy(
-                                error = ErrorState.Empty(),
-                                loadingPage = false,
-                                loadMore = false,
-                                bottomItem = null,
-                                page = 1
-                            )
-                        } else {
-
-                            val itemsList = if (state.loadMore) {
-                                state.data.itemsList + mappedFeed
-                            } else {
-                                mappedFeed
-                            }
-
-                            state.copy(
-                                page = if (mappedFeed.isEmpty()) null else state.page?.plus(1),
-                                loadingPage = false,
-                                data = state.data.copy(
-                                    itemsList = itemsList,
-                                    scrollToTop = state.page == 1
-                                ),
-                                error = null,
-                                loadMore = false,
-                                bottomItem = null
-                            )
-                        }
-
-                    } else {
-                        uiStateListener.value =
-                            state.copy(
-                                loadingPage = false,
-                                error = ErrorState.Error(),
-                                page = 1,
-                                loadMore = false
-                            )
-                    }
-                }
-                .flowOn(Dispatchers.Default)
-                .catch {
-                    debugLog { "fetch products by data source sorted error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
-                .collect()
-        }
-    }
-
-    fun clearScrollState() {
-        uiStateListener.value = state.copy(data = state.data.copy(scrollToTop = false))
-    }
-
-    fun firstLoad() {
-        fetchProductListData()
-        if (!state.isFirstLoad) {
-            uiStateListener.value = state.copy(isFirstLoad = true, loadingPage = true)
-            fetchHeaderByDataSource()
-        }
-    }
-
-    fun refresh() {
-        uiStateListener.value = state.copy(loadingPage = true)
-        fetchHeaderByDataSource()
-    }
-
-    fun firstLoadSorted() {
-        if (!state.data.isFirstLoadSorted) {
-            uiStateListener.value =
-                state.copy(data = state.data.copy(isFirstLoadSorted = true), loadingPage = true)
-            fetchProductsByDataSource()
-        }
-    }
-
-    fun refreshSorted() {
-        uiStateListener.value =
-            state.copy(loadingPage = true, page = 1, loadMore = false, bottomItem = null)
-        fetchHeaderByDataSource()
-        fetchProductsByDataSource()
-    }
-
-    fun loadMoreSorted() {
-        if (state.bottomItem == null && state.page != null) {
-            uiStateListener.value = state.copy(
-                loadMore = true,
-                bottomItem = BottomProgressItem(),
-                data = state.data.copy(scrollToTop = false)
-            )
-            fetchProductsByDataSource()
-        }
-    }
-
-    fun changeLayoutManager() {
-        val manager = if (state.data.layoutManager == LINEAR) GRID else LINEAR
-        uiStateListener.value = state.copy(
-            data = state.data.copy(
-                layoutManager = manager, itemsList = FavoritesMapper.mapFavoritesListByManager(
-                    manager,
-                    state.data.itemsList.filterIsInstance<ProductUI>()
-                )
-            )
-        )
-        changeLayoutManager.value = manager
-    }
-
-    fun isLoginAlready() = accountManager.isAlreadyLogin()
 
     fun changeCart(productId: Long, quantity: Int, oldQuan: Int) {
         viewModelScope.launch {
@@ -455,75 +229,6 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
         viewModelScope.launch {
             ratingProductManager.rate(productId, rating = rating, oldRating = oldRating)
         }
-    }
-
-    fun updateByCat(categoryId: Long) {
-        val categoryUI = state.data.categoryHeader ?: return
-
-        uiStateListener.value = state.copy(
-            data = state.data.copy(
-                categoryHeader = categoryUI.copy(
-                    categoryUIList = categoryUI.categoryUIList.map { it.copy(isSelected = it.id == categoryId) }
-                ),
-                selectedCategoryId = categoryId,
-                sortType = SortTypeUI()
-            ),
-            page = 1,
-            loadMore = false,
-            loadingPage = true
-        )
-        fetchProductsByDataSource()
-    }
-
-    fun onTabClick(id: Long) {
-        val categoryUI = state.data.categoryHeader ?: return
-
-        uiStateListener.value = state.copy(
-            data = state.data.copy(
-                categoryHeader = categoryUI.copy(
-                    categoryUIList = categoryUI.categoryUIList.map { it.copy(isSelected = it.id == id) }
-                ),
-                selectedCategoryId = id,
-            ),
-            page = 1,
-            loadMore = false
-        )
-        fetchProductsByDataSource()
-    }
-
-    fun updateBySortType(sortType: SortTypeUI) {
-        if (state.data.sortType == sortType) return
-        val categoryUI = state.data.categoryHeader
-        uiStateListener.value = state.copy(
-            data = state.data.copy(
-                sortType = sortType,
-                categoryHeader = categoryUI?.copy(
-                    categoryUIList = categoryUI.categoryUIList.map { it.copy(isSelected = it.id == -1L) }
-                ),
-                scrollToTop = true,
-            ),
-            page = 1,
-            loadMore = false,
-            loadingPage = true
-        )
-        fetchProductsByDataSource()
-    }
-
-    private fun checkSelectedFilter(categoryUI: CategoryUI?): CategoryUI? {
-        if (categoryUI == null) return null
-
-        if (categoryUI.categoryUIList.isNotEmpty()) {
-            categoryUI.categoryUIList = categoryUI.categoryUIList.toMutableList().apply {
-                add(
-                    0, CategoryUI(
-                        id = -1,
-                        name = "Все",
-                        isSelected = true
-                    )
-                )
-            }
-        }
-        return categoryUI
     }
 
     fun selectSort(sort: SortUi) = viewModelScope.launch {
@@ -553,6 +258,10 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
         fetchProductListData()
     }
 
+    fun navigateBack() = viewModelScope.launch {
+        eventListener.emit(ProductListNoFilterEvent.GoBack)
+    }
+
     @Immutable
     data class ProductListNoFilterState(
         val categoryId: Long = -1,
@@ -577,6 +286,10 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
         data object Error : UiState
         data object Loading : UiState
         data object Success : UiState
+    }
+
+    sealed class ProductListNoFilterEvent: Event {
+        data object GoBack: ProductListNoFilterEvent()
     }
 
     companion object {

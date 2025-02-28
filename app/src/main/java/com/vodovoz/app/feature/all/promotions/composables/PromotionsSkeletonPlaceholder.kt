@@ -10,11 +10,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.vodovoz.app.design_system.composables.decoration.SkeletonBox
+import kotlin.random.Random
+import kotlin.random.nextInt
 
 @Composable
 fun PromotionsSkeletonPlaceholder(modifier: Modifier = Modifier) {
@@ -25,10 +28,15 @@ fun PromotionsSkeletonPlaceholder(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             repeat(6) {
+
+                val width = rememberSaveable {
+                    Random.nextInt(70..130)
+                }
+
                 SkeletonBox(
                     shimmerState = shimmerState,
                     modifier = Modifier
-                        .width(80.dp)
+                        .width(width.dp)
                         .height(30.dp)
                 )
             }

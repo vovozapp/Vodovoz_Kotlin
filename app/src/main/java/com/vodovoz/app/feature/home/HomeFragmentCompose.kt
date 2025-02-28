@@ -51,6 +51,7 @@ import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.ui.model.PopupNewsUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -102,10 +103,6 @@ class HomeFragment : Fragment() {
         observeEvents()
         observeTabReselect()
         observeUiState()
-
-        //todo - change
-        findNavController().navigate(R.id.preOrderFragment, bundleOf("productId" to 661L))
-
     }
 
     override fun onCreateView(
@@ -120,19 +117,11 @@ class HomeFragment : Fragment() {
                     val viewState by flowViewModel.observeUiState().collectAsStateWithLifecycle()
 
                     when (viewState.data.uiState) {
-                        HomeFlowViewModel.HomeUiState.Loading -> {
-                            HomeSkeletonPlaceholder(
-                                onScanClick = {
-                                    navigateToQrCodeFragment()
-                                }
-                            )
-                        }
-
                         HomeFlowViewModel.HomeUiState.NetworkError -> {
                             NetworkErrorPlaceholder(onTryAgainClick = { flowViewModel.refresh() })
                         }
 
-                        HomeFlowViewModel.HomeUiState.Success -> {
+                        else -> {
                             HomeScreen(
                                 viewState = viewState.data,
                                 viewModel = flowViewModel,
@@ -312,6 +301,8 @@ class HomeFragment : Fragment() {
                             if (findNavController().currentBackStackEntry?.destination?.id == R.id.preOrderBS) {
                                 findNavController().popBackStack()
                             }
+
+
                             findNavController().navigate(
                                 HomeFragmentDirections.actionToPreOrderBS(
                                     event.id,
@@ -380,6 +371,12 @@ class HomeFragment : Fragment() {
                                         )
                                     )
                                 }
+                            )
+                        }
+
+                        HomeFlowViewModel.HomeEvents.GoToSearch -> {
+                            findNavController().navigate(
+                                HomeFragmentDirections.actionToSearchFragment("")
                             )
                         }
                     }

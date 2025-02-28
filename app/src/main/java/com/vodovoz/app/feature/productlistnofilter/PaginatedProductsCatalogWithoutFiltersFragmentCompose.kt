@@ -24,6 +24,7 @@ import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
 import com.vodovoz.app.design_system.VodovozTheme
+import com.vodovoz.app.design_system.effects.LifecycleEffect
 import com.vodovoz.app.ui.model.CategoryUI
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.parcelize.Parcelize
@@ -45,8 +46,7 @@ class PaginatedProductsCatalogWithoutFiltersFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.firstLoad()
-        viewModel.firstLoadSorted()
+        viewModel.fetchProductListData()
     }
 
 
@@ -66,6 +66,16 @@ class PaginatedProductsCatalogWithoutFiltersFragment : Fragment() {
                         viewModel = viewModel,
                         viewState = viewStateData
                     )
+
+                    LifecycleEffect {
+                        viewModel.observeEvent().collect { event ->
+                            when (event) {
+                                ProductsListNoFilterFlowViewModel.ProductListNoFilterEvent.GoBack -> {
+                                    findNavController().popBackStack()
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -156,13 +166,16 @@ class PaginatedProductsCatalogWithoutFiltersFragment : Fragment() {
         data object ViewedProducts : DataSource()
 
         @Parcelize
-        data class ButtonProducts(val buttonId: Int): DataSource()
+        data class ButtonProducts(val buttonId: Int) : DataSource()
 
         @Parcelize
-        class Slider(val categoryId: Long) : DataSource()
+        data class Products(val groupId: Int, val blockId: Int) : DataSource()
 
         @Parcelize
-        data object Missing: DataSource()
+        data class Search(val query: String) : DataSource()
+
+        @Parcelize
+        data object Missing : DataSource()
     }
 
 }

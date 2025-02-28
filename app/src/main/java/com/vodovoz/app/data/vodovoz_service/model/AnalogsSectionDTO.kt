@@ -14,6 +14,8 @@ class AnalogsSectionDTO(
 class ProductsSectionDTO(
     @Json(name = "COUNT")
     val COUNT: Int? = null,
+    @Json(name = "TOVARVSEGO")
+    val TOVARVSEGO: String? = null,
     @Json(name = "STRANIC")
     val STRANIC: Int? = null,
     @Json(name = "TITLE")
@@ -24,7 +26,9 @@ class ProductsSectionDTO(
     val RAZDEL: CategoriesDTO? = null,
     @Json(name = "DATA")
     val DATA: List<TOVAR_DATA_DTO>? = null,
-    @Json(name = "__PODELITCA")
+    @Json(name = "TOVAR")
+    val TOVAR: List<TOVAR_DATA_DTO>? = null,
+    @Json(name = "PODELITCA")
     val PODELITCA: PODELITCA_DTO? = null,
 )
 
@@ -32,7 +36,7 @@ class CategoriesDTO(
     @Json(name = "LISTRAZDEL")
     val LISTRAZDEL: List<CATEGORY_DTO?>?,
     @Json(name = "TITLERAZDEL")
-    val TITLERAZDEL: String?
+    val TITLERAZDEL: String?,
 )
 
 class PODELITCA_DTO(

@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -35,6 +36,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.design_system.ExtendedTheme
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.button.QuantityButtonSmall
+import com.vodovoz.app.design_system.composables.button.VodovozButtonDefaults
 import com.vodovoz.app.design_system.composables.button.VodovozButtonSmall
 import com.vodovoz.app.design_system.composables.chip.VodovozColorChipSmall
 import com.vodovoz.app.feature.home.model.LabelWithColorUi
@@ -50,6 +52,7 @@ fun LinearProductCard(
     product: ProductUi,
     onClick: (ProductUi) -> Unit,
     onLike: (ProductUi) -> Unit,
+    onAnalogsClick: (ProductUi) -> Unit = {},
 ) {
     val percentLabels =
         product.labels.filter { labelEntity -> labelEntity.name.any { s -> s == '%' } }
@@ -206,18 +209,29 @@ fun LinearProductCard(
                 Spacer(modifier = Modifier.weight(1f))
 
                 val buttonIsLoading = product.cartLoading
-                if (buttonIsLoading || product.cartQuantity > 0) {
-                    QuantityButtonSmall(
-                        isLoading = buttonIsLoading,
-                        quantity = product.cartQuantity,
-                        onPlus = { },
-                        onMinus = { }
-                    )
-                } else {
-                    VodovozButtonSmall(
-                        text = stringResource(id = R.string.to_cart),
-                        onClick = { onClick(product) },
-                    )
+
+                when{
+                    !product.isAvailable -> {
+                        VodovozButtonSmall(
+                            text = stringResource(id = R.string.analogs),
+                            onClick = { onAnalogsClick(product) },
+                            colors = VodovozButtonDefaults.secondaryColors()
+                        )
+                    }
+                    product.cartQuantity > 0 -> {
+                        QuantityButtonSmall(
+                            isLoading = buttonIsLoading,
+                            quantity = product.cartQuantity,
+                            onPlus = { },
+                            onMinus = { }
+                        )
+                    }
+                    else -> {
+                        VodovozButtonSmall(
+                            text = stringResource(id = R.string.to_cart),
+                            onClick = { onClick(product) },
+                        )
+                    }
                 }
             }
         }
@@ -248,8 +262,6 @@ private fun LinearProductCardPreview() {
         )
 
 
-        LinearProductCard(product = sampleProduct, onClick = {}) {
-
-        }
+        LinearProductCard(product = sampleProduct, onClick = {}, onLike = {})
     }
 }

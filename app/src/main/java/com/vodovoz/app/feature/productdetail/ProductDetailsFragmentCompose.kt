@@ -15,6 +15,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.vodovoz.app.R
@@ -25,6 +26,7 @@ import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.placeholders.LoadingPlaceholder
+import com.vodovoz.app.design_system.composables.placeholders.ProductNotFoundPlaceholder
 import com.vodovoz.app.feature.replacement.ReplacementProductsSelectionBS
 import com.vodovoz.app.util.extensions.shareText
 import dagger.hilt.android.AndroidEntryPoint
@@ -74,14 +76,26 @@ class ProductDetailsFragment : Fragment() {
 
                     when (viewState.uiState) {
                         ProductDetailsFlowViewModel.UiState.Loading -> {
+                            ProductNotFoundPlaceholder(
+                                onBack = {
+                                    viewModel.navigateBack()
+                                },
+                                haveArrow = true
+                            )
                             LoadingPlaceholder()
                         }
 
                         ProductDetailsFlowViewModel.UiState.ProductNotFound -> {
-
+                            ProductNotFoundPlaceholder(
+                                onBack = {
+                                    viewModel.navigateBack()
+                                },
+                                haveArrow = true
+                            )
                         }
 
                         ProductDetailsFlowViewModel.UiState.Success -> {
+
                             ProductDetailsScreen(
                                 viewState = viewState,
                                 viewModel = viewModel,
@@ -93,12 +107,6 @@ class ProductDetailsFragment : Fragment() {
                                 },
                                 onAllPropertiesShow = {
                                     viewModel.showAllProperties()
-                                },
-                                onProductImageClick = {
-                                    //todo - navigate to image
-                                },
-                                onNavigateBack = {
-                                    findNavController().navigateUp()
                                 },
                                 onShareClick = {
                                     shareText(productDetails.shareUrl)
@@ -178,15 +186,15 @@ class ProductDetailsFragment : Fragment() {
                     .collect { event ->
                         when (event) {
                             is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToPreOrder -> {
-                                if (findNavController().currentBackStackEntry?.destination?.id == R.id.preOrderBS) {
-                                    findNavController().popBackStack()
-                                }
                                 findNavController().navigate(
-                                    ProductDetailsFragmentDirections.actionToPreOrderBS(
-                                        event.id,
-                                        event.name,
-                                        event.detailPicture
-                                    )
+                                    R.id.preOrderFragment,
+                                    bundleOf("productId" to event.id),
+                                    NavOptions.Builder()
+                                        .setEnterAnim(R.anim.slide_in_botton)
+                                        .setExitAnim(R.anim.slide_out_botton)
+                                        .setPopEnterAnim(R.anim.slide_in_botton)
+                                        .setPopExitAnim(R.anim.slide_out_botton)
+                                        .build()
                                 )
                             }
 
@@ -227,11 +235,21 @@ class ProductDetailsFragment : Fragment() {
                             }
 
                             is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToProductComments -> {
-                                findNavController().navigate(R.id.productCommentsFragment, bundleOf("productId" to event.productId))
+                                findNavController().navigate(
+                                    R.id.productCommentsFragment,
+                                    bundleOf("productId" to event.productId)
+                                )
                             }
 
                             is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToProductsCollection -> {
-                                findNavController().navigate(R.id.productsCollectionFragment, bundleOf("productId" to event.productId))
+                                findNavController().navigate(
+                                    R.id.productsCollectionFragment,
+                                    bundleOf("productId" to event.productId)
+                                )
+                            }
+
+                            ProductDetailsFlowViewModel.ProductDetailsEvents.GoBack -> {
+                                findNavController().popBackStack()
                             }
                         }
                     }

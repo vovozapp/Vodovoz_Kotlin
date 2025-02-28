@@ -15,8 +15,9 @@ import com.vodovoz.app.domain.general.model.ProductsSectionModel
 import com.vodovoz.app.domain.general.model.ProductsTitle
 import com.vodovoz.app.domain.general.model.PromotionDetailsModel
 import com.vodovoz.app.domain.general.model.PromotionModel
-import com.vodovoz.app.domain.general.model.SectionModel
 import com.vodovoz.app.domain.general.model.PromotionsSectionModel
+import com.vodovoz.app.domain.general.model.SearchRecommendationsModel
+import com.vodovoz.app.domain.general.model.SectionModel
 import com.vodovoz.app.domain.general.model.SiteStateModel
 import com.vodovoz.app.domain.general.model.SortModel
 import com.vodovoz.app.domain.general.model.StoryModel
@@ -24,6 +25,18 @@ import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
 import kotlinx.coroutines.flow.Flow
 
 interface VodovozServiceRepository {
+
+    fun getSearchProductsPaged(
+        query: String,
+        categoryId: Int = -1,
+        sort: SortModel = SortModel.Empty,
+    ): Flow<PagingData<ProductModel>>
+
+    fun getSearchProducts(query: String, ): Flow<Result<ProductsSectionModel>>
+
+    fun getSearchRecommendations(): Flow<Result<SearchRecommendationsModel>>
+
+    fun getMiniSearchRecommendations(query: String): Flow<Result<SearchRecommendationsModel>>
 
     fun getSiteState(): Flow<Result<SiteStateModel>>
 

@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.search
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
@@ -10,6 +11,7 @@ import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
 import com.vodovoz.app.common.content.toErrorState
+import com.vodovoz.app.common.content.updateData
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.search.SearchManager
@@ -18,7 +20,13 @@ import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.common.SearchQueryHeaderResponse
 import com.vodovoz.app.data.model.common.SearchQueryResponse
+import com.vodovoz.app.domain.general.model.EmptyResultException
+import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
+import com.vodovoz.app.feature.home.model.ProductUi
+import com.vodovoz.app.feature.home.model.SectionUi
+import com.vodovoz.app.feature.home.model.toUi
+import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.mapper.CategoryMapper.mapToUI
 import com.vodovoz.app.mapper.DefaultSearchDataBundleMapper.mapToUI
 import com.vodovoz.app.mapper.ProductMapper.mapToUI
@@ -28,9 +36,11 @@ import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.ui.model.SortTypeUI
 import com.vodovoz.app.ui.model.custom.QuickQueryBundleUI
+import com.vodovoz.app.util.extensions.debounceWithMax
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,8 +52,13 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.singleOrNull
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
@@ -55,6 +70,7 @@ class SearchFlowViewModel @Inject constructor(
     private val ratingProductManager: RatingProductManager,
     private val accountManager: AccountManager,
     private val searchManager: SearchManager,
+    private val vodovozServiceRepository: VodovozServiceRepository,
 ) : PagingContractViewModel<SearchFlowViewModel.SearchState, SearchFlowViewModel.SearchEvents>(
     SearchState()
 ) {
@@ -65,23 +81,141 @@ class SearchFlowViewModel @Inject constructor(
     private val noMatchesToastListener = MutableSharedFlow<Boolean>()
     fun observeNoMatchesToast() = noMatchesToastListener.asSharedFlow()
 
+    private val queryStateFlow = MutableStateFlow("")
+
     private val changeQueryState = MutableStateFlow("")
 
     init {
+        handleQueries()
+
         viewModelScope.launch {
             changeQueryState.debounce(500).distinctUntilChanged()
-                .collect {
-                    debugLog { "Search query: $it" }
-                    if(it.isEmpty()){
+                .collect { q ->
+                    debugLog { "Search query: $q" }
+                    if (q.isEmpty()) {
                         uiStateListener.value = state.copy(
                             data = state.data.copy(
                                 matchesQuery = null,
                                 mayBeSearchDetail = null
-                            ))
+                            )
+                        )
                     }
-                    fetchMatchesQueries(it)
+                    fetchMatchesQueries(q)
                 }
         }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun handleQueries() = queryStateFlow.onStart {
+        uiStateListener.updateData { s -> s.copy(uiState = UiState.Loading) }
+    }.debounceWithMax(200L, 5)
+        .onEach { q ->
+            debugLog { "onEach: After debounce $q" }
+        }
+        .mapLatest { query ->
+            debugLog { "mapLatest: After debounce $query" }
+
+            fun checkAvailableData() {
+                if (dataState.matchingQueries.isEmpty() && dataState.sectionRecommendations.items.isEmpty()) {
+                    uiStateListener.updateData { s ->
+                        s.copy(uiState = UiState.Error)
+                    }
+                }
+            }
+
+            val timeout: Long =
+                if (dataState.uiState == UiState.Loading) 30_000L else 3_000L
+
+            withTimeoutOrNull(timeout) {
+                if (query.isBlank()) {
+                    searchByEmptyQuery()
+                } else {
+                    searchByQuery(query)
+                }
+            } ?: checkAvailableData()
+        }
+        .launchIn(viewModelScope)
+
+
+    private suspend fun searchByQuery(query: String) {
+        val miniSearchRecommendationsResult =
+            vodovozServiceRepository.getMiniSearchRecommendations(query).singleOrNull() ?: return
+        miniSearchRecommendationsResult.onSuccess { miniSearchRecommendations ->
+            val queries = miniSearchRecommendations.queries
+            val section = miniSearchRecommendations.section.toUi()
+
+            debugLog { "searchByQuery: success" }
+
+            uiStateListener.updateData { s ->
+                s.copy(
+                    matchingQueries = queries,
+                    sectionRecommendations = section,
+                    uiState = UiState.Success
+                )
+            }
+
+            debugLog { "searchByQuery: state updated" }
+
+        }.onFailure { error ->
+
+            debugLog { "searchByQuery: error" }
+
+            val uiState = when (error) {
+                is EmptyResultException -> UiState.Empty(error.htmlText)
+                else -> UiState.Error
+            }
+
+            if (uiState is UiState.Empty || (uiState is UiState.Error && dataState.sectionRecommendations.items.isEmpty())) {
+                uiStateListener.updateData { s ->
+                    s.copy(uiState = uiState)
+                }
+            }
+        }
+    }
+
+    private suspend fun searchByEmptyQuery() {
+        val searchRecommendationsResult =
+            vodovozServiceRepository.getSearchRecommendations().singleOrNull() ?: return
+        searchRecommendationsResult.onSuccess { searchRecommendations ->
+            val queries = searchRecommendations.queries
+            val section = searchRecommendations.section.toUi()
+
+            uiStateListener.updateData { s ->
+                s.copy(
+                    matchingQueries = queries,
+                    sectionRecommendations = section,
+                    uiState = UiState.Success
+                )
+            }
+        }.onFailure {
+            val currentQuery = dataState.query
+            if (dataState.matchingQueries.isEmpty() && dataState.sectionRecommendations.items.isEmpty() && currentQuery.isBlank()) {
+                uiStateListener.updateData { s ->
+                    s.copy(uiState = UiState.Error)
+                }
+            }
+        }
+
+    }
+
+    fun retrySearchQuery() = viewModelScope.launch {
+        uiStateListener.updateData { s -> s.copy(uiState = UiState.Loading) }
+        val query = dataState.query
+        if (query.isBlank()) {
+            searchByEmptyQuery()
+        } else {
+            searchByQuery(query)
+        }
+    }
+
+    fun search() = viewModelScope.launch {
+        val currentQuery = dataState.query
+        if (currentQuery.isBlank()) return@launch
+        eventListener.emit(
+            SearchEvents.GoToProductList(
+                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Search(currentQuery)
+            )
+        )
     }
 
     fun firstLoad() {
@@ -264,7 +398,11 @@ class SearchFlowViewModel @Inject constructor(
 
     fun loadMoreSorted() {
         if (state.bottomItem == null && state.page != null) {
-            uiStateListener.value = state.copy(loadMore = true, bottomItem = BottomProgressItem(), data = state.data.copy(scrollToTop = false))
+            uiStateListener.value = state.copy(
+                loadMore = true,
+                bottomItem = BottomProgressItem(),
+                data = state.data.copy(scrollToTop = false)
+            )
             fetchProductsByQuery(true)
         }
     }
@@ -382,7 +520,10 @@ class SearchFlowViewModel @Inject constructor(
                                 state.copy(
                                     page = if (mappedFeed.isEmpty()) null else state.page?.plus(1),
                                     loadingPage = false,
-                                    data = state.data.copy(itemsList = itemsList, scrollToTop = state.page == 1),
+                                    data = state.data.copy(
+                                        itemsList = itemsList,
+                                        scrollToTop = state.page == 1
+                                    ),
                                     error = null,
                                     loadMore = false,
                                     bottomItem = null
@@ -439,7 +580,8 @@ class SearchFlowViewModel @Inject constructor(
                             data = state.data.copy(
                                 matchesQuery = data.quickQueryBundleUI,
                                 mayBeSearchDetail = data.quickProductsCategoryDetailUI?.copy(
-                                    productUIList = data.quickProductsCategoryDetailUI.productUIList.map { it.copy(
+                                    productUIList = data.quickProductsCategoryDetailUI.productUIList.map {
+                                        it.copy(
                                             linear = false
                                         )
                                     }
@@ -510,8 +652,14 @@ class SearchFlowViewModel @Inject constructor(
         }
     }
 
-    fun changeQuery(query: String) {
-        changeQueryState.value = query
+    fun changeQuery(query: String) = viewModelScope.launch {
+        val oldQuery = dataState.query
+        if (query == oldQuery) return@launch
+
+        uiStateListener.updateData { s ->
+            s.copy(query = query)
+        }
+        queryStateFlow.value = query
     }
 
     fun onTabClick(id: Long) {
@@ -562,6 +710,14 @@ class SearchFlowViewModel @Inject constructor(
         }
     }
 
+    fun navigateToScan() = viewModelScope.launch {
+
+    }
+
+    fun navigateBack() = viewModelScope.launch {
+        eventListener.emit(SearchEvents.GoBack)
+    }
+
     sealed class SearchEvents : Event {
         data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) :
             SearchEvents()
@@ -571,14 +727,17 @@ class SearchFlowViewModel @Inject constructor(
         data class GoToWebView(val url: String, val title: String) : SearchEvents()
 
         data class GoToService(val id: String) : SearchEvents()
+        data class GoToProductList(val searchDataSource: PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Search) :
+            SearchEvents()
 
         data object GoToContacts : SearchEvents()
 
         data object GoToPromotions : SearchEvents()
+        data object GoBack : SearchEvents()
     }
 
+    @Immutable
     data class SearchState(
-        val query: String = "",
         val categoryHeader: CategoryUI? = null,
         val popularCategoryDetail: CategoryDetailUI? = null,
         val mayBeSearchDetail: CategoryDetailUI? = null,
@@ -591,7 +750,20 @@ class SearchFlowViewModel @Inject constructor(
         val itemsList: List<Item> = emptyList(),
         val layoutManager: String = LINEAR,
         val scrollToTop: Boolean = false,
+
+        val query: String = "",
+        val matchingQueries: List<String> = emptyList(),
+        val uiState: UiState = UiState.Loading,
+        val sectionRecommendations: SectionUi<ProductUi> = SectionUi.empty(),
     ) : State
+
+    sealed interface UiState {
+        data object Loading : UiState
+        data object Success : UiState
+        data class Empty(val htmlText: String) : UiState
+        data object Error : UiState
+
+    }
 
     companion object {
         const val LINEAR = "linear"

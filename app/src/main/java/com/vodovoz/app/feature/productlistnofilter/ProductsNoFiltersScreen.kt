@@ -40,7 +40,7 @@ import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.bottom_sheet.SortOptionsBottomSheet
 import com.vodovoz.app.design_system.composables.placeholders.LoadingPlaceholder
 import com.vodovoz.app.design_system.composables.placeholders.NetworkErrorPlaceholder
-import com.vodovoz.app.design_system.composables.top_bar.SearchTopBar
+import com.vodovoz.app.design_system.composables.top_bar.StaticSearchTopBar
 import com.vodovoz.app.feature.productlistnofilter.composables.ProductsNoFilterBody
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,22 +58,29 @@ fun ProductsNoFiltersScreen(
             .windowInsetsPadding(WindowInsets.systemBars)
             .consumeWindowInsets(WindowInsets.systemBars)
     ) {
-        SearchTopBar(
-            value = "",
-            onValueChange = {},
-            onFocus = { },
-            onMicClick = { },
-            onScanClick = { },
-            onSearchClick = { }
+        StaticSearchTopBar(
+            onFocus = {
+
+            },
+            onMicClick = {
+
+            },
+            onScanClick = {
+
+            },
+            onSearchClick = {
+
+            },
+            onNavigationClick = {
+                viewModel.navigateBack()
+            }
         )
 
         val lazyPagingProducts = viewState.pagedProducts.collectAsLazyPagingItems()
 
         when (viewState.uiState) {
             ProductsListNoFilterFlowViewModel.UiState.Error -> {
-                NetworkErrorPlaceholder {
-
-                }
+                NetworkErrorPlaceholder { viewModel.fetchProductListData() }
             }
 
             ProductsListNoFilterFlowViewModel.UiState.Loading -> {
@@ -83,7 +90,7 @@ fun ProductsNoFiltersScreen(
             ProductsListNoFilterFlowViewModel.UiState.Success -> {
                 ProductsNoFilterBody(
                     title = productsSection.title,
-                    productsQuantity = productsSection.productsQuantity,
+                    productsQuantity = productsSection.productsQuantityText,
                     categories = productsSection.categories,
                     currentCategory = viewState.currentCategory,
                     currentSort = viewState.currentSort,

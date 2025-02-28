@@ -11,13 +11,13 @@ import com.vodovoz.app.feature.product_comments.model.toUi
 data class ProductsSectionUi(
     val title: String,
     val sortingTitle: String,
-    val productsQuantity: Int,
+    val productsQuantityText: String,
     val products: List<ProductUi>,
     val sorting: List<SortUi>,
     val categories: List<CategoryUi>,
 ) {
     companion object {
-        val Empty = ProductsSectionUi("", "", -1, emptyList(), emptyList(), emptyList())
+        val Empty = ProductsSectionUi("", "", "", emptyList(), emptyList(), emptyList())
     }
 }
 
@@ -26,7 +26,7 @@ fun ProductsSectionModel.toUi(): ProductsSectionUi {
     return ProductsSectionUi(
         title,
         sortingTitle,
-        productsQuantity,
+        productsQuantityText,
         products.map { it.toUi() },
         sorting.map { it.toUi() },
         categories.map { it.toUi() }

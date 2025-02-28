@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -33,7 +34,7 @@ import com.vodovoz.app.design_system.composables.ClickableIcon
 fun ProductNotFoundPlaceholder(
     modifier: Modifier = Modifier,
     onBack: () -> Unit,
-    isArrow: Boolean,
+    haveArrow: Boolean,
 ) {
     Column(
         modifier = modifier
@@ -46,10 +47,11 @@ fun ProductNotFoundPlaceholder(
         Row(
             modifier = Modifier
                 .height(56.dp)
+                .fillMaxWidth()
                 .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            if (isArrow) {
+            if (haveArrow) {
                 ClickableIcon(
                     modifier = Modifier.clip(CircleShape),
                     painter = painterResource(id = R.drawable.ic_arrow_left),
@@ -100,6 +102,6 @@ fun ProductNotFoundPlaceholder(
 @Composable
 private fun ProductNotFoundPlaceholderPreview() {
     VodovozTheme {
-        ProductNotFoundPlaceholder(onBack = { /*TODO*/ }, isArrow = false)
+        ProductNotFoundPlaceholder(onBack = { /*TODO*/ }, haveArrow = false)
     }
 }

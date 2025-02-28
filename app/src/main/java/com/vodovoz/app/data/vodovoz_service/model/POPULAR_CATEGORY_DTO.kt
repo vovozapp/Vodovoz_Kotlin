@@ -1,8 +1,8 @@
 package com.vodovoz.app.data.vodovoz_service.model
 
 
-import com.squareup.moshi.Json
 import androidx.annotation.Keep
+import com.squareup.moshi.Json
 
 @Keep
 data class POPULAR_CATEGORY_DTO(
@@ -11,7 +11,7 @@ data class POPULAR_CATEGORY_DTO(
     @Json(name = "NAMERAZDEL")
     val NAMERAZDEL: String?,
     @Json(name = "PICTURE")
-    val PICTURE: String?
+    val PICTURE: String?,
 )
 
 @Keep
@@ -20,4 +20,6 @@ data class CATEGORY_DTO(
     val ID: Int?,
     @Json(name = "NAME")
     val NAME: String?,
+    @Json(name = "DEPTH_LEVEL")
+    val DEPTH_LEVEL: Int?,
 )

@@ -6,3 +6,5 @@ import kotlinx.coroutines.flow.catch
 fun <T> Flow<Result<T>>.catchResult(throwError: Boolean = false): Flow<Result<T>> = catch { throwable ->
     if (throwError) throw throwable else emit(Result.failure(throwable))
 }
+
+fun<T> resultFailure(throwable: Throwable = Throwable()) = Result.failure<T>(throwable)

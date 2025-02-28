@@ -3,6 +3,7 @@ package com.vodovoz.app.data.vodovoz_service
 import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.data.vodovoz_service.model.AnalogsSectionDTO
 import com.vodovoz.app.data.vodovoz_service.model.BannerDTO
+import com.vodovoz.app.data.vodovoz_service.model.MiniSearchRecommendationsDTO
 import com.vodovoz.app.data.vodovoz_service.model.OrderMenuDTO
 import com.vodovoz.app.data.vodovoz_service.model.PopularCategoriesDTO
 import com.vodovoz.app.data.vodovoz_service.model.PopupWindowDTO
@@ -15,6 +16,7 @@ import com.vodovoz.app.data.vodovoz_service.model.PromotionDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.PromotionsDTO
 import com.vodovoz.app.data.vodovoz_service.model.RAZDEL_DTO
 import com.vodovoz.app.data.vodovoz_service.model.RegistrationSectionDTO
+import com.vodovoz.app.data.vodovoz_service.model.SearchRecommendationsDTO
 import com.vodovoz.app.data.vodovoz_service.model.SiteStateResponseDTO
 import com.vodovoz.app.data.vodovoz_service.model.StoriesDTO
 import com.vodovoz.app.data.vodovoz_service.model.SuperTopAndBottomSectionsDTO
@@ -27,6 +29,25 @@ import retrofit2.http.QueryMap
 
 interface VodovozService {
 
+    /**
+     * Search requests
+     * */
+    @GET("searching/index.php?action=glav")
+    suspend fun getSearchRecommendations(): Response<VodovozResponseDTO<SearchRecommendationsDTO>>
+
+    @GET("searching/minipoisk.php?action=glav")
+    suspend fun getMiniSearchRecommendations(
+        @Query("search") query: String,
+    ): Response<VodovozResponseDTO<MiniSearchRecommendationsDTO>>
+
+    @GET("searching/index.php?action=search&nav=1")
+    suspend fun getSearchProducts(
+        @Query("search") query: String,
+        @Query("nav") page: Int = 1,
+        @Query("sect") categoryId: Int? = null,
+        @Query("sort") sort: String = "",
+        @Query("ascdesc") order: String = "",
+    ): Response<VodovozResponseDTO<ProductsSectionDTO>>
 
     /**
      * Login requests
@@ -47,7 +68,7 @@ interface VodovozService {
     @GET("config/openuserid.php?&android=${BuildConfig.VERSION_NAME}")
     suspend fun relogin(
         @Query("userid") userId: Long,
-        @Query("token") token: String
+        @Query("token") token: String,
     ): Response<Unit>
 
     /**

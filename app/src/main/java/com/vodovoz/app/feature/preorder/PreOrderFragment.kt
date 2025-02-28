@@ -1,6 +1,9 @@
 package com.vodovoz.app.feature.preorder
 
+import android.animation.Animator
+import android.animation.ObjectAnimator
 import android.os.Bundle
+import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,15 +14,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.vodovoz.app.R
+import com.vodovoz.app.core.navigation.tryNavigate
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.placeholders.LoadingPlaceholder
 import com.vodovoz.app.design_system.composables.placeholders.NetworkErrorPlaceholder
 import com.vodovoz.app.design_system.effects.LifecycleEffect
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 
 @AndroidEntryPoint
@@ -70,7 +79,7 @@ class PreOrderFragment : Fragment() {
                         viewModel.observeEvent().collect { event ->
                             when (event) {
                                 PreOrderFlowViewModel.PreOrderEvent.GoBack -> {
-                                    findNavController().popBackStack()
+                                    findNavController().navigateUp()
                                 }
 
                                 PreOrderFlowViewModel.PreOrderEvent.HideKeyboard -> {

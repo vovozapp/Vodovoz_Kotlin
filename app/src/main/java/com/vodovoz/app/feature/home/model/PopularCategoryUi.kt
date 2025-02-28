@@ -31,13 +31,14 @@ fun PopularCategoryModel.toUi(): PopularCategoryUi {
 data class CategoryUi(
     val name: String,
     val id: Int,
+    val depthLevel: Int? = null
 ) : Parcelable {
     companion object {
-        val Empty = CategoryUi("", -1)
+        val Empty = CategoryUi("", -1, null)
     }
 }
 
 fun CategoryModel.toUi(): CategoryUi {
-    return CategoryUi(name = name, id = id)
+    return CategoryUi(name = name, id = id, depthLevel = depthLevel)
 }
 

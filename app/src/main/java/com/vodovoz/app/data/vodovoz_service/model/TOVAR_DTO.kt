@@ -1,8 +1,8 @@
 package com.vodovoz.app.data.vodovoz_service.model
 
 
-import com.squareup.moshi.Json
 import androidx.annotation.Keep
+import com.squareup.moshi.Json
 
 @Keep
 data class TOVAR_DTO(
@@ -13,5 +13,13 @@ data class TOVAR_DTO(
     @Json(name = "SORTIROKA")
     val SORTIROKA: SORTIROVKA_DTO?,
     @Json(name = "STRANIC")
-    val STRANIC: Int?
+    val STRANIC: Int?,
+)
+
+@Keep
+data class TOVARY_DTO(
+    @Json(name = "NAME")
+    val NAME: String?,
+    @Json(name = "TOVARY")
+    val TOVARY: List<TOVAR_DATA_DTO?>?,
 )

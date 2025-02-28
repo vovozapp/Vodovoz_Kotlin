@@ -3,7 +3,6 @@ package com.vodovoz.app.data.vodovoz_service.mappers
 import com.vodovoz.app.data.vodovoz_service.di.toFullUrl
 import com.vodovoz.app.data.vodovoz_service.model.AnalogsSectionDTO
 import com.vodovoz.app.data.vodovoz_service.model.CATEGORY_DTO
-import com.vodovoz.app.data.vodovoz_service.model.CategoriesDTO
 import com.vodovoz.app.data.vodovoz_service.model.EXTENDED_PRICE_DTO
 import com.vodovoz.app.data.vodovoz_service.model.NALICHIE_MORE_DTO
 import com.vodovoz.app.data.vodovoz_service.model.PODELITCA_DTO
@@ -15,13 +14,15 @@ import com.vodovoz.app.domain.general.model.PriceModel
 import com.vodovoz.app.domain.general.model.ProductModel
 import com.vodovoz.app.domain.general.model.ProductsSectionModel
 import com.vodovoz.app.domain.general.model.ShareModel
+// https://vodovoz.net/newmobile_new/glavnaya/novinki.php?new=specpredlosh&detail=Y&android=1.5.55&nav=1&sect=-1&sort=&ascdesc=
 
+// https://vodovoz.net/newmobile_new/glavnaya/novinki.php?new=novinki&detail=Y&nav=1&sect=-1&sort=&ascdesc=
 
 fun ProductsSectionDTO.toDomain(): ProductsSectionModel {
     return ProductsSectionModel(
         title = TITLE ?: "",
         sortingTitle = SORTIROVKA?.NAMEGLAV ?: "",
-        productsQuantity = COUNT ?: -1,
+        productsQuantityText = TOVARVSEGO ?: "",
         sorting = SORTIROVKA?.DANNIESORT?.mapNotNull { it?.toDomain() } ?: emptyList(),
         products = DATA?.mapToDomain() ?: emptyList(),
         categories = RAZDEL?.LISTRAZDEL?.mapNotNull { it?.toDomain() } ?: emptyList(),
@@ -30,7 +31,7 @@ fun ProductsSectionDTO.toDomain(): ProductsSectionModel {
 }
 
 fun CATEGORY_DTO.toDomain(): CategoryModel? {
-    return CategoryModel(ID ?: return null, NAME ?: return null)
+    return CategoryModel(ID ?: return null, NAME ?: return null, DEPTH_LEVEL)
 }
 
 fun PODELITCA_DTO.toDomain(): ShareModel? {
@@ -54,7 +55,7 @@ fun AnalogsSectionDTO.toDomain(): ProductsSectionModel {
         sorting = sorting,
         products = products,
         categories = emptyList(),
-        productsQuantity = products.size
+        productsQuantityText = ""
     )
 }
 

@@ -23,12 +23,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import coil3.compose.AsyncImage
-import com.vodovoz.app.design_system.composables.card.GridProductCard
-import com.vodovoz.app.design_system.composables.chip.VodovozColorChip
 import com.vodovoz.app.design_system.composables.chip.TimeLeftChip
+import com.vodovoz.app.design_system.composables.chip.VodovozColorChip
+import com.vodovoz.app.design_system.composables.list.gridProducts
 import com.vodovoz.app.design_system.model.PromotionDetailsUi
 import com.vodovoz.app.feature.home.model.ProductUi
-import kotlin.random.Random
 
 @Composable
 fun PromotionDetailsBody(
@@ -92,27 +91,17 @@ fun PromotionDetailsBody(
 
 
 
-        items(
-            count = lazyPagingProducts.itemCount,
-            key = { i -> lazyPagingProducts[i]?.id ?: Random.nextInt() }
-        ) { i ->
-            val product = lazyPagingProducts[i]
-            if (product != null) {
-                Column {
-                    GridProductCard(
-                        modifier = Modifier.fillMaxWidth(),
-                        product = product,
-                        onClick = {
+        gridProducts(
+            lazyPagingProducts = lazyPagingProducts,
+            onProductLike = {
 
-                        },
-                        onLike = {
+            },
+            onProductClick = {
 
-                        }
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
             }
-        }
+        )
+
+        item { Spacer(modifier = Modifier.height(16.dp)) }
     }
 }
 

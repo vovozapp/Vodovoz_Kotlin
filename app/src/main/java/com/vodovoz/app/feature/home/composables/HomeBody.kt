@@ -132,13 +132,15 @@ fun HomeBody(
             onShowAllClick = onShowAllClick
         )
 
-        HomeViewedProducts(
-            modifier = Modifier.padding(top = 32.dp),
-            sectionViewedProducts = sectionViewedProducts,
-            onProductClick = onProductCardClick,
-            onProductLike = {},
-            onShowAllClick = onShowAllClick
-        )
+        if (sectionViewedProducts.items.isNotEmpty()) {
+            HomeViewedProducts(
+                modifier = Modifier.padding(top = 32.dp),
+                sectionViewedProducts = sectionViewedProducts,
+                onProductClick = onProductCardClick,
+                onProductLike = {},
+                onShowAllClick = onShowAllClick
+            )
+        }
 
         Spacer(modifier = Modifier.height(24.dp))
     }

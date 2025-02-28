@@ -20,7 +20,7 @@ fun ProductsNoFilterBody(
     modifier: Modifier = Modifier,
     title: String,
     categories: List<CategoryUi>,
-    productsQuantity: Int,
+    productsQuantity: String,
     currentCategory: CategoryUi,
     currentSort: SortUi,
     lazyPagingProducts: LazyPagingItems<ProductUi>,

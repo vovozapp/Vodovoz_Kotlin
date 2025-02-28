@@ -13,7 +13,6 @@ import com.vodovoz.app.R
 import com.vodovoz.app.databinding.BsCatalogMiniBinding
 import com.vodovoz.app.feature.mini_catalog.adapter.MiniCatalogAdapter
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
-import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment1
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 
 class MiniCatalogBottomFragment : BottomSheetDialogFragment() {
@@ -67,14 +66,14 @@ class MiniCatalogBottomFragment : BottomSheetDialogFragment() {
             requireDialog().cancel()
         }
 
-        binding.btnChoose.setOnClickListener {
-            findNavController().previousBackStackEntry
-                ?.savedStateHandle?.set(
-                    PaginatedProductsCatalogWithoutFiltersFragment1.CATEGORY_ID,
-                    miniCatalogAdapter.selectedCategoryId
-                )
-            dialog?.dismiss()
-        }
+//        binding.btnChoose.setOnClickListener {
+//            findNavController().previousBackStackEntry
+//                ?.savedStateHandle?.set(
+//                    PaginatedProductsCatalogWithoutFiltersFragment1.CATEGORY_ID,
+//                    miniCatalogAdapter.selectedCategoryId
+//                )
+//            dialog?.dismiss()
+//        }
     }
 
 }

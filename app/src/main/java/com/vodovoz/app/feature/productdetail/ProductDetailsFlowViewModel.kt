@@ -337,9 +337,9 @@ class ProductDetailsFlowViewModel @Inject constructor(
             val accountId = accountManager.fetchAccountId()
             if (accountId == null) {
                 //     eventListener.emit(ProductDetailsEvents.GoToProfile)
-                eventListener.emit(ProductDetailsEvents.GoToPreOrder(id, name, detailPicture))
+                eventListener.emit(ProductDetailsEvents.GoToPreOrder(id))
             } else {
-                eventListener.emit(ProductDetailsEvents.GoToPreOrder(id, name, detailPicture))
+                eventListener.emit(ProductDetailsEvents.GoToPreOrder(id))
             }
         }
     }
@@ -467,10 +467,17 @@ class ProductDetailsFlowViewModel @Inject constructor(
         eventListener.emit(ProductDetailsEvents.GoToProductsCollection(state.productDetails.id))
     }
 
+    fun navigateToPreOrder() = viewModelScope.launch {
+        eventListener.emit(ProductDetailsEvents.GoToPreOrder(state.productDetails.id))
+    }
+
+    fun navigateBack() = viewModelScope.launch {
+        eventListener.emit(ProductDetailsEvents.GoBack)
+    }
+
 
     sealed class ProductDetailsEvents : Event {
-        data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) :
-            ProductDetailsEvents()
+        data class GoToPreOrder(val id: Long) : ProductDetailsEvents()
 
         data object GoToProfile : ProductDetailsEvents()
         data class SendComment(val id: Long) : ProductDetailsEvents()
@@ -485,6 +492,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
         data object GoToAboutProduct : ProductDetailsEvents()
         data class GoToProductComments(val productId: Long) : ProductDetailsEvents()
         data class GoToProductsCollection(val productId: Long) : ProductDetailsEvents()
+        data object GoBack : ProductDetailsEvents()
     }
 
 

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -103,7 +104,6 @@ fun ProductLazyPagingList(
         } else if (isGridView) {
             items(
                 count = lazyPagingProducts.itemCount,
-                key = lazyPagingProducts.itemKey { it.id },
                 span = { GridItemSpan(1) },
                 contentType = lazyPagingProducts.itemContentType { "Products" },
             ) { i ->
@@ -117,7 +117,6 @@ fun ProductLazyPagingList(
         } else {
             items(
                 count = lazyPagingProducts.itemCount,
-                key = lazyPagingProducts.itemKey { it.id },
                 span = { GridItemSpan(2) },
                 contentType = lazyPagingProducts.itemContentType { "Products" },
             ) { i ->
@@ -141,5 +140,49 @@ fun ProductLazyPagingList(
             }
         }
 
+    }
+}
+
+fun LazyGridScope.gridProducts(
+    lazyPagingProducts: LazyPagingItems<ProductUi>,
+    onProductClick: (ProductUi) -> Unit,
+    onProductLike: (ProductUi) -> Unit,
+) {
+    val loadState = lazyPagingProducts.loadState
+
+    if (loadState.refresh is LoadState.Loading || loadState.refresh is LoadState.Error) {
+        items(8) {
+            SkeletonBox(
+                shimmerState = rememberShimmer(shimmerBounds = ShimmerBounds.View),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(0.85f)
+            )
+        }
+    }
+
+    items(
+        count = lazyPagingProducts.itemCount,
+        key = lazyPagingProducts.itemKey { it.id },
+        span = { GridItemSpan(1) },
+        contentType = lazyPagingProducts.itemContentType { "Products" },
+    ) { i ->
+        GridProductCard(
+            product = lazyPagingProducts[i] ?: return@items,
+            onClick = onProductClick,
+            onLike = onProductLike,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+
+    if (loadState.append is LoadState.Loading) {
+        item(span = { GridItemSpan(2) }) {
+            SkeletonBox(
+                shimmerState = rememberShimmer(shimmerBounds = ShimmerBounds.View),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(80.dp)
+            )
+        }
     }
 }

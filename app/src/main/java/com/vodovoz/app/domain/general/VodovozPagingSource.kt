@@ -3,6 +3,7 @@ package com.vodovoz.app.domain.general
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.vodovoz.app.data.vodovoz_service.mappers.executeRequest
+import com.vodovoz.app.util.extensions.debugLog
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.singleOrNull
 import retrofit2.Response
@@ -33,6 +34,7 @@ class VodovozPagingSource<T : Any, R : Any>(
                 nextKey = nextKey
             )
         }.onFailure { throwable ->
+            debugLog { throwable.stackTraceToString() }
             return LoadResult.Error(throwable)
         }
 

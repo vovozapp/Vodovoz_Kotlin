@@ -70,8 +70,8 @@ fun MultiProductBottomSheet(
             )
 
             val selectedPriceIndex =
-                prices.indexOfOrNull(prices.sortedByDescending { it.quantityTo }
-                    .firstOrNull { cartQuantity >= it.quantityFrom }) ?: 0
+                prices.indexOfOrNull(prices.sortedByDescending { it.quantityFrom }
+                    .firstOrNull { cartQuantity >= it.quantityFrom } ?: 0) ?: 0
 
             if (prices.isNotEmpty()) {
                 VodovozScrollableTabRow(
@@ -79,10 +79,10 @@ fun MultiProductBottomSheet(
                     selectedTabIndex = selectedPriceIndex,
                     spacing = 8.dp
                 ) {
-                    prices.forEach { price ->
+                    prices.forEachIndexed { index, price ->
                         VodovozChip(
                             text = stringResource(R.string.from_quantity, price.quantityFrom),
-                            selected = price.quantityFrom <= cartQuantity,
+                            selected = index == selectedPriceIndex,
                             onSelect = {
                                 onCartQuantityChange(price.quantityFrom.coerceAtLeast(1))
                             }
@@ -119,7 +119,9 @@ fun MultiProductBottomSheet(
             )
 
             BaseQuantityButton(
-                modifier = Modifier.padding(top = 20.dp).height(48.dp),
+                modifier = Modifier
+                    .padding(top = 20.dp)
+                    .height(48.dp),
                 isLoading = buttonIsLoading,
                 onPlus = onPlus,
                 onMinus = onMinus,
