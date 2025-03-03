@@ -1,6 +1,7 @@
 package com.vodovoz.app.feature.search
 
 import androidx.compose.runtime.Immutable
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
@@ -48,11 +49,11 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
@@ -71,9 +72,12 @@ class SearchFlowViewModel @Inject constructor(
     private val accountManager: AccountManager,
     private val searchManager: SearchManager,
     private val vodovozServiceRepository: VodovozServiceRepository,
+    savedStateHandle: SavedStateHandle,
 ) : PagingContractViewModel<SearchFlowViewModel.SearchState, SearchFlowViewModel.SearchEvents>(
     SearchState()
 ) {
+
+    private val previousSearchQuery: String = savedStateHandle.get<String>("query") ?: ""
 
     private val changeLayoutManager = MutableStateFlow(LINEAR)
     fun observeChangeLayoutManager() = changeLayoutManager.asStateFlow()
@@ -81,60 +85,59 @@ class SearchFlowViewModel @Inject constructor(
     private val noMatchesToastListener = MutableSharedFlow<Boolean>()
     fun observeNoMatchesToast() = noMatchesToastListener.asSharedFlow()
 
-    private val queryStateFlow = MutableStateFlow("")
+    private val querySharedFlow = MutableSharedFlow<String>(10)
 
     private val changeQueryState = MutableStateFlow("")
 
     init {
         handleQueries()
+        listenSearchHistory()
+    }
 
-        viewModelScope.launch {
-            changeQueryState.debounce(500).distinctUntilChanged()
-                .collect { q ->
-                    debugLog { "Search query: $q" }
-                    if (q.isEmpty()) {
-                        uiStateListener.value = state.copy(
-                            data = state.data.copy(
-                                matchesQuery = null,
-                                mayBeSearchDetail = null
-                            )
-                        )
-                    }
-                    fetchMatchesQueries(q)
+    private fun listenSearchHistory() = viewModelScope.launch {
+        searchManager.fetchSearchHistoryFlow()
+            .combine(uiStateListener.map { pagingState -> pagingState.data.query }) { searchHistory, currentQuery ->
+                searchHistory to currentQuery
+            }.collect { (searchHistory, currentQuery) ->
+                uiStateListener.updateData { s ->
+                    s.copy(
+                        searchHistory = searchHistory.filter { query ->
+                            query.contains(currentQuery)
+                        }
+                    )
                 }
-        }
+            }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private fun handleQueries() = queryStateFlow.onStart {
-        uiStateListener.updateData { s -> s.copy(uiState = UiState.Loading) }
-    }.debounceWithMax(200L, 5)
-        .onEach { q ->
-            debugLog { "onEach: After debounce $q" }
+    private fun handleQueries() =
+        querySharedFlow.onStart {
+            uiStateListener.updateData { s -> s.copy(uiState = UiState.Loading, query = previousSearchQuery) }
+            emit(previousSearchQuery)
         }
-        .mapLatest { query ->
-            debugLog { "mapLatest: After debounce $query" }
+            .debounceWithMax(200L, 5)
+            .mapLatest { query ->
 
-            fun checkAvailableData() {
-                if (dataState.matchingQueries.isEmpty() && dataState.sectionRecommendations.items.isEmpty()) {
-                    uiStateListener.updateData { s ->
-                        s.copy(uiState = UiState.Error)
+                fun checkAvailableData() {
+                    if (dataState.matchingQueries.isEmpty() && dataState.sectionRecommendations.items.isEmpty()) {
+                        uiStateListener.updateData { s ->
+                            s.copy(uiState = UiState.Error)
+                        }
                     }
                 }
+
+                val timeout: Long =
+                    if (dataState.uiState == UiState.Loading) 30_000L else 3_000L
+
+                withTimeoutOrNull(timeout) {
+                    if (query.isBlank()) {
+                        searchByEmptyQuery()
+                    } else {
+                        searchByQuery(query)
+                    }
+                } ?: checkAvailableData()
             }
-
-            val timeout: Long =
-                if (dataState.uiState == UiState.Loading) 30_000L else 3_000L
-
-            withTimeoutOrNull(timeout) {
-                if (query.isBlank()) {
-                    searchByEmptyQuery()
-                } else {
-                    searchByQuery(query)
-                }
-            } ?: checkAvailableData()
-        }
-        .launchIn(viewModelScope)
+            .launchIn(viewModelScope)
 
 
     private suspend fun searchByQuery(query: String) {
@@ -211,6 +214,8 @@ class SearchFlowViewModel @Inject constructor(
     fun search() = viewModelScope.launch {
         val currentQuery = dataState.query
         if (currentQuery.isBlank()) return@launch
+
+        launch { searchManager.addQueryToHistory(currentQuery) }
         eventListener.emit(
             SearchEvents.GoToProductList(
                 PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Search(currentQuery)
@@ -256,7 +261,7 @@ class SearchFlowViewModel @Inject constructor(
 
     fun fetchDefaultSearchData() {
         uiStateListener.value =
-            state.copy(data = state.data.copy(historyQuery = searchManager.fetchSearchHistory()))
+            state.copy(data = state.data.copy(historyQueries = searchManager.fetchSearchHistory()))
 
         viewModelScope.launch {
             flow { emit(repository.fetchSearchDefaultData()) }
@@ -293,7 +298,7 @@ class SearchFlowViewModel @Inject constructor(
         if (state.data.query.isNotEmpty()) {
             searchManager.addQueryToHistory(state.data.query)
             uiStateListener.value =
-                state.copy(data = state.data.copy(historyQuery = searchManager.fetchSearchHistory()))
+                state.copy(data = state.data.copy(historyQueries = searchManager.fetchSearchHistory()))
         }
 
         viewModelScope.launch {
@@ -612,7 +617,7 @@ class SearchFlowViewModel @Inject constructor(
 
     fun clearSearchHistory() {
         searchManager.clearSearchHistory()
-        uiStateListener.value = state.copy(data = state.data.copy(historyQuery = emptyList()))
+        uiStateListener.value = state.copy(data = state.data.copy(historyQueries = emptyList()))
     }
 
     private fun checkSelectedFilter(categoryUI: CategoryUI?): CategoryUI? {
@@ -652,6 +657,20 @@ class SearchFlowViewModel @Inject constructor(
         }
     }
 
+    fun chooseMatchingQuery(query: String) = viewModelScope.launch {
+        if (query == dataState.query) return@launch
+        uiStateListener.updateData { s ->
+            s.copy(query = query)
+        }
+
+        querySharedFlow.emit(query)
+        if (query.isBlank()) {
+            searchByEmptyQuery()
+        } else {
+            searchByQuery(query)
+        }
+    }
+
     fun changeQuery(query: String) = viewModelScope.launch {
         val oldQuery = dataState.query
         if (query == oldQuery) return@launch
@@ -659,7 +678,7 @@ class SearchFlowViewModel @Inject constructor(
         uiStateListener.updateData { s ->
             s.copy(query = query)
         }
-        queryStateFlow.value = query
+        querySharedFlow.emit(query)
     }
 
     fun onTabClick(id: Long) {
@@ -718,6 +737,10 @@ class SearchFlowViewModel @Inject constructor(
         eventListener.emit(SearchEvents.GoBack)
     }
 
+    fun removeSearchQuery(searchQuery: String) = viewModelScope.launch {
+        searchManager.removeQueryFromHistory(searchQuery)
+    }
+
     sealed class SearchEvents : Event {
         data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) :
             SearchEvents()
@@ -742,7 +765,7 @@ class SearchFlowViewModel @Inject constructor(
         val popularCategoryDetail: CategoryDetailUI? = null,
         val mayBeSearchDetail: CategoryDetailUI? = null,
         val popularQuery: List<String> = emptyList(),
-        val historyQuery: List<String> = emptyList(),
+        val historyQueries: List<String> = emptyList(),
         val matchesQuery: QuickQueryBundleUI? = null,
         val sortType: SortTypeUI = SortTypeUI(),
         val selectedCategoryId: Long = -1,
@@ -755,6 +778,7 @@ class SearchFlowViewModel @Inject constructor(
         val matchingQueries: List<String> = emptyList(),
         val uiState: UiState = UiState.Loading,
         val sectionRecommendations: SectionUi<ProductUi> = SectionUi.empty(),
+        val searchHistory: List<String> = emptyList(),
     ) : State
 
     sealed interface UiState {

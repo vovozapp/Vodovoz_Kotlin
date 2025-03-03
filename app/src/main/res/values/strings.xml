@@ -259,5 +259,7 @@
     <string name="error_message_send_failed">Не удалось отправить сообщение</string>
 
     <string name="analogs">Аналоги</string>
+    <string name="popularity">Популярное</string>
+    <string name="you_were_looking">Вы искали</string>
 
 </resources>

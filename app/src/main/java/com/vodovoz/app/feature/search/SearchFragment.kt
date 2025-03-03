@@ -416,12 +416,12 @@ class SearchFragment1 : BaseFragment() {
 
         if (matches == null) {
             binding.matchesQueriesContainer.visibility = View.GONE
-            if (state.historyQuery.isEmpty()) {
+            if (state.historyQueries.isEmpty()) {
                 binding.historyQueryContainer.visibility = View.GONE
             } else {
                 binding.historyQueryContainer.visibility = View.VISIBLE
                 binding.historyQueryChipGroup.removeAllViews()
-                state.historyQuery.forEach { query ->
+                state.historyQueries.forEach { query ->
                     binding.historyQueryChipGroup.addView(buildQueryChip(query))
                 }
             }

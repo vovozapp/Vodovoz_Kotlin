@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.app.ActivityCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -25,6 +26,7 @@ import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.effects.LifecycleEffect
+import com.vodovoz.app.feature.catalog.model.CatalogCategoryUi
 import com.vodovoz.app.ui.model.CategoryUI
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.parcelize.Parcelize
@@ -72,6 +74,10 @@ class PaginatedProductsCatalogWithoutFiltersFragment : Fragment() {
                             when (event) {
                                 ProductsListNoFilterFlowViewModel.ProductListNoFilterEvent.GoBack -> {
                                     findNavController().popBackStack()
+                                }
+
+                                is ProductsListNoFilterFlowViewModel.ProductListNoFilterEvent.GoToSearch -> {
+                                    findNavController().navigate(R.id.searchFragment, bundleOf("query" to event.query))
                                 }
                             }
                         }
@@ -173,6 +179,9 @@ class PaginatedProductsCatalogWithoutFiltersFragment : Fragment() {
 
         @Parcelize
         data class Search(val query: String) : DataSource()
+
+        @Parcelize
+        data class Catalogs(val catalogCategory: CatalogCategoryUi) : DataSource() //TODO
 
         @Parcelize
         data object Missing : DataSource()

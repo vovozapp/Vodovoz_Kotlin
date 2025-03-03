@@ -5,8 +5,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.ripple
@@ -15,9 +21,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.vodovoz.app.R
 import com.vodovoz.app.design_system.ExtendedTheme
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.vodovozSurface
@@ -57,6 +65,63 @@ fun VodovozChip(
             overflow = TextOverflow.Ellipsis
         )
     }
+}
+
+@Composable
+fun VodovozClosableChip(
+    modifier: Modifier = Modifier,
+    text: String,
+    selected: Boolean,
+    onSelect: () -> Unit = {},
+    onClose: () -> Unit = {},
+    contentPadding: PaddingValues = PaddingValues(
+        end = 8.dp,
+        start = 12.dp,
+        top = 6.dp,
+        bottom = 6.dp
+    )
+) {
+    Row(
+        modifier = modifier
+            .vodovozSurface(
+                border = if (selected) null else BorderStroke(
+                    1.dp,
+                    MaterialTheme.colorScheme.surfaceVariant
+                ),
+                shape = MaterialTheme.shapes.small,
+                backgroundColor = if (selected) MaterialTheme.colorScheme.surfaceTint else MaterialTheme.colorScheme.surface,
+                shadowElevation = 0f
+            )
+            .clickable(
+                interactionSource = null,
+                indication = ripple(),
+                enabled = true,
+                onClick = onSelect
+            ).padding(contentPadding),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = text,
+            modifier = Modifier.weight(1f, false),
+            style = MaterialTheme.typography.bodySmall,
+            color = if (selected) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.onBackground,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Icon(
+            painter = painterResource(id = R.drawable.ic_clean),
+            contentDescription = null,
+            modifier = Modifier
+                .size(18.dp)
+                .clip(CircleShape)
+                .clickable {
+                    onClose()
+                },
+            tint = MaterialTheme.colorScheme.onSurface
+        )
+    }
+
 }
 
 @Composable

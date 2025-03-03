@@ -67,7 +67,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
     ProductListNoFilterState()
 ) {
 
-    private val dataSource = savedState.get<DataSource>("dataSource") ?: DataSource.Missing
+    val dataSource = savedState.get<DataSource>("dataSource") ?: DataSource.Missing
 
     private val changeLayoutManager = MutableStateFlow(LINEAR)
     fun observeChangeLayoutManager() = changeLayoutManager.asStateFlow()
@@ -156,9 +156,15 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
                 )
             }
 
+            is DataSource.Catalogs -> {
+                TODO()
+            }
+
+
             DataSource.Missing -> {
                 TODO()
             }
+
         }
 
     }
@@ -250,16 +256,19 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
     }
 
     fun selectCategory(category: CategoryUi) = viewModelScope.launch {
+        val newCategory = if(category == dataState.currentCategory) CategoryUi.Empty else category
         uiStateListener.updateData { s ->
-            s.copy(
-                currentCategory = category
-            )
+            s.copy(currentCategory = newCategory)
         }
         fetchProductListData()
     }
 
     fun navigateBack() = viewModelScope.launch {
         eventListener.emit(ProductListNoFilterEvent.GoBack)
+    }
+
+    fun navigateToSearch(query: String) = viewModelScope.launch {
+        eventListener.emit(ProductListNoFilterEvent.GoToSearch(query))
     }
 
     @Immutable
@@ -290,6 +299,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
 
     sealed class ProductListNoFilterEvent: Event {
         data object GoBack: ProductListNoFilterEvent()
+        data class GoToSearch(val query: String) : ProductListNoFilterEvent()
     }
 
     companion object {

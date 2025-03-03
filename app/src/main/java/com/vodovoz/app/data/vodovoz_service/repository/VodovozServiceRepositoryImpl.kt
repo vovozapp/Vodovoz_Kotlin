@@ -14,6 +14,7 @@ import com.vodovoz.app.data.vodovoz_service.model.ErrorMessageResponseDTO
 import com.vodovoz.app.data.vodovoz_service.model.PreOrderResponseDTO
 import com.vodovoz.app.domain.general.VodovozPagingSource
 import com.vodovoz.app.domain.general.model.BannerModel
+import com.vodovoz.app.domain.general.model.CatalogDetailsModel
 import com.vodovoz.app.domain.general.model.CommentModel
 import com.vodovoz.app.domain.general.model.EmptyResultException
 import com.vodovoz.app.domain.general.model.FavoriteNotFoundException
@@ -40,6 +41,7 @@ import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
 import com.vodovoz.app.domain.general.model.ValidationException
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import kotlinx.coroutines.flow.Flow
+import retrofit2.Response
 import javax.inject.Inject
 
 
@@ -47,6 +49,17 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     private val vodovozService: VodovozService,
     private val accountManager: AccountManager,
 ) : VodovozServiceRepository {
+
+    override fun getCatalogDetails(): Flow<Result<CatalogDetailsModel>> {
+        return executeRequest(
+            request = {
+                vodovozService.getCatalogDetails()
+            },
+            mapper = { response ->
+                response.data?.toDomain()!!
+            }
+        )
+    }
 
 
     override fun getSearchProductsPaged(

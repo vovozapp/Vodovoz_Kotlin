@@ -6,6 +6,7 @@ import com.vodovoz.app.domain.general.model.ButtonAction
 import com.vodovoz.app.domain.general.model.DataAllAction
 import com.vodovoz.app.domain.general.model.VodovozAction
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
+import com.vodovoz.app.feature.catalog.CatalogFragmentDirections
 import com.vodovoz.app.feature.home.HomeFragmentDirections
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 
@@ -64,9 +65,14 @@ fun DataAllAction.activate(
             )
         }
 
+        DataAllAction.BuyCertificate ->{
+            navController.navigate(CatalogFragmentDirections.actionToBuyCertificateFragment())
+        }
+
         DataAllAction.Unknown -> {
 
         }
+
     }
 }
 

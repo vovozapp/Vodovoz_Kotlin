@@ -21,6 +21,7 @@ import com.vodovoz.app.data.vodovoz_service.model.SiteStateResponseDTO
 import com.vodovoz.app.data.vodovoz_service.model.StoriesDTO
 import com.vodovoz.app.data.vodovoz_service.model.SuperTopAndBottomSectionsDTO
 import com.vodovoz.app.data.vodovoz_service.model.VodovozResponseDTO
+import com.vodovoz.app.data.vodovoz_service.model.catalog_details.CatalogDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.ProductDetailsDTO
 import retrofit2.Response
 import retrofit2.http.GET
@@ -28,6 +29,12 @@ import retrofit2.http.Query
 import retrofit2.http.QueryMap
 
 interface VodovozService {
+
+    /**
+     * Catalog screen
+     * */
+    @GET("razdel/category.php?iblock_id=12")
+    suspend fun getCatalogDetails(): Response<VodovozResponseDTO<CatalogDetailsDTO>>
 
     /**
      * Search requests

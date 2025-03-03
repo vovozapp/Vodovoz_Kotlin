@@ -18,12 +18,12 @@ fun ACTION_DTO.toAction(): VodovozAction? {
         "BRAND" -> VodovozAction.Brand(id.toIntOrNull() ?: return null)
         "URL" -> VodovozAction.Url(id)
         "URLKYKI" -> VodovozAction.UrlWithCookie(id)
-        "DANNYEVSE" -> id.toDataAll()
+        "DANNYEVSE" -> id.toDataAllAction()
         else -> VodovozAction.Unknown(action, id)
     }
 }
 
-fun String.toDataAll(): DataAllAction {
+fun String.toDataAllAction(): DataAllAction {
     return when (this) {
         "vseskidki" -> DataAllAction.AllDiscount
         "vsenovinki" -> DataAllAction.AllNewProducts
@@ -31,6 +31,7 @@ fun String.toDataAll(): DataAllAction {
         "dostavka" -> DataAllAction.Delivery
         "profil" -> DataAllAction.Profile
         "trekervodi" -> DataAllAction.WaterTracker
+        "pokypkasertificat" -> DataAllAction.BuyCertificate
         else -> DataAllAction.Unknown
     }
 }

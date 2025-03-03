@@ -1,5 +1,15 @@
 package com.vodovoz.app.feature.about_product
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
+import androidx.compose.animation.with
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -70,27 +80,24 @@ fun AboutProductScreen(
                 .verticalScroll(rememberScrollState())
         ) {
 
-            when (currentTab.dataId) {
-                viewState.description.id -> {
-                    DescriptionTabContent(description = viewState.description)
-                }
-
-                viewState.characteristics.id -> {
-                    CharacteristicsTabContent(characteristics = viewState.characteristics)
-                }
-
-                viewState.documents.id -> {
-                    DocumentsTabContent(
+            AnimatedContent(
+                targetState = currentTab.dataId,
+                transitionSpec = {
+                    fadeIn() togetherWith  fadeOut()
+                },
+                label = "TabSwitchAnimation"
+            ) { tabId ->
+                when (tabId) {
+                    viewState.description.id -> DescriptionTabContent(description = viewState.description)
+                    viewState.characteristics.id -> CharacteristicsTabContent(characteristics = viewState.characteristics)
+                    viewState.documents.id -> DocumentsTabContent(
                         documentsBlock = viewState.documents,
-                        onDocumentClick = { document -> viewModel.navigateToDocumentViewer(document) })
-                }
+                        onDocumentClick = { document -> viewModel.navigateToDocumentViewer(document) }
+                    )
 
-                else -> {
-
+                    else -> {}
                 }
             }
         }
-
-
     }
 }

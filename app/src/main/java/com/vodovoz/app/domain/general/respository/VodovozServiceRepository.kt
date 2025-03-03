@@ -1,7 +1,9 @@
 package com.vodovoz.app.domain.general.respository
 
 import androidx.paging.PagingData
+import com.vodovoz.app.data.vodovoz_service.model.catalog_details.CatalogDetailsDTO
 import com.vodovoz.app.domain.general.model.BannerModel
+import com.vodovoz.app.domain.general.model.CatalogDetailsModel
 import com.vodovoz.app.domain.general.model.CommentModel
 import com.vodovoz.app.domain.general.model.FieldModel
 import com.vodovoz.app.domain.general.model.OrderWithMenuModel
@@ -23,8 +25,11 @@ import com.vodovoz.app.domain.general.model.SortModel
 import com.vodovoz.app.domain.general.model.StoryModel
 import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
 import kotlinx.coroutines.flow.Flow
+import retrofit2.Response
 
 interface VodovozServiceRepository {
+
+    fun getCatalogDetails(): Flow<Result<CatalogDetailsModel>>
 
     fun getSearchProductsPaged(
         query: String,

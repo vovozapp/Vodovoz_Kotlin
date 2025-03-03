@@ -35,9 +35,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -98,11 +100,11 @@ fun ProductDetailsInfo(
         ) {
             Text(
                 modifier = Modifier.weight(1f),
-                text = if (showDetailText) {
+                text = AnnotatedString.fromHtml(if (showDetailText) {
                     detailInfo.content
                 } else {
                     detailInfo.content.takeWhile { it != '\n' }
-                },
+                }),
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.bodySmall
             )
@@ -162,7 +164,7 @@ fun ProductDetailsInfo(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CharacteristicItem(modifier: Modifier = Modifier, characteristic: CharacteristicUi) {
     val tooltipState = rememberTooltipState(isPersistent = true)

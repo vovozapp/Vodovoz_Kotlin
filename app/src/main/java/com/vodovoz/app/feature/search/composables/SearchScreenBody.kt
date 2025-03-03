@@ -14,9 +14,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.vodovoz.app.R
 import com.vodovoz.app.design_system.composables.card.GridProductCard
 import com.vodovoz.app.design_system.composables.chip.VodovozChip
+import com.vodovoz.app.design_system.composables.chip.VodovozClosableChip
 import com.vodovoz.app.feature.home.model.ProductUi
 import com.vodovoz.app.feature.home.model.SectionUi
 
@@ -26,8 +29,10 @@ import com.vodovoz.app.feature.home.model.SectionUi
 fun SearchScreenBody(
     modifier: Modifier = Modifier,
     matchingQueries: List<String>,
+    searchHistory: List<String>,
     sectionRecommendations: SectionUi<ProductUi>,
     onQueryChoose: (String) -> Unit,
+    onQueryClose: (String) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -35,53 +40,90 @@ fun SearchScreenBody(
             .fillMaxSize()
             .padding(horizontal = 16.dp)
     ) {
-        FlowRow(
-            modifier = Modifier.padding(top = 14.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            maxLines = 5
-        ) {
-            matchingQueries.forEach { query ->
-                VodovozChip(text = query, selected = false, onSelect = { onQueryChoose(query) })
+
+        if (searchHistory.isNotEmpty()) {
+            Text(
+                text = stringResource(R.string.you_were_looking),
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.headlineSmall,
+                modifier = Modifier.padding(top = 14.dp)
+            )
+
+            FlowRow(
+                modifier = Modifier.padding(top = 16.dp, bottom = 10.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                maxLines = 3
+            ) {
+                searchHistory.forEach { query ->
+                    VodovozClosableChip(text = query, selected = false, onSelect = { onQueryChoose(query) }, onClose = { onQueryClose(query)})
+                }
+            }
+        }
+
+
+
+        if (matchingQueries.isNotEmpty()) {
+            Text(
+                text = stringResource(R.string.popularity),
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.headlineSmall,
+                modifier = Modifier.padding(top = 14.dp)
+            )
+
+
+            FlowRow(
+                modifier = Modifier.padding(top = 16.dp, bottom = 10.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                maxLines = 5
+            ) {
+                matchingQueries.forEach { query ->
+                    VodovozChip(text = query, selected = false, onSelect = { onQueryChoose(query) })
+                }
             }
         }
 
         val title = sectionRecommendations.title
-        if (title.isNotBlank()) {
+        val products = sectionRecommendations.items
+
+        if (title.isNotBlank() && products.isNotEmpty()) {
             Text(
                 text = title,
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(top = 24.dp)
+                modifier = Modifier.padding(top = 14.dp)
             )
         }
 
-        val products = sectionRecommendations.items
-        FlowRow(
-            modifier = Modifier
-                .padding(vertical = 16.dp)
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            maxItemsInEachRow = 2
-        ) {
-            products.forEach { product ->
-                GridProductCard(
-                    modifier = Modifier.weight(1f),
-                    product = product,
-                    onClick = {
 
-                    },
-                    onLike = {
+        if (products.isNotEmpty()) {
+            FlowRow(
+                modifier = Modifier
+                    .padding(vertical = 16.dp)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                maxItemsInEachRow = 2
+            ) {
+                products.forEach { product ->
+                    GridProductCard(
+                        modifier = Modifier.weight(1f),
+                        product = product,
+                        onClick = {
 
-                    },
-                    onAnalogsClick = {
+                        },
+                        onLike = {
 
-                    }
-                )
-            }
-            if (products.size % 2 == 1) {
-                Spacer(modifier = Modifier.weight(1f))
+                        },
+                        onAnalogsClick = {
+
+                        }
+                    )
+                }
+                if (products.size % 2 == 1) {
+                    Spacer(modifier = Modifier.weight(1f))
+                }
             }
         }
     }

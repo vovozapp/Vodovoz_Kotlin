@@ -61,7 +61,7 @@ private fun VodovozTabRowPreview() {
         VodovozScrollableTabRow(selectedTabIndex = 0) {
             list.forEach {
                 AssistChip(
-                    modifier = Modifier.height(30.dp),
+                    modifier = Modifier,
                     onClick = { },
                     label = { Text(it.toString()) },
                     enabled = it == list.random()

@@ -293,7 +293,7 @@ private fun BasicSearchField(
         @Composable { innerTextField -> innerTextField() },
 ) {
     var textField by rememberSaveable(stateSaver = TextFieldValue.Saver) {
-        mutableStateOf(TextFieldValue(value))
+        mutableStateOf(TextFieldValue(""))
     }
 
     LaunchedEffect(value) {
@@ -325,7 +325,7 @@ private fun BasicSearchField(
         keyboardActions = KeyboardActions(
             onSearch = { onSearchClick() }
         ),
-        readOnly = readOnly
+        readOnly = readOnly,
     )
 
 }

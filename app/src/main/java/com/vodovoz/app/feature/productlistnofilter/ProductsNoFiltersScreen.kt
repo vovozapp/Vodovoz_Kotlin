@@ -58,9 +58,14 @@ fun ProductsNoFiltersScreen(
             .windowInsetsPadding(WindowInsets.systemBars)
             .consumeWindowInsets(WindowInsets.systemBars)
     ) {
-        StaticSearchTopBar(
-            onFocus = {
+        val searchQuery =
+            (viewModel.dataSource as? PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Search)?.query
+                ?: ""
 
+        StaticSearchTopBar(
+            value = searchQuery,
+            onFocus = {
+                viewModel.navigateToSearch(searchQuery)
             },
             onMicClick = {
 

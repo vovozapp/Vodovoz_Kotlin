@@ -7,11 +7,19 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.app.ActivityCompat
+import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
@@ -28,6 +36,8 @@ import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.databinding.FragmentMainCatalogFlowBinding
+import com.vodovoz.app.design_system.VodovozTheme
+import com.vodovoz.app.design_system.composables.placeholders.NetworkErrorPlaceholder
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
 import com.vodovoz.app.feature.catalog.adapter.CatalogFlowAdapter
 import com.vodovoz.app.feature.catalog.adapter.CatalogFlowClickListener
@@ -38,19 +48,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CatalogFragment1 : BaseFragment() {
+class CatalogFragment : Fragment() {
 
-    private val binding: FragmentMainCatalogFlowBinding by viewBinding {
-        FragmentMainCatalogFlowBinding.bind(
-            contentView
-        )
-    }
     private val viewModel: CatalogFlowViewModel by activityViewModels()
 
-    private val adapter = CatalogFlowAdapter(
-        clickListener = getCatalogFlowClickListener(),
-        nestingPosition = 0
-    )
 
     @Inject
     lateinit var tabManager: TabManager
@@ -58,21 +59,37 @@ class CatalogFragment1 : BaseFragment() {
     @Inject
     lateinit var accountManager: AccountManager
 
-    override fun layout(): Int = R.layout.fragment_main_catalog_flow
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.firstLoad()
+        observeEvents()
+        observeTabReselect()
     }
 
-    override fun initView() {
-        initCategoryRecycler()
-        observeStateUi()
-        observeEvents()
-        initSearch()
-        bindErrorRefresh { viewModel.refresh() }
-        bindSwipeRefresh()
-        observeTabReselect()
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.Default)
+            setContent {
+                VodovozTheme {
+                    val pagingState by viewModel.observeUiState().collectAsStateWithLifecycle()
+                    val viewState = pagingState.data
+
+                    when(viewState.uiState){
+                        CatalogFlowViewModel.UiState.Error -> {
+                            NetworkErrorPlaceholder { }
+                        }
+                        CatalogFlowViewModel.UiState.Success -> {
+                            CatalogScreen(viewModel = viewModel, viewState = viewState)
+                        }
+                    }
+
+                }
+            }
+        }
     }
 
     private fun observeEvents() {
@@ -85,8 +102,9 @@ class CatalogFragment1 : BaseFragment() {
                                 tabManager.setAuthRedirect(findNavController().graph.id)
                                 tabManager.selectTab(R.id.graph_profile)
                             }
-                            else -> {
 
+                            CatalogFlowViewModel.CatalogEvents.GoToSearch -> {
+                                findNavController().navigate(R.id.searchFragment)
                             }
                         }
                     }
@@ -94,48 +112,6 @@ class CatalogFragment1 : BaseFragment() {
         }
     }
 
-    private fun bindSwipeRefresh() {
-        binding.refreshContainer.setOnRefreshListener {
-            viewModel.refresh()
-            binding.refreshContainer.isRefreshing = false
-        }
-    }
-
-    private fun initCategoryRecycler() {
-        binding.categoryRecycler.adapter = adapter
-    }
-
-    private fun initSearch() {
-        initSearchToolbar(
-            "Поиск товара",
-            { findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment()) },
-            { findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment()) },
-            { navigateToQrCodeFragment() },
-            { startSpeechRecognizer() }
-        )
-    }
-
-    private fun observeStateUi() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.observeUiState()
-                    .collect { catalogState ->
-
-                        if (catalogState.loadingPage) {
-                            showLoader()
-                        }
-
-                        adapter.submitList(catalogState.data.itemsList)
-
-                        if (!catalogState.loadingPage) {
-                            hideLoader()
-                        }
-
-                        showError(catalogState.error)
-                    }
-            }
-        }
-    }
 
     private fun ActionEntity?.invoke(
         navController: NavController = findNavController(),
@@ -190,35 +166,17 @@ class CatalogFragment1 : BaseFragment() {
         navDirect?.let { navController.navigate(navDirect) }
     }
 
-    private fun getCatalogFlowClickListener(): CatalogFlowClickListener {
-        return object : CatalogFlowClickListener {
-            override fun onCategoryClick(category: CategoryUI) {
-                if (category.actionEntity == null) {
-                    if (category.id != null) {
-                        findNavController().navigate(
-                            CatalogFragmentDirections.actionToPaginatedProductsCatalogFragment(
-                                category.id
-                            )
-                        )
-                    }
-                } else {
-                    category.actionEntity.invoke()
-                }
-            }
-        }
-    }
-
     private fun observeTabReselect() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 tabManager.observeTabReselect()
                     .collect {
-                        if (it != TabManager.DEFAULT_STATE && it == R.id.catalogFragment) {
-                            binding.categoryRecycler.post {
-                                binding.categoryRecycler.smoothScrollToPosition(0)
-                            }
-                            tabManager.setDefaultState()
-                        }
+//                        if (it != TabManager.DEFAULT_STATE && it == R.id.catalogFragment) {
+//                            binding.categoryRecycler.post {
+//                                binding.categoryRecycler.smoothScrollToPosition(0)
+//                            }
+//                            tabManager.setDefaultState()
+//                        }
                     }
             }
         }
@@ -239,20 +197,6 @@ class CatalogFragment1 : BaseFragment() {
             }
 
             findNavController().navigate(R.id.qrCodeFragment)
-
-        }
-    }
-
-    private fun startSpeechRecognizer() {
-        permissionsController.methodRequiresRecordAudioPermission {
-            if (ActivityCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.RECORD_AUDIO
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                return@methodRequiresRecordAudioPermission
-            }
-            SpeechDialogFragment().show(childFragmentManager, "TAG")
 
         }
     }

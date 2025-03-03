@@ -186,21 +186,8 @@ private fun TabView() {
         var selectedTabPosition by remember { mutableIntStateOf(1) }
 
         val items = listOf(
-            "Описание", "Характеристики", "Документы",
+            "Описание", "Апельсинки", "Водичка",
         )
-
-        val sequence = listOf(2, 1, 0)
-        var index = 0
-        LaunchedEffect(Unit) {
-            while (true) {
-                delay(1000)
-                selectedTabPosition = sequence[index]
-                index += 1
-                if (index >= 3) {
-                    index = 0
-                }
-            }
-        }
 
         VodovozTabRow(
             modifier = Modifier.padding(horizontal = 30.dp),

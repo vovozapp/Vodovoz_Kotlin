@@ -1,6 +1,10 @@
 package com.vodovoz.app.common.datastore
 
+import kotlinx.coroutines.flow.Flow
+
 interface DataStoreRepository {
+
+    fun getStringFlow(key: String): Flow<String?>
 
     fun putString(key: String, value: String)
 

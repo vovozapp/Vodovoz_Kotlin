@@ -31,9 +31,7 @@ class AboutProductViewModel @Inject constructor(
 
     fun selectTab(i: Int) = viewModelScope.launch {
         _state.update { s ->
-            s.copy(
-                selectedTabIndex = i
-            )
+            s.copy(selectedTabIndex = i)
         }
     }
 

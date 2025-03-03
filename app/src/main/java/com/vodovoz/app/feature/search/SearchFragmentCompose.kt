@@ -46,9 +46,6 @@ class SearchFragment : Fragment() {
     @Inject
     lateinit var tabManager: TabManager
 
-
-    private val args: SearchFragmentArgs by navArgs()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         observeEvents()
@@ -83,12 +80,7 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (args.query.isNotEmpty()) {
-            viewModel.fetchMatchesQueries(args.query)
-        }
-
         viewModel.clearScrollState()
-
         initBackButton()
     }
 

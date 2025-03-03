@@ -9,7 +9,9 @@ import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
@@ -33,6 +35,12 @@ class DataStoreRepositoryImpl @Inject constructor(
     @ApplicationContext
     private val context: Context,
 ) : DataStoreRepository {
+
+    override fun getStringFlow(key: String): Flow<String?> {
+        val prefKey = stringPreferencesKey(key)
+        return context.dataStore.data.map { prefs -> prefs[prefKey] }
+    }
+
     override fun putString(key: String, value: String) {
         val prefKey = stringPreferencesKey(key)
         runBlocking {
