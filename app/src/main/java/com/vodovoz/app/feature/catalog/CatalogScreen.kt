@@ -16,7 +16,9 @@ fun CatalogScreen(viewModel: CatalogFlowViewModel, viewState: CatalogFlowViewMod
         topBar = {
             HomeTopBar(
                 value = "",
-                onValueChange = {},
+                onValueChange = {
+
+                },
                 onFocus = {
                     viewModel.navigateToSearch()
                 },
@@ -37,8 +39,8 @@ fun CatalogScreen(viewModel: CatalogFlowViewModel, viewState: CatalogFlowViewMod
             modifier = Modifier.padding(paddingValues).consumeWindowInsets(paddingValues),
             categories = viewState.categories,
             banners = viewState.banners,
-            onCategoryClick = {
-
+            onCategoryClick = { catalogCategory ->
+                viewModel.navigateToSubCategories(catalogCategory)
             },
             onBannerClick = {
 

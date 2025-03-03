@@ -123,7 +123,6 @@ fun StaticSearchTopBar(
     onFocus: () -> Unit,
     onMicClick: () -> Unit,
     onScanClick: () -> Unit,
-    onSearchClick: () -> Unit,
     onNavigationClick: () -> Unit,
 ) {
 
@@ -157,7 +156,7 @@ fun StaticSearchTopBar(
             value = value,
             onValueChange = {},
             interactionSource = interactionSource,
-            onSearchClick = onSearchClick,
+            onSearchClick = {},
             readOnly = true
         ) { innerTextField ->
             TextFieldDefaults.StaticSearchDecorationBox(
@@ -339,7 +338,6 @@ private fun StaticSearchTopBarPreview() {
             onFocus = { },
             onMicClick = {},
             onScanClick = { /*TODO*/ },
-            onSearchClick = {},
             onNavigationClick = {}
         )
     }

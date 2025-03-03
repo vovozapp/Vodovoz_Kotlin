@@ -17,7 +17,7 @@ fun CATALOG_CATEGORY_DTO.toDomain(): CatalogCategoryModel? {
     return CatalogCategoryModel(
         id = ID ?: return null,
         name = NAME ?: "",
-        picture = PICTURE?.toFullUrl() ?: return null,
+        picture = PICTURE?.toFullUrl() ?: "",
         action = UF_SILKAPEREXOD?.toDataAllAction(),
         parentId = IBLOCK_SECTION_ID,
         depthLevel = DEPTH_LEVEL ?: 1,

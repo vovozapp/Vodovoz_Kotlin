@@ -27,7 +27,8 @@ fun ProductsNoFilterBody(
     isGridView: Boolean,
     onSortingClick: () -> Unit,
     onSwitchLayoutClick: () -> Unit,
-    onCategoryClick: (CategoryUi) -> Unit
+    onCategoryClick: (CategoryUi) -> Unit,
+    onCategoriesListClick: () -> Unit
 ) {
     Column(modifier = modifier) {
         ProductListTitle(
@@ -44,7 +45,9 @@ fun ProductsNoFilterBody(
             onCategoryClick = { category ->
                 onCategoryClick(category)
             },
-            onCategoriesListClick = {}
+            onCategoriesListClick = {
+                onCategoriesListClick()
+            }
         )
 
         ProductListOptionsRow(

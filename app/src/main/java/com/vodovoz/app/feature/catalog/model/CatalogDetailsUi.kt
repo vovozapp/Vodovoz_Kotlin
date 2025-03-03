@@ -23,7 +23,13 @@ data class CatalogCategoryUi(
     val picture: String,
     val action: DataAllAction?,
     val childCategories: List<CatalogCategoryUi>,
-) : Parcelable
+) : Parcelable {
+
+    companion object{
+        val Empty = CatalogCategoryUi(-1, "", "", DataAllAction.Unknown, emptyList())
+    }
+
+}
 
 fun CatalogCategoryModel.toUi(): CatalogCategoryUi {
     return CatalogCategoryUi(

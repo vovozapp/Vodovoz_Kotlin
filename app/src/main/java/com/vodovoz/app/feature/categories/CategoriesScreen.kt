@@ -21,6 +21,7 @@ import com.vodovoz.app.design_system.composables.floating.BottomFloatingContaine
 import com.vodovoz.app.design_system.composables.top_bar.VodovozTopBar
 import com.vodovoz.app.feature.categories.model.CategoriesState
 
+@Suppress("NonSkippableComposable")
 @Composable
 fun CategoriesScreen(viewModel: CategoriesViewModel, viewState: CategoriesState) {
     Column(

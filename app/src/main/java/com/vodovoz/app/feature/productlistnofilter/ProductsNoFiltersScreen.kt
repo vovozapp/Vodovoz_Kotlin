@@ -73,9 +73,6 @@ fun ProductsNoFiltersScreen(
             onScanClick = {
 
             },
-            onSearchClick = {
-
-            },
             onNavigationClick = {
                 viewModel.navigateBack()
             }
@@ -109,6 +106,9 @@ fun ProductsNoFiltersScreen(
                     },
                     onCategoryClick = { category ->
                         viewModel.selectCategory(category)
+                    },
+                    onCategoriesListClick = {
+                        viewModel.navigateToCategories()
                     }
                 )
             }

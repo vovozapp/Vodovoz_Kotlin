@@ -34,6 +34,7 @@ class SiteStateManager @Inject constructor(
     suspend fun requestSiteState() {
         if (siteStateListener.value == null) {
             runCatching {
+                //New api
                 val siteState = vodovozServiceRepository.getSiteState().single().getOrThrow()
                 val siteAgreement = siteState.agreement
                 val jivoChat = siteState.jivoChat

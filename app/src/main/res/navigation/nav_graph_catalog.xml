@@ -6,6 +6,17 @@
     app:startDestination="@id/catalogFragment">
 
     <fragment
+        android:id="@+id/subCategoriesFragment"
+        android:name="com.vodovoz.app.feature.sub_categories.SubCategoriesFragment"
+        android:label="fragment_sub_categories">
+
+        <argument
+            android:name="category"
+            app:argType="com.vodovoz.app.feature.catalog.model.CatalogCategoryUi" />
+
+    </fragment>
+
+    <fragment
         android:id="@+id/preOrderFragment"
         android:name="com.vodovoz.app.feature.preorder.PreOrderFragment"
         android:label="PreOrderFragment">

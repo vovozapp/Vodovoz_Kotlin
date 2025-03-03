@@ -3,8 +3,6 @@ package com.vodovoz.app.feature.catalog
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,25 +22,17 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import by.kirich1409.viewbindingdelegate.viewBinding
-import com.bumptech.glide.Glide
 import com.vodovoz.app.R
 import com.vodovoz.app.common.account.data.AccountManager
-import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.permissions.PermissionsController
-import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
 import com.vodovoz.app.common.tab.TabManager
+import com.vodovoz.app.core.navigation.navigateToSubCategories
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.data.model.common.ActionEntity
-import com.vodovoz.app.databinding.FragmentMainCatalogFlowBinding
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.placeholders.NetworkErrorPlaceholder
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
-import com.vodovoz.app.feature.catalog.adapter.CatalogFlowAdapter
-import com.vodovoz.app.feature.catalog.adapter.CatalogFlowClickListener
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
-import com.vodovoz.app.ui.model.CategoryUI
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -70,7 +60,7 @@ class CatalogFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.Default)
             setContent {
@@ -78,10 +68,11 @@ class CatalogFragment : Fragment() {
                     val pagingState by viewModel.observeUiState().collectAsStateWithLifecycle()
                     val viewState = pagingState.data
 
-                    when(viewState.uiState){
+                    when (viewState.uiState) {
                         CatalogFlowViewModel.UiState.Error -> {
                             NetworkErrorPlaceholder { }
                         }
+
                         CatalogFlowViewModel.UiState.Success -> {
                             CatalogScreen(viewModel = viewModel, viewState = viewState)
                         }
@@ -96,8 +87,8 @@ class CatalogFragment : Fragment() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.observeEvent()
-                    .collect {
-                        when (it) {
+                    .collect { event ->
+                        when (event) {
                             is CatalogFlowViewModel.CatalogEvents.GoToProfile -> {
                                 tabManager.setAuthRedirect(findNavController().graph.id)
                                 tabManager.selectTab(R.id.graph_profile)
@@ -105,6 +96,10 @@ class CatalogFragment : Fragment() {
 
                             CatalogFlowViewModel.CatalogEvents.GoToSearch -> {
                                 findNavController().navigate(R.id.searchFragment)
+                            }
+
+                            is CatalogFlowViewModel.CatalogEvents.GoToSubCategories -> {
+                                findNavController().navigateToSubCategories(event.catalogCategory)
                             }
                         }
                     }

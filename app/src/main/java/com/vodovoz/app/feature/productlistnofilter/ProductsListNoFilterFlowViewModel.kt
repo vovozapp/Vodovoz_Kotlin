@@ -7,49 +7,33 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
-import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.content.Event
 import com.vodovoz.app.common.content.PagingContractViewModel
-import com.vodovoz.app.common.content.PagingStateViewModel
 import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.itemadapter.Item
-import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
-import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.content.updateData
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
-import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.domain.general.model.ProductModel
 import com.vodovoz.app.domain.general.model.ProductsSectionModel
 import com.vodovoz.app.domain.general.model.ProductsSectionUi
 import com.vodovoz.app.domain.general.model.toUi
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
-import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
 import com.vodovoz.app.feature.home.model.CategoryUi
 import com.vodovoz.app.feature.home.model.ProductUi
 import com.vodovoz.app.feature.home.model.toUi
 import com.vodovoz.app.feature.product_comments.model.SortUi
 import com.vodovoz.app.feature.product_comments.model.toDomain
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment.DataSource
-import com.vodovoz.app.mapper.CategoryMapper.mapToUI
-import com.vodovoz.app.mapper.ProductMapper.mapToUI
 import com.vodovoz.app.ui.model.CategoryUI
-import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.ui.model.SortTypeUI
-import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -156,7 +140,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
                 )
             }
 
-            is DataSource.Catalogs -> {
+            is DataSource.Category -> {
                 TODO()
             }
 
@@ -271,6 +255,10 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
         eventListener.emit(ProductListNoFilterEvent.GoToSearch(query))
     }
 
+    fun navigateToCategories() = viewModelScope.launch {
+        eventListener.emit(ProductListNoFilterEvent.GoToCategories(dataState.productsSection.categories,dataState.currentCategory))
+    }
+
     @Immutable
     data class ProductListNoFilterState(
         val categoryId: Long = -1,
@@ -300,6 +288,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
     sealed class ProductListNoFilterEvent: Event {
         data object GoBack: ProductListNoFilterEvent()
         data class GoToSearch(val query: String) : ProductListNoFilterEvent()
+        data class GoToCategories(val categories: List<CategoryUi>,val currentCategory: CategoryUi) : ProductListNoFilterEvent()
     }
 
     companion object {

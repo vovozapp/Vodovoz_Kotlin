@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.categories
+package com.vodovoz.app.feature.sub_categories
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,15 +11,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.fragment.findNavController
+import com.vodovoz.app.R
+import com.vodovoz.app.core.navigation.navigateToSubCategories
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.effects.LifecycleEffect
-import com.vodovoz.app.feature.categories.model.CategoriesEvent
-import com.vodovoz.app.feature.home.model.CategoryUi
-import com.vodovoz.app.feature.home.model.PopularCategoryUi
+import com.vodovoz.app.feature.sub_categories.model.SubCategoriesEvent
 
-class CategoriesFragment : Fragment() {
+class SubCategoriesFragment : Fragment() {
 
-    val viewModel by viewModels<CategoriesViewModel>()
+    val viewModel by viewModels<SubCategoriesViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,31 +28,41 @@ class CategoriesFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.Default)
+
             setContent {
                 VodovozTheme {
                     val viewState by viewModel.state.collectAsStateWithLifecycle()
 
-                    CategoriesScreen(viewModel = viewModel, viewState = viewState)
+                    SubCategoriesScreen(
+                        viewModel = viewModel,
+                        viewState = viewState
+                    )
 
                     LifecycleEffect {
                         viewModel.events.collect { event ->
                             when (event) {
-                                is CategoriesEvent.GoBackWithArguments -> {
-                                    val navController = findNavController()
-                                    navController.previousBackStackEntry?.savedStateHandle?.set(
-                                        "category", event.currentCategory
-                                    )
-                                    navController.popBackStack()
+                                is SubCategoriesEvent.GoToProductList -> {
+
                                 }
 
-                                CategoriesEvent.GoBack -> {
+                                is SubCategoriesEvent.GoToSubCategories -> {
+                                    findNavController().navigateToSubCategories(event.category)
+                                }
+
+                                SubCategoriesEvent.GoBack -> {
                                     findNavController().popBackStack()
                                 }
+
+                                SubCategoriesEvent.GoToSearch -> {
+                                    findNavController().navigate(R.id.searchFragment)
+                                }
                             }
+
                         }
                     }
                 }
             }
+
         }
     }
 

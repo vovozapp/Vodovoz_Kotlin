@@ -50,7 +50,7 @@ class CatalogFlowViewModel @Inject constructor(
         fetchCatalogOld()
     }
 
-    fun fetchCatalogDetails() = viewModelScope.launch {
+    private fun fetchCatalogDetails() = viewModelScope.launch {
         vodovozServiceRepository.getCatalogDetails().collect { catalogDetailsResult ->
             catalogDetailsResult.onSuccess { catalogDetails ->
                 val (banners, categories) = catalogDetails.toUi()
@@ -114,9 +114,19 @@ class CatalogFlowViewModel @Inject constructor(
         eventListener.emit(CatalogEvents.GoToSearch)
     }
 
+    fun navigateToSubCategories(catalogCategory: CatalogCategoryUi) = viewModelScope.launch {
+        if (catalogCategory.childCategories.isNotEmpty()) {
+            eventListener.emit(CatalogEvents.GoToSubCategories(catalogCategory))
+        } else {
+
+        }
+    }
+
     sealed class CatalogEvents : Event {
+        data class GoToSubCategories(val catalogCategory: CatalogCategoryUi) : CatalogEvents()
+
         data object GoToProfile : CatalogEvents()
-        data object GoToSearch: CatalogEvents()
+        data object GoToSearch : CatalogEvents()
     }
 
     data class CatalogState(

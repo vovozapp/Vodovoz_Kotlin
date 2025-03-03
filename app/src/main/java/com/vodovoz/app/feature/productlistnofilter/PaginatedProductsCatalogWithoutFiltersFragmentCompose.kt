@@ -27,6 +27,7 @@ import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.effects.LifecycleEffect
 import com.vodovoz.app.feature.catalog.model.CatalogCategoryUi
+import com.vodovoz.app.feature.home.model.CategoryUi
 import com.vodovoz.app.ui.model.CategoryUI
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.parcelize.Parcelize
@@ -57,6 +58,10 @@ class PaginatedProductsCatalogWithoutFiltersFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+        findNavController().currentBackStackEntry?.savedStateHandle?.get<CategoryUi>("category")?.let { category ->
+            viewModel.selectCategory(category)
+        }
+
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.Default)
             setContent {
@@ -77,7 +82,20 @@ class PaginatedProductsCatalogWithoutFiltersFragment : Fragment() {
                                 }
 
                                 is ProductsListNoFilterFlowViewModel.ProductListNoFilterEvent.GoToSearch -> {
-                                    findNavController().navigate(R.id.searchFragment, bundleOf("query" to event.query))
+                                    findNavController().navigate(
+                                        R.id.searchFragment,
+                                        bundleOf("query" to event.query)
+                                    )
+                                }
+
+                                is ProductsListNoFilterFlowViewModel.ProductListNoFilterEvent.GoToCategories -> {
+                                    findNavController().navigate(
+                                        R.id.categoriesFragment,
+                                        bundleOf(
+                                            "categoryList" to event.categories.toTypedArray(),
+                                            "category" to event.currentCategory,
+                                        )
+                                    )
                                 }
                             }
                         }
@@ -180,8 +198,9 @@ class PaginatedProductsCatalogWithoutFiltersFragment : Fragment() {
         @Parcelize
         data class Search(val query: String) : DataSource()
 
+        //TODO - fix
         @Parcelize
-        data class Catalogs(val catalogCategory: CatalogCategoryUi) : DataSource() //TODO
+        data class Category(val catalogCategory: CatalogCategoryUi) : DataSource()
 
         @Parcelize
         data object Missing : DataSource()
