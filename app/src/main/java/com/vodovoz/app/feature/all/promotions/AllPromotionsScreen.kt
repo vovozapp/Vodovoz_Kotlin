@@ -22,7 +22,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.design_system.composables.top_bar.VodovozTopBar
 import com.vodovoz.app.feature.all.promotions.composables.AdvertisingInfoBottomSheet
 import com.vodovoz.app.feature.all.promotions.composables.AllPromotionsBody
-import com.vodovoz.app.feature.all.promotions.composables.PromotionsSkeletonPlaceholder
+import com.vodovoz.app.feature.all.promotions.composables.PromotionsLoadingPlaceholder
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Suppress("NonSkippableComposable")
@@ -49,7 +49,7 @@ fun AllPromotionsScreen(
         when (viewState.uiState) {
             AllPromotionsFlowViewModel.UiState.Error -> {}
             AllPromotionsFlowViewModel.UiState.Loading -> {
-                PromotionsSkeletonPlaceholder()
+                PromotionsLoadingPlaceholder()
             }
 
             AllPromotionsFlowViewModel.UiState.Success -> {

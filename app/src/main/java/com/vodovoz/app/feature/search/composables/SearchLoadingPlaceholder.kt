@@ -27,7 +27,9 @@ import kotlin.random.nextInt
 @Composable
 fun SearchLoadingPlaceholder(modifier: Modifier = Modifier) {
     val shimmerState = rememberShimmer(shimmerBounds = ShimmerBounds.View)
-    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+    Column(modifier = Modifier
+        .verticalScroll(rememberScrollState())
+        .padding(horizontal = 16.dp)) {
         FlowRow(
             modifier = modifier.padding(top = 14.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -56,10 +58,7 @@ fun SearchLoadingPlaceholder(modifier: Modifier = Modifier) {
         )
 
         FlowRow(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .padding(vertical = 16.dp)
-                .fillMaxSize(),
+            modifier = Modifier.padding(vertical = 16.dp).fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             maxItemsInEachRow = 2

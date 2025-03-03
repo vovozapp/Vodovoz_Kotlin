@@ -1036,9 +1036,7 @@
     <fragment
         android:id="@+id/preOrderFragment"
         android:name="com.vodovoz.app.feature.preorder.PreOrderFragment"
-        android:label="PreOrderFragment"
-
-        >
+        android:label="PreOrderFragment">
         <argument
             android:name="productId"
             app:argType="long" />

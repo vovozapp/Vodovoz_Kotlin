@@ -11,5 +11,15 @@ data class ProductsCollectionState(
     val productsSection: ProductsSectionUi = ProductsSectionUi.Empty,
     val currentSort: SortUi = SortUi.Empty,
     val showSortOptionsBottomSheet: Boolean = false,
-    val isGridView: Boolean = true
+    val isGridView: Boolean = true,
+    val uiState: ProductsCollectionUiState = ProductsCollectionUiState.Loading
 )
+
+sealed interface ProductsCollectionUiState{
+
+    data object Loading: ProductsCollectionUiState
+
+    data object Success: ProductsCollectionUiState
+
+
+}

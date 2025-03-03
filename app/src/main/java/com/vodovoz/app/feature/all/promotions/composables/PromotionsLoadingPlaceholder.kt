@@ -20,7 +20,7 @@ import kotlin.random.Random
 import kotlin.random.nextInt
 
 @Composable
-fun PromotionsSkeletonPlaceholder(modifier: Modifier = Modifier) {
+fun PromotionsLoadingPlaceholder(modifier: Modifier = Modifier) {
     val shimmerState = rememberShimmer(shimmerBounds = ShimmerBounds.View)
     Column(modifier = modifier.verticalScroll(rememberScrollState())) {
         Row(

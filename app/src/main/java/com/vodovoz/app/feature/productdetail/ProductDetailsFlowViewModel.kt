@@ -46,6 +46,7 @@ import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -78,7 +79,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
         get() = uiStateListener.value
 
 
-    private val eventListener = MutableSharedFlow<ProductDetailsEvents>()
+    private val eventListener = MutableSharedFlow<ProductDetailsEvents>(replay = 0)
     fun observeEvent() = eventListener.asSharedFlow()
 
     fun observeUiState() = uiStateListener.asStateFlow()

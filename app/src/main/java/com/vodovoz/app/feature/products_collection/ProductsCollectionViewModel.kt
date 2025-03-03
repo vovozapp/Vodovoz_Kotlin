@@ -8,11 +8,13 @@ import com.vodovoz.app.feature.product_comments.model.SortUi
 import com.vodovoz.app.feature.product_comments.model.toDomain
 import com.vodovoz.app.feature.products_collection.model.ProductsCollectionEvent
 import com.vodovoz.app.feature.products_collection.model.ProductsCollectionState
+import com.vodovoz.app.feature.products_collection.model.ProductsCollectionUiState
 import com.vodovoz.app.ui.mvi.MviViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -29,24 +31,25 @@ class ProductsCollectionViewModel @Inject constructor(
 
     fun fetchProducts() =
         vodovozServiceRepository.getProductAnalogs(productId, stateSnapshot.currentSort.toDomain())
-            .onEach { result ->
-                result.onSuccess { productsSectionModel ->
-                    val productsSectionUi = productsSectionModel.toUi()
-                    _state.update { s ->
-                        s.copy(
-                            productsSection = productsSectionUi,
-                            currentSort = if (s.currentSort == SortUi.Empty) productsSectionUi.sorting.firstOrNull()
-                                ?: SortUi(
-                                    productsSectionUi.sortingTitle,
-                                    "",
-                                    ""
-                                ) else s.currentSort
-                        )
-                    }
-                }.onFailure {
-                    //TODO - handle fail
+            .onStart {
+                _state.update { s -> s.copy(uiState = ProductsCollectionUiState.Loading) }
+            }.onEach { result ->
+            result.onSuccess { productsSectionModel ->
+                val productsSectionUi = productsSectionModel.toUi()
+                _state.update { s ->
+                    s.copy(
+                        productsSection = productsSectionUi,
+                        currentSort = if (s.currentSort == SortUi.Empty) productsSectionUi.sorting.firstOrNull()
+                            ?: SortUi(
+                                productsSectionUi.sortingTitle,
+                                "",
+                                ""
+                            ) else s.currentSort,
+                        uiState = ProductsCollectionUiState.Success
+                    )
                 }
-            }.take(1).launchIn(viewModelScope)
+            }
+        }.take(1).launchIn(viewModelScope)
 
     fun showSortOptionsBottomSheet() = viewModelScope.launch {
         _state.update { s ->
@@ -65,6 +68,7 @@ class ProductsCollectionViewModel @Inject constructor(
     }
 
     fun selectSort(sort: SortUi) = viewModelScope.launch {
+        if(sort == stateSnapshot.currentSort) return@launch
         _state.update { s ->
             s.copy(
                 currentSort = sort,
@@ -79,7 +83,7 @@ class ProductsCollectionViewModel @Inject constructor(
         _events.emit(ProductsCollectionEvent.GoBack)
     }
 
-    fun switchLayoutView() = viewModelScope.launch {
+    fun switchLayout() = viewModelScope.launch {
         _state.update { s ->
             s.copy(isGridView = !s.isGridView)
         }

@@ -9,7 +9,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.vodovoz.app.feature.home.composables.HomeBody
-import com.vodovoz.app.feature.home.composables.HomeSkeletonPlaceholder
+import com.vodovoz.app.feature.home.composables.HomeLoadingPlaceholder
 import com.vodovoz.app.feature.home.composables.HomeTopBar
 import com.vodovoz.app.feature.home.composables.SpecialPromotionBottomSheet
 
@@ -44,7 +44,7 @@ fun HomeScreen(
         Box(modifier = Modifier.padding(paddingValues).consumeWindowInsets(paddingValues)){
             when(viewState.uiState){
                 HomeFlowViewModel.HomeUiState.Loading -> {
-                    HomeSkeletonPlaceholder()
+                    HomeLoadingPlaceholder()
                 }
                 HomeFlowViewModel.HomeUiState.NetworkError -> {}
                 HomeFlowViewModel.HomeUiState.Success -> {

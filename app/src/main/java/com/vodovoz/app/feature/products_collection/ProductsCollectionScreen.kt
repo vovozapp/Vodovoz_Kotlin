@@ -13,7 +13,9 @@ import androidx.compose.ui.unit.dp
 import com.vodovoz.app.design_system.composables.list.ProductLazyList
 import com.vodovoz.app.design_system.composables.list.ProductListOptionsRow
 import com.vodovoz.app.design_system.composables.top_bar.VodovozTopBar
+import com.vodovoz.app.feature.products_collection.composables.ProductsCollectionPlaceholder
 import com.vodovoz.app.feature.products_collection.model.ProductsCollectionState
+import com.vodovoz.app.feature.products_collection.model.ProductsCollectionUiState
 
 @Composable
 fun ProductsCollectionScreen(
@@ -34,26 +36,34 @@ fun ProductsCollectionScreen(
             title = productsSection.title
         )
 
-        ProductListOptionsRow(
-            modifier = Modifier.padding(top = 8.dp),
-            sortName = viewState.currentSort.name,
-            isGridView = viewState.isGridView,
-            onSwitchClick = {
-                viewModel.switchLayoutView()
-            },
-            onSortingClick = {
-                viewModel.showSortOptionsBottomSheet()
+        when(viewState.uiState){
+            ProductsCollectionUiState.Loading -> {
+                ProductsCollectionPlaceholder()
             }
-        )
+            ProductsCollectionUiState.Success -> {
+                ProductListOptionsRow(
+                    modifier = Modifier.padding(top = 8.dp),
+                    sortName = viewState.currentSort.name,
+                    isGridView = viewState.isGridView,
+                    onSwitchClick = {
+                        viewModel.switchLayout()
+                    },
+                    onSortingClick = {
+                        viewModel.showSortOptionsBottomSheet()
+                    }
+                )
 
 
-        val products = productsSection.products
+                val products = productsSection.products
 
-        ProductLazyList(
-            products = products,
-            isGridView = viewState.isGridView,
-            onProductClick = {},
-            onProductLike = {}
-        )
+                ProductLazyList(
+                    products = products,
+                    isGridView = viewState.isGridView,
+                    onProductClick = {},
+                    onProductLike = {}
+                )
+            }
+        }
+
     }
 }

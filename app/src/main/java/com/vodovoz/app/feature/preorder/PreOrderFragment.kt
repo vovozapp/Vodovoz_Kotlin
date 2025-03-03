@@ -79,7 +79,7 @@ class PreOrderFragment : Fragment() {
                         viewModel.observeEvent().collect { event ->
                             when (event) {
                                 PreOrderFlowViewModel.PreOrderEvent.GoBack -> {
-                                    findNavController().navigateUp()
+                                    findNavController().popBackStack()
                                 }
 
                                 PreOrderFlowViewModel.PreOrderEvent.HideKeyboard -> {
