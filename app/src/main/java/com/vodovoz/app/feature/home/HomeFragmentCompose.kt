@@ -34,6 +34,9 @@ import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.android.activate
 import com.vodovoz.app.core.android.createDataAllActivator
+import com.vodovoz.app.core.navigation.navigateToProductDetails
+import com.vodovoz.app.core.navigation.navigateToPromotionDetails
+import com.vodovoz.app.core.navigation.navigateToSearch
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.design_system.VodovozTheme
@@ -78,12 +81,6 @@ class HomeFragment : Fragment() {
 
     @Inject
     lateinit var accountManager: AccountManager
-
-    @Inject
-    lateinit var topBannerManager: TopBannerManager
-
-    @Inject
-    lateinit var bottomBannerManager: BottomBannerManager
 
     @Inject
     lateinit var cookieManager: com.vodovoz.app.common.cookie.CookieManager
@@ -335,17 +332,11 @@ class HomeFragment : Fragment() {
                         }
 
                         is HomeFlowViewModel.HomeEvents.GoToProductDetails -> {
-                            findNavController().navigate(
-                                R.id.productDetailFragment,
-                                bundleOf("productId" to event.productId)
-                            )
+                            findNavController().navigateToProductDetails(event.productId)
                         }
 
                         is HomeFlowViewModel.HomeEvents.GoToPromotionDetails -> {
-                            findNavController().navigate(
-                                R.id.promotionDetailFragment,
-                                bundleOf("promotionId" to event.promotionId)
-                            )
+                            findNavController().navigateToPromotionDetails(event.promotionId)
                         }
 
                         is HomeFlowViewModel.HomeEvents.ActivateButtonAction -> {
@@ -373,9 +364,7 @@ class HomeFragment : Fragment() {
                         }
 
                         HomeFlowViewModel.HomeEvents.GoToSearch -> {
-                            findNavController().navigate(
-                                HomeFragmentDirections.actionToSearchFragment("")
-                            )
+                            findNavController().navigateToSearch()
                         }
                     }
                 }

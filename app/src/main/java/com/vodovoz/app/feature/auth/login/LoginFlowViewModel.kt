@@ -12,6 +12,7 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.token.FirebaseTokenManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.ui.model.enum.AuthType
 import com.vodovoz.app.util.FieldValidationsSettings
@@ -19,11 +20,13 @@ import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
@@ -38,6 +41,7 @@ class LoginFlowViewModel @Inject constructor(
     private val loginManager: LoginManager,
     private val siteStateManager: SiteStateManager,
     private val likeManager: LikeManager,
+    private val vodovozServiceRepository: VodovozServiceRepository
 ) : PagingContractViewModel<LoginFlowViewModel.LoginState, LoginFlowViewModel.LoginEvents>(
     LoginState()
 ) {
@@ -55,6 +59,7 @@ class LoginFlowViewModel @Inject constructor(
                         )
                     } else {
                         siteStateManager.requestSiteState()
+                        delay(100L)
                     }
                 }
 
@@ -92,6 +97,15 @@ class LoginFlowViewModel @Inject constructor(
     }
 
     fun authByEmail(email: String, password: String) {
+
+        vodovozServiceRepository.loginByEmail(email, password).onEach { result ->
+            result.onSuccess { message ->
+                debugLog{ message }
+            }.onFailure { throwable ->
+                debugLog { throwable.stackTraceToString() }
+            }
+        }.launchIn(viewModelScope)
+
         uiStateListener.value = state.copy(
             loadingPage = true, data = state.data.copy(
                 settings = AccountManager.UserSettings(

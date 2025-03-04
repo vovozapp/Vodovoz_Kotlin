@@ -49,7 +49,7 @@ class AllPromotionsFragment : Fragment() {
 
                     when (viewState.data.uiState) {
                         AllPromotionsFlowViewModel.UiState.Error -> {
-                            NetworkErrorPlaceholder {}
+                            NetworkErrorPlaceholder {  }
                         }
 
                         else -> {
@@ -65,31 +65,6 @@ class AllPromotionsFragment : Fragment() {
             }
         }
     }
-
-    private fun getAllClickListener(): AllClickListener {
-        return object : AllClickListener {
-            override fun onPromotionClick(id: Long) {
-                findNavController().navigate(
-                    AllPromotionsFragmentDirections.actionToPromotionDetailFragment(id)
-                )
-            }
-
-            override fun onPromotionAdvClick(promotionAdvEntity: PromotionAdvEntity?) {
-                BannerAdvInfoBottomSheetFragment
-                    .newInstance(
-                        promotionAdvEntity?.titleAdv ?: "",
-                        promotionAdvEntity?.bodyAdv ?: "",
-                        promotionAdvEntity?.dataAdv ?: ""
-                    )
-                    .show(childFragmentManager, "TAG")
-            }
-
-            override fun onBrandClick(id: Long) {
-
-            }
-        }
-    }
-
 
     sealed class DataSource : Parcelable {
         @Parcelize

@@ -186,7 +186,7 @@ class LoginFragment : BaseFragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel
                     .observeEvent()
-                    .collect {
+                    .collect { it ->
                         when (it) {
                             LoginFlowViewModel.LoginEvents.AuthByPhone -> {
 
@@ -345,9 +345,11 @@ class LoginFragment : BaseFragment() {
                     }
                 }
             }
-            //tvRegister.setOnClickListener {
-            //    findNavController().navigate(LoginFragmentDirections.actionToRegisterFragment())
-            //}
+
+            //todo - if don't have sms
+            tvRegister.setOnClickListener {
+                findNavController().navigate(LoginFragmentDirections.actionToRegisterFragment())
+            }
 
             tvAuthByEmail.setOnClickListener {
                 findNavController().navigate(LoginFragmentDirections.actionToLoginByEmailFragment())
@@ -439,9 +441,8 @@ class LoginFragment : BaseFragment() {
     }
 }
 
-//todo если необходимо
 @AndroidEntryPoint
-class LoginFragmentCompose : Fragment(R.layout.fragment_login_flow) {
+class LoginFragmentCompose : Fragment() {
 
     @Inject
     lateinit var tabManager: TabManager

@@ -44,17 +44,6 @@ fun PromotionDetailsLoadingPlaceholder(modifier: Modifier = Modifier) {
         }
 
 
-//        val widths = listOf(1f, 0.9f, 0.75f, 0.85f)
-
-//        widths.forEachIndexed { index, width ->
-//            SkeletonBox(
-//                shimmerState = shimmerState,
-//                modifier = Modifier
-//                    .padding(top = if (index == 0) 24.dp else 16.dp)
-//                    .fillMaxWidth(width)
-//                    .height(30.dp)
-//            )
-//        }
         SkeletonBox(
             shimmerState = shimmerState,
             modifier = Modifier
@@ -76,15 +65,15 @@ fun PromotionDetailsLoadingPlaceholder(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             SkeletonBox(
-
-                shimmerState = shimmerState, modifier = Modifier
+                shimmerState = shimmerState,
+                modifier = Modifier
                     .weight(1f)
                     .height(300.dp)
             )
 
             SkeletonBox(
-
-                shimmerState = shimmerState, modifier = Modifier
+                shimmerState = shimmerState,
+                modifier = Modifier
                     .weight(1f)
                     .height(300.dp)
             )

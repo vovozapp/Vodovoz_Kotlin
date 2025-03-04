@@ -10,12 +10,12 @@ fun ACTION_DTO.toAction(): VodovozAction? {
     val action = ACTION ?: return null
 
     return when (action.uppercase()) {
-        "TOVAR" -> VodovozAction.Product(id.toIntOrNull() ?: return null)
-        "TOVARY" -> VodovozAction.Products(id.toIntOrNull() ?: return null)
-        "RAZDEL" -> VodovozAction.Category(id.toIntOrNull() ?: return null)
-        "AKCIYA" -> VodovozAction.Promotion(id.toIntOrNull() ?: return null)
-        "AKCII" -> VodovozAction.Promotions(id.toIntOrNull() ?: return null)
-        "BRAND" -> VodovozAction.Brand(id.toIntOrNull() ?: return null)
+        "TOVAR" -> VodovozAction.Product(id.toLongOrNull() ?: return null)
+        "TOVARY" -> VodovozAction.Products(id.toLongOrNull() ?: return null)
+        "RAZDEL" -> VodovozAction.Category(id.toLongOrNull() ?: return null)
+        "AKCIYA" -> VodovozAction.Promotion(id.toLongOrNull() ?: return null)
+        "AKCII" -> VodovozAction.Promotions(id.toLongOrNull() ?: return null)
+        "BRAND" -> VodovozAction.Brand(id.toLongOrNull() ?: return null)
         "URL" -> VodovozAction.Url(id)
         "URLKYKI" -> VodovozAction.UrlWithCookie(id)
         "DANNYEVSE" -> id.toDataAllAction()

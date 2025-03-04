@@ -64,6 +64,7 @@ fun AllPromotionsBody(
 
         val refreshState = lazyPagingPromotions.loadState.refresh
         val appendState = lazyPagingPromotions.loadState.append
+        val shimmerState = rememberShimmer(shimmerBounds = ShimmerBounds.View)
 
         LazyColumn(
             modifier = Modifier.padding(top = 16.dp),
@@ -74,10 +75,7 @@ fun AllPromotionsBody(
 
             when (refreshState) {
                 is LoadState.NotLoading -> {
-                    items(
-                        count = lazyPagingPromotions.itemCount,
-                        key = lazyPagingPromotions.itemKey { it.id }
-                    ) { i ->
+                    items(count = lazyPagingPromotions.itemCount) { i ->
                         val promotion = lazyPagingPromotions[i]
                         if (promotion != null) {
                             PromotionCard(
@@ -92,7 +90,7 @@ fun AllPromotionsBody(
                 else -> {
                     items(10) {
                         SkeletonBox(
-                            shimmerState = rememberShimmer(shimmerBounds = ShimmerBounds.View),
+                            shimmerState = shimmerState,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(150.dp)
@@ -104,7 +102,7 @@ fun AllPromotionsBody(
             if(appendState is LoadState.Loading){
                 item {
                     SkeletonBox(
-                        shimmerState = rememberShimmer(shimmerBounds = ShimmerBounds.View),
+                        shimmerState = shimmerState,
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(70.dp)

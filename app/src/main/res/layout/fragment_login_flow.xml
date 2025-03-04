@@ -218,17 +218,19 @@
             android:layout_marginBottom="@dimen/space_16"
             android:gravity="center_horizontal"
             android:orientation="horizontal"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <androidx.appcompat.widget.AppCompatTextView
-                style="@style/TextViewNormalBlack"
+                android:textColor="@color/text_black_composable"
+                android:fontFamily="@font/roboto_regular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/have_not_account_text" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvRegister"
-                style="@style/TextViewNormalBlueBold"
+                android:textColor="@color/new_product_blue"
+                android:fontFamily="@font/roboto_bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/space_4"

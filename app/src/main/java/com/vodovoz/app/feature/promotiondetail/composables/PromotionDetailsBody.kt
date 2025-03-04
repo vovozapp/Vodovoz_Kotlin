@@ -23,6 +23,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import coil3.compose.AsyncImage
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
 import com.vodovoz.app.design_system.composables.chip.TimeLeftChip
 import com.vodovoz.app.design_system.composables.chip.VodovozColorChip
 import com.vodovoz.app.design_system.composables.list.gridProducts
@@ -38,13 +40,14 @@ fun PromotionDetailsBody(
 ) {
 
     val lazyGridState = rememberLazyGridState()
+    val shimmerState = rememberShimmer(shimmerBounds = ShimmerBounds.View)
 
     LazyVerticalGrid(
         modifier = modifier.fillMaxSize(),
         columns = GridCells.Fixed(2),
         state = lazyGridState,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(horizontal = 16.dp)
+        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 16.dp)
     ) {
         item(span = { GridItemSpan(2) }) {
             Column {
@@ -63,13 +66,12 @@ fun PromotionDetailsBody(
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     val label = promotionDetails.label
+
                     if (label != null) {
                         VodovozColorChip(color = label.color, text = label.name)
                     }
 
-                    TimeLeftChip(
-                        text = promotionDetails.timeLeft,
-                    )
+                    TimeLeftChip(text = promotionDetails.timeLeft)
                 }
                 Text(
                     modifier = Modifier.padding(top = 24.dp),
@@ -93,6 +95,7 @@ fun PromotionDetailsBody(
 
         gridProducts(
             lazyPagingProducts = lazyPagingProducts,
+            shimmerState = shimmerState,
             onProductLike = {
 
             },

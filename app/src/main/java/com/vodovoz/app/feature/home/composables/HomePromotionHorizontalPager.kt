@@ -76,7 +76,7 @@ fun AuthScrollImagePager(
             .collectLatest { isDragged ->
                 if (!isDragged) {
                     while (true) {
-                        delay(4_500L)
+                        delay(3_750L)
                         runCatching {
                             val targetPage = pagerState.currentPage.inc() % pagerState.pageCount
                             if (targetPage == 0) {

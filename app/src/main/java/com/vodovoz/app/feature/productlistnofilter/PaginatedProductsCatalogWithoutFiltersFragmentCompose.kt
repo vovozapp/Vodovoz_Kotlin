@@ -58,7 +58,7 @@ class PaginatedProductsCatalogWithoutFiltersFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        findNavController().currentBackStackEntry?.savedStateHandle?.get<CategoryUi>("category")?.let { category ->
+        findNavController().currentBackStackEntry?.savedStateHandle?.remove<CategoryUi>("category")?.let { category ->
             viewModel.selectCategory(category)
         }
 

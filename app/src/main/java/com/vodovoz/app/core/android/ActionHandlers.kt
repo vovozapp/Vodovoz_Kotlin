@@ -1,7 +1,24 @@
 package com.vodovoz.app.core.android
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.webkit.CookieManager
 import androidx.navigation.NavController
+import com.vodovoz.app.R
+import com.vodovoz.app.core.navigation.navigateToBrandProductList
+import com.vodovoz.app.core.navigation.navigateToBuyCertificate
+import com.vodovoz.app.core.navigation.navigateToCategoryProductList
+import com.vodovoz.app.core.navigation.navigateToHurryBuyUpProducts
+import com.vodovoz.app.core.navigation.navigateToNewProducts
+import com.vodovoz.app.core.navigation.navigateToProductDetails
+import com.vodovoz.app.core.navigation.navigateToPromotionDetails
+import com.vodovoz.app.core.navigation.navigateToPromotions
+import com.vodovoz.app.core.navigation.navigateToWaterApp
+import com.vodovoz.app.core.navigation.navigateToWebView
 import com.vodovoz.app.core.network.ApiConfig
+import com.vodovoz.app.core.network.VODOVOZ_URL
 import com.vodovoz.app.domain.general.model.ButtonAction
 import com.vodovoz.app.domain.general.model.DataAllAction
 import com.vodovoz.app.domain.general.model.VodovozAction
@@ -23,36 +40,19 @@ fun DataAllAction.activate(
 
     when (this) {
         DataAllAction.AllDiscount -> {
-            navController.navigate(
-                HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.HurryBuyUpProducts
-                )
-            )
+            navController.navigateToHurryBuyUpProducts()
         }
 
         DataAllAction.AllNewProducts -> {
-            navController.navigate(
-                HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.NewProducts
-                )
-            )
+            navController.navigateToNewProducts()
         }
 
         DataAllAction.AllPromotions -> {
-            navController.navigate(
-                HomeFragmentDirections.actionToAllPromotionsFragment(
-                    AllPromotionsFragment.DataSource.All
-                )
-            )
+            navController.navigateToPromotions()
         }
 
         DataAllAction.Delivery -> {
-            navController.navigate(
-                HomeFragmentDirections.actionToWebViewFragment(
-                    ApiConfig.ABOUT_DELIVERY_URL,
-                    "О доставке"
-                )
-            )
+            navController.navigateToWebView(ApiConfig.ABOUT_DELIVERY_URL, "О доставке")
         }
 
         DataAllAction.Profile -> {
@@ -60,13 +60,11 @@ fun DataAllAction.activate(
         }
 
         DataAllAction.WaterTracker -> {
-            navController.navigate(
-                HomeFragmentDirections.actionToWaterAppFragment()
-            )
+            navController.navigateToWaterApp()
         }
 
-        DataAllAction.BuyCertificate ->{
-            navController.navigate(CatalogFragmentDirections.actionToBuyCertificateFragment())
+        DataAllAction.BuyCertificate -> {
+            navController.navigateToBuyCertificate()
         }
 
         DataAllAction.Unknown -> {
@@ -94,23 +92,57 @@ fun ButtonAction.activate(
 
 fun VodovozAction.activate(
     navController: NavController,
+    activity: Activity? = null,
+    cookie: String = "",
     activators: List<VodovozActionActivator> = emptyList(),
 ) {
     when (this) {
-        is VodovozAction.Brand -> TODO()
-        is VodovozAction.Category -> TODO()
-        is VodovozAction.Product -> TODO()
-        is VodovozAction.Products -> TODO()
-        is VodovozAction.Promotion -> TODO()
-        is VodovozAction.Promotions -> TODO()
-        is VodovozAction.Url -> TODO()
-        is VodovozAction.UrlWithCookie -> TODO()
+        is VodovozAction.Brand -> {
+            navController.navigateToBrandProductList(id)
+        }
+
+        is VodovozAction.Category -> {
+            navController.navigateToCategoryProductList(id)
+        }
+
+        is VodovozAction.Product -> {
+            navController.navigateToProductDetails(id)
+        }
+
+        is VodovozAction.Products -> {
+            TODO()
+//            navController.navigate(
+//
+//            )
+        }
+
+        is VodovozAction.Promotion -> {
+            navController.navigateToPromotionDetails(id)
+        }
+
+        is VodovozAction.Promotions -> {
+            //todo - put args
+            //navController.navigateToPromotions()
+        }
+
+        is VodovozAction.Url -> {
+            val openLinkIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            activity?.startActivity(openLinkIntent)
+        }
+
+        is VodovozAction.UrlWithCookie -> {
+            val webCookieManager = CookieManager.getInstance()
+            webCookieManager.acceptCookie()
+            webCookieManager.setCookie(VODOVOZ_URL, cookie)
+            navController.navigate(R.id.webViewFragment)
+        }
+
         is DataAllAction -> {
             val dataAllActivators = activators.mapNotNull { it as? DataAllActionActivator }
             activate(navController, dataAllActivators)
         }
 
-        is VodovozAction.Unknown -> TODO()
+        is VodovozAction.Unknown -> {}
     }
 }
 

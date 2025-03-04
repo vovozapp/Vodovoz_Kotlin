@@ -4,6 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.core.network.messageWithCode
 import com.vodovoz.app.data.vodovoz_service.VodovozService
@@ -12,6 +13,7 @@ import com.vodovoz.app.data.vodovoz_service.mappers.mapToDomain
 import com.vodovoz.app.data.vodovoz_service.mappers.toDomain
 import com.vodovoz.app.data.vodovoz_service.model.ErrorMessageResponseDTO
 import com.vodovoz.app.data.vodovoz_service.model.PreOrderResponseDTO
+import com.vodovoz.app.data.vodovoz_service.model.VodovozResponseDTO
 import com.vodovoz.app.domain.general.VodovozPagingSource
 import com.vodovoz.app.domain.general.model.BannerModel
 import com.vodovoz.app.domain.general.model.CatalogDetailsModel
@@ -41,7 +43,6 @@ import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
 import com.vodovoz.app.domain.general.model.ValidationException
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import kotlinx.coroutines.flow.Flow
-import retrofit2.Response
 import javax.inject.Inject
 
 
@@ -49,6 +50,32 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     private val vodovozService: VodovozService,
     private val accountManager: AccountManager,
 ) : VodovozServiceRepository {
+
+    override fun loginByEmail(email: String, password: String): Flow<Result<String>> {
+        return executeRequest(
+            request = {
+                vodovozService.loginByEmail(email, password)
+            },
+            mapper = { response ->
+                response.message ?: ""
+            },
+            onFail = { response ->
+                val moshi = Moshi.Builder().build()
+                val adapter = moshi.adapter<VodovozResponseDTO<String>>(
+                    Types.newParameterizedType(
+                        VodovozResponseDTO::class.java,
+                        String::class.java
+                    )
+                )
+
+                val jsonBody = (response.errorBody() ?: response.raw().body)?.string() ?: ""
+
+                val errorResponse = adapter.fromJson(jsonBody)
+
+                Result.failure(RequestException(errorResponse?.message ?: ""))
+            }
+        )
+    }
 
     override fun getCatalogDetails(): Flow<Result<CatalogDetailsModel>> {
         return executeRequest(
@@ -123,13 +150,14 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                 val moshi = Moshi.Builder().build()
                 val adapter = moshi.adapter(ErrorMessageResponseDTO::class.java)
                 val body = (response.errorBody() ?: response.raw().body)?.string() ?: ""
-                val errorMessageResponseDTO= adapter.fromJson(body)
+                val errorMessageResponseDTO = adapter.fromJson(body)
 
                 val throwable = when (response.code()) {
                     404 -> EmptyResultException(
                         htmlText = errorMessageResponseDTO?.message ?: "",
                         message = response.messageWithCode()
                     )
+
                     else -> RequestException(response.messageWithCode())
                 }
                 Result.failure(throwable)

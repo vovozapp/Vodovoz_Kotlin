@@ -1,7 +1,6 @@
 package com.vodovoz.app.domain.general.respository
 
 import androidx.paging.PagingData
-import com.vodovoz.app.data.vodovoz_service.model.catalog_details.CatalogDetailsDTO
 import com.vodovoz.app.domain.general.model.BannerModel
 import com.vodovoz.app.domain.general.model.CatalogDetailsModel
 import com.vodovoz.app.domain.general.model.CommentModel
@@ -25,9 +24,13 @@ import com.vodovoz.app.domain.general.model.SortModel
 import com.vodovoz.app.domain.general.model.StoryModel
 import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
 import kotlinx.coroutines.flow.Flow
-import retrofit2.Response
 
 interface VodovozServiceRepository {
+
+    fun loginByEmail(
+        email: String,
+        password: String,
+    ): Flow<Result<String>>
 
     fun getCatalogDetails(): Flow<Result<CatalogDetailsModel>>
 
@@ -37,7 +40,7 @@ interface VodovozServiceRepository {
         sort: SortModel = SortModel.Empty,
     ): Flow<PagingData<ProductModel>>
 
-    fun getSearchProducts(query: String, ): Flow<Result<ProductsSectionModel>>
+    fun getSearchProducts(query: String): Flow<Result<ProductsSectionModel>>
 
     fun getSearchRecommendations(): Flow<Result<SearchRecommendationsModel>>
 

@@ -62,13 +62,16 @@ interface VodovozService {
     @GET("reg.php?action=glav")
     suspend fun getRegisterFields(): Response<VodovozResponseDTO<RegistrationSectionDTO>>
 
+    @GET("auth.php")
+    suspend fun loginByEmail(
+        @Query("email") email: String,
+        @Query("pass") password: String
+    ): Response<VodovozResponseDTO<String>>
+
+    //TODO - change return type
     @GET("reg.php?action=otpravka")
     suspend fun register(
-        @Query("name") name: String,
-        @Query("lastname") lastName: String,
-        @Query("phone") phone: String,
-        @Query("email") email: String,
-        @Query("pass") code: Int,
+        @QueryMap queries: Map<String, String>
     ): Response<Unit>
 
     //TODO - change return type

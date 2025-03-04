@@ -87,7 +87,7 @@ fun BaseQuantityButton(
             }
 
             CounterButton(
-                painter = painterResource(id = R.drawable.ic_minus),
+                painter = painterResource(id = R.drawable.ic_plus),
                 iconModifier = iconModifier,
                 enabled = plusEnabled,
                 isLoading = isLoading,

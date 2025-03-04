@@ -1,25 +1,22 @@
 package com.vodovoz.app.feature.catalog.composables
 
-import android.graphics.Bitmap
-import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,9 +25,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import coil3.compose.SubcomposeAsyncImage
 import com.vodovoz.app.design_system.model.BannerUi
 import com.vodovoz.app.feature.catalog.model.CatalogCategoryUi
+import com.vodovoz.app.feature.home.composables.AuthScrollImagePager
 
 @OptIn(ExperimentalLayoutApi::class)
 @Suppress("NonSkippableComposable")
@@ -42,40 +39,55 @@ fun CatalogBody(
     onBannerClick: (BannerUi) -> Unit,
     onCategoryClick: (CatalogCategoryUi) -> Unit,
 ) {
-    FlowRow(
+    Column(
         modifier = modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 16.dp)
-            .padding(bottom = 20.dp, top = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        maxItemsInEachRow = 2
+            .verticalScroll(rememberScrollState()),
     ) {
+        val pictures = banners.map { it.detailPicture }
+        val pagerState = rememberPagerState(0) { pictures.size }
+
+        if(banners.size > 1){
+            AuthScrollImagePager(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .fillMaxWidth()
+                    .height(150.dp),
+                images = pictures,
+                onImageClick = { page ->
+                    onBannerClick(banners[page])
+                },
+                pagerState = pagerState,
+                pageWidth = 315.dp
+            )
+        }
+
+
         val cardModifier = Modifier.weight(1f)
 
-        categories.forEach { category ->
-            CatalogCard(
-                modifier = cardModifier,
-                title = category.name,
-                image = category.picture,
-                onClick = {
-                    onCategoryClick(category)
-                }
-            )
-        }
+        FlowRow(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            maxItemsInEachRow = 2
+        ) {
+            categories.forEach { category ->
+                CatalogCard(
+                    modifier = cardModifier,
+                    title = category.name,
+                    image = category.picture,
+                    onClick = {
+                        onCategoryClick(category)
+                    }
+                )
+            }
 
-        banners.forEach { banner ->
-            CatalogCard(
-                modifier = cardModifier,
-                title = "",
-                image = banner.detailPicture,
-                onClick = {
-                    onBannerClick(banner)
-                }
-            )
+            if(categories.size % 2 == 1){
+                Spacer(modifier = cardModifier)
+            }
         }
-
     }
 }
 

@@ -10,16 +10,13 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.composables.top_bar.VodovozTopBar
+import com.vodovoz.app.design_system.effects.LifecycleEffect
 import com.vodovoz.app.feature.all.promotions.composables.AdvertisingInfoBottomSheet
 import com.vodovoz.app.feature.all.promotions.composables.AllPromotionsBody
 import com.vodovoz.app.feature.all.promotions.composables.PromotionsLoadingPlaceholder
@@ -82,26 +79,23 @@ fun AllPromotionsScreen(
         )
     }
 
-    val lifecycleOwner = LocalLifecycleOwner.current
-    LaunchedEffect(Unit) {
-        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            viewModel.observeEvent().collect { event ->
-                when (event) {
-                    AllPromotionsFlowViewModel.AllPromotionsEvent.ScrollTop -> {
-                        lazyListState.animateScrollToItem(0)
-                    }
+    LifecycleEffect {
+        viewModel.observeEvent().collect { event ->
+            when (event) {
+                AllPromotionsFlowViewModel.AllPromotionsEvent.ScrollTop -> {
+                    lazyListState.animateScrollToItem(0)
+                }
 
-                    is AllPromotionsFlowViewModel.AllPromotionsEvent.GoToProductDetails -> {
-                        navController.navigate(
-                            AllPromotionsFragmentDirections.actionToPromotionDetailFragment(
-                                event.promotionId
-                            )
+                is AllPromotionsFlowViewModel.AllPromotionsEvent.GoToProductDetails -> {
+                    navController.navigate(
+                        AllPromotionsFragmentDirections.actionToPromotionDetailFragment(
+                            event.promotionId
                         )
-                    }
+                    )
+                }
 
-                    AllPromotionsFlowViewModel.AllPromotionsEvent.GoBack -> {
-                        navController.popBackStack()
-                    }
+                AllPromotionsFlowViewModel.AllPromotionsEvent.GoBack -> {
+                    navController.popBackStack()
                 }
             }
         }

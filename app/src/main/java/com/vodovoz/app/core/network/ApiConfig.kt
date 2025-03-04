@@ -23,4 +23,5 @@ object ApiConfig {
 
     const val RUTUBE_URL = "https://rutube.ru/video/"
 
+
 }
