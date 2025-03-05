@@ -1,6 +1,8 @@
 package com.vodovoz.app.domain.general.model
 
 
+
+
 class RequestException(
     message: String = "",
     cause: Throwable? = null
@@ -15,7 +17,7 @@ class WebsiteErrorException(
     message, cause
 )
 
-class FavoriteNotFoundException(
+class FavoritesNotFoundException(
     message: String = "",
     cause: Throwable? = null
 ): IllegalStateException(
@@ -41,4 +43,11 @@ data class ErrorPlaceholder(
     val title: String,
     val text: String,
     val image: String
+)
+
+class UserNotRegisterException(
+    message: String = "",
+    cause: Throwable? = null
+): IllegalStateException(
+    message, cause
 )

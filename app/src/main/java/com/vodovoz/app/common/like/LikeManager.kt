@@ -3,12 +3,15 @@ package com.vodovoz.app.common.like
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.datastore.DataStoreRepository
+import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.ui.model.ProductUI
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.singleOrNull
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.util.concurrent.ConcurrentHashMap
@@ -20,6 +23,7 @@ class LikeManager @Inject constructor(
     private val repository: LikeRepository,
     private val dataStoreRepository: DataStoreRepository,
     private val accountManager: AccountManager,
+    private val vodovozServiceRepository: VodovozServiceRepository
 ) {
 
     companion object {
@@ -50,6 +54,7 @@ class LikeManager @Inject constructor(
             version to userId
         }
 
+
         if (userId != null) {
             runCatching {
                 action(productId, userId, isFavorite, likeVersion)
@@ -70,6 +75,8 @@ class LikeManager @Inject constructor(
             //todo - change like to new rep
             repository.like(listOf(productId), userId)
         }
+
+
 
         if (likeVersion >= versions.getOrDefault(productId, 0)) {
             updateLikes(productId, !isFavorite)
@@ -149,7 +156,8 @@ class LikeManager @Inject constructor(
         val localLikesListString = dataStoreRepository.getString(FAV_IDS)?.dropLast(1) ?: ""
 
         runCatching {
-            //todo - change to new repository
+            vodovozServiceRepository.addFavoriteProducts(localLikesListString).singleOrNull()
+            //TODO - delete old repository
             repository.like(productIdListStr = localLikesListString, userId = userId)
             dataStoreRepository.remove(FAV_IDS)
         }

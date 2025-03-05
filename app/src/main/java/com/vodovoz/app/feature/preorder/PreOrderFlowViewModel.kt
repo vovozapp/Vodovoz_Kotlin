@@ -84,8 +84,7 @@ class PreOrderFlowViewModel @Inject constructor(
                 }.onFailure { t ->
                     val errorMessage = when (t) {
                         is ValidationException -> {
-                            t.message
-                                ?: resourcesProvider.getString(R.string.error_message_send_failed)
+                            t.message ?: resourcesProvider.getString(R.string.error_message_send_failed)
                         }
 
                         else -> {
@@ -166,6 +165,9 @@ class PreOrderFlowViewModel @Inject constructor(
 
         uiStateListener.updateData { s ->
             val fields = s.sectionPreOrder.fields
+
+
+
             s.copy(
                 sectionPreOrder = s.sectionPreOrder.copy(
                     fields = fields.map { field ->

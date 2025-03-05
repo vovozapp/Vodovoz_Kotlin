@@ -27,6 +27,10 @@ import kotlinx.coroutines.flow.Flow
 
 interface VodovozServiceRepository {
 
+    fun getRegisterFields(): Flow<Result<SectionModel<FieldModel>>>
+
+    fun register(fields: List<FieldModel>): Flow<Result<Long>>
+
     fun loginByEmail(
         email: String,
         password: String,
@@ -58,6 +62,10 @@ interface VodovozServiceRepository {
         categoryId: Int = -1,
         sort: SortModel = SortModel.Empty,
     ): Flow<PagingData<ProductModel>>
+
+    suspend fun addFavoriteProducts(
+        productsIds: String,
+    ): Flow<Result<ProductsSectionModel>>
 
     suspend fun addProductToCart(
         productId: Long,

@@ -17,7 +17,7 @@ fun PreOrderDTO.toDomain(): PreOrderSectionModel {
 fun FIELD_DTO.toDomain(): FieldModel? {
     return FieldModel(
         id = SID ?: return null,
-        title = TITLE ?: "",
+        label = TITLE ?: "",
         value = VALUE ?: "",
         valueType = TITLE_TYPE ?: "text",
         isRequired = REQUIRED == "Y",

@@ -347,9 +347,10 @@ class LoginFragment : BaseFragment() {
             }
 
             //todo - if don't have sms
-            tvRegister.setOnClickListener {
-                findNavController().navigate(LoginFragmentDirections.actionToRegisterFragment())
-            }
+
+//            tvRegister.setOnClickListener {
+//                findNavController().navigate(LoginFragmentDirections.actionToRegisterFragment())
+//            }
 
             tvAuthByEmail.setOnClickListener {
                 findNavController().navigate(LoginFragmentDirections.actionToLoginByEmailFragment())

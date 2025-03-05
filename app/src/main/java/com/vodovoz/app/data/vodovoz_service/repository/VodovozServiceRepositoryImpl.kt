@@ -7,6 +7,8 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.core.network.messageWithCode
+import com.vodovoz.app.core.network.serialization.fromJson
+import com.vodovoz.app.core.network.stringBody
 import com.vodovoz.app.data.vodovoz_service.VodovozService
 import com.vodovoz.app.data.vodovoz_service.mappers.executeRequest
 import com.vodovoz.app.data.vodovoz_service.mappers.mapToDomain
@@ -19,7 +21,7 @@ import com.vodovoz.app.domain.general.model.BannerModel
 import com.vodovoz.app.domain.general.model.CatalogDetailsModel
 import com.vodovoz.app.domain.general.model.CommentModel
 import com.vodovoz.app.domain.general.model.EmptyResultException
-import com.vodovoz.app.domain.general.model.FavoriteNotFoundException
+import com.vodovoz.app.domain.general.model.FavoritesNotFoundException
 import com.vodovoz.app.domain.general.model.FieldModel
 import com.vodovoz.app.domain.general.model.OrderWithMenuModel
 import com.vodovoz.app.domain.general.model.PopularCategoryModel
@@ -40,16 +42,56 @@ import com.vodovoz.app.domain.general.model.SiteStateModel
 import com.vodovoz.app.domain.general.model.SortModel
 import com.vodovoz.app.domain.general.model.StoryModel
 import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
+import com.vodovoz.app.domain.general.model.UserNotRegisterException
 import com.vodovoz.app.domain.general.model.ValidationException
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
+import com.vodovoz.app.util.extensions.catchResult
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.retry
+import kotlinx.coroutines.flow.retryWhen
 import javax.inject.Inject
 
 
 class VodovozServiceRepositoryImpl @Inject constructor(
     private val vodovozService: VodovozService,
     private val accountManager: AccountManager,
+    private val moshi: Moshi,
 ) : VodovozServiceRepository {
+
+    override fun getRegisterFields(): Flow<Result<SectionModel<FieldModel>>> {
+        return executeRequest(
+            request = {
+                vodovozService.getRegisterFields()
+            },
+            mapper = {
+                it.data!!.toDomain()
+            }
+        )
+    }
+
+    override fun register(fields: List<FieldModel>): Flow<Result<Long>> {
+        return executeRequest(
+            request = {
+                vodovozService.register(
+                    fields.associate { field -> field.id to field.value.trim() }
+                )
+            },
+            mapper = { registerDTO ->
+                registerDTO.userId!!
+            },
+            onFail = {
+                val jsonBody = it.stringBody()
+
+                val errorDTO = moshi.fromJson<VodovozResponseDTO<String>>(
+                    jsonBody,
+                    Types.newParameterizedType(VodovozResponseDTO::class.java, String::class.java)
+                )
+
+                Result.failure(Throwable(errorDTO.message))
+            }
+        )
+    }
 
     override fun loginByEmail(email: String, password: String): Flow<Result<String>> {
         return executeRequest(
@@ -60,19 +102,13 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                 response.message ?: ""
             },
             onFail = { response ->
-                val moshi = Moshi.Builder().build()
-                val adapter = moshi.adapter<VodovozResponseDTO<String>>(
-                    Types.newParameterizedType(
-                        VodovozResponseDTO::class.java,
-                        String::class.java
-                    )
+                val jsonBody = response.stringBody()
+                val errorResponse = moshi.fromJson<VodovozResponseDTO<String>>(
+                    jsonBody,
+                    Types.newParameterizedType(VodovozResponseDTO::class.java, String::class.java)
                 )
 
-                val jsonBody = (response.errorBody() ?: response.raw().body)?.string() ?: ""
-
-                val errorResponse = adapter.fromJson(jsonBody)
-
-                Result.failure(RequestException(errorResponse?.message ?: ""))
+                Result.failure(RequestException(errorResponse.message ?: ""))
             }
         )
     }
@@ -147,16 +183,17 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                 responseDTO.data?.toDomain()!!
             },
             onFail = { response ->
-                val moshi = Moshi.Builder().build()
-                val adapter = moshi.adapter(ErrorMessageResponseDTO::class.java)
-                val body = (response.errorBody() ?: response.raw().body)?.string() ?: ""
-                val errorMessageResponseDTO = adapter.fromJson(body)
+                val jsonBody = (response.errorBody() ?: response.raw().body)?.string() ?: ""
 
                 val throwable = when (response.code()) {
-                    404 -> EmptyResultException(
-                        htmlText = errorMessageResponseDTO?.message ?: "",
-                        message = response.messageWithCode()
-                    )
+                    404 -> {
+                        val errorMessageResponseDTO =
+                            moshi.fromJson<ErrorMessageResponseDTO>(jsonBody)
+                        EmptyResultException(
+                            htmlText = errorMessageResponseDTO.message,
+                            message = response.messageWithCode()
+                        )
+                    }
 
                     else -> RequestException(response.messageWithCode())
                 }
@@ -193,17 +230,15 @@ class VodovozServiceRepositoryImpl @Inject constructor(
             request = {
                 val userId = accountManager.fetchAccountId() ?: -1L
                 val queries =
-                    fields.filter { it.value.isNotEmpty() }.associate { it.id to it.value }
+                    fields.filter { fieldModel -> fieldModel.value.isNotEmpty() }
+                        .associate { it.id to it.value }
                 vodovozService.sendPreorder(userId, productId, queries)
             },
             mapper = { response -> response.message ?: "" },
             onFail = { response ->
-                val moshi = Moshi.Builder().build()
-                val adapter = moshi.adapter(PreOrderResponseDTO::class.java)
-                val body = (response.errorBody() ?: response.raw().body)?.string() ?: ""
-                val responseBody = adapter.fromJson(body)
-
-                Result.failure(ValidationException(responseBody?.message ?: ""))
+                val jsonBody = response.stringBody()
+                val responseBody = moshi.fromJson<PreOrderResponseDTO>(jsonBody)
+                Result.failure(ValidationException(responseBody.message ?: ""))
             }
         )
     }
@@ -219,7 +254,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         },
         onFail = { response ->
             val exception = when (response.code()) {
-                404 -> FavoriteNotFoundException(response.messageWithCode())
+                404 -> FavoritesNotFoundException(response.messageWithCode())
                 else -> RequestException(response.messageWithCode())
             }
             Result.failure(exception)
@@ -245,6 +280,18 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                 )
             }
         ).flow
+    }
+
+    override suspend fun addFavoriteProducts(productsIds: String): Flow<Result<ProductsSectionModel>> {
+        return executeRequest(
+            request = {
+                val userId = accountManager.fetchAccountId()
+                vodovozService.addFavoriteProducts(userId ?: -1, productsIds)
+            },
+            mapper = { it ->
+                it.data?.toDomain()!!
+            }
+        )
     }
 
 

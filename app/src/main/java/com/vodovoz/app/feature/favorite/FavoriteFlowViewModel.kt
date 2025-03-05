@@ -1,6 +1,6 @@
 package com.vodovoz.app.feature.favorite
 
-import androidx.compose.ui.graphics.Color
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.map
@@ -18,13 +18,12 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.domain.general.model.FavoriteNotFoundException
+import com.vodovoz.app.domain.general.model.FavoritesNotFoundException
 import com.vodovoz.app.domain.general.model.ProductsSectionUi
 import com.vodovoz.app.domain.general.model.toUi
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
 import com.vodovoz.app.feature.home.model.CategoryUi
-import com.vodovoz.app.feature.home.model.LabelWithColorUi
 import com.vodovoz.app.feature.home.model.ProductUi
 import com.vodovoz.app.feature.home.model.toUi
 import com.vodovoz.app.feature.product_comments.model.SortUi
@@ -80,10 +79,12 @@ class FavoriteFlowViewModel @Inject constructor(
     }
 
 
+
     fun fetchFavoriteProducts() = viewModelScope.launch {
         val currentProductsSection = dataState.productsSection
         val favoriteProductsResult =
             if (currentProductsSection == ProductsSectionUi.Empty) {
+                uiStateListener.updateData { s -> s.copy(uiState = FavoriteUiState.Loading) }
                 vodovozServiceRepository.getFavoriteProducts().singleOrNull()
                     ?.map { section -> section.toUi() } ?: Result.failure(NoSuchElementException())
             } else {
@@ -93,19 +94,30 @@ class FavoriteFlowViewModel @Inject constructor(
 
         favoriteProductsResult.onSuccess { productsSectionUi ->
             uiStateListener.updateData { s ->
+
+                val currentCategory = s.currentCategory.takeIf {
+                    it != CategoryUi.Empty
+                } ?: productsSectionUi.categories.firstOrNull() ?: CategoryUi.Empty
+                val currentSort = s.currentSort.takeIf {
+                    it != SortUi.Empty
+                } ?: productsSectionUi.sorting.firstOrNull() ?: SortUi.Empty
+
                 s.copy(
                     productsSection = productsSectionUi,
                     pagedProducts = vodovozServiceRepository.getFavoriteProductsPaged(
-                        categoryId = dataState.currentCategory.id,
-                        sort = dataState.currentSort.toDomain()
+                        categoryId = currentCategory.id,
+                        sort = currentSort.toDomain()
                     ).map { pagingData ->
                         pagingData.map { productModel -> productModel.toUi() }
-                    }
+                    },
+                    currentCategory = currentCategory,
+                    currentSort = currentSort,
+                    uiState = FavoriteUiState.Success
                 )
             }
         }.onFailure { t ->
             when (t) {
-                is FavoriteNotFoundException -> {
+                is FavoritesNotFoundException -> {
                     uiStateListener.updateData { s ->
                         s.copy(uiState = FavoriteUiState.Empty)
                     }
@@ -124,10 +136,10 @@ class FavoriteFlowViewModel @Inject constructor(
 
     fun firstLoad() {
         fetchFavoriteProducts()
-        if (!state.isFirstLoad) {
-            uiStateListener.value = state.copy(isFirstLoad = true, loadingPage = true)
-            fetchFavoriteProductsHeader()
-        }
+//        if (!state.isFirstLoad) {
+//            uiStateListener.value = state.copy(isFirstLoad = true, loadingPage = true)
+//            fetchFavoriteProductsHeader()
+//        }
     }
 
     fun refresh() {
@@ -454,11 +466,13 @@ class FavoriteFlowViewModel @Inject constructor(
     }
 
     fun selectCategory(category: CategoryUi) = viewModelScope.launch {
-        uiStateListener.updateData { s -> s.copy(currentCategory = category) }
+        if(category == dataState.currentCategory) uiStateListener.updateData { s -> s.copy(currentCategory = CategoryUi.Empty) }
+        else uiStateListener.updateData { s -> s.copy(currentCategory = category) }
         fetchFavoriteProducts()
     }
 
     fun selectSort(sort: SortUi) = viewModelScope.launch {
+        if(sort == dataState.currentSort) return@launch
         uiStateListener.updateData { s -> s.copy(currentSort = sort, showSortBottomSheet = false) }
         fetchFavoriteProducts()
     }
@@ -474,6 +488,7 @@ class FavoriteFlowViewModel @Inject constructor(
         ) : FavoriteEvents()
     }
 
+    @Immutable
     data class FavoriteState(
         val favoriteCategory: CategoryUI? = null,
         val bestForYouCategoryDetailUI: CategoryDetailUI? = null,
@@ -494,10 +509,11 @@ class FavoriteFlowViewModel @Inject constructor(
         val currentCategory: CategoryUi = CategoryUi.Empty,
         val isGridView: Boolean = true,
         val showSortBottomSheet: Boolean = false,
-        val uiState: FavoriteUiState = FavoriteUiState.Success,
+        val uiState: FavoriteUiState = FavoriteUiState.Loading,
         val pagedProducts: Flow<PagingData<ProductUi>> = emptyFlow(),
     ) : State
 
+    @Immutable
     sealed interface FavoriteUiState {
 
         data object Loading : FavoriteUiState

@@ -355,3 +355,20 @@ inline fun <T : View> T.preDraw(crossinline callBack: (isReady: Boolean) -> Unit
         }
     })
 }
+
+/**
+ * <item name="android:statusBarColor">@android:color/transparent</item>
+ * <item name="android:navigationBarColor">@android:color/transparent</item>
+ * <item name="android:enforceNavigationBarContrast">false</item>
+ * <item name="android:enforceStatusBarContrast">false</item>
+*
+ *
+ *  systemUiController.setSystemBarsColor(
+ *            color = Color.Transparent,
+ *            darkIcons = useDarkIcons,
+ *            isNavigationBarContrastEnforced = false,
+ *            transformColorForLightContent = { original ->
+ *                BlackScrim.compositeOver(original)
+ *            }
+ *        )
+* */

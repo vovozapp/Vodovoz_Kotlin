@@ -50,17 +50,19 @@ class FavoriteFragment : Fragment() {
     @Inject
     lateinit var tabManager: TabManager
 
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        viewModel.fetchFavoriteProducts()
+//    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        viewModel.fetchFavoriteProducts()
-
-        findNavController().currentBackStackEntry?.savedStateHandle?.get<CategoryUi>("category")?.let { category ->
-            viewModel.selectCategory(category)
-        }
+        findNavController().currentBackStackEntry?.savedStateHandle?.remove<CategoryUi>("category")
+            ?.let { category -> viewModel.selectCategory(category) }
 
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.Default)
@@ -86,11 +88,8 @@ class FavoriteFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         viewModel.clearScrollState()
         observeEvents()
-
-        viewModel.refreshIdle()
     }
 
     private fun observeEvents() {

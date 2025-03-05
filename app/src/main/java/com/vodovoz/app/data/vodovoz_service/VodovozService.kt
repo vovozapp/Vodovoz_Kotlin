@@ -15,6 +15,7 @@ import com.vodovoz.app.data.vodovoz_service.model.ProductsSectionDTO
 import com.vodovoz.app.data.vodovoz_service.model.PromotionDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.PromotionsDTO
 import com.vodovoz.app.data.vodovoz_service.model.RAZDEL_DTO
+import com.vodovoz.app.data.vodovoz_service.model.RegisterDTO
 import com.vodovoz.app.data.vodovoz_service.model.RegistrationSectionDTO
 import com.vodovoz.app.data.vodovoz_service.model.SearchRecommendationsDTO
 import com.vodovoz.app.data.vodovoz_service.model.SiteStateResponseDTO
@@ -68,11 +69,10 @@ interface VodovozService {
         @Query("pass") password: String
     ): Response<VodovozResponseDTO<String>>
 
-    //TODO - change return type
     @GET("reg.php?action=otpravka")
     suspend fun register(
         @QueryMap queries: Map<String, String>
-    ): Response<Unit>
+    ): Response<RegisterDTO>
 
     //TODO - change return type
     @GET("config/openuserid.php?&android=${BuildConfig.VERSION_NAME}")
@@ -291,7 +291,7 @@ interface VodovozService {
     /**
      * Favorite screen
      * */
-    @GET("izbrannoe.php?action=izbrannoe")
+    @GET("osnova/izbrannoe.php?action=izbrannoe")
     suspend fun getFavoriteProducts(
         @Query("userid") userId: Long,
         @Query("nav") page: Int = 1,
@@ -300,10 +300,10 @@ interface VodovozService {
         @Query("ascdesc") order: String = "",
     ): Response<VodovozResponseDTO<ProductsSectionDTO>>
 
-    @GET("izbrannoe.php?action=izbrannoe")
+    @GET("osnova/izbrannoe.php?action=izbrannoe")
     suspend fun addFavoriteProducts(
         @Query("userid") userId: Long,
-        @Query("id") ids: String,
+        @Query("id") productIds: String,
     ): Response<VodovozResponseDTO<ProductsSectionDTO>>
 
 }

@@ -1,9 +1,11 @@
 package com.vodovoz.app.data.vodovoz_service.di
 
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.vodovoz.app.core.network.interceptor.CookieHandlerInterceptor
 import com.vodovoz.app.data.vodovoz_service.VodovozService
+import com.vodovoz.app.data.vodovoz_service.model.VodovozResponseDTO
 import com.vodovoz.app.data.vodovoz_service.repository.VodovozServiceRepositoryImpl
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import dagger.Binds
@@ -37,14 +39,10 @@ abstract class VodovozServiceModule {
         @Provides
         @Singleton
         @Named("vodovoz")
-        fun providesVodovozRetrofit(@Named("vodovoz") okHttpClient: OkHttpClient): Retrofit {
+        fun providesVodovozRetrofit(@Named("vodovoz") okHttpClient: OkHttpClient, moshi: Moshi): Retrofit {
             return Retrofit.Builder()
                 .baseUrl(URL)
-                .addConverterFactory(
-                    MoshiConverterFactory.create(
-                        Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
-                    )
-                )
+                .addConverterFactory(MoshiConverterFactory.create(moshi))
                 .client(okHttpClient)
                 .build()
         }
@@ -69,7 +67,6 @@ abstract class VodovozServiceModule {
                 .writeTimeout(30, TimeUnit.SECONDS)
                 .build()
         }
-
 
     }
 

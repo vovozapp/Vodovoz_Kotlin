@@ -25,6 +25,7 @@ fun FavoriteBody(
     onCategoriesListClick: () -> Unit,
     onLayoutViewSwitch: () -> Unit,
     onSortingClick: () -> Unit,
+    onCategoryClick: (CategoryUi) -> Unit
 ) {
     Column(modifier = modifier) {
 
@@ -32,7 +33,7 @@ fun FavoriteBody(
             modifier = Modifier.padding(top = 8.dp),
             categories = categories,
             currentCategory = currentCategory,
-            onCategoryClick = { },
+            onCategoryClick = { categoryUi -> onCategoryClick(categoryUi) },
             onCategoriesListClick = { onCategoriesListClick() })
 
 

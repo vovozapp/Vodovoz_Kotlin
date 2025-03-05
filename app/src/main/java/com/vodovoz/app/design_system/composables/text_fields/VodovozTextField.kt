@@ -7,6 +7,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -15,7 +16,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -40,6 +40,7 @@ fun VodovozTextField(
     hint: String = "",
     label: String? = null,
     supportingText: String? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
     isError: Boolean = false,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -76,7 +77,7 @@ fun VodovozTextField(
                     modifier = Modifier.padding(bottom = 4.dp)
                 )
             }
-            Box(
+            Row(
                 Modifier
                     .fillMaxWidth()
                     .animateContentSize()
@@ -87,18 +88,20 @@ fun VodovozTextField(
                         shape = MaterialTheme.shapes.medium
                     )
                     .padding(horizontal = 16.dp, vertical = 10.dp),
-                contentAlignment = Alignment.CenterStart
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                if (value.isEmpty() && !isFocused) {
-
-                    Text(
-                        text = hint,
-                        color = MaterialTheme.colorScheme.surfaceTint,
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier
-                    )
+                Box(modifier = Modifier.weight(1f),contentAlignment = Alignment.CenterStart) {
+                    if (value.isEmpty() && !isFocused) {
+                        Text(
+                            text = hint,
+                            color = MaterialTheme.colorScheme.surfaceTint,
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier
+                        )
+                    }
+                    innerTextField()
                 }
-                innerTextField()
+                trailingIcon?.let { trailingIcon() }
             }
             supportingText?.let {
                 Text(

@@ -59,7 +59,7 @@ class LoginFlowViewModel @Inject constructor(
                         )
                     } else {
                         siteStateManager.requestSiteState()
-                        delay(100L)
+                        delay(50L)
                     }
                 }
 
@@ -157,6 +157,7 @@ class LoginFlowViewModel @Inject constructor(
     }
 
     fun authByPhone(phone: String, code: String): Job {
+        //TODO - show toast if requestUrl is empty
         val url = state.data.requestUrl ?: return viewModelScope.launch { }
         uiStateListener.value = state.copy(loadingPage = true)
         return viewModelScope.launch {

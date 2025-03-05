@@ -35,19 +35,23 @@ class SiteStateManager @Inject constructor(
         if (siteStateListener.value == null) {
             runCatching {
                 //New api
-                val siteState = vodovozServiceRepository.getSiteState().single().getOrThrow()
+//                val siteState = vodovozServiceRepository.getSiteState().single().getOrThrow()
+//                val siteAgreement = siteState.agreement
+//                val jivoChat = siteState.jivoChat
+
+                //TODO - change to new api if all correctly
+                val siteState = repository.fetchSiteState()
+                siteStateListener.value = siteState
                 val siteAgreement = siteState.agreement
                 val jivoChat = siteState.jivoChat
 
-                //TODO - change to new api if all correctly
-                siteStateListener.value = repository.fetchSiteState()
                 AgreementController.setAgreement(
-                    text = siteAgreement.htmlText,
-                    titles = siteAgreement.titles,
+                    text = siteAgreement?.text,
+                    titles = siteAgreement?.titles,
                 )
                 JivoChatController.setParams(
-                    active = jivoChat.isActive,
-                    link = jivoChat.url,
+                    active = jivoChat?.active ?: false,
+                    link = jivoChat?.url ?: "",
                 )
             }.onFailure {
                 siteStateListener.value = null

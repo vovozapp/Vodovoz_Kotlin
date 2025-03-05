@@ -91,7 +91,6 @@ class SplashFragment : BaseFragment() {
         homeViewModel.firstLoad()
         catalogViewModel.firstLoad()
         favoriteViewModel.firstLoad()
-        favoriteViewModel.firstLoadSorted()
     }
 
     private fun refreshLoad() {

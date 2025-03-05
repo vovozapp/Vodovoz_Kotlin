@@ -21,7 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class RegisterFragment : BaseFragment() {
+class RegisterFragment1 : BaseFragment() {
 
     override fun layout(): Int = R.layout.fragment_register_flow
 
@@ -115,6 +115,9 @@ class RegisterFragment : BaseFragment() {
                             }
                             is RegFlowViewModel.RegEvents.RegSuccess -> {
                                 findNavController().popBackStack() //todo
+                            }
+                            else -> {
+
                             }
                         }
                     }

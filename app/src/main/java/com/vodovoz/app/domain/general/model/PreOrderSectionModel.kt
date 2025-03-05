@@ -8,10 +8,11 @@ data class PreOrderSectionModel(
 
 data class FieldModel(
     val id: String,
-    val title: String,
+    val label: String,
     val value: String,
     val valueType: String,
     val isRequired: Boolean,
     val readOnly: Boolean,
-    val supportingText: String
+    val supportingText: String,
+    val hint: String = ""
 )

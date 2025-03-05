@@ -63,11 +63,16 @@ fun FavoriteScreen(
                     },
                     onSortingClick = {
                         viewModel.showSortBottomSheet()
+                    },
+                    onCategoryClick = { categoryUi ->
+                        viewModel.selectCategory(categoryUi)
                     }
                 )
             }
 
-            else -> {}
+            FavoriteFlowViewModel.FavoriteUiState.Error -> {
+
+            }
         }
     }
 
