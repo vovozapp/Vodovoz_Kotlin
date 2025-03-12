@@ -52,6 +52,7 @@ fun <S> MutableStateFlow<PagingState<S>>.updateData(block: (S) -> S) {
     }
 }
 
+
 interface Event
 
 data class PagingState<S>(

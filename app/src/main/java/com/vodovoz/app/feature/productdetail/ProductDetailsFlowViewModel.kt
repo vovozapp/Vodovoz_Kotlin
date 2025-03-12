@@ -20,9 +20,8 @@ import com.vodovoz.app.design_system.model.ProductDetailsUi
 import com.vodovoz.app.design_system.model.mapToUi
 import com.vodovoz.app.design_system.model.toUi
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
-import com.vodovoz.app.feature.home.model.ProductUi
-import com.vodovoz.app.feature.home.model.SectionUi
-import com.vodovoz.app.feature.home.model.toUi
+import com.vodovoz.app.design_system.model.ProductUi
+import com.vodovoz.app.design_system.model.SectionUi
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotions
 import com.vodovoz.app.feature.productdetail.present.model.PresentInfoData
@@ -46,7 +45,6 @@ import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow

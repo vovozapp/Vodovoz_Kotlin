@@ -15,13 +15,13 @@ import com.vodovoz.app.design_system.model.BannerUi
 import com.vodovoz.app.design_system.model.PromotionUi
 import com.vodovoz.app.design_system.model.StoryUi
 import com.vodovoz.app.domain.general.model.ButtonAction
-import com.vodovoz.app.feature.home.model.CategoryWithProductsUi
+import com.vodovoz.app.design_system.model.CategoryWithProductsUi
 import com.vodovoz.app.feature.home.model.MenuItemUi
 import com.vodovoz.app.feature.home.model.OrderUi
 import com.vodovoz.app.feature.home.model.OrderWithMenuUi
 import com.vodovoz.app.feature.home.model.PopularCategoryUi
-import com.vodovoz.app.feature.home.model.ProductUi
-import com.vodovoz.app.feature.home.model.SectionUi
+import com.vodovoz.app.design_system.model.ProductUi
+import com.vodovoz.app.design_system.model.SectionUi
 
 @Suppress("NonSkippableComposable")
 @Composable
@@ -45,6 +45,7 @@ fun HomeBody(
     onMenuItemClick: (MenuItemUi) -> Unit,
     onShowAllClick: (ButtonAction) -> Unit,
     onProductCardClick: (ProductUi) -> Unit,
+    onProductLike: (ProductUi) -> Unit,
     onPromotionClick: (PromotionUi) -> Unit,
 ) {
     Column(
@@ -97,7 +98,7 @@ fun HomeBody(
             sectionCategoriesWithProducts = sectionTop,
             onCategorySelect = onCategorySelect,
             onProductClick = onProductCardClick,
-            onProductLike = {}
+            onProductLike = onProductLike
         )
 
         HomeHurryUpBuyProducts(
@@ -105,14 +106,14 @@ fun HomeBody(
             sectionHurryUpBuyProducts = sectionHurryUpBuyProducts,
             onProductClick = onProductCardClick,
             onShowAllClick = onShowAllClick,
-            onProductLike = { }
+            onProductLike = onProductLike
         )
 
         HomeNewProducts(
             modifier = Modifier.padding(top = 32.dp),
             sectionNewProducts = sectionNewProducts,
             onProductClick = onProductCardClick,
-            onProductLike = {},
+            onProductLike = onProductLike,
             onShowAllClick = onShowAllClick
         )
 
@@ -128,7 +129,7 @@ fun HomeBody(
             modifier = Modifier.padding(top = 32.dp),
             sectionBottomProducts = sectionBottomProducts,
             onProductClick = onProductCardClick,
-            onProductLike = {},
+            onProductLike = onProductLike,
             onShowAllClick = onShowAllClick
         )
 
@@ -137,7 +138,7 @@ fun HomeBody(
                 modifier = Modifier.padding(top = 32.dp),
                 sectionViewedProducts = sectionViewedProducts,
                 onProductClick = onProductCardClick,
-                onProductLike = {},
+                onProductLike = onProductLike,
                 onShowAllClick = onShowAllClick
             )
         }

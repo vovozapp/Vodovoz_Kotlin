@@ -9,11 +9,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.compose.foundation.gestures.animateScrollBy
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.app.ActivityCompat
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -24,6 +25,9 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
+import com.vodovoz.app.core.navigation.navigateToCategories
+import com.vodovoz.app.core.navigation.navigateToProductDetails
+import com.vodovoz.app.core.navigation.navigateToSearch
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.effects.LifecycleEffect
 import com.vodovoz.app.feature.catalog.model.CatalogCategoryUi
@@ -66,12 +70,14 @@ class PaginatedProductsCatalogWithoutFiltersFragment : Fragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.Default)
             setContent {
                 VodovozTheme {
-                    val viewState by viewModel.observeUiState().collectAsStateWithLifecycle()
-                    val viewStateData = viewState.data
+                    val pagingState by viewModel.observeUiState().collectAsStateWithLifecycle()
+                    val viewState = pagingState.data
+                    val lazyGridState = rememberLazyGridState()
 
                     ProductsNoFiltersScreen(
                         viewModel = viewModel,
-                        viewState = viewStateData
+                        viewState = viewState,
+                        lazyGridState = lazyGridState
                     )
 
                     LifecycleEffect {
@@ -82,20 +88,22 @@ class PaginatedProductsCatalogWithoutFiltersFragment : Fragment() {
                                 }
 
                                 is ProductsListNoFilterFlowViewModel.ProductListNoFilterEvent.GoToSearch -> {
-                                    findNavController().navigate(
-                                        R.id.searchFragment,
-                                        bundleOf("query" to event.query)
-                                    )
+                                    findNavController().navigateToSearch(event.query)
                                 }
 
                                 is ProductsListNoFilterFlowViewModel.ProductListNoFilterEvent.GoToCategories -> {
-                                    findNavController().navigate(
-                                        R.id.categoriesFragment,
-                                        bundleOf(
-                                            "categoryList" to event.categories.toTypedArray(),
-                                            "category" to event.currentCategory,
-                                        )
+                                    findNavController().navigateToCategories(
+                                        category = event.currentCategory,
+                                        categories = event.categories
                                     )
+                                }
+
+                                is ProductsListNoFilterFlowViewModel.ProductListNoFilterEvent.GoToProductDetails -> {
+                                    findNavController().navigateToProductDetails(event.productId)
+                                }
+
+                                ProductsListNoFilterFlowViewModel.ProductListNoFilterEvent.ScrollToTop -> {
+                                    lazyGridState.animateScrollToItem(0);
                                 }
                             }
                         }

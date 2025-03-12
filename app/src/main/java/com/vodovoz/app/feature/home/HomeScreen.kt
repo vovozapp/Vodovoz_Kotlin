@@ -26,9 +26,7 @@ fun HomeScreen(
         topBar = {
             HomeTopBar(
                 value = viewState.searchField,
-                onValueChange = {
-
-                },
+                onValueChange = {},
                 onFocus = {
                     viewModel.navigateToSearch()
                 },
@@ -53,7 +51,7 @@ fun HomeScreen(
                         stories = viewState.stories,
                         sectionPromotions = viewState.sectionPromotions,
                         orderWithMenu = viewState.orderWithMenu,
-                        sectionPopularCategories = viewState.popularSections,
+                        sectionPopularCategories = viewState.sectionPopularCategories,
                         sectionNewProducts = viewState.sectionNewProducts,
                         sectionHurryUpBuyProducts = viewState.sectionHurryUpBuyProducts,
                         sectionTop = viewState.sectionTop,
@@ -80,6 +78,9 @@ fun HomeScreen(
                         },
                         onProductCardClick = { product ->
                             viewModel.navigateToProductDetails(product)
+                        },
+                        onProductLike = { product ->
+                            viewModel.changeFavorite(product)
                         },
                         onShowAllClick = { action ->
                             viewModel.handleButtonAction(action)

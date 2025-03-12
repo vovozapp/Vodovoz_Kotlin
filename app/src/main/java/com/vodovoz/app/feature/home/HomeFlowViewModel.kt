@@ -15,18 +15,20 @@ import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.design_system.model.BannerUi
+import com.vodovoz.app.design_system.model.CategoryWithProductsUi
+import com.vodovoz.app.design_system.model.ProductUi
 import com.vodovoz.app.design_system.model.PromotionUi
+import com.vodovoz.app.design_system.model.SectionUi
 import com.vodovoz.app.design_system.model.SpecialPromotionUi
 import com.vodovoz.app.design_system.model.StoryUi
 import com.vodovoz.app.design_system.model.mapToUi
 import com.vodovoz.app.design_system.model.toUi
+import com.vodovoz.app.design_system.model.withUpdatedFavorites
 import com.vodovoz.app.domain.general.model.ButtonAction
+import com.vodovoz.app.domain.general.model.toUi
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
-import com.vodovoz.app.feature.home.model.CategoryWithProductsUi
 import com.vodovoz.app.feature.home.model.OrderWithMenuUi
 import com.vodovoz.app.feature.home.model.PopularCategoryUi
-import com.vodovoz.app.feature.home.model.ProductUi
-import com.vodovoz.app.feature.home.model.SectionUi
 import com.vodovoz.app.feature.home.model.toUi
 import com.vodovoz.app.feature.home.viewholders.homebanners.HomeBanners
 import com.vodovoz.app.feature.home.viewholders.homebottominfo.HomeBottomInfo
@@ -41,12 +43,10 @@ import com.vodovoz.app.mapper.CategoryDetailMapper.mapToUI
 import com.vodovoz.app.mapper.CategoryMapper.mapToUI
 import com.vodovoz.app.mapper.PopupNewsMapper.mapToUI
 import com.vodovoz.app.ui.model.PopupNewsUI
-import com.vodovoz.app.util.extensions.combineIntoTriple
 import com.vodovoz.app.util.extensions.debugLog
-import com.vodovoz.app.util.extensions.resultFailure
+import com.vodovoz.app.util.extensions.singleResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -54,12 +54,12 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.singleOrNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -74,93 +74,124 @@ class HomeFlowViewModel @Inject constructor(
     private val vodovozServiceRepository: VodovozServiceRepository,
 ) : PagingContractViewModel<HomeFlowViewModel.HomeState, HomeFlowViewModel.HomeEvents>(HomeState.idle()) {
 
+    init {
+        listenFavorites()
+    }
 
-    private fun loadData() = viewModelScope.launch {
+    private fun listenFavorites() = viewModelScope.launch {
+        val uiStateFlow = uiStateListener.map { pagingState -> pagingState.data.uiState }
+
+        uiStateFlow.combine(likeManager.observeLikes()) { uiState, favorites ->
+            uiState to favorites
+        }.collectLatest { (uiState, favorites) ->
+
+            if (uiState != HomeUiState.Success) return@collectLatest
+
+            uiStateListener.updateData { s ->
+                s.copy(
+                    sectionTop = s.sectionTop.withUpdatedFavorites(favorites),
+                    sectionBottom = s.sectionBottom.withUpdatedFavorites(favorites),
+                    sectionViewedProducts = s.sectionViewedProducts.withUpdatedFavorites(
+                        favorites
+                    ),
+                    sectionNewProducts = s.sectionNewProducts.withUpdatedFavorites(favorites),
+                    sectionHurryUpBuyProducts = s.sectionHurryUpBuyProducts.withUpdatedFavorites(
+                        favorites
+                    ),
+                    currentCategoryWithProducts = s.currentCategoryWithProducts.withUpdatedFavorites(
+                        favorites
+                    )
+                )
+            }
+
+        }
+    }
+
+    private fun fetchHomeInfo() = viewModelScope.launch {
         uiStateListener.updateData { s -> s.copy(uiState = HomeUiState.Loading) }
 
-        combine(
-            combineIntoTriple(
-                vodovozServiceRepository.getPromotions(),
-                vodovozServiceRepository.getPopularCategories(),
-                vodovozServiceRepository.getOrderMenu(accountManager.fetchAccountId())
-            ),
-            combineIntoTriple(
-                vodovozServiceRepository.getNewProducts(),
-                vodovozServiceRepository.getHurryUpBuyProducts(),
-                vodovozServiceRepository.getSuperTop()
-            ),
-            vodovozServiceRepository.getBanners(),
-            vodovozServiceRepository.getStories(),
+        val bannersDeferred = async {
+            vodovozServiceRepository.getBanners().singleResult()
+        }
+        val storiesDeferred = async {
+            vodovozServiceRepository.getStories().singleResult()
+        }
+        val sectionPopularCategoriesDeferred = async {
+            vodovozServiceRepository.getPopularCategories().singleResult()
+        }
+        val orderMenuDeferred = async {
+            vodovozServiceRepository.getOrderMenu().singleResult()
+        }
+        val sectionsTopAndBottomDeferred = async {
+            vodovozServiceRepository.getSuperTop().singleResult()
+        }
 
-            ) { (promotionsWithSectionsResult, sectionPopularCategoriesResult, orderMenuResult), (sectionNewProductsResult, sectionHurryUpBuyProductsResult, superTopResult), bannersResult, storiesResult ->
+        val banners = bannersDeferred.await().getOrNull()
+        val stories = storiesDeferred.await().getOrNull()
+        val sectionPopularCategories = sectionPopularCategoriesDeferred.await().getOrNull()
+        val orderMenu = orderMenuDeferred.await().getOrNull()
+        val sectionsTopAndBottom = sectionsTopAndBottomDeferred.await().getOrNull()
 
+        if (banners != null && stories != null && sectionPopularCategories != null && orderMenu != null && sectionsTopAndBottom != null) {
+            val topSection = sectionsTopAndBottom.topSection.toUi(
+                mapItems = { items -> items.map { it.toUi() } }
+            )
 
-            val sectionPopularCategories = sectionPopularCategoriesResult.getOrNull()
-            val topAndBottomSections = superTopResult.getOrNull()
-            val sectionNewProducts = sectionNewProductsResult.getOrNull()
-            val sectionHurryBuyProducts = sectionHurryUpBuyProductsResult.getOrNull()
-            val promotionsWithSections = promotionsWithSectionsResult.getOrNull()
-
-            val orderMenu = orderMenuResult.getOrNull()
-            val banners = bannersResult.getOrNull()
-            val stories = storiesResult.getOrNull()
-
-
-            if (
-                sectionPopularCategories != null && topAndBottomSections != null && sectionNewProducts != null
-                && sectionHurryBuyProducts != null && promotionsWithSections != null && orderMenu != null
-                && banners != null && stories != null
-            ) {
-
-                val topSection = topAndBottomSections.topSection.toUi(
-                    mapItems = { items -> items.map { it.toUi() } }
+            uiStateListener.updateData { s ->
+                s.copy(
+                    sectionPopularCategories = sectionPopularCategories.toUi { items -> items.map { it.toUi() } },
+                    sectionTop = topSection,
+                    sectionBottom = sectionsTopAndBottom.bottomSection.toUi { items -> items.map { it -> it.toUi() } },
+                    currentCategoryWithProducts = topSection.items.firstOrNull()
+                        ?: CategoryWithProductsUi.Empty,
+                    orderWithMenu = orderMenu.toUi(),
+                    banners = banners.mapToUi(),
+                    stories = stories.mapToUi(),
+                    uiState = HomeUiState.Success
                 )
-
-                uiStateListener.updateData { s ->
-                    s.copy(
-                        popularSections = sectionPopularCategories.toUi { items -> items.map { it.toUi() } },
-                        sectionTop = topSection,
-                        sectionBottom = topAndBottomSections.bottomSection.toUi { items -> items.map { it -> it.toUi() } },
-                        currentCategoryWithProducts = topSection.items.firstOrNull()
-                            ?: CategoryWithProductsUi.Empty,
-                        sectionNewProducts = sectionNewProducts.toUi { productModels -> productModels.map { item -> item.toUi() } },
-                        sectionHurryUpBuyProducts = sectionHurryBuyProducts.toUi { productModels -> productModels.map { item -> item.toUi() } },
-                        sectionPromotions = SectionUi(
-                            title = promotionsWithSections.title,
-                            items = promotionsWithSections.promotions.map { promotionModel -> promotionModel.toUi() },
-                            button = promotionsWithSections.button?.toUi()
-                        ),
-                        orderWithMenu = orderMenu.toUi(),
-                        banners = banners.mapToUi(),
-                        stories = stories.mapToUi(),
-                        uiState = HomeUiState.Success
-                    )
-
-                }
-
-            } else {
-                uiStateListener.updateData { s ->
-                    s.copy(
-                        uiState = HomeUiState.NetworkError
-                    )
-                }
             }
-        }.launchIn(viewModelScope)
-
-
-        val viewedProductsDeferred = async(start = CoroutineStart.LAZY) {
-            vodovozServiceRepository.getViewedProducts().singleOrNull() ?: resultFailure()
+        } else {
+            uiStateListener.updateData { s -> s.copy(uiState = HomeUiState.NetworkError) }
+            return@launch
         }
 
-        val popupWindowsInfoDeferred = async(start = CoroutineStart.LAZY) {
-            vodovozServiceRepository.getPopupWindowInfo().singleOrNull() ?: resultFailure()
+        val sectionPromotionsDeferred =
+            async { vodovozServiceRepository.getPromotions().singleResult() }
+        val sectionHurryUpBuyProductsDeferred =
+            async { vodovozServiceRepository.getHurryUpBuyProducts().singleResult() }
+        val sectionNewProductsDeferred =
+            async { vodovozServiceRepository.getNewProducts().singleResult() }
+
+        sectionPromotionsDeferred.await().onSuccess { value ->
+            uiStateListener.updateData { s -> s.copy(sectionPromotions = value.toUi()) }
+        }
+
+        sectionHurryUpBuyProductsDeferred.await().onSuccess { value ->
+            uiStateListener.updateData { s -> s.copy(sectionHurryUpBuyProducts = value.toUi()) }
+
+        }
+
+        sectionNewProductsDeferred.await().onSuccess { value ->
+            uiStateListener.updateData { s -> s.copy(sectionNewProducts = value.toUi()) }
         }
 
 
-        val sectionViewedProducts = viewedProductsDeferred.await().getOrNull()?.toUi() ?: dataState.sectionViewedProducts
-        val specialPromotion = popupWindowsInfoDeferred.await().getOrNull()?.specialPromotion?.toUi() ?: dataState.specialPromotion
+        val viewedProductsDeferred = async {
+            vodovozServiceRepository.getViewedProducts().singleResult()
+        }
 
-        uiStateListener.updateData { s->
+        val popupWindowsInfoDeferred = async {
+            vodovozServiceRepository.getPopupWindowInfo().singleResult()
+        }
+
+
+        val sectionViewedProducts =
+            viewedProductsDeferred.await().getOrNull()?.toUi() ?: dataState.sectionViewedProducts
+        val specialPromotion =
+            popupWindowsInfoDeferred.await().getOrNull()?.specialPromotion?.toUi()
+                ?: dataState.specialPromotion
+
+        uiStateListener.updateData { s ->
             s.copy(
                 sectionViewedProducts = sectionViewedProducts,
                 specialPromotion = specialPromotion
@@ -171,31 +202,31 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     fun firstLoad() {
-        loadData()
+        fetchHomeInfo()
         if (!state.isFirstLoad) {
-            uiStateListener.value = state.copy(loadingPage = true)
+            //uiStateListener.value = state.copy(loadingPage = true)
 
             viewModelScope.launch(Dispatchers.IO) {
-//                updatePopupNews()
-//                val tasks = firstLoadTasks()
-//                val start = System.currentTimeMillis()
-//                val result = awaitAll(*tasks).flatten()
-//                debugLog { "first load task ${System.currentTimeMillis() - start} result size ${result.size}" }
-//                val positionItemsSorted =
-//                    (state.data.positionItems + result).toSet().sortedBy { it.position }
+                //updatePopupNews()
+                val tasks = firstLoadTasks()
+                val start = System.currentTimeMillis()
+                val result = awaitAll(*tasks).flatten()
+                debugLog { "first load task ${System.currentTimeMillis() - start} result size ${result.size}" }
+                val positionItemsSorted =
+                    (state.data.positionItems + result).toSet().sortedBy { it.position }
                 uiStateListener.value = state.copy(
                     loadingPage = false,
-//                    data = state.data.copy(
-//                        positionItems = positionItemsSorted,
-//                        items = positionItemsSorted.map { it.item }),
+                    data = state.data.copy(
+                        positionItems = positionItemsSorted,
+                        items = positionItemsSorted.map { it.item }),
                     isFirstLoad = true,
-//                    error = if (result.isNotEmpty()) {
-//                        null
-//                    } else {
-//                        state.error
-//                    }
+                    error = if (result.isNotEmpty()) {
+                        null
+                    } else {
+                        state.error
+                    }
                 )
-                secondLoad()
+                //secondLoad()
             }
         }
     }
@@ -232,7 +263,7 @@ class HomeFlowViewModel @Inject constructor(
 
     fun refresh() {
         if (state.data.uiState !is HomeUiState.Loading) {
-            loadData()
+            fetchHomeInfo()
         }
 
         if (!state.loadingPage) {
@@ -1030,6 +1061,10 @@ class HomeFlowViewModel @Inject constructor(
         eventListener.emit(HomeEvents.GoToSearch)
     }
 
+    fun changeFavorite(product: ProductUi) = viewModelScope.launch {
+        likeManager.changeFavorite(product.id, !product.isFavorite)
+    }
+
     data class PositionItem(
         val position: Int,
         val item: Item,
@@ -1066,9 +1101,10 @@ class HomeFlowViewModel @Inject constructor(
 
         val banners: List<BannerUi> = emptyList(),
         val stories: List<StoryUi> = emptyList(),
-        val sectionPromotions: SectionUi<PromotionUi> = SectionUi.empty(),
+
         val orderWithMenu: OrderWithMenuUi = OrderWithMenuUi.Empty,
-        val popularSections: SectionUi<PopularCategoryUi> = SectionUi.empty(),
+        val sectionPromotions: SectionUi<PromotionUi> = SectionUi.empty(),
+        val sectionPopularCategories: SectionUi<PopularCategoryUi> = SectionUi.empty(),
         val sectionNewProducts: SectionUi<ProductUi> = SectionUi.empty(),
         val sectionHurryUpBuyProducts: SectionUi<ProductUi> = SectionUi.empty(),
         val sectionTop: SectionUi<CategoryWithProductsUi> = SectionUi.empty(),

@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.home.model
+package com.vodovoz.app.design_system.model
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
@@ -9,6 +9,39 @@ import com.vodovoz.app.domain.general.model.LabelModel
 import com.vodovoz.app.domain.general.model.ProductModel
 import com.vodovoz.app.domain.general.model.SectionModel
 import com.vodovoz.app.util.fromHexOrNull
+import com.yandex.mapkit.search.Advertisement.Product
+
+
+@JvmName("withUpdatedFavoritesSectionProduct")
+fun SectionUi<ProductUi>.withUpdatedFavorites(favorites: Map<Long, Boolean>): SectionUi<ProductUi> {
+    return copy(
+        items = items.withUpdatedFavorites(favorites)
+    )
+}
+
+fun SectionUi<CategoryWithProductsUi>.withUpdatedFavorites(favorites: Map<Long, Boolean>): SectionUi<CategoryWithProductsUi> {
+    return copy(
+        items = items.withUpdatedFavorites(favorites)
+    )
+}
+
+@JvmName("withUpdatedFavoritesCategoriesWithProducts")
+fun List<CategoryWithProductsUi>.withUpdatedFavorites(favorites: Map<Long, Boolean>): List<CategoryWithProductsUi> {
+    return map{  categoryWithProductsUi ->
+        categoryWithProductsUi.withUpdatedFavorites(favorites)
+    }
+}
+
+fun CategoryWithProductsUi.withUpdatedFavorites(favorites: Map<Long, Boolean>): CategoryWithProductsUi {
+    return copy(products = products.withUpdatedFavorites(favorites))
+}
+
+fun List<ProductUi>.withUpdatedFavorites(favorites: Map<Long, Boolean>): List<ProductUi> {
+    return map { product ->
+        product.copy(isFavorite = favorites[product.id] ?: product.isFavorite)
+    }
+}
+
 
 @Immutable
 data class CategoryWithProductsUi(
@@ -112,7 +145,7 @@ fun ProductModel.toUi(): ProductUi {
         price = firstPrice.price,
         oldPrice = firstPrice.oldPrice,
         name = name,
-        cartQuantity = -1,
+        cartQuantity = 0,
         cartLoading = false,
         image = picture,
         labels = labels.toUi(),
@@ -127,7 +160,7 @@ fun ProductModel.toUi(): ProductUi {
 data class LabelWithColorUi(
     val name: String,
     val color: Color,
-) {}
+)
 
 fun List<LabelModel>.toUi(): List<LabelWithColorUi> {
     return mapNotNull { labelModel ->

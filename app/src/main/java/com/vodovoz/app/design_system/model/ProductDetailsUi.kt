@@ -23,9 +23,6 @@ import com.vodovoz.app.domain.general.model.ProductDetailsButtonsModel
 import com.vodovoz.app.domain.general.model.ProductDetailsModel
 import com.vodovoz.app.domain.general.model.ProductDetailsTabModel
 import com.vodovoz.app.domain.general.model.PromoProductModel
-import com.vodovoz.app.feature.home.model.LabelWithColorUi
-import com.vodovoz.app.feature.home.model.SectionUi
-import com.vodovoz.app.feature.home.model.toUi
 import com.vodovoz.app.util.fromHexOrTransparent
 import kotlinx.parcelize.Parcelize
 

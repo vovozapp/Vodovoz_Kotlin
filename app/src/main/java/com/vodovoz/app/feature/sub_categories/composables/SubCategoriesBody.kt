@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -22,13 +21,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.vodovoz.app.R
 import com.vodovoz.app.feature.catalog.model.CatalogCategoryUi
@@ -38,6 +33,7 @@ fun SubCategoriesBody(
     modifier: Modifier = Modifier,
     catalogCategory: CatalogCategoryUi,
     onCategoryClick: (CatalogCategoryUi) -> Unit,
+    onParentCategoryClick: (CatalogCategoryUi) -> Unit,
 ) {
 
     val scrollState = rememberScrollState()
@@ -56,17 +52,25 @@ fun SubCategoriesBody(
 
         val childCategories = catalogCategory.childCategories
 
-        childCategories.forEachIndexed { index, category ->
-            SubCategoryItem(category = category, onCategoryClick = onCategoryClick)
-            if (childCategories.lastIndex != index) {
-                HorizontalDivider(
-                    thickness = 1.dp,
-                    color = MaterialTheme.colorScheme.surfaceVariant
-                )
+        SubCategoryItem(
+            category = catalogCategory.copy(
+                name = stringResource(id = R.string.all),
+                childCategories = emptyList()
+            ),
+            onCategoryClick = {
+                onParentCategoryClick(catalogCategory)
             }
+        )
+
+        childCategories.forEachIndexed { index, category ->
+            HorizontalDivider(
+                thickness = 1.dp,
+                color = MaterialTheme.colorScheme.surfaceVariant
+            )
+            SubCategoryItem(category = category, onCategoryClick = onCategoryClick)
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 

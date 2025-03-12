@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
@@ -49,14 +50,12 @@ import com.vodovoz.app.feature.productlistnofilter.composables.ProductsNoFilterB
 fun ProductsNoFiltersScreen(
     viewModel: ProductsListNoFilterFlowViewModel,
     viewState: ProductsListNoFilterFlowViewModel.ProductListNoFilterState,
+    lazyGridState: LazyGridState
 ) {
     val productsSection = viewState.productsSection
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.systemBars)
-            .consumeWindowInsets(WindowInsets.systemBars)
+        modifier = Modifier.fillMaxSize()
     ) {
         val searchQuery =
             (viewModel.dataSource as? PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Search)?.query
@@ -78,8 +77,6 @@ fun ProductsNoFiltersScreen(
             }
         )
 
-        val lazyPagingProducts = viewState.pagedProducts.collectAsLazyPagingItems()
-
         when (viewState.uiState) {
             ProductsListNoFilterFlowViewModel.UiState.Error -> {
                 NetworkErrorPlaceholder { viewModel.fetchProductListData() }
@@ -91,13 +88,18 @@ fun ProductsNoFiltersScreen(
 
             ProductsListNoFilterFlowViewModel.UiState.Success -> {
                 ProductsNoFilterBody(
+                    lazyGridState = lazyGridState,
                     title = productsSection.title,
                     productsQuantity = productsSection.productsQuantityText,
                     categories = productsSection.categories,
                     currentCategory = viewState.currentCategory,
                     currentSort = viewState.currentSort,
-                    lazyPagingProducts = lazyPagingProducts,
+                    products = viewState.products,
+                    productsLoadStates = viewState.productsLoadStates,
                     isGridView = viewState.isGridView,
+                    onProductSee = { index ->
+                        viewModel.notifyPagingProducts(index)
+                    },
                     onSortingClick = {
                         viewModel.showSortBottomSheet()
                     },
@@ -109,6 +111,12 @@ fun ProductsNoFiltersScreen(
                     },
                     onCategoriesListClick = {
                         viewModel.navigateToCategories()
+                    },
+                    onProductClick = { product ->
+                        viewModel.navigateToProductDetails(product)
+                    },
+                    onProductLike = { product ->
+                        viewModel.changeFavorite(product)
                     }
                 )
             }

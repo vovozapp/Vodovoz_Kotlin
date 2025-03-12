@@ -18,7 +18,7 @@ import com.vodovoz.app.design_system.composables.button.VodovozButtonDefaults
 import com.vodovoz.app.design_system.composables.card.CommentCard
 import com.vodovoz.app.design_system.model.CommentUi
 import com.vodovoz.app.feature.home.composables.TitleAndButton
-import com.vodovoz.app.feature.home.model.ButtonUi
+import com.vodovoz.app.design_system.model.ButtonUi
 
 @Suppress("NonSkippableComposable")
 @Composable

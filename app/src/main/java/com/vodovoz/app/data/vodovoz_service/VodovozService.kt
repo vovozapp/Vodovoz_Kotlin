@@ -66,12 +66,12 @@ interface VodovozService {
     @GET("auth.php")
     suspend fun loginByEmail(
         @Query("email") email: String,
-        @Query("pass") password: String
+        @Query("pass") password: String,
     ): Response<VodovozResponseDTO<String>>
 
     @GET("reg.php?action=otpravka")
     suspend fun register(
-        @QueryMap queries: Map<String, String>
+        @QueryMap queries: Map<String, String>,
     ): Response<RegisterDTO>
 
     //TODO - change return type
@@ -226,7 +226,7 @@ interface VodovozService {
 
     @GET("glavnaya/menushka.php?action=glavnaya")
     suspend fun getOrderMenu(
-        @Query("userid") userId: Long,
+        @Query("userid") userId: Long? = null,
     ): Response<VodovozResponseDTO<OrderMenuDTO>>
 
     @GET("glavnaya/razdel.php?action=popylrazdel")
@@ -289,21 +289,33 @@ interface VodovozService {
     ): Response<VodovozResponseDTO<PopupWindowDTO>>
 
     /**
-     * Favorite screen
+     * Favorite requests
      * */
-    @GET("osnova/izbrannoe.php?action=izbrannoe")
+    @GET("osnova/izbrannoe/izbrannoe.php?action=izbrannoe")
     suspend fun getFavoriteProducts(
         @Query("userid") userId: Long,
         @Query("nav") page: Int = 1,
-        @Query("sect") categoryId: Int = -1,
+        @Query("sect") categoryId: Int? = null,
         @Query("sort") sort: String = "",
         @Query("ascdesc") order: String = "",
     ): Response<VodovozResponseDTO<ProductsSectionDTO>>
 
-    @GET("osnova/izbrannoe.php?action=izbrannoe")
+    @GET("osnova/izbrannoe/izbrannoe.php?action=izbrannoe")
     suspend fun addFavoriteProducts(
         @Query("userid") userId: Long,
         @Query("id") productIds: String,
     ): Response<VodovozResponseDTO<ProductsSectionDTO>>
+
+    @GET("osnova/izbrannoe/adddel.php?action=add")
+    suspend fun addToFavorites(
+        @Query("id") productId: Long,
+        @Query("userid") userId: Long,
+    ): Response<VodovozResponseDTO<String>>
+
+    @GET("osnova/izbrannoe/adddel.php?action=del")
+    suspend fun removeFromFavorites(
+        @Query("id") productId: Long,
+        @Query("userid") userId: Long,
+    ): Response<VodovozResponseDTO<String>>
 
 }

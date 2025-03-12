@@ -6,10 +6,10 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.vodovoz.app.design_system.composables.bottom_sheet.SortOptionsBottomSheet
 import com.vodovoz.app.design_system.composables.placeholders.LoadingPlaceholder
 import com.vodovoz.app.feature.favorite.composables.FavoriteBody
@@ -22,6 +22,7 @@ import com.vodovoz.app.feature.favorite.composables.FavoriteTopBar
 fun FavoriteScreen(
     viewModel: FavoriteFlowViewModel,
     viewState: FavoriteFlowViewModel.FavoriteState,
+    lazyGridState: LazyGridState,
 ) {
     Column(
         modifier = Modifier
@@ -31,13 +32,12 @@ fun FavoriteScreen(
     ) {
         FavoriteTopBar(
             onSearchClick = {
-
+                viewModel.navigateToSearch()
             },
             showSearch = viewState.uiState is FavoriteFlowViewModel.FavoriteUiState.Success || viewState.uiState is FavoriteFlowViewModel.FavoriteUiState.Loading
         )
 
         val categories = viewState.productsSection.categories
-        val lazyPagingProducts = viewState.pagedProducts.collectAsLazyPagingItems()
 
         when (viewState.uiState) {
             FavoriteFlowViewModel.FavoriteUiState.Empty -> {
@@ -50,11 +50,13 @@ fun FavoriteScreen(
 
             FavoriteFlowViewModel.FavoriteUiState.Success -> {
                 FavoriteBody(
-                    lazyPagingProducts = lazyPagingProducts,
                     categories = categories,
                     currentCategory = viewState.currentCategory,
                     currentSort = viewState.currentSort,
                     isGridView = viewState.isGridView,
+                    products = viewState.products,
+                    lazyGridState = lazyGridState,
+                    productsLoadStates = viewState.productsLoadStates,
                     onCategoriesListClick = {
                         viewModel.navigateToCategories()
                     },
@@ -66,6 +68,15 @@ fun FavoriteScreen(
                     },
                     onCategoryClick = { categoryUi ->
                         viewModel.selectCategory(categoryUi)
+                    },
+                    onProductLike = { product ->
+                        viewModel.changeFavorite(product)
+                    },
+                    onProductClick = { product ->
+                        viewModel.navigateToProductDetails(product)
+                    },
+                    onProductSee = { index ->
+                        viewModel.notifyPaging(index)
                     }
                 )
             }

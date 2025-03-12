@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.vodovoz.app.feature.home.model.LabelWithColorUi
+import com.vodovoz.app.design_system.model.LabelWithColorUi
 
 
 @Suppress("NonSkippableComposable")

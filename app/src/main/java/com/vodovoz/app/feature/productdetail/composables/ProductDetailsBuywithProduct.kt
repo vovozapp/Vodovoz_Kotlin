@@ -13,8 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.vodovoz.app.design_system.composables.card.GridProductCard
-import com.vodovoz.app.feature.home.model.ProductUi
-import com.vodovoz.app.feature.home.model.SectionUi
+import com.vodovoz.app.design_system.model.ProductUi
+import com.vodovoz.app.design_system.model.SectionUi
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable

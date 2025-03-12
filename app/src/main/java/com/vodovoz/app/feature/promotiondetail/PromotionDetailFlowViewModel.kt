@@ -20,8 +20,7 @@ import com.vodovoz.app.data.parser.response.promotion.PromotionDetailResponseJso
 import com.vodovoz.app.design_system.model.PromotionDetailsUi
 import com.vodovoz.app.design_system.model.toUi
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
-import com.vodovoz.app.feature.home.model.ProductUi
-import com.vodovoz.app.feature.home.model.toUi
+import com.vodovoz.app.design_system.model.ProductUi
 import com.vodovoz.app.mapper.PromotionDetailMapper.mapToUI
 import com.vodovoz.app.ui.model.PromotionDetailUI
 import com.vodovoz.app.util.extensions.debugLog

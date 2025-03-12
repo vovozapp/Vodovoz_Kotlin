@@ -2,33 +2,39 @@ package com.vodovoz.app.feature.productlistnofilter.composables
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.paging.compose.LazyPagingItems
+import androidx.paging.CombinedLoadStates
 import com.vodovoz.app.design_system.composables.list.ProductLazyPagingList
 import com.vodovoz.app.design_system.composables.list.ProductListCategoriesRow
 import com.vodovoz.app.design_system.composables.list.ProductListOptionsRow
 import com.vodovoz.app.design_system.composables.list.ProductListTitle
+import com.vodovoz.app.design_system.model.ProductUi
 import com.vodovoz.app.feature.home.model.CategoryUi
-import com.vodovoz.app.feature.home.model.ProductUi
 import com.vodovoz.app.feature.product_comments.model.SortUi
 
 @Suppress("NonSkippableComposable")
 @Composable
 fun ProductsNoFilterBody(
     modifier: Modifier = Modifier,
+    lazyGridState: LazyGridState,
     title: String,
     categories: List<CategoryUi>,
     productsQuantity: String,
     currentCategory: CategoryUi,
     currentSort: SortUi,
-    lazyPagingProducts: LazyPagingItems<ProductUi>,
     isGridView: Boolean,
+    products: List<ProductUi>,
+    productsLoadStates: CombinedLoadStates,
+    onProductSee: (Int) -> Unit,
     onSortingClick: () -> Unit,
     onSwitchLayoutClick: () -> Unit,
     onCategoryClick: (CategoryUi) -> Unit,
-    onCategoriesListClick: () -> Unit
+    onCategoriesListClick: () -> Unit,
+    onProductClick: (ProductUi) -> Unit,
+    onProductLike: (ProductUi) -> Unit,
 ) {
     Column(modifier = modifier) {
         ProductListTitle(
@@ -64,10 +70,19 @@ fun ProductsNoFilterBody(
 
 
         ProductLazyPagingList(
-            lazyPagingProducts = lazyPagingProducts,
+            lazyGridState = lazyGridState,
+            products = products,
+            loadStates = productsLoadStates,
             isGridView = isGridView,
-            onProductClick = { },
-            onProductLike = { }
+            onProductSee = { index ->
+                onProductSee(index)
+            },
+            onProductClick = { product ->
+                onProductClick(product)
+            },
+            onProductLike = { product ->
+                onProductLike(product)
+            }
         )
     }
 }

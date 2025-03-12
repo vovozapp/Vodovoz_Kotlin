@@ -11,14 +11,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.vodovoz.app.design_system.model.ColorfulButtonUi
 import com.vodovoz.app.design_system.model.CommentUi
 import com.vodovoz.app.design_system.model.ProductDetailsButtonsUi
 import com.vodovoz.app.design_system.model.ProductDetailsUi
-import com.vodovoz.app.feature.home.model.ProductUi
-import com.vodovoz.app.feature.home.model.SectionUi
+import com.vodovoz.app.design_system.model.ProductUi
+import com.vodovoz.app.design_system.model.SectionUi
 import com.vodovoz.app.util.calculateProductPrice
 import com.vodovoz.app.util.formatPrice
 import kotlin.math.roundToInt

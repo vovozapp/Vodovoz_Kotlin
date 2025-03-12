@@ -2,7 +2,8 @@ package com.vodovoz.app.domain.general.model
 
 import androidx.compose.runtime.Immutable
 import com.vodovoz.app.feature.home.model.CategoryUi
-import com.vodovoz.app.feature.home.model.ProductUi
+import com.vodovoz.app.design_system.model.ProductUi
+import com.vodovoz.app.design_system.model.toUi
 import com.vodovoz.app.feature.home.model.toUi
 import com.vodovoz.app.feature.product_comments.model.SortUi
 import com.vodovoz.app.feature.product_comments.model.toUi

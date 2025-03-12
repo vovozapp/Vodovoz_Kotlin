@@ -37,8 +37,8 @@ import com.vodovoz.app.design_system.composables.button.QuantityButtonSmall
 import com.vodovoz.app.design_system.composables.button.VodovozButtonDefaults
 import com.vodovoz.app.design_system.composables.button.VodovozButtonSmall
 import com.vodovoz.app.design_system.composables.chip.VodovozColorChipSmall
-import com.vodovoz.app.feature.home.model.LabelWithColorUi
-import com.vodovoz.app.feature.home.model.ProductUi
+import com.vodovoz.app.design_system.model.LabelWithColorUi
+import com.vodovoz.app.design_system.model.ProductUi
 import com.vodovoz.app.util.formatPrice
 import java.util.Locale
 import kotlin.math.roundToInt

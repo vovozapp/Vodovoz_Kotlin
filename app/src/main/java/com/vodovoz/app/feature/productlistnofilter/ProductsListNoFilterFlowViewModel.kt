@@ -3,6 +3,8 @@ package com.vodovoz.app.feature.productlistnofilter
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.vodovoz.app.common.account.data.AccountManager
@@ -15,23 +17,29 @@ import com.vodovoz.app.common.content.updateData
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
+import com.vodovoz.app.design_system.model.ProductUi
+import com.vodovoz.app.design_system.model.toUi
+import com.vodovoz.app.design_system.model.withUpdatedFavorites
 import com.vodovoz.app.domain.general.model.ProductModel
 import com.vodovoz.app.domain.general.model.ProductsSectionModel
 import com.vodovoz.app.domain.general.model.ProductsSectionUi
 import com.vodovoz.app.domain.general.model.toUi
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.home.model.CategoryUi
-import com.vodovoz.app.feature.home.model.ProductUi
-import com.vodovoz.app.feature.home.model.toUi
 import com.vodovoz.app.feature.product_comments.model.SortUi
 import com.vodovoz.app.feature.product_comments.model.toDomain
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment.DataSource
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.SortTypeUI
+import com.vodovoz.app.ui.paging.PagingDataListener
+import com.vodovoz.app.ui.paging.copy
+import com.vodovoz.app.ui.paging.emptyCombinedLoadStates
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.single
@@ -55,6 +63,20 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
 
     private val changeLayoutManager = MutableStateFlow(LINEAR)
     fun observeChangeLayoutManager() = changeLayoutManager.asStateFlow()
+
+    private val pagingProductsListener = PagingDataListener(
+        onUpdateItems = { itemSnapshotList ->
+            uiStateListener.updateData { s ->
+                val pagedProducts = itemSnapshotList.mapNotNull { product -> product }
+                s.copy(products = pagedProducts)
+            }
+        }
+    )
+
+    init {
+        listenFavorites()
+        listenProductsLoadStates()
+    }
 
     fun fetchProductListData() = viewModelScope.launch {
         uiStateListener.updateData { s ->
@@ -180,20 +202,25 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
             Result.success(dataState.productsSection)
         }
 
-        val pagedProductsFlow = fetchPagedProductsFlow().map { pagingData ->
-            pagingData.map { productModel -> productModel.toUi() }
-        }
+
 
         productsSectionResult.onSuccess { productsSection ->
+
+
             uiStateListener.updateData { state ->
                 state.copy(
                     productsSection = productsSection,
-                    pagedProducts = pagedProductsFlow,
                     uiState = UiState.Success,
-                    currentSort = productsSection.sorting.firstOrNull { it.name == productsSection.sortingTitle }
-                        ?: productsSection.sorting.firstOrNull() ?: SortUi.Empty,
+                    currentSort = state.currentSort.takeIf { sort ->
+                        sort != SortUi.Empty
+                    } ?: productsSection.sorting.firstOrNull() ?: SortUi.Empty,
                 )
             }
+
+            fetchPagedProductsFlow().map { pagingData ->
+                pagingData.map { productModel -> productModel.toUi() }
+            }.collect { pagingData -> pagingProductsListener.collectPagingData(pagingData) }
+
         }.onFailure {
             uiStateListener.updateData { state ->
                 state.copy(uiState = UiState.Error)
@@ -201,6 +228,40 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
         }
     }
 
+
+    private fun listenFavorites() = viewModelScope.launch {
+        uiStateListener.map { pagingState -> pagingState.data.products }
+            .combine(likeManager.observeLikes()) { products, favorites ->
+                products to favorites
+            }.collectLatest { (products, favorites) ->
+                uiStateListener.updateData { s ->
+                    s.copy(
+                        products = products.withUpdatedFavorites(favorites)
+                    )
+                }
+            }
+    }
+
+    private fun listenProductsLoadStates() = viewModelScope.launch {
+        pagingProductsListener.collectLoadState { combinedLoadStates ->
+            val refreshState = when {
+                combinedLoadStates.refresh is LoadState.Loading && dataState.products.isNotEmpty() -> {
+                    dataState.productsLoadStates.refresh
+                }
+
+                else -> combinedLoadStates.refresh
+            }
+
+            uiStateListener.updateData { s ->
+                s.copy(
+                    productsLoadStates = combinedLoadStates.copy(
+                        refresh = refreshState
+                    )
+                )
+            }
+        }
+
+    }
 
 
     fun changeCart(productId: Long, quantity: Int, oldQuan: Int) {
@@ -225,9 +286,11 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
         uiStateListener.updateData { s ->
             s.copy(
                 currentSort = sort,
-                showSortBottomSheet = false
+                showSortBottomSheet = false,
+                products = emptyList()
             )
         }
+        eventListener.emit(ProductListNoFilterEvent.ScrollToTop)
         fetchProductListData()
     }
 
@@ -240,10 +303,15 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
     }
 
     fun selectCategory(category: CategoryUi) = viewModelScope.launch {
-        val newCategory = if(category == dataState.currentCategory) CategoryUi.Empty else category
+        val newCategory = if (category == dataState.currentCategory) CategoryUi.Empty else category
         uiStateListener.updateData { s ->
-            s.copy(currentCategory = newCategory)
+            s.copy(
+                currentCategory = newCategory,
+                productsLoadStates = s.productsLoadStates.copy(refresh = LoadState.Loading),
+                products = emptyList()
+            )
         }
+        eventListener.emit(ProductListNoFilterEvent.ScrollToTop)
         fetchProductListData()
     }
 
@@ -256,7 +324,24 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
     }
 
     fun navigateToCategories() = viewModelScope.launch {
-        eventListener.emit(ProductListNoFilterEvent.GoToCategories(dataState.productsSection.categories,dataState.currentCategory))
+        eventListener.emit(
+            ProductListNoFilterEvent.GoToCategories(
+                dataState.productsSection.categories,
+                dataState.currentCategory
+            )
+        )
+    }
+
+    fun navigateToProductDetails(product: ProductUi) = viewModelScope.launch {
+        eventListener.emit(ProductListNoFilterEvent.GoToProductDetails(product.id))
+    }
+
+    fun changeFavorite(product: ProductUi) = viewModelScope.launch {
+        likeManager.changeFavorite(product.id, !product.isFavorite)
+    }
+
+    fun notifyPagingProducts(index: Int) = kotlin.runCatching {
+        pagingProductsListener[index]
     }
 
     @Immutable
@@ -271,7 +356,8 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
         val scrollToTop: Boolean = false,
 
         val productsSection: ProductsSectionUi = ProductsSectionUi.Empty,
-        val pagedProducts: Flow<PagingData<ProductUi>> = emptyFlow(),
+        val products: List<ProductUi> = emptyList(),
+        val productsLoadStates: CombinedLoadStates = emptyCombinedLoadStates,
         val currentCategory: CategoryUi = CategoryUi.Empty,
         val currentSort: SortUi = SortUi.Empty,
         val uiState: UiState = UiState.Loading,
@@ -285,10 +371,17 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
         data object Success : UiState
     }
 
-    sealed class ProductListNoFilterEvent: Event {
-        data object GoBack: ProductListNoFilterEvent()
+    sealed class ProductListNoFilterEvent : Event {
+        data object GoBack : ProductListNoFilterEvent()
+        data object ScrollToTop : ProductListNoFilterEvent()
+
         data class GoToSearch(val query: String) : ProductListNoFilterEvent()
-        data class GoToCategories(val categories: List<CategoryUi>,val currentCategory: CategoryUi) : ProductListNoFilterEvent()
+        data class GoToCategories(
+            val categories: List<CategoryUi>,
+            val currentCategory: CategoryUi,
+        ) : ProductListNoFilterEvent()
+
+        data class GoToProductDetails(val productId: Long) : ProductListNoFilterEvent()
     }
 
     companion object {

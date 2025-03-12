@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.sub_categories
 
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -30,7 +31,8 @@ fun SubCategoriesScreen(
                     viewModel.navigateBack()
                 }
             )
-        }
+        },
+        contentWindowInsets = WindowInsets(0,0,0,0)
     ) { paddingValues ->
         SubCategoriesBody(
             modifier = Modifier
@@ -39,6 +41,9 @@ fun SubCategoriesScreen(
             catalogCategory = viewState.catalogCategory,
             onCategoryClick = { catalogCategory ->
                 viewModel.chooseCatalogCategory(catalogCategory)
+            },
+            onParentCategoryClick = { catalogCategory ->
+                viewModel.chooseParentCatalogCategory(catalogCategory)
             }
         )
     }

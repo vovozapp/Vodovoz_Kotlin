@@ -1,8 +1,12 @@
 package com.vodovoz.app.data.vodovoz_service.repository
 
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.LoadType
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.PagingState
+import androidx.paging.RemoteMediator
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.vodovoz.app.common.account.data.AccountManager
@@ -45,11 +49,7 @@ import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
 import com.vodovoz.app.domain.general.model.UserNotRegisterException
 import com.vodovoz.app.domain.general.model.ValidationException
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
-import com.vodovoz.app.util.extensions.catchResult
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.retry
-import kotlinx.coroutines.flow.retryWhen
 import javax.inject.Inject
 
 
@@ -266,12 +266,18 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         sort: SortModel,
     ): Flow<PagingData<ProductModel>> {
         return Pager(
-            config = PagingConfig(pageSize = 4, initialLoadSize = 4),
+            config = PagingConfig(pageSize = 4, initialLoadSize = 4, enablePlaceholders = false),
             pagingSourceFactory = {
                 VodovozPagingSource(
                     request = { page, _ ->
                         val userId = accountManager.fetchAccountId() ?: -1L
-                        vodovozService.getFavoriteProducts(userId, page)
+                        vodovozService.getFavoriteProducts(
+                            userId,
+                            page,
+                            categoryId.takeIf { value -> value != -1 },
+                            sort.value,
+                            sort.order
+                        )
                     },
                     mapper = { response ->
                         response.data?.DATA?.mapNotNull { it.toDomain() }
@@ -290,6 +296,30 @@ class VodovozServiceRepositoryImpl @Inject constructor(
             },
             mapper = { it ->
                 it.data?.toDomain()!!
+            }
+        )
+    }
+
+    override suspend fun addProductToFavorites(productId: Long): Flow<Result<String>> {
+        return executeRequest(
+            request = {
+                val userId = accountManager.fetchAccountId() ?: throw UserNotRegisterException()
+                vodovozService.addToFavorites(productId, userId)
+            },
+            mapper = {
+                it.message ?: ""
+            }
+        )
+    }
+
+    override suspend fun removeProductFromFavorites(productId: Long): Flow<Result<String>> {
+        return executeRequest(
+            request = {
+                val userId = accountManager.fetchAccountId() ?: throw UserNotRegisterException()
+                vodovozService.removeFromFavorites(productId, userId)
+            },
+            mapper = {
+                it.message ?: ""
             }
         )
     }
@@ -468,7 +498,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
 
     override fun getPromotionsPaged(limit: Int): Flow<PagingData<PromotionModel>> {
         return Pager(
-            config = PagingConfig(limit, initialLoadSize = limit),
+            config = PagingConfig(pageSize = limit, initialLoadSize = limit),
             pagingSourceFactory = {
                 VodovozPagingSource(
                     request = { page, limit ->
@@ -485,7 +515,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
 
     override fun getOrderMenu(userId: Long?): Flow<Result<OrderWithMenuModel>> = executeRequest(
         request = {
-            vodovozService.getOrderMenu(userId ?: accountManager.fetchAccountId() ?: -1)
+            vodovozService.getOrderMenu(accountManager.fetchAccountId())
         },
         mapper = {
             it.data?.toDomain()!!

@@ -67,6 +67,14 @@ interface VodovozServiceRepository {
         productsIds: String,
     ): Flow<Result<ProductsSectionModel>>
 
+    suspend fun addProductToFavorites(
+        productId: Long
+    ): Flow<Result<String>>
+
+    suspend fun removeProductFromFavorites(
+        productId: Long
+    ): Flow<Result<String>>
+
     suspend fun addProductToCart(
         productId: Long,
         quantity: Int,

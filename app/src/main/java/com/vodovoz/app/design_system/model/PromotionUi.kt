@@ -6,8 +6,6 @@ import com.vodovoz.app.domain.general.model.PromotionDetailsModel
 import com.vodovoz.app.domain.general.model.PromotionCategoryModel
 import com.vodovoz.app.domain.general.model.PromotionModel
 import com.vodovoz.app.domain.general.model.SpecialPromotionModel
-import com.vodovoz.app.feature.home.model.LabelWithColorUi
-import com.vodovoz.app.feature.home.model.toUi
 import java.time.Duration
 import java.time.ZonedDateTime
 import java.util.Locale
@@ -85,6 +83,8 @@ data class PromotionUi(
     val name: String,
     val aboutAdvertisingUi: AboutAdvertisingUi?,
 )
+
+
 
 @Immutable
 data class AboutAdvertisingUi(

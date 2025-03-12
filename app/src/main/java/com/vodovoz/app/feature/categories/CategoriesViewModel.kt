@@ -14,9 +14,9 @@ class CategoriesViewModel(
 ) : MviViewModel<CategoriesState, CategoriesEvent>(CategoriesState()) {
 
     private val categoriesArg =
-        savedStateHandle.get<Array<CategoryUi>>("categoryList") ?: emptyArray()
+        savedStateHandle.remove<Array<CategoryUi>>("categoryList") ?: emptyArray()
     private val categoryArg =
-        savedStateHandle.get<CategoryUi>("category") ?: categoriesArg.firstOrNull()
+        savedStateHandle.remove<CategoryUi>("category") ?: categoriesArg.firstOrNull()
         ?: CategoryUi.Empty
 
     init {
@@ -39,6 +39,8 @@ class CategoriesViewModel(
     }
 
     fun navigateBackWithArgs() = viewModelScope.launch {
+        if(stateSnapshot.currentCategory == CategoryUi.Empty) return@launch
+
         _events.emit(CategoriesEvent.GoBackWithArguments(stateSnapshot.currentCategory))
     }
 

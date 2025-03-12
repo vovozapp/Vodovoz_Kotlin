@@ -20,8 +20,8 @@ import com.vodovoz.app.R
 import com.vodovoz.app.design_system.composables.card.GridProductCard
 import com.vodovoz.app.design_system.composables.chip.VodovozChip
 import com.vodovoz.app.design_system.composables.chip.VodovozClosableChip
-import com.vodovoz.app.feature.home.model.ProductUi
-import com.vodovoz.app.feature.home.model.SectionUi
+import com.vodovoz.app.design_system.model.ProductUi
+import com.vodovoz.app.design_system.model.SectionUi
 
 @Suppress("NonSkippableComposable")
 @OptIn(ExperimentalLayoutApi::class)

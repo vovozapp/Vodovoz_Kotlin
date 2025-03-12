@@ -14,7 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.vodovoz.app.feature.home.model.SectionUi
+import com.vodovoz.app.design_system.model.SectionUi
 
 @Composable
 fun ProductDetailsSearchWords(modifier: Modifier = Modifier, sectionTags: SectionUi<String>) {

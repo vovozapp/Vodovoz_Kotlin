@@ -29,7 +29,7 @@ import com.vodovoz.app.design_system.composables.chip.TimeLeftChip
 import com.vodovoz.app.design_system.composables.chip.VodovozColorChip
 import com.vodovoz.app.design_system.composables.list.gridProducts
 import com.vodovoz.app.design_system.model.PromotionDetailsUi
-import com.vodovoz.app.feature.home.model.ProductUi
+import com.vodovoz.app.design_system.model.ProductUi
 
 @Composable
 fun PromotionDetailsBody(

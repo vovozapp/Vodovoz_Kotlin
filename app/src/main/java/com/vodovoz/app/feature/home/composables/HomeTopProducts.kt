@@ -15,9 +15,9 @@ import com.vodovoz.app.design_system.composables.card.GridProductCard
 import com.vodovoz.app.design_system.composables.chip.VodovozChip
 import com.vodovoz.app.design_system.composables.tab_row.VodovozScrollableTabRow
 import com.vodovoz.app.domain.general.model.ButtonAction
-import com.vodovoz.app.feature.home.model.CategoryWithProductsUi
-import com.vodovoz.app.feature.home.model.ProductUi
-import com.vodovoz.app.feature.home.model.SectionUi
+import com.vodovoz.app.design_system.model.CategoryWithProductsUi
+import com.vodovoz.app.design_system.model.ProductUi
+import com.vodovoz.app.design_system.model.SectionUi
 import com.vodovoz.app.util.extensions.indexOfOrNull
 
 @Composable
@@ -57,6 +57,7 @@ fun HomeTopProducts(
                 )
             }
         }
+
 
         LazyRow(
             modifier = Modifier.padding(top = 16.dp),

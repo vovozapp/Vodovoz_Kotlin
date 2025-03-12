@@ -1,5 +1,8 @@
 package com.vodovoz.app.domain.general.model
 
+import com.vodovoz.app.design_system.model.PromotionUi
+import com.vodovoz.app.design_system.model.SectionUi
+import com.vodovoz.app.design_system.model.toUi
 import java.time.ZonedDateTime
 
 
@@ -9,6 +12,16 @@ data class PromotionsSectionModel(
     val promotions: List<PromotionModel>,
     val button: ButtonModel?
 )
+
+
+fun PromotionsSectionModel.toUi(): SectionUi<PromotionUi> {
+    return SectionUi(
+        title = title,
+        items = promotions.map { promotionModel -> promotionModel.toUi() },
+        button = button?.toUi()
+    )
+}
+
 
 
 data class PromotionCategoryModel(

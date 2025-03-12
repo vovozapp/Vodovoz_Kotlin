@@ -3,13 +3,26 @@ package com.vodovoz.app.core.navigation
 import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
+import androidx.navigation.fragment.findNavController
 import com.vodovoz.app.R
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
 import com.vodovoz.app.feature.catalog.CatalogFragmentDirections
 import com.vodovoz.app.feature.catalog.model.CatalogCategoryUi
 import com.vodovoz.app.feature.home.HomeFragmentDirections
+import com.vodovoz.app.feature.home.model.CategoryUi
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
+
+fun NavController.navigateToCategories(category: CategoryUi, categories: List<CategoryUi>) {
+    navigate(
+        R.id.categoriesFragment,
+        bundleOf(
+            "categoryList" to categories.toTypedArray(),
+            "category" to category,
+        )
+    )
+}
+
 
 fun NavController.navigateToSubCategories(category: CatalogCategoryUi) {
     navigate(

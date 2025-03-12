@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.vodovoz.app.design_system.model.PromotionUi
 import com.vodovoz.app.domain.general.model.ButtonAction
-import com.vodovoz.app.feature.home.model.SectionUi
+import com.vodovoz.app.design_system.model.SectionUi
 
 @Composable
 fun HomePromotions(

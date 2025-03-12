@@ -17,7 +17,7 @@ class SplashViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            likeManager.updateStateFromLikesLocal()
+            likeManager.syncFavoritesFromLocal()
         }
     }
 

@@ -11,11 +11,9 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -39,8 +37,8 @@ import com.vodovoz.app.design_system.composables.button.QuantityButtonSmall
 import com.vodovoz.app.design_system.composables.button.VodovozButtonDefaults
 import com.vodovoz.app.design_system.composables.button.VodovozButtonSmall
 import com.vodovoz.app.design_system.composables.chip.VodovozColorChipSmall
-import com.vodovoz.app.feature.home.model.LabelWithColorUi
-import com.vodovoz.app.feature.home.model.ProductUi
+import com.vodovoz.app.design_system.model.LabelWithColorUi
+import com.vodovoz.app.design_system.model.ProductUi
 import com.vodovoz.app.util.formatPrice
 import java.util.Locale
 import kotlin.math.roundToInt

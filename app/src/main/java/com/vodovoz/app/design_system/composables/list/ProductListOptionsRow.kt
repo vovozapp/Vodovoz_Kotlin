@@ -19,7 +19,7 @@ fun ProductListOptionsRow(
     onSortingClick: () -> Unit,
 ) {
     Row(
-        modifier = modifier.padding(horizontal = 16.dp),
+        modifier = modifier.padding(horizontal = 16.dp).padding(bottom = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         SortingButton(
