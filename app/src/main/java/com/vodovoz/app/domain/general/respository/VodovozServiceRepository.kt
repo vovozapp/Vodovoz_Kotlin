@@ -62,11 +62,14 @@ interface VodovozServiceRepository {
 
     fun sendPreorder(productId: Long, fields: List<FieldModel>): Flow<Result<String>>
 
-    fun getFavoriteProducts(): Flow<Result<ProductsSectionModel>>
+    fun getFavoriteProducts(
+        productsIds: String = ""
+    ): Flow<Result<ProductsSectionModel>>
 
     fun getFavoriteProductsPaged(
         categoryId: Int = -1,
         sort: SortModel = SortModel.Empty,
+        productsIds: String = ""
     ): Flow<PagingData<ProductModel>>
 
     suspend fun addFavoriteProducts(

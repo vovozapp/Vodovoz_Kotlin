@@ -40,17 +40,12 @@ class ReloginManager @Inject constructor(
                         debugLog { userRelogin.toString() }
 
                         //TODO - review old version
-//                        if (userRelogin.isAuthorized) {
-//                            val newCookie = reloginResponse.headers()["Set-Cookie"] ?: ""
-//                            if (newCookie.isNotEmpty()) {
-//                                cookieManager.updateCookieSessionId(newCookie)
-//                            }
-//                        } else {
-//                            accountManager.removeUserId()
-//                            accountManager.removeUserToken()
-//                            cookieManager.removeCookieSessionId()
-//                        }
-                        if(!userRelogin.isAuthorized){
+                        if (userRelogin.isAuthorized) {
+                            val newCookie = reloginResponse.headers()["Set-Cookie"] ?: ""
+                            if (newCookie.isNotEmpty()) {
+                                cookieManager.updateCookieSessionId(newCookie)
+                            }
+                        } else {
                             accountManager.removeUserId()
                             accountManager.removeUserToken()
                             cookieManager.removeCookieSessionId()

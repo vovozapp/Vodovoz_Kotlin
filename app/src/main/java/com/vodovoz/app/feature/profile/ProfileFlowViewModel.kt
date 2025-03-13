@@ -88,7 +88,7 @@ class ProfileFlowViewModel @Inject constructor(
                     if (it is ResponseEntity.Success) {
                         firstLoad()
                     } else {
-                        //logout()
+                        logout()
                     }
                 }
                 .collect()

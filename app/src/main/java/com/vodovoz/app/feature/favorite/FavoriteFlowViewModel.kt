@@ -53,7 +53,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -81,7 +80,7 @@ class FavoriteFlowViewModel @Inject constructor(
         }
     )
 
-    fun notifyPaging(productIndex: Int) = viewModelScope.launch {
+    fun notifyPagingProducts(productIndex: Int) = viewModelScope.launch {
         pagingProductsListener[productIndex]
     }
 
@@ -138,7 +137,9 @@ class FavoriteFlowViewModel @Inject constructor(
         }
 
         val favoriteProductsResult =
-            vodovozServiceRepository.getFavoriteProducts().singleResult()
+            vodovozServiceRepository.getFavoriteProducts(
+                productsIds = likeManager.fetchLikeLocalStr() ?: ""
+            ).singleResult()
                 .map { productsSectionModel -> productsSectionModel.toUi() }
 
 
@@ -163,14 +164,15 @@ class FavoriteFlowViewModel @Inject constructor(
 
             vodovozServiceRepository.getFavoriteProductsPaged(
                 categoryId = currentCategory.id,
-                sort = dataState.currentSort.toDomain()
+                sort = dataState.currentSort.toDomain(),
+                productsIds = likeManager.fetchLikeLocalStr() ?: ""
             ).map { pagingData ->
                 pagingData.map { productModel -> productModel.toUi() }
             }.collectLatest { pagingData -> pagingProductsListener.collectPagingData(pagingData) }
 
 
-        }.onFailure { t ->
-            when (t) {
+        }.onFailure { fail ->
+            when (fail) {
                 is FavoritesNotFoundException -> {
                     uiStateListener.updateData { s ->
                         s.copy(uiState = FavoriteUiState.Empty)

@@ -306,11 +306,12 @@ interface VodovozService {
      * */
     @GET("osnova/izbrannoe/izbrannoe.php?action=izbrannoe")
     suspend fun getFavoriteProducts(
-        @Query("userid") userId: Long,
         @Query("nav") page: Int = 1,
+        @Query("userid") userId: Long? = null,
         @Query("sect") categoryId: Int? = null,
         @Query("sort") sort: String = "",
         @Query("ascdesc") order: String = "",
+        @Query("id") productsIds: String? = null
     ): Response<VodovozResponseDTO<ProductsSectionDTO>>
 
     @GET("osnova/izbrannoe/izbrannoe.php?action=izbrannoe")

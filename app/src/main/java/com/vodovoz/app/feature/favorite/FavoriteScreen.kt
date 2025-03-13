@@ -76,7 +76,7 @@ fun FavoriteScreen(
                         viewModel.navigateToProductDetails(product)
                     },
                     onProductSee = { index ->
-                        viewModel.notifyPaging(index)
+                        viewModel.notifyPagingProducts(index)
                     }
                 )
             }

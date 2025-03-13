@@ -271,10 +271,14 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         )
     }
 
-    override fun getFavoriteProducts(): Flow<Result<ProductsSectionModel>> = executeRequest(
+    override fun getFavoriteProducts(productsIds: String): Flow<Result<ProductsSectionModel>> = executeRequest(
         request = {
-            val userId = accountManager.fetchAccountId() ?: -1L
-            vodovozService.getFavoriteProducts(userId)
+            val userId = accountManager.fetchAccountId()
+
+            vodovozService.getFavoriteProducts(
+                userId = userId,
+                productsIds = if(userId == null) productsIds else null
+            )
         },
         mapper = { responseDTO ->
             responseDTO.data?.toDomain()
@@ -292,19 +296,21 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     override fun getFavoriteProductsPaged(
         categoryId: Int,
         sort: SortModel,
+        productsIds: String,
     ): Flow<PagingData<ProductModel>> {
         return Pager(
             config = PagingConfig(pageSize = 4, initialLoadSize = 4, enablePlaceholders = false),
             pagingSourceFactory = {
                 VodovozPagingSource(
                     request = { page, _ ->
-                        val userId = accountManager.fetchAccountId() ?: -1L
+                        val userId = accountManager.fetchAccountId()
                         vodovozService.getFavoriteProducts(
-                            userId,
-                            page,
-                            categoryId.takeIf { value -> value != -1 },
-                            sort.value,
-                            sort.order
+                            userId = userId,
+                            page =page,
+                            categoryId = categoryId.takeIf { value -> value != -1 },
+                            sort = sort.value,
+                            order = sort.order,
+                            productsIds = if(userId == null) productsIds else null
                         )
                     },
                     mapper = { response ->
@@ -319,8 +325,8 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     override suspend fun addFavoriteProducts(productsIds: String): Flow<Result<ProductsSectionModel>> {
         return executeRequest(
             request = {
-                val userId = accountManager.fetchAccountId()
-                vodovozService.addFavoriteProducts(userId ?: -1, productsIds)
+                val userId = accountManager.fetchAccountId() ?: throw UserNotRegisterException("")
+                vodovozService.getFavoriteProducts(userId = userId, productsIds = productsIds)
             },
             mapper = { it ->
                 it.data?.toDomain()!!

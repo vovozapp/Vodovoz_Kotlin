@@ -176,7 +176,7 @@ class LikeManager @Inject constructor(
         val localLikesListString = dataStoreRepository.getString(FAV_IDS)?.dropLast(1) ?: ""
 
         runCatching {
-            vodovozServiceRepository.addFavoriteProducts(localLikesListString).singleOrNull()
+            vodovozServiceRepository.addFavoriteProducts(localLikesListString).singleResult()
             //TODO - delete old repository
             repository.like(productIdListStr = localLikesListString, userId = userId)
             dataStoreRepository.remove(FAV_IDS)

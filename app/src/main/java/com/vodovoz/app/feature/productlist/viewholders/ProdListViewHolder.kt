@@ -45,6 +45,10 @@ class ProdListViewHolder(
     override fun attach() {
         super.attach()
 
+        this.launch {
+
+        }
+
         launch {
             val item = item ?: return@launch
             ratingProductManager
