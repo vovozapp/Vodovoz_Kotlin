@@ -59,7 +59,7 @@ fun ProductDetailsRatingBar(
                     null,
                     onClick = onReviewsClick
                 ),
-            text = if (numberOfReviews == 0) stringResource(R.string.leave_feedback) else pluralStringResource(
+            text = if (numberOfReviews <= 0) stringResource(R.string.leave_feedback) else pluralStringResource(
                 id = R.plurals.reviews_count,
                 numberOfReviews,
                 numberOfReviews

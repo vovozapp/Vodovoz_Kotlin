@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -19,6 +20,7 @@ import com.vodovoz.app.feature.home.composables.SpecialPromotionBottomSheet
 fun HomeScreen(
     viewState: HomeFlowViewModel.HomeState,
     viewModel: HomeFlowViewModel,
+    topProductsLazyListState: LazyListState,
     onNavigateToQrCodeFragment: () -> Unit,
 ) {
 
@@ -47,6 +49,7 @@ fun HomeScreen(
                 HomeFlowViewModel.HomeUiState.NetworkError -> {}
                 HomeFlowViewModel.HomeUiState.Success -> {
                     HomeBody(
+                        topProductsLazyListState = topProductsLazyListState,
                         banners = viewState.banners,
                         stories = viewState.stories,
                         sectionPromotions = viewState.sectionPromotions,
@@ -91,7 +94,7 @@ fun HomeScreen(
         }
     }
 
-    if (viewState.showBottomSheet) {
+    if (viewState.showSpecialPromotion) {
         SpecialPromotionBottomSheet(
             specialPromotionUi = viewState.specialPromotion,
             onDismissRequest = { viewModel.closeBottomSheet() },

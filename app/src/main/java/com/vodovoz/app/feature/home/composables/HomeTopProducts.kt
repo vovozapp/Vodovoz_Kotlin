@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,9 +25,10 @@ import com.vodovoz.app.util.extensions.indexOfOrNull
 @Composable
 fun HomeTopProducts(
     modifier: Modifier = Modifier,
-    onShowAllClick: (ButtonAction) -> Unit,
+    lazyListState: LazyListState,
     currentCategoryWithProducts: CategoryWithProductsUi,
     sectionCategoriesWithProducts: SectionUi<CategoryWithProductsUi>,
+    onShowAllClick: (ButtonAction) -> Unit,
     onCategorySelect: (CategoryWithProductsUi) -> Unit,
     onProductClick: (ProductUi) -> Unit,
     onProductLike: (ProductUi) -> Unit,
@@ -60,6 +63,7 @@ fun HomeTopProducts(
 
 
         LazyRow(
+            state = lazyListState,
             modifier = Modifier.padding(top = 16.dp),
             contentPadding = PaddingValues(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),

@@ -63,6 +63,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.nanoseconds
 
 @HiltViewModel
 class HomeFlowViewModel @Inject constructor(
@@ -107,22 +108,22 @@ class HomeFlowViewModel @Inject constructor(
         }
     }
 
-    private fun fetchHomeInfo() = viewModelScope.launch {
+    private suspend fun fetchPrimaryDetails(): Boolean {
         uiStateListener.updateData { s -> s.copy(uiState = HomeUiState.Loading) }
 
-        val bannersDeferred = async {
+        val bannersDeferred = viewModelScope.async {
             vodovozServiceRepository.getBanners().singleResult()
         }
-        val storiesDeferred = async {
+        val storiesDeferred = viewModelScope.async {
             vodovozServiceRepository.getStories().singleResult()
         }
-        val sectionPopularCategoriesDeferred = async {
+        val sectionPopularCategoriesDeferred = viewModelScope.async {
             vodovozServiceRepository.getPopularCategories().singleResult()
         }
-        val orderMenuDeferred = async {
+        val orderMenuDeferred = viewModelScope.async {
             vodovozServiceRepository.getOrderMenu().singleResult()
         }
-        val sectionsTopAndBottomDeferred = async {
+        val sectionsTopAndBottomDeferred = viewModelScope.async {
             vodovozServiceRepository.getSuperTop().singleResult()
         }
 
@@ -152,57 +153,77 @@ class HomeFlowViewModel @Inject constructor(
             }
         } else {
             uiStateListener.updateData { s -> s.copy(uiState = HomeUiState.NetworkError) }
-            return@launch
+            return false
         }
+        return true
+    }
 
+    private suspend fun fetchSecondaryDetails(): Boolean {
         val sectionPromotionsDeferred =
-            async { vodovozServiceRepository.getPromotions().singleResult() }
+            viewModelScope.async { vodovozServiceRepository.getPromotions().singleResult() }
         val sectionHurryUpBuyProductsDeferred =
-            async { vodovozServiceRepository.getHurryUpBuyProducts().singleResult() }
+            viewModelScope.async { vodovozServiceRepository.getHurryUpBuyProducts().singleResult() }
         val sectionNewProductsDeferred =
-            async { vodovozServiceRepository.getNewProducts().singleResult() }
+            viewModelScope.async { vodovozServiceRepository.getNewProducts().singleResult() }
 
         sectionPromotionsDeferred.await().onSuccess { value ->
             uiStateListener.updateData { s -> s.copy(sectionPromotions = value.toUi()) }
-        }
+        }.onFailure { return false }
 
         sectionHurryUpBuyProductsDeferred.await().onSuccess { value ->
             uiStateListener.updateData { s -> s.copy(sectionHurryUpBuyProducts = value.toUi()) }
+        }.onFailure { return false }
 
-        }
 
         sectionNewProductsDeferred.await().onSuccess { value ->
             uiStateListener.updateData { s -> s.copy(sectionNewProducts = value.toUi()) }
-        }
+        }.onFailure { return false }
 
+        return true
+    }
 
-        val viewedProductsDeferred = async {
+    private suspend fun fetchOptionalDetails(): Boolean {
+        val viewedProductsDeferred = viewModelScope.async {
             vodovozServiceRepository.getViewedProducts().singleResult()
         }
 
-        val popupWindowsInfoDeferred = async {
+        val popupWindowsInfoDeferred = viewModelScope.async {
             vodovozServiceRepository.getPopupWindowInfo().singleResult()
         }
 
 
         val sectionViewedProducts =
-            viewedProductsDeferred.await().getOrNull()?.toUi() ?: dataState.sectionViewedProducts
+            viewedProductsDeferred.await().getOrNull()?.toUi()
         val specialPromotion =
             popupWindowsInfoDeferred.await().getOrNull()?.specialPromotion?.toUi()
-                ?: dataState.specialPromotion
+
+
 
         uiStateListener.updateData { s ->
             s.copy(
-                sectionViewedProducts = sectionViewedProducts,
-                specialPromotion = specialPromotion
+                sectionViewedProducts = sectionViewedProducts ?: s.sectionViewedProducts,
+                specialPromotion = specialPromotion ?: s.specialPromotion,
+                showSpecialPromotion = specialPromotion != null
             )
         }
 
+        return sectionViewedProducts != null
+    }
+
+    private fun fetchHomeDetails() = viewModelScope.launch {
+        var startTime = System.nanoTime()
+        fetchPrimaryDetails()
+        debugLog { "Primary time - ${(System.nanoTime() - startTime).nanoseconds.inWholeMilliseconds}" }
+        fetchSecondaryDetails()
+        debugLog { "End time - ${(System.nanoTime() - startTime).nanoseconds.inWholeMilliseconds}" }
+        fetchOptionalDetails()
+
+        debugLog { "End time - ${(System.nanoTime() - startTime).nanoseconds.inWholeMilliseconds}" }
 
     }
 
     fun firstLoad() {
-        fetchHomeInfo()
+        fetchHomeDetails()
         if (!state.isFirstLoad) {
             //uiStateListener.value = state.copy(loadingPage = true)
 
@@ -263,7 +284,7 @@ class HomeFlowViewModel @Inject constructor(
 
     fun refresh() {
         if (state.data.uiState !is HomeUiState.Loading) {
-            fetchHomeInfo()
+            fetchHomeDetails()
         }
 
         if (!state.loadingPage) {
@@ -1030,12 +1051,13 @@ class HomeFlowViewModel @Inject constructor(
                 currentCategoryWithProducts = categoryWithProductsUi
             )
         }
+        eventListener.emit(HomeEvents.ScrollTopProductsToStart)
     }
 
     fun closeBottomSheet() = viewModelScope.launch {
         uiStateListener.updateData { s ->
             s.copy(
-                showBottomSheet = false
+                showSpecialPromotion = false
             )
         }
     }
@@ -1079,6 +1101,7 @@ class HomeFlowViewModel @Inject constructor(
         data object GoToProfile : HomeEvents()
         data object SendComment : HomeEvents()
         data object GoToCart : HomeEvents()
+        data object ScrollTopProductsToStart : HomeEvents()
 
         data class GoToStories(val storyId: Long) : HomeEvents()
         data class GoToProductDetails(val productId: Long) : HomeEvents()
@@ -1113,7 +1136,7 @@ class HomeFlowViewModel @Inject constructor(
         val sectionViewedProducts: SectionUi<ProductUi> = SectionUi.empty(),
         val specialPromotion: SpecialPromotionUi = SpecialPromotionUi.Empty,
         val uiState: HomeUiState = HomeUiState.Loading,
-        val showBottomSheet: Boolean = false,
+        val showSpecialPromotion: Boolean = false,
         val searchField: String = "",
 
         ) : State {

@@ -9,7 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.CookieManager
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -24,7 +25,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.R
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
@@ -42,15 +42,13 @@ import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.placeholders.NetworkErrorPlaceholder
+import com.vodovoz.app.design_system.effects.LifecycleEffect
 import com.vodovoz.app.domain.general.model.DataAllAction
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
-import com.vodovoz.app.feature.certificate_activation.CertificateActivationFragment
 import com.vodovoz.app.feature.home.popup.NewsClickListener
-import com.vodovoz.app.feature.home.popup.PopupNewsBottomFragment
 import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.feature.sitestate.SiteStateManager
-import com.vodovoz.app.ui.model.PopupNewsUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -95,9 +93,7 @@ class HomeFragment : Fragment() {
         observeMediaManager()
         observePushFromSiteState()
         observeDeepLinkFromSiteState()
-        observeEvents()
         observeTabReselect()
-        observeUiState()
     }
 
     override fun onCreateView(
@@ -113,6 +109,7 @@ class HomeFragment : Fragment() {
 
                 VodovozTheme {
                     val viewState by flowViewModel.observeUiState().collectAsStateWithLifecycle()
+                    val topProductLazyListState = rememberLazyListState()
 
                     when (viewState.data.uiState) {
                         HomeFlowViewModel.HomeUiState.NetworkError -> {
@@ -123,6 +120,7 @@ class HomeFragment : Fragment() {
                             HomeScreen(
                                 viewState = viewState.data,
                                 viewModel = flowViewModel,
+                                topProductsLazyListState = topProductLazyListState,
                                 onNavigateToQrCodeFragment = {
                                     navigateToQrCodeFragment()
                                 }
@@ -130,42 +128,13 @@ class HomeFragment : Fragment() {
                         }
                     }
 
+                    LifecycleEffect {
+                        observeEvents(topProductLazyListState = topProductLazyListState)
+                    }
+
                 }
             }
         }
-    }
-
-    private fun observeUiState() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                flowViewModel.observeUiState()
-                    .collect { homeState ->
-                        if (homeState.data.news?.androidVersion.isNullOrEmpty()) {
-                            if (homeState.data.news != null && !homeState.data.hasShow) {
-                                showPopUpNews(homeState.data.news)
-                            }
-                        } else {
-                            if (homeState.data.news?.androidVersion != null) {
-                                if (homeState.data.news.androidVersion > BuildConfig.VERSION_NAME) {
-                                    showPopUpNews(homeState.data.news)
-                                }
-                            }
-                        }
-
-                    }
-            }
-        }
-    }
-
-
-    private fun showPopUpNews(data: PopupNewsUI) {
-        val dialog = PopupNewsBottomFragment.newInstance(
-            data,
-            clickListener = newsClickListener()
-        )
-
-        dialog.show(childFragmentManager, dialog::class.simpleName)
-        flowViewModel.hasShown()
     }
 
     private fun observeTabReselect() {
@@ -290,87 +259,88 @@ class HomeFragment : Fragment() {
     }
 
 
-    private fun observeEvents() = lifecycleScope.launch {
-        repeatOnLifecycle(Lifecycle.State.STARTED) {
-            flowViewModel.observeEvent()
-                .collect { event ->
-                    when (event) {
-                        is HomeFlowViewModel.HomeEvents.GoToPreOrder -> {
-                            if (findNavController().currentBackStackEntry?.destination?.id == R.id.preOrderBS) {
-                                findNavController().popBackStack()
-                            }
+    private suspend fun observeEvents(topProductLazyListState: LazyListState) {
+        flowViewModel.observeEvent().collect { event ->
+            when (event) {
+                is HomeFlowViewModel.HomeEvents.GoToPreOrder -> {
+                    if (findNavController().currentBackStackEntry?.destination?.id == R.id.preOrderBS) {
+                        findNavController().popBackStack()
+                    }
 
 
+                    findNavController().navigate(
+                        HomeFragmentDirections.actionToPreOrderBS(
+                            event.id,
+                            event.name,
+                            event.detailPicture
+                        )
+                    )
+                }
+
+                is HomeFlowViewModel.HomeEvents.GoToProfile -> {
+                    tabManager.setAuthRedirect(findNavController().graph.id)
+                    tabManager.selectTab(R.id.graph_profile)
+                }
+
+                is HomeFlowViewModel.HomeEvents.SendComment -> {
+                    if (findNavController().currentBackStackEntry?.destination?.id == R.id.sendCommentAboutShopBottomDialog) {
+                        findNavController().popBackStack()
+                    }
+                    findNavController().navigate(HomeFragmentDirections.actionToSendCommentAboutShopBottomDialog())
+                }
+
+                is HomeFlowViewModel.HomeEvents.GoToCart -> {
+
+                }
+
+                is HomeFlowViewModel.HomeEvents.GoToStories -> {
+                    val bundle = bundleOf("startHistoryId" to event.storyId)
+                    findNavController().navigate(
+                        R.id.fullScreenHistorySliderFragment,
+                        bundle
+                    )
+                }
+
+                is HomeFlowViewModel.HomeEvents.GoToProductDetails -> {
+                    findNavController().navigateToProductDetails(event.productId)
+                }
+
+                is HomeFlowViewModel.HomeEvents.GoToPromotionDetails -> {
+                    findNavController().navigateToPromotionDetails(event.promotionId)
+                }
+
+                is HomeFlowViewModel.HomeEvents.ActivateButtonAction -> {
+                    event.action.activate(
+                        navController = findNavController(),
+                        activators = listOf(
+                            createDataAllActivator(DataAllAction.Profile) {
+                                tabManager.setAuthRedirect(findNavController().graph.id)
+                                tabManager.selectTab(R.id.graph_profile)
+                            },
+                            createDataAllActivator(DataAllAction.Unknown) {
+                                //TODO("Implement snackbar")
+                            },
+                        ),
+                        activateIdAction = { id ->
                             findNavController().navigate(
-                                HomeFragmentDirections.actionToPreOrderBS(
-                                    event.id,
-                                    event.name,
-                                    event.detailPicture
+                                HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+                                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.ButtonProducts(
+                                        id
+                                    )
                                 )
                             )
                         }
-
-                        is HomeFlowViewModel.HomeEvents.GoToProfile -> {
-                            tabManager.setAuthRedirect(findNavController().graph.id)
-                            tabManager.selectTab(R.id.graph_profile)
-                        }
-
-                        is HomeFlowViewModel.HomeEvents.SendComment -> {
-                            if (findNavController().currentBackStackEntry?.destination?.id == R.id.sendCommentAboutShopBottomDialog) {
-                                findNavController().popBackStack()
-                            }
-                            findNavController().navigate(HomeFragmentDirections.actionToSendCommentAboutShopBottomDialog())
-                        }
-
-                        is HomeFlowViewModel.HomeEvents.GoToCart -> {
-
-                        }
-
-                        is HomeFlowViewModel.HomeEvents.GoToStories -> {
-                            val bundle = bundleOf("startHistoryId" to event.storyId)
-                            findNavController().navigate(
-                                R.id.fullScreenHistorySliderFragment,
-                                bundle
-                            )
-                        }
-
-                        is HomeFlowViewModel.HomeEvents.GoToProductDetails -> {
-                            findNavController().navigateToProductDetails(event.productId)
-                        }
-
-                        is HomeFlowViewModel.HomeEvents.GoToPromotionDetails -> {
-                            findNavController().navigateToPromotionDetails(event.promotionId)
-                        }
-
-                        is HomeFlowViewModel.HomeEvents.ActivateButtonAction -> {
-                            event.action.activate(
-                                navController = findNavController(),
-                                activators = listOf(
-                                    createDataAllActivator(DataAllAction.Profile) {
-                                        tabManager.setAuthRedirect(findNavController().graph.id)
-                                        tabManager.selectTab(R.id.graph_profile)
-                                    },
-                                    createDataAllActivator(DataAllAction.Unknown) {
-                                        //TODO("Implement snackbar")
-                                    },
-                                ),
-                                activateIdAction = { id ->
-                                    findNavController().navigate(
-                                        HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                                            PaginatedProductsCatalogWithoutFiltersFragment.DataSource.ButtonProducts(
-                                                id
-                                            )
-                                        )
-                                    )
-                                }
-                            )
-                        }
-
-                        HomeFlowViewModel.HomeEvents.GoToSearch -> {
-                            findNavController().navigateToSearch()
-                        }
-                    }
+                    )
                 }
+
+                HomeFlowViewModel.HomeEvents.GoToSearch -> {
+                    findNavController().navigateToSearch()
+                }
+
+                HomeFlowViewModel.HomeEvents.ScrollTopProductsToStart -> {
+                    topProductLazyListState.animateScrollToItem(0)
+                }
+            }
         }
     }
 

@@ -19,7 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -86,12 +85,13 @@ fun SpecialPromotionBottomSheet(
 
             VodovozButton(
                 modifier = Modifier
-                    .padding(top = 8.dp)
+                    .padding(top = 20.dp)
                     .padding(bottom = 18.dp),
                 text = button.name,
                 onClick = { onButtonClick(specialPromotionUi) },
                 colors = ButtonDefaults.filledTonalButtonColors(
-                    contentColor = button.textColor,
+                    contentColor = button.textColor.takeIf { button.backgroundColor != it }
+                        ?: MaterialTheme.colorScheme.background,
                     containerColor = button.backgroundColor
                 )
             )
