@@ -22,20 +22,22 @@ data class PreOrderSectionUi(
 }
 
 fun interface FieldValidator {
-    fun validate(field: FieldUi): Boolean
+    fun isValid(field: FieldUi): Boolean
 }
 
 val KeyboardTypeValidator = FieldValidator { field ->
 
     val value = field.value
 
-    return@FieldValidator when(field.keyboardType){
+    return@FieldValidator when (field.keyboardType) {
         KeyboardType.Text -> {
             value.length in 2..100 && value.isNotBlank()
         }
+
         KeyboardType.Phone -> {
             value.isValidRussianPhoneNumber()
         }
+
         KeyboardType.Email -> {
             FieldValidationsSettings.EMAIL_REGEX.matches(value)
         }
@@ -50,15 +52,14 @@ val KeyboardTypeValidator = FieldValidator { field ->
 
 val NameValidator = FieldValidator { field ->
     val value = field.value
-    when{
+    when {
         value.contains("name") -> {
             value.length in 3..30 && value.isNotBlank()
         }
+
         else -> true
     }
 }
-
-
 
 
 @Immutable
@@ -72,8 +73,21 @@ data class FieldUi(
     val readOnly: Boolean,
     val supportingText: String,
     val hint: String = "",
-    val isValueVisible: Boolean = true
-)
+    val isValueVisible: Boolean = true,
+) {
+    companion object {
+        val Empty = FieldUi(
+            id = "",
+            label = "",
+            value = "",
+            keyboardType = KeyboardType.Text,
+            isRequired = false,
+            isError = false,
+            readOnly = false,
+            supportingText = ""
+        )
+    }
+}
 
 fun PreOrderSectionModel.toUi(): PreOrderSectionUi {
     return PreOrderSectionUi(
@@ -85,16 +99,19 @@ fun PreOrderSectionModel.toUi(): PreOrderSectionUi {
 
 fun FieldModel.toUi(): FieldUi {
 
-    val keyboardType = when{
+    val keyboardType = when {
         id.contains("email") -> {
             KeyboardType.Email
         }
+
         id.contains("phone") -> {
             KeyboardType.Phone
         }
+
         id.contains("pass") -> {
             KeyboardType.Password
         }
+
         else -> {
             when (valueType.lowercase()) {
                 "text" -> KeyboardType.Text
@@ -115,7 +132,8 @@ fun FieldModel.toUi(): FieldUi {
         isRequired = isRequired,
         isError = false,
         readOnly = readOnly,
-        supportingText = supportingText
+        supportingText = supportingText,
+        hint = hint
     )
 }
 

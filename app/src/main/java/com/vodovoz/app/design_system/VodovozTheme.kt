@@ -11,6 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextLinkStyles
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.LocalShimmerTheme
 import com.valentinilk.shimmer.defaultShimmerTheme
@@ -35,6 +37,16 @@ private val extendedLightColors = ExtendedColors(
     primaryVariant = blueDisable
 )
 
+val vodovozTextLinkStyle: TextLinkStyles
+    @Composable
+    get(){
+        return TextLinkStyles(
+            style = MaterialTheme.typography.labelSmall.copy(
+                color = MaterialTheme.colorScheme.primary,
+                textDecoration = TextDecoration.Underline
+            ).toSpanStyle()
+        )
+    }
 
 @Composable
 fun VodovozTheme(
@@ -42,7 +54,6 @@ fun VodovozTheme(
     content: @Composable () -> Unit,
 ) {
     val colorScheme = if (isDarkTheme) lightColors else lightColors
-
 
     MaterialTheme(
         colorScheme = colorScheme,

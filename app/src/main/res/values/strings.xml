@@ -265,5 +265,6 @@
     <string name="registration">Регистрация</string>
     <string name="registration_fail">Не удалось зарегистрироваться, попробуйте позже</string>
     <string name="register_button_text">Зарегистрироваться</string>
+    <string name="its_clear">Понятно</string>
 
 </resources>

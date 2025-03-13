@@ -31,10 +31,10 @@ fun VNYTRENNOST_DTO.toDomain(): ActionWithButtonModel? {
     )
 }
 
-fun COLORFUL_KNOPKA_DTO.toDomain(): ColorfulButtonModel? {
+fun COLORFUL_KNOPKA_DTO.toDomain(): ColorfulButtonModel {
     return ColorfulButtonModel(
-        name = NAME ?: return null,
-        backgroundColor = COLOR_BACKGROUND ?: return null,
-        textColor = COLOR_TEXT ?: return null
+        name = NAME ?: "",
+        backgroundColor = COLOR_BACKGROUND ?: "",
+        textColor = COLOR_TEXT ?: ""
     )
 }

@@ -3,6 +3,7 @@ package com.vodovoz.app.domain.general.respository
 import androidx.paging.PagingData
 import com.vodovoz.app.domain.general.model.BannerModel
 import com.vodovoz.app.domain.general.model.CatalogDetailsModel
+import com.vodovoz.app.domain.general.model.CertificateActivationDetailsModel
 import com.vodovoz.app.domain.general.model.CommentModel
 import com.vodovoz.app.domain.general.model.FieldModel
 import com.vodovoz.app.domain.general.model.OrderWithMenuModel
@@ -23,9 +24,14 @@ import com.vodovoz.app.domain.general.model.SiteStateModel
 import com.vodovoz.app.domain.general.model.SortModel
 import com.vodovoz.app.domain.general.model.StoryModel
 import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
+import com.vodovoz.app.feature.preorder.model.FieldUi
 import kotlinx.coroutines.flow.Flow
 
 interface VodovozServiceRepository {
+
+    fun getCertificateActivationDetails(): Flow<Result<CertificateActivationDetailsModel>>
+
+    fun activateCertificate(field: FieldUi): Flow<Result<String>>
 
     fun getRegisterFields(): Flow<Result<SectionModel<FieldModel>>>
 
@@ -68,11 +74,11 @@ interface VodovozServiceRepository {
     ): Flow<Result<ProductsSectionModel>>
 
     suspend fun addProductToFavorites(
-        productId: Long
+        productId: Long,
     ): Flow<Result<String>>
 
     suspend fun removeProductFromFavorites(
-        productId: Long
+        productId: Long,
     ): Flow<Result<String>>
 
     suspend fun addProductToCart(

@@ -1,8 +1,10 @@
 package com.vodovoz.app.design_system.composables.text_fields
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Box
@@ -11,6 +13,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -24,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.vodovoz.app.design_system.VodovozTheme
@@ -52,9 +56,14 @@ fun VodovozTextField(
 ) {
     val isFocused by interactionSource.collectIsFocusedAsState()
 
+
+
+
     BasicTextField(
         value = value,
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .animateContentSize(),
         onValueChange = onValueChange,
         enabled = enabled,
         readOnly = readOnly,
@@ -69,7 +78,7 @@ fun VodovozTextField(
         minLines = minLines
     ) { innerTextField ->
         Column {
-            label?.let {
+            if(!label.isNullOrEmpty()){
                 Text(
                     text = label,
                     color = if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceTint,
@@ -80,7 +89,6 @@ fun VodovozTextField(
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .animateContentSize()
                     .heightIn(48.dp)
                     .border(
                         width = 1.dp,
@@ -91,19 +99,23 @@ fun VodovozTextField(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(modifier = Modifier.weight(1f),contentAlignment = Alignment.CenterStart) {
-                    if (value.isEmpty() && !isFocused) {
+                    this@Row.AnimatedVisibility(value.isEmpty()) {
                         Text(
                             text = hint,
                             color = MaterialTheme.colorScheme.surfaceTint,
                             style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier
+                            modifier = Modifier.horizontalScroll(rememberScrollState()),
+                            maxLines = maxLines,
+                            overflow = TextOverflow.Ellipsis
                         )
+
                     }
                     innerTextField()
                 }
                 trailingIcon?.let { trailingIcon() }
             }
-            supportingText?.let {
+
+            if(!supportingText.isNullOrEmpty()){
                 Text(
                     text = supportingText,
                     color = if (!isError) {
@@ -134,8 +146,8 @@ private fun VodovozTextFieldPreview() {
                 hint = "Введите значение",
                 onValueChange = {},
                 label = "Поле ввода",
-                supportingText = "Текст в помощь",
-                isError = true
+                supportingText = "",
+                isError = false
             )
         }
     }

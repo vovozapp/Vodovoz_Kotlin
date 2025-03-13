@@ -6,7 +6,7 @@ import com.vodovoz.app.domain.general.model.ActionWithButtonModel
 import com.vodovoz.app.domain.general.model.ColorfulButtonModel
 import com.vodovoz.app.domain.general.model.StoryModel
 import com.vodovoz.app.domain.general.model.VodovozAction
-import com.vodovoz.app.util.fromHexOrTransparent
+import com.vodovoz.app.util.fromHexOrUnspecified
 
 @Immutable
 data class StoryUi(
@@ -40,7 +40,7 @@ data class ColorfulButtonUi(
     val textColor: Color,
 ) {
     companion object {
-        val Empty = ColorfulButtonUi("", Color.Transparent, Color.Transparent)
+        val Empty = ColorfulButtonUi("", Color.Unspecified, Color.Unspecified)
     }
 }
 
@@ -53,7 +53,7 @@ fun StoryModel.toUi(): StoryUi {
         id = id,
         image = image,
         pages = actionWithButtonList.map { action ->
-            StoryPage(image, action.toUi(), 6_000)
+            StoryPage(image, action.toUi(), 5_000)
         },
         viewed = viewed
     )
@@ -69,7 +69,7 @@ fun ActionWithButtonModel.toUi(): ActionWithButtonUi {
 fun ColorfulButtonModel.toUi(): ColorfulButtonUi {
     return ColorfulButtonUi(
         name = name,
-        backgroundColor = Color.fromHexOrTransparent(backgroundColor),
-        textColor = Color.fromHexOrTransparent(textColor)
+        backgroundColor = Color.fromHexOrUnspecified(backgroundColor),
+        textColor = Color.fromHexOrUnspecified(textColor)
     )
 }

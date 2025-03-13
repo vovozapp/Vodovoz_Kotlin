@@ -23,7 +23,7 @@ import com.vodovoz.app.domain.general.model.ProductDetailsButtonsModel
 import com.vodovoz.app.domain.general.model.ProductDetailsModel
 import com.vodovoz.app.domain.general.model.ProductDetailsTabModel
 import com.vodovoz.app.domain.general.model.PromoProductModel
-import com.vodovoz.app.util.fromHexOrTransparent
+import com.vodovoz.app.util.fromHexOrUnspecified
 import kotlinx.parcelize.Parcelize
 
 
@@ -241,8 +241,8 @@ data class BuyButtonUi(
 
 fun BuyButtonModel.toUi(): BuyButtonUi {
     return BuyButtonUi(
-        Color.fromHexOrTransparent(textColor),
-        Color.fromHexOrTransparent(backgroundColor),
+        Color.fromHexOrUnspecified(textColor),
+        Color.fromHexOrUnspecified(backgroundColor),
         title,
         productId,
         moreProductId
@@ -305,9 +305,9 @@ fun DesignBlockModel.toUi(): DesignBlockUi {
     return DesignBlockUi(
         title = title,
         image = image,
-        background = Color.fromHexOrTransparent(background),
-        textColor = Color.fromHexOrTransparent(textColor),
-        borderColor = Color.fromHexOrTransparent(borderColor),
+        background = Color.fromHexOrUnspecified(background),
+        textColor = Color.fromHexOrUnspecified(textColor),
+        borderColor = Color.fromHexOrUnspecified(borderColor),
         button = button.toUi()
     )
 }

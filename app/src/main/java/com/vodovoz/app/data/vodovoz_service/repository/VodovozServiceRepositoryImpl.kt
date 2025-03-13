@@ -1,12 +1,8 @@
 package com.vodovoz.app.data.vodovoz_service.repository
 
-import androidx.paging.ExperimentalPagingApi
-import androidx.paging.LoadType
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.PagingState
-import androidx.paging.RemoteMediator
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.vodovoz.app.common.account.data.AccountManager
@@ -23,6 +19,7 @@ import com.vodovoz.app.data.vodovoz_service.model.VodovozResponseDTO
 import com.vodovoz.app.domain.general.VodovozPagingSource
 import com.vodovoz.app.domain.general.model.BannerModel
 import com.vodovoz.app.domain.general.model.CatalogDetailsModel
+import com.vodovoz.app.domain.general.model.CertificateActivationDetailsModel
 import com.vodovoz.app.domain.general.model.CommentModel
 import com.vodovoz.app.domain.general.model.EmptyResultException
 import com.vodovoz.app.domain.general.model.FavoritesNotFoundException
@@ -49,6 +46,7 @@ import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
 import com.vodovoz.app.domain.general.model.UserNotRegisterException
 import com.vodovoz.app.domain.general.model.ValidationException
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
+import com.vodovoz.app.feature.preorder.model.FieldUi
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -58,6 +56,36 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     private val accountManager: AccountManager,
     private val moshi: Moshi,
 ) : VodovozServiceRepository {
+
+    override fun getCertificateActivationDetails(): Flow<Result<CertificateActivationDetailsModel>> {
+        return executeRequest(
+            request = {
+                vodovozService.getCertificateActivationDetails()
+            },
+            mapper = {
+                it.data!!.toDomain()
+            }
+        )
+    }
+
+    override fun activateCertificate(field: FieldUi): Flow<Result<String>> {
+        return executeRequest(
+            request = {
+                val userId = accountManager.fetchAccountId() ?: throw UserNotRegisterException("")
+                vodovozService.activateCertificate(userId, mapOf(field.id to field.value.trim()))
+            },
+            mapper = {
+                it.data ?: ""
+            },
+            onFail = { response ->
+                val errorDTO = moshi.fromJson<VodovozResponseDTO<String>>(
+                    response.stringBody(),
+                    Types.newParameterizedType(VodovozResponseDTO::class.java, String::class.java)
+                )
+                throw RequestException(errorDTO.message ?: "")
+            }
+        )
+    }
 
     override fun getRegisterFields(): Flow<Result<SectionModel<FieldModel>>> {
         return executeRequest(

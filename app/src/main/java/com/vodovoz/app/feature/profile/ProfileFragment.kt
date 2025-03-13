@@ -22,6 +22,7 @@ import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
+import com.vodovoz.app.core.navigation.navigateToCertificateActivation
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.databinding.FragmentProfileFlowBinding
 import com.vodovoz.app.feature.cart.CartFlowViewModel

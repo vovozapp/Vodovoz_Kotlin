@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -219,7 +220,7 @@ fun LazyGridScope.gridProducts(
 
     items(products.size, span = { GridItemSpan(1) }) { index ->
 
-        SideEffect {
+        LaunchedEffect(index) {
             onProductSee(index)
         }
 

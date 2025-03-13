@@ -6,6 +6,11 @@
     app:startDestination="@id/profileFragment">
 
     <fragment
+        android:id="@+id/certificateActivationFragment"
+        android:name="com.vodovoz.app.feature.certificate_activation.CertificateActivationFragment"
+        android:label="CertificateActivationFragment" />
+
+    <fragment
         android:id="@+id/preOrderFragment"
         android:name="com.vodovoz.app.feature.preorder.PreOrderFragment"
         android:label="PreOrderFragment">

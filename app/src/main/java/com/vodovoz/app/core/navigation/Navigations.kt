@@ -13,6 +13,10 @@ import com.vodovoz.app.feature.home.HomeFragmentDirections
 import com.vodovoz.app.feature.home.model.CategoryUi
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 
+fun NavController.navigateToCertificateActivation(){
+    navigate(R.id.certificateActivationFragment)
+}
+
 fun NavController.navigateToCategories(category: CategoryUi, categories: List<CategoryUi>) {
     navigate(
         R.id.categoriesFragment,

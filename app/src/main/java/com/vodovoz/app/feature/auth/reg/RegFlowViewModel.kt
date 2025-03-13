@@ -25,7 +25,6 @@ import com.vodovoz.app.feature.preorder.model.toUi
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
@@ -109,7 +108,7 @@ class RegFlowViewModel @Inject constructor(
         val validators = listOf(NameValidator, KeyboardTypeValidator)
 
         val newFields = dataState.fields.map { field ->
-            val isCorrect = validators.all { fieldValidator -> fieldValidator.validate(field) }
+            val isCorrect = validators.all { fieldValidator -> fieldValidator.isValid(field) }
             if (!isCorrect) {
                 isValidFields = false
                 if (hasErrors) return@map field.copy(isError = true)

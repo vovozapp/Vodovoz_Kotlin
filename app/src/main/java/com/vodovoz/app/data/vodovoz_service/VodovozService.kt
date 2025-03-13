@@ -3,6 +3,7 @@ package com.vodovoz.app.data.vodovoz_service
 import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.data.vodovoz_service.model.AnalogsSectionDTO
 import com.vodovoz.app.data.vodovoz_service.model.BannerDTO
+import com.vodovoz.app.data.vodovoz_service.model.CertificateActivationDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.MiniSearchRecommendationsDTO
 import com.vodovoz.app.data.vodovoz_service.model.OrderMenuDTO
 import com.vodovoz.app.data.vodovoz_service.model.PopularCategoriesDTO
@@ -30,6 +31,18 @@ import retrofit2.http.Query
 import retrofit2.http.QueryMap
 
 interface VodovozService {
+
+    /**
+     *  Certificate activation screen
+     * */
+    @GET("osnova/sertificat/activaciya.php?action=glav")
+    suspend fun getCertificateActivationDetails(): Response<VodovozResponseDTO<CertificateActivationDetailsDTO>>
+
+    @GET("osnova/sertificat/activaciya.php?action=detail")
+    suspend fun activateCertificate(
+        @Query("userid") userId: Long,
+        @QueryMap queries: Map<String, String>
+    ): Response<VodovozResponseDTO<String>>
 
     /**
      * Catalog screen

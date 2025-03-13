@@ -2,7 +2,10 @@ package com.vodovoz.app.design_system.effects
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.CoroutineScope
@@ -17,6 +20,7 @@ fun LifecycleEffect(
     block: suspend CoroutineScope.() -> Unit,
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
+
     LaunchedEffect(lifecycleOwner, arg2, arg3, arg4) {
         lifecycleOwner.repeatOnLifecycle(lifecycleState) {
             block()

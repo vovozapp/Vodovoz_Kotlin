@@ -21,7 +21,7 @@ fun AKCIYA_DTO.toDomain(): PromotionDetailsModel? {
         id = ID ?: return null,
         picture = DETAIL_PICTURE?.toFullUrl() ?: return null,
         name = NAME ?: return null,
-        description = Html.fromHtml(DETAIL_TEXT ?: return null).toString(),
+        description = DETAIL_TEXT ?: "",
         endDate = mapToZonedDateTime(DATAOUT ?: return null) ?: return null,
         advertising = OREKLAME?.toDomain() ?: return null,
         label = HIT?.toDomain()
