@@ -25,6 +25,7 @@ import com.vodovoz.app.data.vodovoz_service.model.SuperTopAndBottomSectionsDTO
 import com.vodovoz.app.data.vodovoz_service.model.VodovozResponseDTO
 import com.vodovoz.app.data.vodovoz_service.model.catalog_details.CatalogDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.ProductDetailsDTO
+import com.vodovoz.app.data.vodovoz_service.model.unrated_products.UnratedProductsSectionDTO
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -204,20 +205,11 @@ interface VodovozService {
     suspend fun getBanners(
     ): Response<VodovozResponseDTO<List<BannerDTO>>>
 
-    @GET("https://vodovoz.net/newmobile_new/glavnaya/slayders/index.php?action=detailaction&android=${BuildConfig.VERSION_NAME}")
-    suspend fun getBannersPromotions(
-        @Query("id") bannerId: Long,
-        @Query("nav") page: Int = 1,
-    )
+    @GET("glavnaya/otzivtovari.php?action=tovarglav")
+    suspend fun getUnratedProductsDetails(
+        @Query("userid") userId: Long
+    ): Response<VodovozResponseDTO<UnratedProductsSectionDTO>>
 
-    @GET("https://vodovoz.net/newmobile_new/glavnaya/slayders/index.php?action=detailtovar&android=${BuildConfig.VERSION_NAME}")
-    suspend fun getBannersProducts(
-        @Query("id") bannerId: Long,
-        @Query("nav") page: Int = 1,
-        @Query("sect") categoryId: Int = -1,
-        @Query("sort") sort: String = "",
-        @Query("ascdesc") order: String = "",
-    )
 
     @GET("glavnaya/stories/index.php?iblock_id=12&action=stories&platforma=android")
     suspend fun getStories(): Response<VodovozResponseDTO<StoriesDTO>>

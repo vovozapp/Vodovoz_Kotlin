@@ -266,5 +266,6 @@
     <string name="registration_fail">Не удалось зарегистрироваться, попробуйте позже</string>
     <string name="register_button_text">Зарегистрироваться</string>
     <string name="its_clear">Понятно</string>
+    <string name="do_not_rate_this_product">Не оценивать этот товар</string>
 
 </resources>

@@ -1,5 +1,13 @@
 package com.vodovoz.app.feature.home
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.VisibilityThreshold
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -9,10 +17,12 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.IntOffset
 import com.vodovoz.app.feature.home.composables.HomeBody
 import com.vodovoz.app.feature.home.composables.HomeLoadingPlaceholder
 import com.vodovoz.app.feature.home.composables.HomeTopBar
 import com.vodovoz.app.feature.home.composables.SpecialPromotionBottomSheet
+import com.vodovoz.app.feature.home.composables.UnratedProductsBottomSheet
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Suppress("NonSkippableComposable")
@@ -41,11 +51,16 @@ fun HomeScreen(
         },
         contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) { paddingValues ->
-        Box(modifier = Modifier.padding(paddingValues).consumeWindowInsets(paddingValues)){
-            when(viewState.uiState){
+        Box(
+            modifier = Modifier
+                .padding(paddingValues)
+                .consumeWindowInsets(paddingValues)
+        ) {
+            when (viewState.uiState) {
                 HomeFlowViewModel.HomeUiState.Loading -> {
                     HomeLoadingPlaceholder()
                 }
+
                 HomeFlowViewModel.HomeUiState.NetworkError -> {}
                 HomeFlowViewModel.HomeUiState.Success -> {
                     HomeBody(
@@ -91,14 +106,35 @@ fun HomeScreen(
                     )
                 }
             }
+
+
+            AnimatedVisibility(
+                visible = viewState.showUnratedProducts,
+                enter = slideInVertically(tween(durationMillis = 300, easing = LinearEasing)) { it },
+                exit = slideOutVertically(tween(durationMillis = 300, easing = LinearEasing)) { it }
+            ) {
+                UnratedProductsBottomSheet(
+                    sectionUnratedProducts = viewState.sectionUnratedProducts,
+                    onProductRatingChanged = { product, rating ->
+                    },
+                    onProductRatingChange = { product, rating ->
+                        viewModel.changeUnratedProductRating(product, rating)
+                    },
+                    onDispose = {
+                        viewModel.closeUnratedProductsBottomSheet()
+                    }
+                )
+            }
         }
+
     }
 
     if (viewState.showSpecialPromotion) {
         SpecialPromotionBottomSheet(
             specialPromotionUi = viewState.specialPromotion,
-            onDismissRequest = { viewModel.closeBottomSheet() },
+            onDismissRequest = { viewModel.closeSpecialPromotionBottomSheet() },
             onButtonClick = { }
         )
     }
+
 }

@@ -29,6 +29,8 @@ import com.vodovoz.app.domain.general.model.toUi
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.home.model.OrderWithMenuUi
 import com.vodovoz.app.feature.home.model.PopularCategoryUi
+import com.vodovoz.app.feature.home.model.UnratedProductUi
+import com.vodovoz.app.feature.home.model.UnratedProductsSectionUi
 import com.vodovoz.app.feature.home.model.toUi
 import com.vodovoz.app.feature.home.viewholders.homebanners.HomeBanners
 import com.vodovoz.app.feature.home.viewholders.homebottominfo.HomeBottomInfo
@@ -52,6 +54,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
@@ -63,7 +66,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
-import kotlin.time.Duration.Companion.nanoseconds
 
 @HiltViewModel
 class HomeFlowViewModel @Inject constructor(
@@ -191,11 +193,16 @@ class HomeFlowViewModel @Inject constructor(
             vodovozServiceRepository.getPopupWindowInfo().singleResult()
         }
 
+        val unratedProductsSectionDeferred = viewModelScope.async {
+            vodovozServiceRepository.getUnratedProductsDetails().singleResult()
+        }
+
 
         val sectionViewedProducts =
             viewedProductsDeferred.await().getOrNull()?.toUi()
         val specialPromotion =
             popupWindowsInfoDeferred.await().getOrNull()?.specialPromotion?.toUi()
+        val sectionUnratedProducts = unratedProductsSectionDeferred.await().getOrNull()
 
 
 
@@ -203,7 +210,9 @@ class HomeFlowViewModel @Inject constructor(
             s.copy(
                 sectionViewedProducts = sectionViewedProducts ?: s.sectionViewedProducts,
                 specialPromotion = specialPromotion ?: s.specialPromotion,
-                showSpecialPromotion = specialPromotion != null
+                showSpecialPromotion = specialPromotion != null,
+                sectionUnratedProducts = sectionUnratedProducts?.toUi() ?: s.sectionUnratedProducts,
+                showUnratedProducts = sectionUnratedProducts != null
             )
         }
 
@@ -211,15 +220,11 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     private fun fetchHomeDetails() = viewModelScope.launch {
-        var startTime = System.nanoTime()
         fetchPrimaryDetails()
-        debugLog { "Primary time - ${(System.nanoTime() - startTime).nanoseconds.inWholeMilliseconds}" }
         fetchSecondaryDetails()
-        debugLog { "End time - ${(System.nanoTime() - startTime).nanoseconds.inWholeMilliseconds}" }
+        //TODO - remove
+        return@launch
         fetchOptionalDetails()
-
-        debugLog { "End time - ${(System.nanoTime() - startTime).nanoseconds.inWholeMilliseconds}" }
-
     }
 
     fun firstLoad() {
@@ -1054,7 +1059,7 @@ class HomeFlowViewModel @Inject constructor(
         eventListener.emit(HomeEvents.ScrollTopProductsToStart)
     }
 
-    fun closeBottomSheet() = viewModelScope.launch {
+    fun closeSpecialPromotionBottomSheet() = viewModelScope.launch {
         uiStateListener.updateData { s ->
             s.copy(
                 showSpecialPromotion = false
@@ -1085,6 +1090,33 @@ class HomeFlowViewModel @Inject constructor(
 
     fun changeFavorite(product: ProductUi) = viewModelScope.launch {
         likeManager.changeFavorite(product.id, !product.isFavorite)
+    }
+
+    fun closeUnratedProductsBottomSheet() = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(
+                showUnratedProducts = false
+            )
+        }
+        delay(2000L)
+        uiStateListener.updateData { s ->
+            s.copy(
+                showUnratedProducts = true
+            )
+        }
+    }
+
+    fun changeUnratedProductRating(product: UnratedProductUi, rating: Float) {
+        uiStateListener.updateData { s ->
+            val products = s.sectionUnratedProducts.products
+            s.copy(
+                sectionUnratedProducts = s.sectionUnratedProducts.copy(
+                    products = products.toMutableList().apply {
+                        set(products.indexOf(product), product.copy(rating = rating))
+                    }
+                )
+            )
+        }
     }
 
     data class PositionItem(
@@ -1124,8 +1156,8 @@ class HomeFlowViewModel @Inject constructor(
 
         val banners: List<BannerUi> = emptyList(),
         val stories: List<StoryUi> = emptyList(),
-
         val orderWithMenu: OrderWithMenuUi = OrderWithMenuUi.Empty,
+
         val sectionPromotions: SectionUi<PromotionUi> = SectionUi.empty(),
         val sectionPopularCategories: SectionUi<PopularCategoryUi> = SectionUi.empty(),
         val sectionNewProducts: SectionUi<ProductUi> = SectionUi.empty(),
@@ -1134,9 +1166,61 @@ class HomeFlowViewModel @Inject constructor(
         val currentCategoryWithProducts: CategoryWithProductsUi = CategoryWithProductsUi.Empty,
         val sectionBottom: SectionUi<CategoryWithProductsUi> = SectionUi.empty(),
         val sectionViewedProducts: SectionUi<ProductUi> = SectionUi.empty(),
+
+        //TODO - replace to empty
+        val sectionUnratedProducts: UnratedProductsSectionUi = UnratedProductsSectionUi(
+            title = "Оцените ваши покупки",
+            productTitle = "Оцените товар",
+            countProductsText = "2 товара ожидает вашей оценки",
+            products = listOf(
+                UnratedProductUi(
+                    name = "Вода Горная Вершина 0.5 литра, спорт, без газа, пэт, 12 шт. в уп.",
+                    id = 1,
+                    detailPicture = "https://vodovoz.net/upload/iblock/43a/43a2581179b6061ce8836e0b3b6c3cab.jpeg"
+                ),
+                UnratedProductUi(
+                    name = "Вода Шишкин лес спорт 1 литр, без газа, пэт, 12 шт. в уп.",
+                    id = 2,
+                    detailPicture = "https://vodovoz.net/upload/iblock/380/bghmh0u2f63v5wepu5xykb180ufdn1vi.jpg"
+                ),
+                UnratedProductUi(
+                    name = "Вода Горная Вершина 0.5 литра, спорт, без газа, пэт, 12 шт. в уп.",
+                    id = 3,
+                    detailPicture = "https://vodovoz.net/upload/iblock/43a/43a2581179b6061ce8836e0b3b6c3cab.jpeg"
+                ),
+                UnratedProductUi(
+                    name = "Вода Шишкин лес спорт 1 литр, без газа, пэт, 12 шт. в уп.",
+                    id = 4,
+                    detailPicture = "https://vodovoz.net/upload/iblock/380/bghmh0u2f63v5wepu5xykb180ufdn1vi.jpg"
+                ),
+                UnratedProductUi(
+                    name = "Вода Горная Вершина 0.5 литра, спорт, без газа, пэт, 12 шт. в уп.",
+                    id = 5,
+                    detailPicture = "https://vodovoz.net/upload/iblock/43a/43a2581179b6061ce8836e0b3b6c3cab.jpeg"
+                ),
+                UnratedProductUi(
+                    name = "Вода Шишкин лес спорт 1 литр, без газа, пэт, 12 шт. в уп.",
+                    id = 6,
+                    detailPicture = "https://vodovoz.net/upload/iblock/380/bghmh0u2f63v5wepu5xykb180ufdn1vi.jpg"
+                ),
+                UnratedProductUi(
+                    name = "Вода Горная Вершина 0.5 литра, спорт, без газа, пэт, 12 шт. в уп.",
+                    id = 7,
+                    detailPicture = "https://vodovoz.net/upload/iblock/43a/43a2581179b6061ce8836e0b3b6c3cab.jpeg"
+                ),
+                UnratedProductUi(
+                    name = "Вода Шишкин лес спорт 1 литр, без газа, пэт, 12 шт. в уп.",
+                    id = 8,
+                    detailPicture = "https://vodovoz.net/upload/iblock/380/bghmh0u2f63v5wepu5xykb180ufdn1vi.jpg"
+                )
+            )
+        )
+        ,
         val specialPromotion: SpecialPromotionUi = SpecialPromotionUi.Empty,
-        val uiState: HomeUiState = HomeUiState.Loading,
+
+        val uiState: HomeUiState = HomeUiState.Success,
         val showSpecialPromotion: Boolean = false,
+        val showUnratedProducts: Boolean = true,
         val searchField: String = "",
 
         ) : State {

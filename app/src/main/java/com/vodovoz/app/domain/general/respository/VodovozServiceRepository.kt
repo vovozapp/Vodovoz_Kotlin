@@ -24,6 +24,7 @@ import com.vodovoz.app.domain.general.model.SiteStateModel
 import com.vodovoz.app.domain.general.model.SortModel
 import com.vodovoz.app.domain.general.model.StoryModel
 import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
+import com.vodovoz.app.domain.general.model.UnratedProductsSectionModel
 import com.vodovoz.app.feature.preorder.model.FieldUi
 import kotlinx.coroutines.flow.Flow
 
@@ -61,6 +62,8 @@ interface VodovozServiceRepository {
     fun getPreorderFields(productId: Long): Flow<Result<PreOrderSectionModel>>
 
     fun sendPreorder(productId: Long, fields: List<FieldModel>): Flow<Result<String>>
+
+    fun getUnratedProductsDetails(): Flow<Result<UnratedProductsSectionModel>>
 
     fun getFavoriteProducts(
         productsIds: String = ""

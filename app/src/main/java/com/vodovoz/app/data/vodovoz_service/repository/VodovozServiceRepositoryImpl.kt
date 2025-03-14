@@ -43,6 +43,7 @@ import com.vodovoz.app.domain.general.model.SiteStateModel
 import com.vodovoz.app.domain.general.model.SortModel
 import com.vodovoz.app.domain.general.model.StoryModel
 import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
+import com.vodovoz.app.domain.general.model.UnratedProductsSectionModel
 import com.vodovoz.app.domain.general.model.UserNotRegisterException
 import com.vodovoz.app.domain.general.model.ValidationException
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
@@ -267,6 +268,18 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                 val jsonBody = response.stringBody()
                 val responseBody = moshi.fromJson<PreOrderResponseDTO>(jsonBody)
                 Result.failure(ValidationException(responseBody.message ?: ""))
+            }
+        )
+    }
+
+    override fun getUnratedProductsDetails(): Flow<Result<UnratedProductsSectionModel>> {
+        return executeRequest(
+            request = {
+                val userId = accountManager.fetchAccountId() ?: throw UserNotRegisterException()
+                vodovozService.getUnratedProductsDetails(userId)
+            },
+            mapper = {
+                it.data!!.toDomain()
             }
         )
     }
