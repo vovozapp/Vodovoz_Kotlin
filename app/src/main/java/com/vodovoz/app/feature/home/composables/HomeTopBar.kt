@@ -25,14 +25,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.vodovoz.app.R
 
 @Composable
 fun HomeTopBar(
     modifier: Modifier = Modifier,
-    value: String,
-    onValueChange: (String) -> Unit,
+    value: String = "",
+    onValueChange: (String) -> Unit = {},
     onFocus: () -> Unit,
     onMicClick: () -> Unit,
     onScanClick: () -> Unit,
@@ -64,6 +65,7 @@ fun HomeTopBar(
             singleLine = true,
             cursorBrush = SolidColor(MaterialTheme.colorScheme.onBackground),
             interactionSource = interactionSource,
+            readOnly = true,
             decorationBox = { innerTextField ->
                 Row(
                     modifier = Modifier
@@ -92,7 +94,9 @@ fun HomeTopBar(
                             Text(
                                 text = stringResource(R.string.search_product),
                                 color = MaterialTheme.colorScheme.surfaceTint,
-                                style = MaterialTheme.typography.bodyMedium
+                                style = MaterialTheme.typography.bodyMedium,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
                             )
                         }
                         innerTextField()

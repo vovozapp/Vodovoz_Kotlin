@@ -79,7 +79,7 @@ data class ProductDetailsUi(
 
     val detailPicture: String,
     val pictures: List<String>,
-    val sectionTags: SectionUi<String>,
+    val sectionQueries: SectionUi<String>,
     val isFavorite: Boolean,
     val isAvailable: Boolean,
     val productQuantity: Int,
@@ -96,7 +96,7 @@ data class ProductDetailsUi(
 
     val coefficient: Float,
     val pricePerUnit: String?,
-    val barCode: String,
+    val articleNumber: String,
 
     val firstPrice: PriceUi,
     val prices: List<PriceUi>,
@@ -119,7 +119,7 @@ data class ProductDetailsUi(
 
             detailPicture = "",
             pictures = emptyList(),
-            sectionTags = SectionUi.empty(),
+            sectionQueries = SectionUi.empty(),
             isFavorite = false,
             isAvailable = false,
             productQuantity = 0,
@@ -135,7 +135,7 @@ data class ProductDetailsUi(
 
             coefficient = 0f,
             pricePerUnit = null,
-            barCode = "",
+            articleNumber = "",
 
             firstPrice = PriceUi(0f, 0f, 0, 0),
             prices = emptyList(),
@@ -159,7 +159,7 @@ fun ProductDetailsModel.toUi(): ProductDetailsUi {
 
         detailPicture = detailPicture,
         pictures = pictures,
-        sectionTags = sectionTags.toUi { tag -> tag },
+        sectionQueries = sectionTags.toUi { tag -> tag },
         isFavorite = isFavorite,
         isAvailable = isAvailable,
         productQuantity = productQuantity,
@@ -175,7 +175,7 @@ fun ProductDetailsModel.toUi(): ProductDetailsUi {
 
         coefficient = coefficient,
         pricePerUnit = pricePerUnit,
-        barCode = barCode,
+        articleNumber = articleNumber,
 
         firstPrice = firstPrice.toUi(),
         prices = prices.map { price -> price.toUi() },

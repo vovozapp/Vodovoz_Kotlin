@@ -18,7 +18,7 @@ data class CatalogDetailsUi(
 @Immutable
 @Parcelize
 data class CatalogCategoryUi(
-    val id: Int,
+    val id: Long,
     val name: String,
     val picture: String,
     val action: DataAllAction?,

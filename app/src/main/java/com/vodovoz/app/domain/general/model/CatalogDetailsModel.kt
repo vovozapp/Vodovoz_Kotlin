@@ -6,7 +6,7 @@ data class CatalogDetailsModel(
 )
 
 data class CatalogCategoryModel(
-    val id: Int,
+    val id: Long,
     val name: String,
     val picture: String,
     val action: DataAllAction?,

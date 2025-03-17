@@ -16,9 +16,9 @@ import com.vodovoz.app.R
 import com.vodovoz.app.design_system.composables.button.VodovozButton
 import com.vodovoz.app.design_system.composables.button.VodovozButtonDefaults
 import com.vodovoz.app.design_system.composables.card.CommentCard
+import com.vodovoz.app.design_system.model.ButtonUi
 import com.vodovoz.app.design_system.model.CommentUi
 import com.vodovoz.app.feature.home.composables.TitleAndButton
-import com.vodovoz.app.design_system.model.ButtonUi
 
 @Suppress("NonSkippableComposable")
 @Composable
@@ -26,7 +26,7 @@ fun ProductDetailsComments(
     modifier: Modifier = Modifier,
     commentsCount: Int,
     comments: List<CommentUi>,
-    onLeaveRateClick: () -> Unit,
+    onWriteCommentClick: () -> Unit,
     onShowAllCommentsClick: () -> Unit,
 ) {
     Column(modifier = modifier) {
@@ -56,7 +56,7 @@ fun ProductDetailsComments(
                 .padding(top = 18.dp)
                 .padding(horizontal = 16.dp),
             text = stringResource(R.string.leave_rate),
-            onClick = onLeaveRateClick,
+            onClick = onWriteCommentClick,
             colors = VodovozButtonDefaults.secondaryColors()
         )
 
@@ -70,7 +70,7 @@ private fun CommentsPager(
     modifier: Modifier = Modifier,
     comments: List<CommentUi>,
 ) {
-    val pagerState = rememberPagerState { comments.count() }
+    val pagerState = rememberPagerState { comments.size }
 
     HorizontalPager(
         modifier = modifier,
@@ -80,7 +80,8 @@ private fun CommentsPager(
         beyondViewportPageCount = comments.size,
     ) { page ->
         CommentCard(
-            comment = comments[page]
+            comment = comments[page],
+            maxLines = 2
         )
     }
 }

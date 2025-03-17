@@ -51,14 +51,14 @@ class ProductCommentsFlowViewModel @Inject constructor(
 
     private val productId = savedState.get<Long>("productId")
 
-    private fun observeUserLoginStatus() = viewModelScope.launch {
+    private fun listenUserLoginStatus() = viewModelScope.launch {
         accountManager.observeAccountId().collectLatest { id ->
             if (id == null) uiStateListener.updateData { s -> s.copy(showWriteComment = false) }
             else uiStateListener.updateData { s -> s.copy(showWriteComment = true) }
         }
     }
 
-    private fun loadProductComments() = viewModelScope.launch {
+    private fun fetchProductComments() = viewModelScope.launch {
         if (productId == null) return@launch
 
         val productCommentsInfoResult =
@@ -82,7 +82,7 @@ class ProductCommentsFlowViewModel @Inject constructor(
                 )
             }
 
-            observeUserLoginStatus()
+            listenUserLoginStatus()
         }
 
         productCommentsInfoResult?.onFailure {
@@ -90,82 +90,26 @@ class ProductCommentsFlowViewModel @Inject constructor(
         } ?: run {
             //todo - handle flow fails
         }
-
-        flow {
-            emit(
-                repository.fetchAllCommentsByProduct(
-                    productId = productId,
-                    page = state.page
-                )
-            )
-        }.onEach { response ->
-            if (response is ResponseEntity.Success) {
-                val data = response.data.mapToUI()
-                uiStateListener.value = if (data.comments.isEmpty() && !state.loadMore) {
-                    state.copy(
-                        error = ErrorState.Empty(),
-                        loadingPage = false,
-                        loadMore = false,
-                        bottomItem = null,
-                        page = 1
-                    )
-                } else {
-
-                    val itemsList = if (state.loadMore) {
-                        state.data.itemsList + data.comments
-                    } else {
-                        mutableListOf<Item>().apply {
-                            add(data.commentsData)
-                            addAll(data.comments)
-                        }
-                    }
-
-                    state.copy(
-                        page = if (data.comments.isEmpty()) null else state.page?.plus(1),
-                        loadingPage = false,
-                        data = state.data.copy(itemsList = itemsList),
-                        error = null,
-                        loadMore = false,
-                        bottomItem = null
-                    )
-                }
-            } else {
-                uiStateListener.value =
-                    state.copy(
-                        loadingPage = false,
-                        error = ErrorState.Error(),
-                        page = 1,
-                        loadMore = false
-                    )
-            }
-        }
-            .flowOn(Dispatchers.Default)
-            .catch {
-                debugLog { "fetch all comments error ${it.localizedMessage}" }
-                uiStateListener.value =
-                    state.copy(error = it.toErrorState(), loadingPage = false)
-            }
-            .collect()
     }
 
     fun firstLoadSorted() {
         if (!state.isFirstLoad) {
             uiStateListener.value =
                 state.copy(isFirstLoad = true, loadingPage = true)
-            loadProductComments()
+            fetchProductComments()
         }
     }
 
     fun refreshSorted() {
         uiStateListener.value =
             state.copy(loadingPage = true, page = 1, loadMore = false, bottomItem = null)
-        loadProductComments()
+        fetchProductComments()
     }
 
     fun loadMoreSorted() {
         if (state.bottomItem == null && state.page != null) {
             uiStateListener.value = state.copy(loadMore = true, bottomItem = BottomProgressItem())
-            loadProductComments()
+            fetchProductComments()
         }
     }
 

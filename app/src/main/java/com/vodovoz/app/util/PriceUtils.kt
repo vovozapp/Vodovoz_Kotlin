@@ -22,9 +22,9 @@ fun Number.formatPrice(): String {
     return PRICE_FORMATTER.format(this)
 }
 
-fun parseNumberOrNull(numberString: String): Long? {
+fun parsePriceOrNull(price: String): Long? {
     return try {
-        val number = PRICE_FORMATTER.parse(numberString) as Number
+        val number = PRICE_FORMATTER.parse(price) as Number
         number.toLong()
     } catch (e: ParseException) {
         null

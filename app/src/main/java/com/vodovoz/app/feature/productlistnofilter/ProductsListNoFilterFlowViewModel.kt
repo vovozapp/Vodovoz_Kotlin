@@ -34,6 +34,7 @@ import com.vodovoz.app.ui.model.SortTypeUI
 import com.vodovoz.app.ui.paging.PagingDataListener
 import com.vodovoz.app.ui.paging.copy
 import com.vodovoz.app.ui.paging.emptyCombinedLoadStates
+import com.vodovoz.app.util.extensions.singleResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -94,7 +95,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
             is DataSource.ButtonProducts -> {
                 fetchProductsData(
                     fetchProductsSection = {
-                        vodovozServiceRepository.getAllSuperTop(dataSource.buttonId).single()
+                        vodovozServiceRepository.getAllSuperTop(dataSource.buttonId).singleResult()
                     },
                     fetchPagedProductsFlow = {
                         vodovozServiceRepository.getAllSuperTopPaged(
@@ -113,7 +114,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
             DataSource.HurryBuyUpProducts -> {
                 fetchProductsData(
                     fetchProductsSection = {
-                        vodovozServiceRepository.getAllHurryUpBuyProducts().single()
+                        vodovozServiceRepository.getAllHurryUpBuyProducts().singleResult()
                     },
                     fetchPagedProductsFlow = {
                         vodovozServiceRepository.getAllHurryUpBuyProductsPaged(
@@ -127,7 +128,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
             DataSource.NewProducts -> {
                 fetchProductsData(
                     fetchProductsSection = {
-                        vodovozServiceRepository.getAllNewProducts().single()
+                        vodovozServiceRepository.getAllNewProducts().singleResult()
                     },
                     fetchPagedProductsFlow = {
                         vodovozServiceRepository.getAllNewProductsPaged(
@@ -143,6 +144,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
             }
 
             is DataSource.Products -> {
+
                 TODO()
 
             }
@@ -150,7 +152,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
             is DataSource.Search -> {
                 fetchProductsData(
                     fetchProductsSection = {
-                        vodovozServiceRepository.getSearchProducts(dataSource.query).single()
+                        vodovozServiceRepository.getSearchProducts(dataSource.query).singleResult()
                     },
                     fetchPagedProductsFlow = {
                         vodovozServiceRepository.getSearchProductsPaged(
@@ -163,7 +165,14 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
             }
 
             is DataSource.Category -> {
-                TODO()
+                fetchProductsData(
+                    fetchProductsSection = {
+                        vodovozServiceRepository.getCategoryProducts(dataSource.categoryId).singleResult()
+                    },
+                    fetchPagedProductsFlow = {
+                        vodovozServiceRepository.getCategoryProductsPaged(dataSource.categoryId, sortModel)
+                    }
+                )
             }
 
 

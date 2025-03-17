@@ -42,7 +42,7 @@ fun HomeBody(
     sectionBottomProducts: SectionUi<CategoryWithProductsUi>,
     onStoryClick: (StoryUi) -> Unit,
     onCategorySelect: (CategoryWithProductsUi) -> Unit,
-    onPopularSectionClick: (PopularCategoryUi) -> Unit,
+    onPopularCategoryClick: (PopularCategoryUi) -> Unit,
     onOrderClick: (OrderUi) -> Unit,
     onMenuItemClick: (MenuItemUi) -> Unit,
     onShowAllClick: (ButtonAction) -> Unit,
@@ -89,7 +89,7 @@ fun HomeBody(
 
         HomePopularCategories(
             modifier = Modifier.padding(top = 4.dp),
-            onPopularCategoryClick = onPopularSectionClick,
+            onPopularCategoryClick = onPopularCategoryClick,
             sectionPopularCategories = sectionPopularCategories
         )
 

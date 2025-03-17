@@ -198,13 +198,6 @@
     <string name="leave_feedback">Оставить отзыв</string>
     <string name="price">%1$s ₽</string>
 
-    <plurals name="reviews_count">
-        <item quantity="one">1 отзыв</item>
-        <item quantity="few">%d отзыва</item>
-        <item quantity="many">%d отзывов</item>
-    </plurals>
-
-
     <string name="deposit_start_text">Залог&#160;</string>
     <string name="deposit_end_text">&#160;за оборотную тару</string>
     <string name="to_cart">В корзину</string>

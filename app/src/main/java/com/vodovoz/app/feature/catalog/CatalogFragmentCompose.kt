@@ -26,6 +26,8 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.tab.TabManager
+import com.vodovoz.app.core.android.activate
+import com.vodovoz.app.core.navigation.navigateToCategoryProductList
 import com.vodovoz.app.core.navigation.navigateToSubCategories
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.data.model.common.ActionEntity
@@ -70,7 +72,7 @@ class CatalogFragment : Fragment() {
 
                     when (viewState.uiState) {
                         CatalogFlowViewModel.UiState.Error -> {
-                            NetworkErrorPlaceholder { }
+                            NetworkErrorPlaceholder {  }
                         }
 
                         CatalogFlowViewModel.UiState.Success -> {
@@ -100,6 +102,14 @@ class CatalogFragment : Fragment() {
 
                             is CatalogFlowViewModel.CatalogEvents.GoToSubCategories -> {
                                 findNavController().navigateToSubCategories(event.catalogCategory)
+                            }
+
+                            is CatalogFlowViewModel.CatalogEvents.GoToProductList -> {
+                                findNavController().navigateToCategoryProductList(event.catalogCategory.id)
+                            }
+
+                            is CatalogFlowViewModel.CatalogEvents.ActivateDataAllAction -> {
+                                event.action.activate(findNavController())
                             }
                         }
                     }

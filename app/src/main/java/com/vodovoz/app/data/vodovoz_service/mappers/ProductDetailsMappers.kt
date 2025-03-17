@@ -1,7 +1,7 @@
 package com.vodovoz.app.data.vodovoz_service.mappers
 
-import androidx.core.text.HtmlCompat
 import com.vodovoz.app.data.vodovoz_service.di.toFullUrl
+import com.vodovoz.app.data.vodovoz_service.model.COMMENT_DTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.BLOCK_KNOPKA_DATA_DTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.BLOCK_KNOPKA_VALUE_DTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.BLOCK_RAZDEL_DTO
@@ -11,7 +11,6 @@ import com.vodovoz.app.data.vodovoz_service.model.product_details.BLOCK_TOVAR_DT
 import com.vodovoz.app.data.vodovoz_service.model.product_details.BLOCK_U_BLOCK_KNOPKA_DIZAIN_DTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.BLOK_KNOPKA_DIZAIN_DTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.BLOK_KNOPKA_DTO
-import com.vodovoz.app.data.vodovoz_service.model.COMMENT_DTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.DETAILTEXT_DTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.DOCUMENTS_DTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.DOCUMENT_DTO
@@ -111,12 +110,23 @@ private fun TOVAR_DETAIL_DTO.toDomain(
         rutubeUrl = RUTUBE_VIDEO?.firstOrNull()?.IMAGE,
         coefficient = KOFFICIENT ?: 1f,
         pricePerUnit = DOPTSENA_ZA_EDINICY,
-        barCode = BAR_CODE ?: "",
+        articleNumber = HARAKTERISTIKI.toArticleNumber() ?: "",
         firstPrice = EXTENDEDPRICE?.firstOrNull()?.toDomain()
             ?: throw IllegalArgumentException("First extended price cannot be null"),
         prices = EXTENDEDPRICE.mapNotNull { extendedPriceDto -> extendedPriceDto.toDomain() },
         commentsCount = commentsCount
     )
+}
+
+fun PRODUCT_DETAIL_HARAKTERISTIKI_DTO.toArticleNumber(): String {
+    DATA?.map { harakteristikiDto ->
+        val articleNumber = harakteristikiDto.BINDS?.firstOrNull { harakteristikBindDto ->
+            harakteristikBindDto?.CODE?.contains("ARTICLE") == true
+        }?.VALUE
+        if (articleNumber != null) return articleNumber
+    }
+
+    return ""
 }
 
 fun DOCUMENTS_DTO.toDomain(): ContentBlockModel<List<DocumentModel>> {
@@ -325,10 +335,10 @@ fun COMMENT_DTO.toDomain(): CommentModel {
     return CommentModel(
         userName = NAME ?: "",
         userPhoto = USER_PHOTO?.toFullUrl() ?: "",
-        text = HtmlCompat.fromHtml(TEXT ?: "", HtmlCompat.FROM_HTML_MODE_LEGACY).toString(),
+        text = TEXT ?: "",
         dateText = DATA ?: "",
         rating = RATING ?: 0,
-        purchased = HtmlCompat.fromHtml(KYPLEN ?: "", HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
+        purchased = KYPLEN ?: ""
     )
 }
 

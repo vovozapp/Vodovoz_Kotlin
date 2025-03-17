@@ -27,10 +27,15 @@ class SubCategoriesViewModel(
     }
 
     fun chooseCatalogCategory(catalogCategory: CatalogCategoryUi) = viewModelScope.launch {
-        if (catalogCategory.childCategories.isEmpty()) {
-            _events.emit(SubCategoriesEvent.GoToProductList(catalogCategory.id))
-        } else {
+        if (catalogCategory.childCategories.isNotEmpty()) {
             _events.emit(SubCategoriesEvent.GoToSubCategories(catalogCategory))
+        }
+        else if(catalogCategory.action != null){
+            _events.emit(SubCategoriesEvent.ActivateDataAllAction(catalogCategory.action))
+        }
+        else {
+            _events.emit(SubCategoriesEvent.GoToProductList(catalogCategory.id))
+
         }
     }
 

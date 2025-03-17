@@ -44,17 +44,19 @@ fun ProductsNoFilterBody(
             onShareClick = { }
         )
 
-        ProductListCategoriesRow(
-            modifier = Modifier.padding(top = 16.dp),
-            categories = categories,
-            currentCategory = currentCategory,
-            onCategoryClick = { category ->
-                onCategoryClick(category)
-            },
-            onCategoriesListClick = {
-                onCategoriesListClick()
-            }
-        )
+        if (categories.isNotEmpty()) {
+            ProductListCategoriesRow(
+                modifier = Modifier.padding(top = 16.dp),
+                categories = categories,
+                currentCategory = currentCategory,
+                onCategoryClick = { category ->
+                    onCategoryClick(category)
+                },
+                onCategoriesListClick = {
+                    onCategoriesListClick()
+                }
+            )
+        }
 
         ProductListOptionsRow(
             modifier = Modifier.padding(top = 24.dp),

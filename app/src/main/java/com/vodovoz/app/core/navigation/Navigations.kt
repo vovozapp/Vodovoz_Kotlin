@@ -13,6 +13,36 @@ import com.vodovoz.app.feature.home.HomeFragmentDirections
 import com.vodovoz.app.feature.home.model.CategoryUi
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 
+
+fun NavController.navigateToProductComments(productId: Long)    {
+    navigate(
+        R.id.productCommentsFragment,
+        bundleOf("productId" to productId)
+    )
+
+}
+
+fun NavController.navigateToPreOrder(productId: Long){
+    navigate(
+        R.id.preOrderFragment,
+        bundleOf("productId" to productId),
+        NavOptions.Builder()
+            .setEnterAnim(R.anim.slide_in_botton)
+            .setExitAnim(R.anim.slide_out_botton)
+            .setPopEnterAnim(R.anim.slide_in_botton)
+            .setPopExitAnim(R.anim.slide_out_botton)
+            .build()
+    )
+
+}
+
+fun NavController.navigateToAnalogs(productId: Long){
+    navigate(
+        R.id.productsCollectionFragment,
+        bundleOf("productId" to productId)
+    )
+}
+
 fun NavController.navigateToCertificateActivation(){
     navigate(R.id.certificateActivationFragment)
 }
@@ -56,7 +86,7 @@ fun NavController.navigateToCategoryProductList(categoryId: Long) {
     navigate(
         R.id.paginatedProductsCatalogWithoutFiltersFragment,
         bundleOf(
-            "dataSource" to PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Brand(
+            "dataSource" to PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Category(
                 categoryId
             )
         )

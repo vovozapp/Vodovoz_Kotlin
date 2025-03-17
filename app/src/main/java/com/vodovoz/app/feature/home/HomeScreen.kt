@@ -2,9 +2,6 @@ package com.vodovoz.app.feature.home
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.VisibilityThreshold
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -17,7 +14,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.IntOffset
 import com.vodovoz.app.feature.home.composables.HomeBody
 import com.vodovoz.app.feature.home.composables.HomeLoadingPlaceholder
 import com.vodovoz.app.feature.home.composables.HomeTopBar
@@ -37,13 +33,15 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             HomeTopBar(
-                value = viewState.searchField,
-                onValueChange = {},
                 onFocus = {
                     viewModel.navigateToSearch()
                 },
-                onMicClick = { },
-                onScanClick = { onNavigateToQrCodeFragment() },
+                onMicClick = {
+
+                },
+                onScanClick = {
+                    onNavigateToQrCodeFragment()
+                              },
                 onSearchClick = {
                     viewModel.navigateToSearch()
                 }
@@ -85,8 +83,8 @@ fun HomeScreen(
                         onOrderClick = {
 
                         },
-                        onPopularSectionClick = {
-
+                        onPopularCategoryClick = { popularCategory ->
+                            viewModel.navigateToPopularCategory(popularCategory)
                         },
                         onStoryClick = { story ->
                             viewModel.navigateToStories(story)
@@ -110,7 +108,12 @@ fun HomeScreen(
 
             AnimatedVisibility(
                 visible = viewState.showUnratedProducts,
-                enter = slideInVertically(tween(durationMillis = 300, easing = LinearEasing)) { it },
+                enter = slideInVertically(
+                    tween(
+                        durationMillis = 300,
+                        easing = LinearEasing
+                    )
+                ) { it },
                 exit = slideOutVertically(tween(durationMillis = 300, easing = LinearEasing)) { it }
             ) {
                 UnratedProductsBottomSheet(

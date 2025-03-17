@@ -1119,6 +1119,10 @@ class HomeFlowViewModel @Inject constructor(
         }
     }
 
+    fun navigateToPopularCategory(popularCategory: PopularCategoryUi) = viewModelScope.launch {
+        eventListener.emit(HomeEvents.GoToCategoryProductList(popularCategory.id))
+    }
+
     data class PositionItem(
         val position: Int,
         val item: Item,
@@ -1139,6 +1143,7 @@ class HomeFlowViewModel @Inject constructor(
         data class GoToProductDetails(val productId: Long) : HomeEvents()
         data class GoToPromotionDetails(val promotionId: Long) : HomeEvents()
         data class ActivateButtonAction(val action: ButtonAction) : HomeEvents()
+        data class GoToCategoryProductList(val categoryId: Long) : HomeEvents()
     }
 
     sealed class HomeUiState {
@@ -1166,63 +1171,12 @@ class HomeFlowViewModel @Inject constructor(
         val currentCategoryWithProducts: CategoryWithProductsUi = CategoryWithProductsUi.Empty,
         val sectionBottom: SectionUi<CategoryWithProductsUi> = SectionUi.empty(),
         val sectionViewedProducts: SectionUi<ProductUi> = SectionUi.empty(),
-
-        //TODO - replace to empty
-        val sectionUnratedProducts: UnratedProductsSectionUi = UnratedProductsSectionUi(
-            title = "Оцените ваши покупки",
-            productTitle = "Оцените товар",
-            countProductsText = "2 товара ожидает вашей оценки",
-            products = listOf(
-                UnratedProductUi(
-                    name = "Вода Горная Вершина 0.5 литра, спорт, без газа, пэт, 12 шт. в уп.",
-                    id = 1,
-                    detailPicture = "https://vodovoz.net/upload/iblock/43a/43a2581179b6061ce8836e0b3b6c3cab.jpeg"
-                ),
-                UnratedProductUi(
-                    name = "Вода Шишкин лес спорт 1 литр, без газа, пэт, 12 шт. в уп.",
-                    id = 2,
-                    detailPicture = "https://vodovoz.net/upload/iblock/380/bghmh0u2f63v5wepu5xykb180ufdn1vi.jpg"
-                ),
-                UnratedProductUi(
-                    name = "Вода Горная Вершина 0.5 литра, спорт, без газа, пэт, 12 шт. в уп.",
-                    id = 3,
-                    detailPicture = "https://vodovoz.net/upload/iblock/43a/43a2581179b6061ce8836e0b3b6c3cab.jpeg"
-                ),
-                UnratedProductUi(
-                    name = "Вода Шишкин лес спорт 1 литр, без газа, пэт, 12 шт. в уп.",
-                    id = 4,
-                    detailPicture = "https://vodovoz.net/upload/iblock/380/bghmh0u2f63v5wepu5xykb180ufdn1vi.jpg"
-                ),
-                UnratedProductUi(
-                    name = "Вода Горная Вершина 0.5 литра, спорт, без газа, пэт, 12 шт. в уп.",
-                    id = 5,
-                    detailPicture = "https://vodovoz.net/upload/iblock/43a/43a2581179b6061ce8836e0b3b6c3cab.jpeg"
-                ),
-                UnratedProductUi(
-                    name = "Вода Шишкин лес спорт 1 литр, без газа, пэт, 12 шт. в уп.",
-                    id = 6,
-                    detailPicture = "https://vodovoz.net/upload/iblock/380/bghmh0u2f63v5wepu5xykb180ufdn1vi.jpg"
-                ),
-                UnratedProductUi(
-                    name = "Вода Горная Вершина 0.5 литра, спорт, без газа, пэт, 12 шт. в уп.",
-                    id = 7,
-                    detailPicture = "https://vodovoz.net/upload/iblock/43a/43a2581179b6061ce8836e0b3b6c3cab.jpeg"
-                ),
-                UnratedProductUi(
-                    name = "Вода Шишкин лес спорт 1 литр, без газа, пэт, 12 шт. в уп.",
-                    id = 8,
-                    detailPicture = "https://vodovoz.net/upload/iblock/380/bghmh0u2f63v5wepu5xykb180ufdn1vi.jpg"
-                )
-            )
-        )
-        ,
+        val sectionUnratedProducts: UnratedProductsSectionUi = UnratedProductsSectionUi.Empty        ,
         val specialPromotion: SpecialPromotionUi = SpecialPromotionUi.Empty,
 
         val uiState: HomeUiState = HomeUiState.Success,
         val showSpecialPromotion: Boolean = false,
-        val showUnratedProducts: Boolean = true,
-        val searchField: String = "",
-
+        val showUnratedProducts: Boolean = false
         ) : State {
         companion object {
             fun idle(): HomeState {

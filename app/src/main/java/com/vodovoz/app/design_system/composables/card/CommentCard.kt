@@ -18,13 +18,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.model.CommentUi
 
 @Composable
-fun CommentCard(modifier: Modifier = Modifier, comment: CommentUi) {
+fun CommentCard(modifier: Modifier = Modifier, comment: CommentUi, maxLines: Int = Int.MAX_VALUE) {
     OutlinedCard(
         modifier = modifier
             .fillMaxWidth(),
@@ -60,11 +62,10 @@ fun CommentCard(modifier: Modifier = Modifier, comment: CommentUi) {
                 modifier = Modifier
                     .padding(top = 12.dp)
                     .heightIn(min = 40.dp),
-                text = comment.text,
+                text = AnnotatedString.fromHtml(comment.text),
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.bodySmall,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
+                maxLines = maxLines
             )
 
             Row(
@@ -79,41 +80,41 @@ fun CommentCard(modifier: Modifier = Modifier, comment: CommentUi) {
                     style = MaterialTheme.typography.labelSmall
                 )
 
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_dislike),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(start = 8.dp)
-                        .size(18.dp),
-                    tint = MaterialTheme.colorScheme.surfaceTint
-                )
-
-                //todo dislikes
-                Text(
-                    modifier = Modifier.padding(start = 4.dp),
-                    text = "0",
-                    maxLines = 1,
-                    color = MaterialTheme.colorScheme.surfaceTint,
-                    style = MaterialTheme.typography.labelSmall
-                )
-
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_like_up),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(start = 16.dp)
-                        .size(18.dp),
-                    tint = MaterialTheme.colorScheme.surfaceTint
-
-                )
-                //todo likes
-                Text(
-                    modifier = Modifier.padding(start = 4.dp),
-                    text = "0",
-                    maxLines = 1,
-                    color = MaterialTheme.colorScheme.surfaceTint,
-                    style = MaterialTheme.typography.labelSmall
-                )
+//                Icon(
+//                    painter = painterResource(id = R.drawable.ic_dislike),
+//                    contentDescription = null,
+//                    modifier = Modifier
+//                        .padding(start = 8.dp)
+//                        .size(18.dp),
+//                    tint = MaterialTheme.colorScheme.surfaceTint
+//                )
+//
+//                //todo dislikes
+//                Text(
+//                    modifier = Modifier.padding(start = 4.dp),
+//                    text = "0",
+//                    maxLines = 1,
+//                    color = MaterialTheme.colorScheme.surfaceTint,
+//                    style = MaterialTheme.typography.labelSmall
+//                )
+//
+//                Icon(
+//                    painter = painterResource(id = R.drawable.ic_like_up),
+//                    contentDescription = null,
+//                    modifier = Modifier
+//                        .padding(start = 16.dp)
+//                        .size(18.dp),
+//                    tint = MaterialTheme.colorScheme.surfaceTint
+//
+//                )
+//                //todo likes
+//                Text(
+//                    modifier = Modifier.padding(start = 4.dp),
+//                    text = "0",
+//                    maxLines = 1,
+//                    color = MaterialTheme.colorScheme.surfaceTint,
+//                    style = MaterialTheme.typography.labelSmall
+//                )
             }
         }
     }

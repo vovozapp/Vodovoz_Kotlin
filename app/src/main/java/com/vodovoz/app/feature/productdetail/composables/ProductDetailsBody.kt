@@ -12,6 +12,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.vodovoz.app.design_system.model.BrandCategoryBlockUi
+import com.vodovoz.app.design_system.model.BrandCategoryItemUi
 import com.vodovoz.app.design_system.model.CommentUi
 import com.vodovoz.app.design_system.model.ProductDetailsButtonsUi
 import com.vodovoz.app.design_system.model.ProductDetailsUi
@@ -42,7 +44,7 @@ fun ProductDetailsBody(
     onAddToCart: () -> Unit,
     onProductMinus: () -> Unit,
     onProductPlus: () -> Unit,
-    onNavigateToCart: () -> Unit,
+    onCartClick: () -> Unit,
     onAboutProductClick: () -> Unit,
 
     onShowAllCommentsClick: () -> Unit,
@@ -51,7 +53,12 @@ fun ProductDetailsBody(
     onPresentButtonClick: () -> Unit,
     onPreOrderButtonClick: () -> Unit,
     onAnalogButtonClick: () -> Unit,
-    onPresentBlockButtonClick: () -> Unit
+    onPresentBlockButtonClick: () -> Unit,
+    onQueryClick: (String) -> Unit,
+
+    onCategoryClick: (BrandCategoryItemUi) -> Unit,
+    onProductClick: (ProductUi) -> Unit,
+    onProductLikeClick: (ProductUi) -> Unit
 ) {
     val scrollState = rememberScrollState()
 
@@ -85,13 +92,14 @@ fun ProductDetailsBody(
             modifier = Modifier.padding(top = 16.dp),
             rating = productDetails.rating.formatPrice(),
             numberOfReviews = productDetails.commentsCount,
-            articleNumber = productDetails.barCode,
-            onReviewsClick = {
-
-            },
+            articleNumber = productDetails.articleNumber,
+            onReviewsClick = onShowAllCommentsClick,
             onCopyClick = {
 
             },
+            onZeroReviewsClick = {
+
+            }
         )
 
         ProductDetailsPriceInfo(
@@ -113,7 +121,7 @@ fun ProductDetailsBody(
             ).roundToInt(),
             onProductMinus = onProductMinus,
             onProductPlus = onProductPlus,
-            onNavigateToCart = onNavigateToCart,
+            onNavigateToCart = onCartClick,
             onAddToCart = onAddToCart,
             onFloatingButtonChange = onFloatingButtonChange,
             onPresentButtonClick = onPresentButtonClick,
@@ -143,16 +151,15 @@ fun ProductDetailsBody(
             onBrandClick = { brand ->
 
             },
-            onCategoryClick = { category ->
-
-            }
+            onCategoryClick = onCategoryClick
         )
 
 
-        if (productDetails.sectionTags.items.isNotEmpty()) {
-            ProductDetailsSearchWords(
+        if (productDetails.sectionQueries.items.isNotEmpty()) {
+            ProductDetailsSearchQueries(
                 modifier = Modifier.padding(top = 32.dp),
-                sectionTags = productDetails.sectionTags
+                sectionQueries = productDetails.sectionQueries,
+                onQueryClick = onQueryClick
             )
         }
 
@@ -161,7 +168,7 @@ fun ProductDetailsBody(
             modifier = Modifier.padding(top = 32.dp),
             commentsCount = productDetails.commentsCount,
             comments = comments,
-            onLeaveRateClick = {
+            onWriteCommentClick = {
 
             },
             onShowAllCommentsClick = onShowAllCommentsClick
@@ -172,8 +179,8 @@ fun ProductDetailsBody(
             ProductDetailsAccessoryProducts(
                 modifier = Modifier.padding(top = 32.dp),
                 sectionAccessory = sectionAccessory,
-                onProductLike = {},
-                onProductClick = {}
+                onProductLike = onProductLikeClick,
+                onProductClick = onProductClick
             )
         }
 
@@ -182,8 +189,8 @@ fun ProductDetailsBody(
             ProductDetailsSimilarProducts(
                 modifier = Modifier.padding(top = 32.dp),
                 sectionSimilarProducts = sectionSimilarProducts,
-                onProductLike = {},
-                onProductClick = {}
+                onProductLike = onProductLikeClick,
+                onProductClick = onProductClick
             )
         }
 

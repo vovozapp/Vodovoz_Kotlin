@@ -7,7 +7,7 @@ import com.squareup.moshi.Json
 @Keep
 data class POPULAR_CATEGORY_DTO(
     @Json(name = "IDRAZDEL")
-    val IDRAZDEL: Int?,
+    val IDRAZDEL: Long?,
     @Json(name = "NAMERAZDEL")
     val NAMERAZDEL: String?,
     @Json(name = "PICTURE")

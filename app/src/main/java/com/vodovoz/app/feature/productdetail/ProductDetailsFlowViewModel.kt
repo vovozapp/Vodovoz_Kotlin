@@ -13,15 +13,17 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.design_system.model.BrandCategoryItemUi
 import com.vodovoz.app.design_system.model.CommentUi
 import com.vodovoz.app.design_system.model.ProductDetailsButtonsUi
 import com.vodovoz.app.design_system.model.ProductDetailsTabUi
 import com.vodovoz.app.design_system.model.ProductDetailsUi
-import com.vodovoz.app.design_system.model.mapToUi
-import com.vodovoz.app.design_system.model.toUi
-import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.design_system.model.ProductUi
 import com.vodovoz.app.design_system.model.SectionUi
+import com.vodovoz.app.design_system.model.mapToUi
+import com.vodovoz.app.design_system.model.toUi
+import com.vodovoz.app.design_system.model.withUpdatedFavorites
+import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotions
 import com.vodovoz.app.feature.productdetail.present.model.PresentInfoData
@@ -52,6 +54,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onEach
@@ -86,6 +89,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
     fun observeUpdateFab() = updateFabListener.asSharedFlow()
 
     init {
+        listenFavorites()
         viewModelScope.launch {
             cartManager
                 .observeCarts()
@@ -99,6 +103,41 @@ class ProductDetailsFlowViewModel @Inject constructor(
                     updateFabListener.emit(cartQuantity)
                 }
         }
+    }
+
+    private fun listenFavorites() = viewModelScope.launch {
+        uiStateListener.combine(likeManager.observeLikes()) { uiState, favorites ->
+            favorites
+        }.collectLatest { favoritesMap ->
+            uiStateListener.update { s ->
+
+                val sectionSimilarProducts = s.sectionSimilarProducts
+                val sectionAccessory = s.sectionAccessory
+                val productDetails = s.productDetails
+
+
+                s.copy(
+                    productDetails = productDetails.copy(
+                        isFavorite = favoritesMap.getOrDefault(
+                            productDetails.id,
+                            productDetails.isFavorite
+                        )
+                    ),
+                    sectionSimilarProducts = sectionSimilarProducts.copy(
+                        items = sectionSimilarProducts.items.withUpdatedFavorites(
+                            favoritesMap
+                        )
+                    ),
+                    sectionAccessory = sectionAccessory.copy(
+                        items = sectionAccessory.items.withUpdatedFavorites(
+                            favoritesMap
+                        )
+                    )
+
+                )
+            }
+        }
+
     }
 
     fun fetchProductDetail() {
@@ -463,7 +502,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
     }
 
     fun navigateToProductsCollection() = viewModelScope.launch {
-        eventListener.emit(ProductDetailsEvents.GoToProductsCollection(state.productDetails.id))
+        eventListener.emit(ProductDetailsEvents.GoToProductAnalogs(state.productDetails.id))
     }
 
     fun navigateToPreOrder() = viewModelScope.launch {
@@ -472,6 +511,36 @@ class ProductDetailsFlowViewModel @Inject constructor(
 
     fun navigateBack() = viewModelScope.launch {
         eventListener.emit(ProductDetailsEvents.GoBack)
+    }
+
+    fun navigateToSearch(query: String) = viewModelScope.launch {
+        eventListener.emit(ProductDetailsEvents.GoToSearch(query))
+    }
+
+    fun navigateToProductDetails(product: ProductUi) = viewModelScope.launch {
+        eventListener.emit(ProductDetailsEvents.GoToProductDetails(product.id))
+    }
+
+    fun changeFavorite() = viewModelScope.launch {
+        val productDetails = uiStateListener.value.productDetails
+        likeManager.changeFavorite(productDetails.id, !productDetails.isFavorite)
+    }
+
+
+    fun changeFavorite(product: ProductUi) = viewModelScope.launch {
+        likeManager.changeFavorite(product.id, !product.isFavorite)
+    }
+
+    fun navigateToCategory(categoryItem: BrandCategoryItemUi) = viewModelScope.launch {
+        eventListener.emit(ProductDetailsEvents.GoToCategoryProductList(categoryItem.data.id.toLong()))
+    }
+
+    fun navigateToCart() = viewModelScope.launch {
+        eventListener.emit(ProductDetailsEvents.GoToCart)
+    }
+
+    fun share() = viewModelScope.launch {
+        eventListener.emit(ProductDetailsEvents.Share(uiStateListener.value.productDetails.shareUrlText))
     }
 
 
@@ -489,9 +558,14 @@ class ProductDetailsFlowViewModel @Inject constructor(
 
         data object GoToCart : ProductDetailsEvents()
         data object GoToAboutProduct : ProductDetailsEvents()
-        data class GoToProductComments(val productId: Long) : ProductDetailsEvents()
-        data class GoToProductsCollection(val productId: Long) : ProductDetailsEvents()
         data object GoBack : ProductDetailsEvents()
+        data class Share(val text: String) : ProductDetailsEvents()
+
+        data class GoToProductComments(val productId: Long) : ProductDetailsEvents()
+        data class GoToProductAnalogs(val productId: Long) : ProductDetailsEvents()
+        data class GoToSearch(val query: String) : ProductDetailsEvents()
+        data class GoToProductDetails(val productId: Long) : ProductDetailsEvents()
+        data class GoToCategoryProductList(val categoryId: Long) : ProductDetailsEvents()
     }
 
 
@@ -519,15 +593,14 @@ class ProductDetailsFlowViewModel @Inject constructor(
         val presentInfo: PresentInfoData? = null,
         val error: ErrorState? = null,
         val loadingPage: Boolean = false,
-
         val categoryUI: CategoryUI = CategoryUI(name = ""),
         val commentsUI: List<CommentUI> = emptyList(),
         val buyWithProductUIList: List<ProductUI> = emptyList(),
+
+
         val showDetailText: Boolean = false,
         val showAllProperties: Boolean = false,
         val articleNumber: String = "",
-        val deposit: Int = 0,
-        val searchWords: List<String> = emptyList(),
         val cartQuantity: Int = 0,
         val buttonIsLoading: Boolean = false,
         val hideFloatingButton: Boolean = true,

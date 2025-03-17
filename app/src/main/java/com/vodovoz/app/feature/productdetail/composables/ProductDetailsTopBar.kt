@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.productdetail.composables
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -21,7 +23,7 @@ import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.ClickableIcon
 
 @Composable
-fun ProductDetailTopBar(
+fun ProductDetailsTopBar(
     modifier: Modifier = Modifier,
     onNavigationClick: () -> Unit,
     onLikeClick: () -> Unit,
@@ -47,21 +49,32 @@ fun ProductDetailTopBar(
             )
             Spacer(modifier = Modifier.weight(1f))
 
-            ClickableIcon(
-                painter = painterResource(id = if (isFavoriteProduct) R.drawable.ic_filled_like else R.drawable.ic_like),
-                modifier = Modifier.size(24.dp),
-                onClick = onLikeClick,
-                tint = if (isFavoriteProduct) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onBackground
 
+            Icon(
+                painter = painterResource(id = if (isFavoriteProduct) R.drawable.ic_filled_like else R.drawable.ic_like),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(24.dp)
+                    .clickable(
+                        interactionSource = null,
+                        indication = null,
+                        onClick = { onLikeClick() }),
+                tint = if (isFavoriteProduct) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onBackground
             )
-            ClickableIcon(
-                painter = painterResource(id = R.drawable.ic_share),
+
+            Icon(
+                painter = painterResource(R.drawable.ic_share),
+                contentDescription = null,
                 modifier = Modifier
                     .padding(start = 24.dp)
-                    .size(24.dp),
-                onClick = onShareClick,
+                    .size(24.dp)
+                    .clickable(
+                        interactionSource = null,
+                        indication = null,
+                        onClick = { onShareClick() }),
                 tint = MaterialTheme.colorScheme.onBackground
             )
+
         }
     }
 }
@@ -70,7 +83,7 @@ fun ProductDetailTopBar(
 @Composable
 private fun ProductDetailTopBarPreview() {
     VodovozTheme {
-        ProductDetailTopBar(
+        ProductDetailsTopBar(
             onNavigationClick = { /*TODO*/ },
             onLikeClick = { /*TODO*/ },
             isFavoriteProduct = true,

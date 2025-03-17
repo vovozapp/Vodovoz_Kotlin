@@ -54,7 +54,6 @@ class LikeManager @Inject constructor(
             updatedVersion to userId
         }
 
-
         kotlin.runCatching {
             if (userId != null) {
                 updateFavoritesOnline(productId, newValue)

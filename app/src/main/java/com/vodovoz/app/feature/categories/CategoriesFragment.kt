@@ -38,14 +38,11 @@ class CategoriesFragment : Fragment() {
                         viewModel.events.collect { event ->
                             when (event) {
                                 is CategoriesEvent.GoBackWithArguments -> {
-
                                     val navController = findNavController()
-
-                                    val graph = navController.graph
-                                    findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                                    navController.previousBackStackEntry?.savedStateHandle?.set(
                                         "category", event.currentCategory
                                     )
-                                    findNavController().popBackStack()
+                                    navController.popBackStack()
                                 }
 
                                 CategoriesEvent.GoBack -> {

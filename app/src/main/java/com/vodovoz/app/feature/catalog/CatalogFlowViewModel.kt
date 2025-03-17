@@ -11,6 +11,7 @@ import com.vodovoz.app.common.content.updateData
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.design_system.model.BannerUi
+import com.vodovoz.app.domain.general.model.DataAllAction
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.catalog.model.CatalogCategoryUi
 import com.vodovoz.app.feature.catalog.model.toUi
@@ -114,16 +115,20 @@ class CatalogFlowViewModel @Inject constructor(
         eventListener.emit(CatalogEvents.GoToSearch)
     }
 
-    fun navigateToSubCategories(catalogCategory: CatalogCategoryUi) = viewModelScope.launch {
+    fun chooseCategory(catalogCategory: CatalogCategoryUi) = viewModelScope.launch {
         if (catalogCategory.childCategories.isNotEmpty()) {
             eventListener.emit(CatalogEvents.GoToSubCategories(catalogCategory))
+        } else if (catalogCategory.action != null) {
+            eventListener.emit(CatalogEvents.ActivateDataAllAction(catalogCategory.action))
         } else {
-
+            eventListener.emit(CatalogEvents.GoToProductList(catalogCategory))
         }
     }
 
     sealed class CatalogEvents : Event {
         data class GoToSubCategories(val catalogCategory: CatalogCategoryUi) : CatalogEvents()
+        data class GoToProductList(val catalogCategory: CatalogCategoryUi) : CatalogEvents()
+        data class ActivateDataAllAction(val action: DataAllAction) : CatalogEvents()
 
         data object GoToProfile : CatalogEvents()
         data object GoToSearch : CatalogEvents()

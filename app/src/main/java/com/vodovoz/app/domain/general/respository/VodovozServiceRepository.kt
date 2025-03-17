@@ -45,6 +45,10 @@ interface VodovozServiceRepository {
 
     fun getCatalogDetails(): Flow<Result<CatalogDetailsModel>>
 
+    fun getCategoryProducts(categoryId: Long): Flow<Result<ProductsSectionModel>>
+
+    fun getCategoryProductsPaged(categoryId: Long, sort: SortModel): Flow<PagingData<ProductModel>>
+
     fun getSearchProductsPaged(
         query: String,
         categoryId: Int = -1,

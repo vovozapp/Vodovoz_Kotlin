@@ -26,7 +26,7 @@ class VodovozPagingSource<T : Any, R : Any>(
         ).singleOrNull() ?: return LoadResult.Error(NoSuchElementException("No elements received from the flow"))
 
         result.onSuccess { list ->
-            val nextKey = if (list.size < 2) null else page + 1
+            val nextKey = if (list.size < 3) null else page + 1
 
             return LoadResult.Page(
                 data = list,

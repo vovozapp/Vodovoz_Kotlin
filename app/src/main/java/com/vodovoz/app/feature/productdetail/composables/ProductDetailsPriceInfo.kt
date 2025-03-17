@@ -1,15 +1,24 @@
 package com.vodovoz.app.feature.productdetail.composables
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -22,8 +31,10 @@ import com.vodovoz.app.R
 import com.vodovoz.app.design_system.model.DepositUi
 import com.vodovoz.app.design_system.model.PriceUi
 import com.vodovoz.app.util.formatPrice
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductDetailsPriceInfo(
     modifier: Modifier = Modifier,
@@ -39,14 +50,14 @@ fun ProductDetailsPriceInfo(
     ) {
         Row(verticalAlignment = Alignment.Bottom) {
             Text(
-                text = stringResource(R.string.price, price.roundToInt().formatPrice()),
+                text = stringResource(R.string.price, price.formatPrice()),
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.titleLarge,
             )
 
             if (oldPrice > price) {
                 Text(
-                    text = stringResource(R.string.price, oldPrice.roundToInt().formatPrice()),
+                    text = stringResource(R.string.price, oldPrice.formatPrice()),
                     color = MaterialTheme.colorScheme.surfaceTint,
                     style = MaterialTheme.typography.labelLarge.copy(
                         textDecoration = TextDecoration.LineThrough,
@@ -72,14 +83,46 @@ fun ProductDetailsPriceInfo(
             ) {
 
                 Text(text = buildAnnotatedDepositString(deposit = deposit.price.roundToInt()))
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_question_circle),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(start = 8.dp)
-                        .size(20.dp),
-                    tint = MaterialTheme.colorScheme.primary
-                )
+
+                val tooltipState = rememberTooltipState(isPersistent = true)
+                val coroutineScope = rememberCoroutineScope()
+
+                TooltipBox(
+                    modifier = Modifier.padding(start = 8.dp),
+                    positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+                    tooltip = {
+                        if (deposit.description.content.isNotEmpty()) {
+                            Surface(
+                                modifier = Modifier.padding(horizontal = 50.dp),
+                                shape = MaterialTheme.shapes.medium,
+                                color = MaterialTheme.colorScheme.background,
+                                shadowElevation = 2.dp,
+                                tonalElevation = 2.dp,
+                            ) {
+                                Text(
+                                    modifier = Modifier.padding(
+                                        vertical = 8.dp,
+                                        horizontal = 10.dp
+                                    ),
+                                    text = deposit.description.content,
+                                    color = MaterialTheme.colorScheme.onBackground,
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
+                        }
+                    },
+                    state = tooltipState,
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_question_circle),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier
+                            .size(20.dp)
+                            .clip(CircleShape)
+                            .clickable { coroutineScope.launch { tooltipState.show() } }
+                    )
+                }
             }
         }
     }

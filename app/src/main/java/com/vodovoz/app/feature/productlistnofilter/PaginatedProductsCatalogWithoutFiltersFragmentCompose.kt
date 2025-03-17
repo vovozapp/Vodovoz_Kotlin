@@ -206,9 +206,8 @@ class PaginatedProductsCatalogWithoutFiltersFragment : Fragment() {
         @Parcelize
         data class Search(val query: String) : DataSource()
 
-        //TODO - fix
         @Parcelize
-        data class Category(val catalogCategory: CatalogCategoryUi) : DataSource()
+        data class Category(val categoryId: Long) : DataSource()
 
         @Parcelize
         data object Missing : DataSource()

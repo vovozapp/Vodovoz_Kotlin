@@ -153,6 +153,43 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         )
     }
 
+    override fun getCategoryProducts(categoryId: Long): Flow<Result<ProductsSectionModel>> {
+        return executeRequest(
+            request = {
+                vodovozService.getCategoryProducts(categoryId)
+            },
+            mapper = {
+                it.data!!.toDomain()
+            }
+        )
+    }
+
+    override fun getCategoryProductsPaged(
+        categoryId: Long,
+        sort: SortModel,
+    ): Flow<PagingData<ProductModel>> {
+        return Pager(
+            config = PagingConfig(pageSize = 5, initialLoadSize = 5),
+            pagingSourceFactory = {
+                VodovozPagingSource(
+                    request = { page, _ ->
+                        vodovozService.getCategoryProducts(
+                            page = page,
+                            categoryId = categoryId,
+                            sort = sort.value,
+                            order = sort.order
+                        )
+                    },
+                    mapper = { response ->
+                        response.data?.DATA?.mapNotNull { product -> product.toDomain() }
+                            ?: throw IllegalArgumentException("Paged search products can't be null")
+                    }
+                )
+            }
+        ).flow
+
+    }
+
 
     override fun getSearchProductsPaged(
         query: String,
@@ -284,27 +321,28 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         )
     }
 
-    override fun getFavoriteProducts(productsIds: String): Flow<Result<ProductsSectionModel>> = executeRequest(
-        request = {
-            val userId = accountManager.fetchAccountId()
+    override fun getFavoriteProducts(productsIds: String): Flow<Result<ProductsSectionModel>> =
+        executeRequest(
+            request = {
+                val userId = accountManager.fetchAccountId()
 
-            vodovozService.getFavoriteProducts(
-                userId = userId,
-                productsIds = if(userId == null) productsIds else null
-            )
-        },
-        mapper = { responseDTO ->
-            responseDTO.data?.toDomain()
-                ?: throw IllegalArgumentException("Favorite products can't be null")
-        },
-        onFail = { response ->
-            val exception = when (response.code()) {
-                404 -> FavoritesNotFoundException(response.messageWithCode())
-                else -> RequestException(response.messageWithCode())
+                vodovozService.getFavoriteProducts(
+                    userId = userId,
+                    productsIds = if (userId == null) productsIds else null
+                )
+            },
+            mapper = { responseDTO ->
+                responseDTO.data?.toDomain()
+                    ?: throw IllegalArgumentException("Favorite products can't be null")
+            },
+            onFail = { response ->
+                val exception = when (response.code()) {
+                    404 -> FavoritesNotFoundException(response.messageWithCode())
+                    else -> RequestException(response.messageWithCode())
+                }
+                Result.failure(exception)
             }
-            Result.failure(exception)
-        }
-    )
+        )
 
     override fun getFavoriteProductsPaged(
         categoryId: Int,
@@ -319,11 +357,11 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                         val userId = accountManager.fetchAccountId()
                         vodovozService.getFavoriteProducts(
                             userId = userId,
-                            page =page,
+                            page = page,
                             categoryId = categoryId.takeIf { value -> value != -1 },
                             sort = sort.value,
                             order = sort.order,
-                            productsIds = if(userId == null) productsIds else null
+                            productsIds = if (userId == null) productsIds else null
                         )
                     },
                     mapper = { response ->

@@ -11,7 +11,7 @@ import kotlinx.parcelize.Parcelize
 data class PopularCategoryUi(
     val image: String,
     val name: String,
-    val id: Int,
+    val id: Long,
 ) : Parcelable {
     companion object {
         val Empty = PopularCategoryUi("", "", -1)

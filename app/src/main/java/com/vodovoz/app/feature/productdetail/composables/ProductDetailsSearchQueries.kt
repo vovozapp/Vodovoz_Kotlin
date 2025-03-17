@@ -17,11 +17,15 @@ import androidx.compose.ui.unit.dp
 import com.vodovoz.app.design_system.model.SectionUi
 
 @Composable
-fun ProductDetailsSearchWords(modifier: Modifier = Modifier, sectionTags: SectionUi<String>) {
+fun ProductDetailsSearchQueries(
+    modifier: Modifier = Modifier,
+    sectionQueries: SectionUi<String>,
+    onQueryClick: (String) -> Unit,
+) {
     Column(modifier = modifier) {
         Text(
             modifier = Modifier.padding(horizontal = 16.dp),
-            text = sectionTags.title,
+            text = sectionQueries.title,
             color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.headlineSmall
         )
@@ -33,15 +37,18 @@ fun ProductDetailsSearchWords(modifier: Modifier = Modifier, sectionTags: Sectio
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            sectionTags.items.forEach { searchWord ->
+            sectionQueries.items.forEach { query ->
                 Surface(
                     color = MaterialTheme.colorScheme.surface,
                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceVariant),
-                    shape = MaterialTheme.shapes.small
+                    shape = MaterialTheme.shapes.small,
+                    onClick = {
+                        onQueryClick(query)
+                    }
                 ) {
                     Text(
                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                        text = searchWord,
+                        text = query,
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.bodySmall
                     )

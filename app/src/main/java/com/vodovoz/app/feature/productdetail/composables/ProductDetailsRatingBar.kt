@@ -19,7 +19,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.VodovozTheme
-import java.util.Locale
 
 @Composable
 fun ProductDetailsRatingBar(
@@ -29,6 +28,7 @@ fun ProductDetailsRatingBar(
     articleNumber: String,
     onCopyClick: () -> Unit,
     onReviewsClick: () -> Unit,
+    onZeroReviewsClick: () -> Unit,
 ) {
     Row(
         modifier = modifier
@@ -51,17 +51,22 @@ fun ProductDetailsRatingBar(
                 .size(16.dp),
         )
 
+        val hasReviews = numberOfReviews > 0
+
         Text(
             modifier = Modifier
                 .padding(start = 16.dp)
                 .clickable(
                     null,
                     null,
-                    onClick = onReviewsClick
+                    onClick = {
+                        if (hasReviews) onReviewsClick()
+                        else onZeroReviewsClick()
+                    }
                 ),
-            text = if (numberOfReviews <= 0) stringResource(R.string.leave_feedback) else pluralStringResource(
+            text = if (!hasReviews) stringResource(R.string.leave_feedback) else pluralStringResource(
                 id = R.plurals.reviews_count,
-                numberOfReviews,
+                count = numberOfReviews,
                 numberOfReviews
             ),
             color = MaterialTheme.colorScheme.primary,
@@ -105,6 +110,7 @@ private fun ProductDetailsRatingBarPreview() {
             articleNumber = "123456789",
             onReviewsClick = {},
             onCopyClick = {},
+            onZeroReviewsClick = {}
         )
     }
 }

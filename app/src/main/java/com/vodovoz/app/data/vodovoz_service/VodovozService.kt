@@ -51,6 +51,14 @@ interface VodovozService {
     @GET("razdel/category.php?iblock_id=12")
     suspend fun getCatalogDetails(): Response<VodovozResponseDTO<CatalogDetailsDTO>>
 
+    @GET("razdel/index.php?iblock_id=12")
+    suspend fun getCategoryProducts(
+        @Query("sectionid") categoryId: Long,
+        @Query("nav") page: Int = 1,
+        @Query("sort") sort: String = "",
+        @Query("ascdesc") order: String = "",
+    ): Response<VodovozResponseDTO<ProductsSectionDTO>>
+
     /**
      * Search requests
      * */

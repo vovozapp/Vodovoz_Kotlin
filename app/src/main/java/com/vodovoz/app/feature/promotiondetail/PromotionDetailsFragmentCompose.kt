@@ -70,9 +70,7 @@ class PromotionDetailsFragment : Fragment() {
                     when(viewState.uiState){
                         PromotionDetailFlowViewModel.UiState.Error -> {
                             NetworkErrorPlaceholder(
-                                onTryAgainClick = {
-
-                                }
+                                onTryAgainClick = { viewModel.firstLoadSorted() }
                             )
                         }
                         else -> {

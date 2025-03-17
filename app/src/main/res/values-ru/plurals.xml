@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="ru">
+    <plurals name="reviews_count" tools:ignore="MissingDefaultResource,UnusedQuantity">
+        <item quantity="zero">%d отзывов</item>
+        <item quantity="one">%d отзыв</item>
+        <item quantity="two">%d отзыва</item>
+        <item quantity="few">%d отзыва</item>
+        <item quantity="many">%d отзывов</item>
+        <item quantity="other">%d отзывов</item>
+    </plurals>
+
+</resources>

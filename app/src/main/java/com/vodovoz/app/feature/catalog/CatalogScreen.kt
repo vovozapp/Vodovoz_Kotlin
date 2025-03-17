@@ -15,10 +15,6 @@ fun CatalogScreen(viewModel: CatalogFlowViewModel, viewState: CatalogFlowViewMod
     Scaffold(
         topBar = {
             HomeTopBar(
-                value = "",
-                onValueChange = {
-
-                },
                 onFocus = {
                     viewModel.navigateToSearch()
                 },
@@ -40,7 +36,7 @@ fun CatalogScreen(viewModel: CatalogFlowViewModel, viewState: CatalogFlowViewMod
             categories = viewState.categories,
             banners = viewState.banners,
             onCategoryClick = { catalogCategory ->
-                viewModel.navigateToSubCategories(catalogCategory)
+                viewModel.chooseCategory(catalogCategory)
             },
             onBannerClick = {
 

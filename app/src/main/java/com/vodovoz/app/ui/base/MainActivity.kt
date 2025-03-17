@@ -23,6 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import pub.devrel.easypermissions.EasyPermissions
+import java.util.Locale
 import javax.inject.Inject
 
 @AndroidEntryPoint

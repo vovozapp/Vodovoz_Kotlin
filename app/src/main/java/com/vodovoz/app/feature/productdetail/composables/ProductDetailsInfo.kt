@@ -100,13 +100,10 @@ fun ProductDetailsInfo(
         ) {
             Text(
                 modifier = Modifier.weight(1f),
-                text = AnnotatedString.fromHtml(if (showDetailText) {
-                    detailInfo.content
-                } else {
-                    detailInfo.content.takeWhile { it != '\n' }
-                }),
+                text = AnnotatedString.fromHtml(detailInfo.content),
                 color = MaterialTheme.colorScheme.onBackground,
-                style = MaterialTheme.typography.bodySmall
+                style = MaterialTheme.typography.bodySmall,
+                maxLines = if(showDetailText) Int.MAX_VALUE else 4
             )
             Icon(
                 painter = painterResource(id = R.drawable.ic_arrow_down),

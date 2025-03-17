@@ -20,6 +20,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import coil3.compose.AsyncImage
@@ -28,8 +30,9 @@ import com.valentinilk.shimmer.rememberShimmer
 import com.vodovoz.app.design_system.composables.chip.TimeLeftChip
 import com.vodovoz.app.design_system.composables.chip.VodovozColorChip
 import com.vodovoz.app.design_system.composables.list.gridProducts
-import com.vodovoz.app.design_system.model.PromotionDetailsUi
 import com.vodovoz.app.design_system.model.ProductUi
+import com.vodovoz.app.design_system.model.PromotionDetailsUi
+import com.vodovoz.app.design_system.vodovozTextLinkStyle
 
 @Composable
 fun PromotionDetailsBody(
@@ -73,9 +76,14 @@ fun PromotionDetailsBody(
 
                     TimeLeftChip(text = promotionDetails.timeLeft)
                 }
+
+
                 Text(
                     modifier = Modifier.padding(top = 24.dp),
-                    text = promotionDetails.description,
+                    text = AnnotatedString.fromHtml(
+                        promotionDetails.description,
+                        vodovozTextLinkStyle
+                    ),
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.bodySmall
                 )

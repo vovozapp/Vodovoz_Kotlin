@@ -8,14 +8,12 @@ import android.view.ViewGroup
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.vodovoz.app.R
@@ -24,6 +22,12 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.media.MediaManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
+import com.vodovoz.app.core.navigation.navigateToAnalogs
+import com.vodovoz.app.core.navigation.navigateToCategoryProductList
+import com.vodovoz.app.core.navigation.navigateToPreOrder
+import com.vodovoz.app.core.navigation.navigateToProductComments
+import com.vodovoz.app.core.navigation.navigateToProductDetails
+import com.vodovoz.app.core.navigation.navigateToSearch
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.placeholders.LoadingPlaceholder
 import com.vodovoz.app.design_system.composables.placeholders.ProductNotFoundPlaceholder
@@ -100,31 +104,6 @@ class ProductDetailsFragment : Fragment() {
                             ProductDetailsScreen(
                                 viewState = viewState,
                                 viewModel = viewModel,
-                                onFloatingButtonChange = { value ->
-                                    viewModel.changeFloatingButton(value)
-                                },
-                                onDetailPreviewTextShowOrHide = {
-                                    viewModel.showOrHideDetailText()
-                                },
-                                onAllPropertiesShow = {
-                                    viewModel.showAllProperties()
-                                },
-                                onShareClick = {
-                                    shareText(productDetails.shareUrl)
-                                },
-                                onLikeClick = {
-                                    //todo
-//                                    viewModel.changeFavoriteStatus(
-//                                        productDetails.id,
-//                                        true
-//                                    )
-                                },
-                                onNavigateToCart = {
-                                    //todo - navigate to cart
-                                },
-                                onAddToCart = {
-                                    viewModel.changeCart(productDetails.id, 1, 0)
-                                }
                             )
                         }
                     }
@@ -184,75 +163,76 @@ class ProductDetailsFragment : Fragment() {
 
     private suspend fun observeEvents() {
         viewModel.observeEvent().collect { event ->
-                when (event) {
-                    is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToPreOrder -> {
-                        findNavController().navigate(
-                            R.id.preOrderFragment,
-                            bundleOf("productId" to event.id),
-                            NavOptions.Builder()
-                                .setEnterAnim(R.anim.slide_in_botton)
-                                .setExitAnim(R.anim.slide_out_botton)
-                                .setPopEnterAnim(R.anim.slide_in_botton)
-                                .setPopExitAnim(R.anim.slide_out_botton)
-                                .build()
-                        )
-                    }
+            when (event) {
+                is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToPreOrder -> {
+                    findNavController().navigateToPreOrder(event.id)
+                }
 
-                    is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToProfile -> {
-                        tabManager.setAuthRedirect(findNavController().graph.id)
-                        tabManager.selectTab(R.id.graph_profile)
-                    }
+                is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToProfile -> {
+                    tabManager.setAuthRedirect(findNavController().graph.id)
+                    tabManager.selectTab(R.id.graph_profile)
+                }
 
-                    is ProductDetailsFlowViewModel.ProductDetailsEvents.SendComment -> {
-                        if (findNavController().currentBackStackEntry?.destination?.id == R.id.sendCommentAboutProductFragment) {
-                            findNavController().popBackStack()
-                        }
-                        findNavController().navigate(
-                            ProductDetailsFragmentDirections.actionToSendCommentAboutProductFragment(
-                                event.id
-                            )
-                        )
-                    }
-
-                    is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToCart -> {
-                        tabManager.setAuthRedirect(findNavController().graph.id)
-                        tabManager.selectTab(R.id.graph_cart)
-                    }
-
-                    is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToPresentInfo -> {
-                        findNavController().navigate(
-                            ProductDetailsFragmentDirections.actionProductDetailFragmentToPresentInfoBottomSheetFragment(
-                                presentText = event.presentText,
-                                progressBackground = event.progressBackground,
-                                percent = event.progress,
-                                showProgress = event.showText
-                            )
-                        )
-                    }
-
-                    ProductDetailsFlowViewModel.ProductDetailsEvents.GoToAboutProduct -> {
-                        findNavController().navigate(R.id.aboutProductFragment)
-                    }
-
-                    is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToProductComments -> {
-                        findNavController().navigate(
-                            R.id.productCommentsFragment,
-                            bundleOf("productId" to event.productId)
-                        )
-                    }
-
-                    is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToProductsCollection -> {
-                        findNavController().navigate(
-                            R.id.productsCollectionFragment,
-                            bundleOf("productId" to event.productId)
-                        )
-                    }
-
-                    ProductDetailsFlowViewModel.ProductDetailsEvents.GoBack -> {
+                is ProductDetailsFlowViewModel.ProductDetailsEvents.SendComment -> {
+                    if (findNavController().currentBackStackEntry?.destination?.id == R.id.sendCommentAboutProductFragment) {
                         findNavController().popBackStack()
                     }
+                    findNavController().navigate(
+                        ProductDetailsFragmentDirections.actionToSendCommentAboutProductFragment(
+                            event.id
+                        )
+                    )
+                }
+
+                is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToCart -> {
+                    tabManager.setAuthRedirect(findNavController().graph.id)
+                    tabManager.selectTab(R.id.graph_cart)
+                }
+
+                is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToPresentInfo -> {
+                    findNavController().navigate(
+                        ProductDetailsFragmentDirections.actionProductDetailFragmentToPresentInfoBottomSheetFragment(
+                            presentText = event.presentText,
+                            progressBackground = event.progressBackground,
+                            percent = event.progress,
+                            showProgress = event.showText
+                        )
+                    )
+                }
+
+                ProductDetailsFlowViewModel.ProductDetailsEvents.GoToAboutProduct -> {
+                    findNavController().navigate(R.id.aboutProductFragment)
+                }
+
+                is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToProductComments -> {
+                    findNavController().navigateToProductComments(event.productId)
+                }
+
+                is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToProductAnalogs -> {
+                    findNavController().navigateToAnalogs(event.productId)
+                }
+
+                ProductDetailsFlowViewModel.ProductDetailsEvents.GoBack -> {
+                    findNavController().popBackStack()
+                }
+
+                is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToSearch -> {
+                    findNavController().navigateToSearch(event.query)
+                }
+
+                is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToProductDetails -> {
+                    findNavController().navigateToProductDetails(event.productId)
+                }
+
+                is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToCategoryProductList -> {
+                    findNavController().navigateToCategoryProductList(event.categoryId)
+                }
+
+                is ProductDetailsFlowViewModel.ProductDetailsEvents.Share -> {
+                    kotlin.runCatching { shareText(event.text) }
                 }
             }
+        }
 
     }
 

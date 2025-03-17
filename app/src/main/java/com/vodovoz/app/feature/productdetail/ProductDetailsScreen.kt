@@ -2,6 +2,7 @@ package com.vodovoz.app.feature.productdetail
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -10,7 +11,7 @@ import androidx.compose.ui.Modifier
 import com.vodovoz.app.design_system.composables.button.ProductBottomFloatingButton
 import com.vodovoz.app.feature.productdetail.composables.MultiProductBottomSheet
 import com.vodovoz.app.feature.productdetail.composables.PresentBottomSheet
-import com.vodovoz.app.feature.productdetail.composables.ProductDetailTopBar
+import com.vodovoz.app.feature.productdetail.composables.ProductDetailsTopBar
 import com.vodovoz.app.feature.productdetail.composables.ProductDetailsBody
 import com.vodovoz.app.util.calculateProductPrice
 import kotlin.math.roundToInt
@@ -21,24 +22,21 @@ import kotlin.math.roundToInt
 fun ProductDetailsScreen(
     viewState: ProductDetailsFlowViewModel.ProductDetailsState,
     viewModel: ProductDetailsFlowViewModel,
-    onFloatingButtonChange: (Boolean) -> Unit,
-    onLikeClick: () -> Unit,
-    onShareClick: () -> Unit,
-    onAllPropertiesShow: () -> Unit,
-    onDetailPreviewTextShowOrHide: () -> Unit,
-    onAddToCart: () -> Unit,
-    onNavigateToCart: () -> Unit,
 ) {
     val productDetails = viewState.productDetails
 
     Scaffold(
         topBar = {
-            ProductDetailTopBar(
+            ProductDetailsTopBar(
                 onNavigationClick = {
                     viewModel.navigateBack()
                 },
-                onLikeClick = onLikeClick,
-                onShareClick = onShareClick,
+                onLikeClick = {
+                    viewModel.changeFavorite()
+                },
+                onShareClick = {
+                    viewModel.share()
+                },
                 isFavoriteProduct = productDetails.isFavorite
             )
         },
@@ -65,8 +63,12 @@ fun ProductDetailsScreen(
                     onProductMinus = {
                         viewModel.decrementCart()
                     },
-                    onCartClick = onNavigateToCart,
-                    onAddToCartClick = onAddToCart,
+                    onCartClick = {
+                        viewModel.navigateToCart()
+                    },
+                    onAddToCartClick = {
+                        viewModel.changeCart(productDetails.id, 1, 0)
+                    },
                     onAnalogClick = {
                         viewModel.navigateToProductsCollection()
                     }
@@ -76,14 +78,25 @@ fun ProductDetailsScreen(
         contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) { paddingValues ->
         ProductDetailsBody(
-            modifier = Modifier.padding(paddingValues),
+            modifier = Modifier.padding(paddingValues).consumeWindowInsets(paddingValues),
+            productDetails = productDetails,
             comments = viewState.comments,
             quantityButtonIsLoading = viewState.buttonIsLoading,
             productCartQuantity = viewState.cartQuantity,
             showAllProperties = viewState.showAllProperties,
-            onFloatingButtonChange = onFloatingButtonChange,
-            onAllPropertiesShow = onAllPropertiesShow,
-            onDetailPreviewTextShowOrHide = onDetailPreviewTextShowOrHide,
+            sectionSimilarProducts = viewState.sectionSimilarProducts,
+            sectionAccessory = viewState.sectionAccessory,
+            showDetailText = viewState.showDetailText,
+            buttons = viewState.buttons,
+            onFloatingButtonChange = { show ->
+                viewModel.changeFloatingButton(show)
+            },
+            onAllPropertiesShow = {
+                viewModel.showAllProperties()
+            },
+            onDetailPreviewTextShowOrHide = {
+                viewModel.showOrHideDetailText()
+            },
             onProductImageClick = {
                 //TODO - make viewmodel func
             },
@@ -93,13 +106,12 @@ fun ProductDetailsScreen(
             onProductMinus = {
                 viewModel.decrementCart()
             },
-            onAddToCart = onAddToCart,
-            onNavigateToCart = onNavigateToCart,
-            productDetails = productDetails,
-            sectionSimilarProducts = viewState.sectionSimilarProducts,
-            sectionAccessory = viewState.sectionAccessory,
-            showDetailText = viewState.showDetailText,
-            buttons = viewState.buttons,
+            onAddToCart = {
+                viewModel.changeCart(productDetails.id, 1, 0)
+            },
+            onCartClick = {
+                viewModel.navigateToCart()
+            },
             onAnalogButtonClick = {
                 viewModel.navigateToProductsCollection()
             },
@@ -120,6 +132,18 @@ fun ProductDetailsScreen(
             },
             onShowAllCommentsClick = {
                 viewModel.showAllComments()
+            },
+            onQueryClick = { query ->
+                viewModel.navigateToSearch(query)
+            },
+            onProductClick = { product ->
+                viewModel.navigateToProductDetails(product)
+            },
+            onProductLikeClick = { product ->
+                viewModel.changeFavorite(product)
+            },
+            onCategoryClick = { categoryItem ->
+                viewModel.navigateToCategory(categoryItem)
             }
         )
     }

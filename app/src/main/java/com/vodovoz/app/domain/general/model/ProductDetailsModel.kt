@@ -58,7 +58,7 @@ data class ProductDetailsModel(
 
     val coefficient: Float,
     val pricePerUnit: String?,
-    val barCode: String,
+    val articleNumber: String,
 
     val firstPrice: PriceModel,
     val prices: List<PriceModel>,

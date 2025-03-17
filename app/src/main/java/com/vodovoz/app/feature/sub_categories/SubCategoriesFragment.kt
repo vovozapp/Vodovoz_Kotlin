@@ -12,10 +12,14 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.fragment.findNavController
 import com.vodovoz.app.R
+import com.vodovoz.app.core.android.activate
+import com.vodovoz.app.core.navigation.navigateToCategoryProductList
+import com.vodovoz.app.core.navigation.navigateToSearch
 import com.vodovoz.app.core.navigation.navigateToSubCategories
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.effects.LifecycleEffect
 import com.vodovoz.app.feature.sub_categories.model.SubCategoriesEvent
+import com.vodovoz.app.util.extensions.debugLog
 
 class SubCategoriesFragment : Fragment() {
 
@@ -42,7 +46,7 @@ class SubCategoriesFragment : Fragment() {
                         viewModel.events.collect { event ->
                             when (event) {
                                 is SubCategoriesEvent.GoToProductList -> {
-
+                                    findNavController().navigateToCategoryProductList(event.categoryId)
                                 }
 
                                 is SubCategoriesEvent.GoToSubCategories -> {
@@ -54,7 +58,11 @@ class SubCategoriesFragment : Fragment() {
                                 }
 
                                 SubCategoriesEvent.GoToSearch -> {
-                                    findNavController().navigate(R.id.searchFragment)
+                                    findNavController().navigateToSearch()
+                                }
+
+                                is SubCategoriesEvent.ActivateDataAllAction -> {
+                                    event.action.activate(findNavController())
                                 }
                             }
 

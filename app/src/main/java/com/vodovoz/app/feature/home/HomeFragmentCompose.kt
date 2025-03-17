@@ -35,6 +35,7 @@ import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.android.activate
 import com.vodovoz.app.core.android.createDataAllActivator
+import com.vodovoz.app.core.navigation.navigateToCategoryProductList
 import com.vodovoz.app.core.navigation.navigateToProductDetails
 import com.vodovoz.app.core.navigation.navigateToPromotionDetails
 import com.vodovoz.app.core.navigation.navigateToSearch
@@ -339,6 +340,10 @@ class HomeFragment : Fragment() {
 
                 HomeFlowViewModel.HomeEvents.ScrollTopProductsToStart -> {
                     topProductLazyListState.animateScrollToItem(0)
+                }
+
+                is HomeFlowViewModel.HomeEvents.GoToCategoryProductList -> {
+                    findNavController().navigateToCategoryProductList(event.categoryId)
                 }
             }
         }
