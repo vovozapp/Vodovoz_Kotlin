@@ -24,6 +24,8 @@ import com.vodovoz.app.domain.general.model.CommentModel
 import com.vodovoz.app.domain.general.model.EmptyResultException
 import com.vodovoz.app.domain.general.model.FavoritesNotFoundException
 import com.vodovoz.app.domain.general.model.FieldModel
+import com.vodovoz.app.domain.general.model.FilterValueModel
+import com.vodovoz.app.domain.general.model.FiltersModel
 import com.vodovoz.app.domain.general.model.OrderWithMenuModel
 import com.vodovoz.app.domain.general.model.PopularCategoryModel
 import com.vodovoz.app.domain.general.model.PopupWindowInfoModel
@@ -48,6 +50,7 @@ import com.vodovoz.app.domain.general.model.UserNotRegisterException
 import com.vodovoz.app.domain.general.model.ValidationException
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.preorder.model.FieldUi
+import com.vodovoz.app.util.extensions.debugLog
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -57,6 +60,28 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     private val accountManager: AccountManager,
     private val moshi: Moshi,
 ) : VodovozServiceRepository {
+    override fun getFilters(categoryId: Int): Flow<Result<FiltersModel>> {
+        return executeRequest(
+            request = {
+                vodovozService.getFilters(categoryId)
+            },
+            mapper = {
+                debugLog { it.data.toString() }
+                it.data!!.toDomain()
+            }
+        )
+    }
+
+    override fun getFilterValues(categoryId: Int, filterId: String): Flow<Result<List<FilterValueModel>>> {
+        return executeRequest(
+            request = {
+                vodovozService.getFilterValues(categoryId, filterId)
+            },
+            mapper = {
+                it.data!!.mapToDomain()
+            }
+        )
+    }
 
     override fun getCertificateActivationDetails(): Flow<Result<CertificateActivationDetailsModel>> {
         return executeRequest(

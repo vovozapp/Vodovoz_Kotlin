@@ -35,6 +35,7 @@ fun ProductsNoFilterBody(
     onCategoriesListClick: () -> Unit,
     onProductClick: (ProductUi) -> Unit,
     onProductLike: (ProductUi) -> Unit,
+    onFiltersClick: (() -> Unit)?
 ) {
     Column(modifier = modifier) {
         ProductListTitle(
@@ -67,7 +68,8 @@ fun ProductsNoFilterBody(
             },
             onSwitchClick = {
                 onSwitchLayoutClick()
-            }
+            },
+            onFiltersClick = onFiltersClick
         )
 
 

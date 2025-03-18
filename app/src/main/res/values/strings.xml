@@ -1,4 +1,4 @@
-<resources>
+<resources translatable="false">
     <string name="plug" translatable="false">Текст</string>
 
     <string name="new_app" translatable="false">vodovoz.ru</string>
@@ -260,5 +260,8 @@
     <string name="register_button_text">Зарегистрироваться</string>
     <string name="its_clear">Понятно</string>
     <string name="do_not_rate_this_product">Не оценивать этот товар</string>
+    <string name="filter">Фильтр</string>
+    <string name="price_and_currency">Цена, ₽</string>
+    <string name="see_more">Смотреть еще</string>
 
 </resources>

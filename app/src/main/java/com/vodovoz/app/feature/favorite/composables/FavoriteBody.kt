@@ -48,29 +48,13 @@ fun FavoriteBody(
 ) {
     Column(modifier = modifier) {
 
-
-
-
-        object : NestedScrollConnection {
-
-            override fun onPostScroll(
-                consumed: Offset,
-                available: Offset,
-                source: NestedScrollSource,
-            ): Offset {
-
-                debugLog { "onPostScroll offset: $consumed" }
-                return Offset.Zero
-            }
-        }
-
-
         ProductListCategoriesRow(
             modifier = Modifier.padding(top = 8.dp),
             categories = categories,
             currentCategory = currentCategory,
             onCategoryClick = { categoryUi -> onCategoryClick(categoryUi) },
-            onCategoriesListClick = { onCategoriesListClick() })
+            onCategoriesListClick = { onCategoriesListClick() }
+        )
 
 
 

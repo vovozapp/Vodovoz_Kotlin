@@ -3,18 +3,26 @@ package com.vodovoz.app.core.navigation
 import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
-import androidx.navigation.fragment.findNavController
 import com.vodovoz.app.R
-import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
-import com.vodovoz.app.feature.catalog.CatalogFragmentDirections
 import com.vodovoz.app.feature.catalog.model.CatalogCategoryUi
-import com.vodovoz.app.feature.home.HomeFragmentDirections
 import com.vodovoz.app.feature.home.model.CategoryUi
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 
+fun NavController.navigateToProductFilters(categoryId: Long) {
+    navigate(
+        R.id.productFiltersFragment,
+        bundleOf("categoryId" to categoryId),
+        NavOptions.Builder()
+            .setEnterAnim(R.anim.slide_in_botton)
+            .setExitAnim(R.anim.slide_out_botton)
+            .setPopEnterAnim(R.anim.slide_in_botton)
+            .setPopExitAnim(R.anim.slide_out_botton)
+            .build()
+    )
+}
 
-fun NavController.navigateToProductComments(productId: Long)    {
+fun NavController.navigateToProductComments(productId: Long) {
     navigate(
         R.id.productCommentsFragment,
         bundleOf("productId" to productId)
@@ -22,7 +30,7 @@ fun NavController.navigateToProductComments(productId: Long)    {
 
 }
 
-fun NavController.navigateToPreOrder(productId: Long){
+fun NavController.navigateToPreOrder(productId: Long) {
     navigate(
         R.id.preOrderFragment,
         bundleOf("productId" to productId),
@@ -36,14 +44,14 @@ fun NavController.navigateToPreOrder(productId: Long){
 
 }
 
-fun NavController.navigateToAnalogs(productId: Long){
+fun NavController.navigateToAnalogs(productId: Long) {
     navigate(
         R.id.productsCollectionFragment,
         bundleOf("productId" to productId)
     )
 }
 
-fun NavController.navigateToCertificateActivation(){
+fun NavController.navigateToCertificateActivation() {
     navigate(R.id.certificateActivationFragment)
 }
 
@@ -132,19 +140,19 @@ fun NavController.navigateToNewProducts() {
     )
 }
 
-fun NavController.navigateToPromotions(){
+fun NavController.navigateToPromotions() {
     navigate(R.id.allPromotionsFragment)
 }
 
-fun NavController.navigateToWaterApp(){
+fun NavController.navigateToWaterApp() {
     navigate(R.id.waterAppFragment)
 }
 
-fun NavController.navigateToBuyCertificate(){
+fun NavController.navigateToBuyCertificate() {
     navigate(R.id.buyCertificateFragment)
 }
 
-fun NavController.navigateToWebView(url: String, title: String){
+fun NavController.navigateToWebView(url: String, title: String) {
     navigate(R.id.webViewFragment, bundleOf("url" to url, "title" to title))
 
 }

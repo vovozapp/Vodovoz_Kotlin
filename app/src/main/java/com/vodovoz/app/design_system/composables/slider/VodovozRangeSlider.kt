@@ -1,7 +1,6 @@
 package com.vodovoz.app.design_system.composables.slider
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -26,32 +25,31 @@ import com.vodovoz.app.design_system.VodovozTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun VodovozRangeSlider(modifier: Modifier = Modifier) {
+fun VodovozRangeSlider(
+    modifier: Modifier = Modifier,
+    onValueChanged: (ClosedFloatingPointRange<Float>) -> Unit,
+) {
     val rangeSliderState = remember {
         RangeSliderState(
-            0f,
-            100f,
-            valueRange = 0f..100f,
-            onValueChangeFinished = {
-
-            }
-        )
+            activeRangeStart = 0f,
+            activeRangeEnd = 1f,
+            valueRange = 0f..1f,
+        ).apply {
+            onValueChangeFinished = { onValueChanged(valueRange) }
+        }
     }
-    val startInteractionSource = remember { MutableInteractionSource() }
-    val endInteractionSource = remember { MutableInteractionSource() }
+
     val startThumbAndTrackColors =
         SliderDefaults.colors(
             thumbColor = MaterialTheme.colorScheme.primary,
             activeTrackColor = MaterialTheme.colorScheme.primary,
             inactiveTrackColor = MaterialTheme.colorScheme.surfaceVariant
         )
-    val endThumbColors = SliderDefaults.colors(thumbColor = MaterialTheme.colorScheme.primary)
-    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+
+    Column(modifier = modifier) {
         RangeSlider(
             modifier = modifier.requiredHeight(48.dp),
             state = rangeSliderState,
-            startInteractionSource = startInteractionSource,
-            endInteractionSource = endInteractionSource,
             startThumb = {
                 VodovozThumb()
             },
@@ -94,6 +92,6 @@ private fun VodovozThumb(modifier: Modifier = Modifier) {
 private fun VodovozRangeSliderPreview() {
     VodovozTheme {
 
-        VodovozRangeSlider(modifier = Modifier.background(MaterialTheme.colorScheme.background))
+        VodovozRangeSlider(modifier = Modifier.background(MaterialTheme.colorScheme.background), onValueChanged = {})
     }
 }

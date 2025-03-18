@@ -588,15 +588,12 @@
         android:id="@+id/productFiltersFragment"
         android:name="com.vodovoz.app.feature.filters.product.ProductFiltersFlowFragment"
         android:label="ProductFiltersFragment">
-        <argument
-            android:name="defaultFiltersBundle"
-            app:argType="com.vodovoz.app.ui.model.custom.FiltersBundleUI" />
-        <action
-            android:id="@+id/action_to_concreteFilterFragment"
-            app:destination="@id/concreteFilterFragment" />
+
         <argument
             android:name="categoryId"
             app:argType="long" />
+
+
     </fragment>
     <dialog
         android:id="@+id/fullScreenDetailPicturesSliderFragment"

@@ -302,14 +302,9 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
         }
     }
 
-    private fun showAllFiltersFragment(filterBundle: FiltersBundleUI, id: Long) =
-        findNavController().navigate(
-            PaginatedProductsCatalogFragmentDirections.actionToProductFiltersFragment(
-                filterBundle,
-                id
-            )
-        )
+    private fun showAllFiltersFragment(filterBundle: FiltersBundleUI, id: Long) {
 
+    }
     private fun showSingleRootCatalogCatalog(id: Long) = findNavController().navigate(
         PaginatedProductsCatalogFragmentDirections.actionToSingleRootCatalogBottomFragment(id)
     )

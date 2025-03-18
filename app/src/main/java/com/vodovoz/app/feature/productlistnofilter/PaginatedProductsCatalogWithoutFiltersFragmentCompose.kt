@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
@@ -27,10 +26,10 @@ import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
 import com.vodovoz.app.core.navigation.navigateToCategories
 import com.vodovoz.app.core.navigation.navigateToProductDetails
+import com.vodovoz.app.core.navigation.navigateToProductFilters
 import com.vodovoz.app.core.navigation.navigateToSearch
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.effects.LifecycleEffect
-import com.vodovoz.app.feature.catalog.model.CatalogCategoryUi
 import com.vodovoz.app.feature.home.model.CategoryUi
 import com.vodovoz.app.ui.model.CategoryUI
 import dagger.hilt.android.AndroidEntryPoint
@@ -62,9 +61,10 @@ class PaginatedProductsCatalogWithoutFiltersFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        findNavController().currentBackStackEntry?.savedStateHandle?.remove<CategoryUi>("category")?.let { category ->
-            viewModel.selectCategory(category)
-        }
+        findNavController().currentBackStackEntry?.savedStateHandle?.remove<CategoryUi>("category")
+            ?.let { category ->
+                viewModel.selectCategory(category)
+            }
 
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.Default)
@@ -104,6 +104,10 @@ class PaginatedProductsCatalogWithoutFiltersFragment : Fragment() {
 
                                 ProductsListNoFilterFlowViewModel.ProductListNoFilterEvent.ScrollToTop -> {
                                     lazyGridState.animateScrollToItem(0);
+                                }
+
+                                is ProductsListNoFilterFlowViewModel.ProductListNoFilterEvent.GoToProductFilters -> {
+                                    findNavController().navigateToProductFilters(event.categoryId)
                                 }
                             }
                         }

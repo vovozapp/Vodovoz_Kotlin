@@ -24,6 +24,8 @@ import com.vodovoz.app.data.vodovoz_service.model.StoriesDTO
 import com.vodovoz.app.data.vodovoz_service.model.SuperTopAndBottomSectionsDTO
 import com.vodovoz.app.data.vodovoz_service.model.VodovozResponseDTO
 import com.vodovoz.app.data.vodovoz_service.model.catalog_details.CatalogDetailsDTO
+import com.vodovoz.app.data.vodovoz_service.model.filters.FilterValueDTO
+import com.vodovoz.app.data.vodovoz_service.model.filters.FiltersDTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.ProductDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.unrated_products.UnratedProductsSectionDTO
 import retrofit2.Response
@@ -34,6 +36,18 @@ import retrofit2.http.QueryMap
 interface VodovozService {
 
     /**
+     * Filter requests
+     * */
+    @GET("razdel/filtercatalog.php?action=getAllProps")
+    suspend fun getFilters(@Query("section") categoryId: Int): Response<VodovozResponseDTO<FiltersDTO>>
+
+    @GET("razdel/filtercatalog.php?action=getAllValueOfProps")
+    suspend fun getFilterValues(
+        @Query("section") categoryId: Int,
+        @Query("propCode") filterId: String,
+    ): Response<VodovozResponseDTO<List<FilterValueDTO>>>
+
+    /**
      *  Certificate activation screen
      * */
     @GET("osnova/sertificat/activaciya.php?action=glav")
@@ -42,7 +56,7 @@ interface VodovozService {
     @GET("osnova/sertificat/activaciya.php?action=detail")
     suspend fun activateCertificate(
         @Query("userid") userId: Long,
-        @QueryMap queries: Map<String, String>
+        @QueryMap queries: Map<String, String>,
     ): Response<VodovozResponseDTO<String>>
 
     /**
@@ -57,6 +71,8 @@ interface VodovozService {
         @Query("nav") page: Int = 1,
         @Query("sort") sort: String = "",
         @Query("ascdesc") order: String = "",
+        @Query("filter") filters: String? = null,
+        @Query("filtervalue") filtersAndValues: String? = null
     ): Response<VodovozResponseDTO<ProductsSectionDTO>>
 
     /**
@@ -215,7 +231,7 @@ interface VodovozService {
 
     @GET("glavnaya/otzivtovari.php?action=tovarglav")
     suspend fun getUnratedProductsDetails(
-        @Query("userid") userId: Long
+        @Query("userid") userId: Long,
     ): Response<VodovozResponseDTO<UnratedProductsSectionDTO>>
 
 
@@ -311,7 +327,7 @@ interface VodovozService {
         @Query("sect") categoryId: Int? = null,
         @Query("sort") sort: String = "",
         @Query("ascdesc") order: String = "",
-        @Query("id") productsIds: String? = null
+        @Query("id") productsIds: String? = null,
     ): Response<VodovozResponseDTO<ProductsSectionDTO>>
 
     @GET("osnova/izbrannoe/izbrannoe.php?action=izbrannoe")

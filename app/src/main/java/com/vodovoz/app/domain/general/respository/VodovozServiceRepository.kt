@@ -6,6 +6,8 @@ import com.vodovoz.app.domain.general.model.CatalogDetailsModel
 import com.vodovoz.app.domain.general.model.CertificateActivationDetailsModel
 import com.vodovoz.app.domain.general.model.CommentModel
 import com.vodovoz.app.domain.general.model.FieldModel
+import com.vodovoz.app.domain.general.model.FilterValueModel
+import com.vodovoz.app.domain.general.model.FiltersModel
 import com.vodovoz.app.domain.general.model.OrderWithMenuModel
 import com.vodovoz.app.domain.general.model.PopularCategoryModel
 import com.vodovoz.app.domain.general.model.PopupWindowInfoModel
@@ -29,6 +31,10 @@ import com.vodovoz.app.feature.preorder.model.FieldUi
 import kotlinx.coroutines.flow.Flow
 
 interface VodovozServiceRepository {
+
+    fun getFilters(categoryId: Int): Flow<Result<FiltersModel>>
+
+    fun getFilterValues(categoryId: Int, filterId: String): Flow<Result<List<FilterValueModel>>>
 
     fun getCertificateActivationDetails(): Flow<Result<CertificateActivationDetailsModel>>
 

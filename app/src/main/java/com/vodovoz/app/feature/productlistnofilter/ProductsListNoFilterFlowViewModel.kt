@@ -41,9 +41,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -84,7 +82,16 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
             s.copy(uiState = UiState.Loading)
         }
 
-        val categoryId = dataState.currentCategory.id
+        val currentCategory = if (dataSource is DataSource.Category && dataState.currentCategory == CategoryUi.Empty) {
+            val category = CategoryUi("", dataSource.categoryId.toInt())
+            uiStateListener.updateData { s ->
+                s.copy(currentCategory = category)
+            }
+            category
+
+        } else dataState.currentCategory
+
+        val categoryId = currentCategory.id
         val sortModel = dataState.currentSort.toDomain()
 
         when (dataSource) {
@@ -144,9 +151,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
             }
 
             is DataSource.Products -> {
-
                 TODO()
-
             }
 
             is DataSource.Search -> {
@@ -167,10 +172,14 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
             is DataSource.Category -> {
                 fetchProductsData(
                     fetchProductsSection = {
-                        vodovozServiceRepository.getCategoryProducts(dataSource.categoryId).singleResult()
+                        vodovozServiceRepository.getCategoryProducts(dataSource.categoryId)
+                            .singleResult()
                     },
                     fetchPagedProductsFlow = {
-                        vodovozServiceRepository.getCategoryProductsPaged(dataSource.categoryId, sortModel)
+                        vodovozServiceRepository.getCategoryProductsPaged(
+                            dataSource.categoryId,
+                            sortModel
+                        )
                     }
                 )
             }
@@ -353,6 +362,10 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
         pagingProductsListener[index]
     }
 
+    fun navigateToProductFilters() = viewModelScope.launch {
+        eventListener.emit(ProductListNoFilterEvent.GoToProductFilters(dataState.currentCategory.id.toLong()))
+    }
+
     @Immutable
     data class ProductListNoFilterState(
         val categoryId: Long = -1,
@@ -391,6 +404,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
         ) : ProductListNoFilterEvent()
 
         data class GoToProductDetails(val productId: Long) : ProductListNoFilterEvent()
+        data class GoToProductFilters(val categoryId: Long) : ProductListNoFilterEvent()
     }
 
     companion object {

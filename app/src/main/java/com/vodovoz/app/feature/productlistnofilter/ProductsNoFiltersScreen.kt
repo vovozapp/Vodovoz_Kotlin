@@ -117,7 +117,10 @@ fun ProductsNoFiltersScreen(
                     },
                     onProductLike = { product ->
                         viewModel.changeFavorite(product)
-                    }
+                    },
+                    onFiltersClick = if(viewModel.dataSource is PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Category){
+                        {  viewModel.navigateToProductFilters()  }
+                    } else null
                 )
             }
         }
