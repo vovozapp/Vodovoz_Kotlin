@@ -589,7 +589,7 @@
             app:argType="long" />
         <argument
             android:name="filter"
-            app:argType="com.vodovoz.app.ui.model.FilterUI" />
+            app:argType="com.vodovoz.app.design_system.model.filters.FilterUi" />
     </fragment>
     <fragment
         android:id="@+id/productFiltersFragment"
@@ -598,6 +598,11 @@
         <argument
             android:name="categoryId"
             app:argType="long" />
+
+        <argument
+            android:name="filters"
+            app:argType="com.vodovoz.app.design_system.model.filters.FiltersUi"/>
+
 
 
 

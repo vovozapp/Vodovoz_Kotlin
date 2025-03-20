@@ -2,6 +2,7 @@ package com.vodovoz.app.data.vodovoz_service.mappers
 
 import com.vodovoz.app.data.vodovoz_service.model.filters.FilterDTO
 import com.vodovoz.app.data.vodovoz_service.model.filters.FilterValueDTO
+import com.vodovoz.app.data.vodovoz_service.model.filters.FilterValuesDTO
 import com.vodovoz.app.data.vodovoz_service.model.filters.FiltersDTO
 import com.vodovoz.app.domain.general.model.FilterModel
 import com.vodovoz.app.domain.general.model.FilterValueModel
@@ -24,7 +25,8 @@ fun FilterDTO.toDomain(): FilterModel? {
     return FilterModel(
         id = CODE ?: return null,
         name = NAME ?: return null,
-        values = emptyList()
+        totalValues = ZNACHEIE?.COUNT ?: 0,
+        values = ZNACHEIE?.toDomain() ?: emptyList()
     )
 }
 
@@ -36,4 +38,10 @@ fun List<FilterValueDTO>.mapToDomain(): List<FilterValueModel> {
             value = it.VALUE ?: return@mapNotNull null
         )
     }
+}
+
+fun FilterValuesDTO.toDomain(): List<FilterValueModel>{
+    return DATA?.map {
+        FilterValueModel(it, it)
+    } ?: emptyList()
 }

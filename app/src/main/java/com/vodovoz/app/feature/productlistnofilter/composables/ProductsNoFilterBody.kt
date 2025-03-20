@@ -1,10 +1,12 @@
 package com.vodovoz.app.feature.productlistnofilter.composables
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.paging.CombinedLoadStates
 import com.vodovoz.app.design_system.composables.list.ProductLazyPagingList

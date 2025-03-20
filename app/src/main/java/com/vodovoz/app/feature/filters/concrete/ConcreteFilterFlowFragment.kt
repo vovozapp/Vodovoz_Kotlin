@@ -15,7 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class ConcreteFilterFlowFragment : BaseFragment() {
+class ConcreteFilterFlowFragment1 : BaseFragment() {
 
     override fun layout(): Int = R.layout.fragment_filter_concrete
 
@@ -52,10 +52,6 @@ class ConcreteFilterFlowFragment : BaseFragment() {
                     add(productFilterValuesAdapter.getItem(it) as FilterValueUI)
                 }
             }
-            findNavController().previousBackStackEntry?.savedStateHandle?.set(
-                ProductFiltersFlowFragment.CONCRETE_FILTER,
-                viewModel.prepareFilter(filterList.toList())
-            )
             findNavController().popBackStack()
         }
     }

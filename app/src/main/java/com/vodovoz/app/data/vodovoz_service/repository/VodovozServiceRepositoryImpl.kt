@@ -48,10 +48,15 @@ import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
 import com.vodovoz.app.domain.general.model.UnratedProductsSectionModel
 import com.vodovoz.app.domain.general.model.UserNotRegisterException
 import com.vodovoz.app.domain.general.model.ValidationException
+import com.vodovoz.app.domain.general.model.format
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.preorder.model.FieldUi
-import com.vodovoz.app.util.extensions.debugLog
+import com.vodovoz.app.util.extensions.singleResult
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 
@@ -66,19 +71,45 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                 vodovozService.getFilters(categoryId)
             },
             mapper = {
-                debugLog { it.data.toString() }
                 it.data!!.toDomain()
             }
-        )
+        ).map { result ->
+            result.mapCatching { filtersModel ->
+                val updatedFilters = coroutineScope {
+                    filtersModel.filters.map { filter ->
+                        async {
+                            if (filter.values.isEmpty()) {
+                                val values = getFilterValues(categoryId, filter.id)
+                                    .singleResult()
+                                    .getOrNull() ?: emptyList()
+                                filter.copy(
+                                    values = values.take(6),
+                                    totalValues = values.size
+                                )
+                            } else {
+                                filter
+                            }
+                        }
+                    }.awaitAll()
+                }
+
+                filtersModel.copy(
+                    filters = updatedFilters
+                )
+            }
+        }
     }
 
-    override fun getFilterValues(categoryId: Int, filterId: String): Flow<Result<List<FilterValueModel>>> {
+    override fun getFilterValues(
+        categoryId: Int,
+        filterId: String,
+    ): Flow<Result<List<FilterValueModel>>> {
         return executeRequest(
             request = {
                 vodovozService.getFilterValues(categoryId, filterId)
             },
             mapper = {
-                it.data!!.mapToDomain()
+                it.data!!.map { filterValue -> FilterValueModel(filterValue, filterValue) }
             }
         )
     }
@@ -178,13 +209,31 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         )
     }
 
-    override fun getCategoryProducts(categoryId: Long): Flow<Result<ProductsSectionModel>> {
+    override fun getCategoryProducts(
+        categoryId: Long,
+        filters: FiltersModel,
+    ): Flow<Result<ProductsSectionModel>> {
+        val filtersQuery = filters.filters.joinToString(",") { it.name }
+        val filtersAndValuesQuery = filters.filters.format()
+
         return executeRequest(
             request = {
-                vodovozService.getCategoryProducts(categoryId)
+                vodovozService.getCategoryProducts(
+                    categoryId = categoryId,
+                    filters = filtersQuery.takeIf { s -> s.isNotBlank() },
+                    filtersAndValues = filtersAndValuesQuery.takeIf { s -> s.isNotBlank() },
+                    priceTo = filters.priceRange.last.toFloat(),
+                    priceFrom = filters.priceRange.first.toFloat()
+                )
             },
             mapper = {
                 it.data!!.toDomain()
+            },
+            onFail = { response ->
+                if (response.code() == 404) {
+                    throw EmptyResultException(htmlText = "", message = response.messageWithCode())
+                }
+                throw RequestException(response.messageWithCode())
             }
         )
     }
@@ -192,7 +241,12 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     override fun getCategoryProductsPaged(
         categoryId: Long,
         sort: SortModel,
+        filters: FiltersModel,
     ): Flow<PagingData<ProductModel>> {
+
+        val filtersQuery = filters.filters.joinToString(",") { it.name }
+        val filtersAndValuesQuery = filters.filters.format()
+
         return Pager(
             config = PagingConfig(pageSize = 5, initialLoadSize = 5),
             pagingSourceFactory = {
@@ -202,7 +256,11 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                             page = page,
                             categoryId = categoryId,
                             sort = sort.value,
-                            order = sort.order
+                            order = sort.order,
+                            filters = filtersQuery.takeIf { s -> s.isNotBlank() },
+                            filtersAndValues = filtersAndValuesQuery.takeIf { s -> s.isNotBlank() },
+                            priceTo = filters.priceRange.last.toFloat(),
+                            priceFrom = filters.priceRange.first.toFloat()
                         )
                     },
                     mapper = { response ->
@@ -229,7 +287,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                         vodovozService.getSearchProducts(
                             query = query,
                             page = page,
-                            categoryId = if (categoryId == -1) null else categoryId,
+                            categoryId = if (categoryId < 0) null else categoryId,
                             sort = sort.value,
                             order = sort.order
                         )
@@ -250,6 +308,12 @@ class VodovozServiceRepositoryImpl @Inject constructor(
             },
             mapper = { response ->
                 response.data?.toDomain()!!
+            },
+            onFail = { response ->
+                if (response.code() == 404) {
+                    throw EmptyResultException(htmlText = "", message = response.messageWithCode())
+                }
+                throw RequestException(response.messageWithCode())
             }
         )
     }
@@ -277,6 +341,13 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                 val jsonBody = (response.errorBody() ?: response.raw().body)?.string() ?: ""
 
                 val throwable = when (response.code()) {
+                    200 -> {
+                        EmptyResultException(
+                            htmlText = "",
+                            message = response.messageWithCode()
+                        )
+                    }
+
                     404 -> {
                         val errorMessageResponseDTO =
                             moshi.fromJson<ErrorMessageResponseDTO>(jsonBody)

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -29,8 +30,9 @@ import com.vodovoz.app.core.navigation.navigateToProductComments
 import com.vodovoz.app.core.navigation.navigateToProductDetails
 import com.vodovoz.app.core.navigation.navigateToSearch
 import com.vodovoz.app.design_system.VodovozTheme
+import com.vodovoz.app.design_system.composables.placeholders.EmptyResultPlaceholder
+import com.vodovoz.app.design_system.composables.placeholders.EmptyResultPlaceholderItem
 import com.vodovoz.app.design_system.composables.placeholders.LoadingPlaceholder
-import com.vodovoz.app.design_system.composables.placeholders.ProductNotFoundPlaceholder
 import com.vodovoz.app.design_system.effects.LifecycleEffect
 import com.vodovoz.app.feature.replacement.ReplacementProductsSelectionBS
 import com.vodovoz.app.util.extensions.shareText
@@ -77,30 +79,22 @@ class ProductDetailsFragment : Fragment() {
             setContent {
                 VodovozTheme {
                     val viewState by viewModel.observeUiState().collectAsStateWithLifecycle()
-                    val productDetails = viewState.productDetails
 
                     when (viewState.uiState) {
                         ProductDetailsFlowViewModel.UiState.Loading -> {
-                            ProductNotFoundPlaceholder(
-                                onBack = {
-                                    viewModel.navigateBack()
-                                },
-                                haveArrow = true
-                            )
                             LoadingPlaceholder()
                         }
 
                         ProductDetailsFlowViewModel.UiState.ProductNotFound -> {
-                            ProductNotFoundPlaceholder(
-                                onBack = {
-                                    viewModel.navigateBack()
-                                },
-                                haveArrow = true
+                            EmptyResultPlaceholder(
+                                title = stringResource(R.string.product_not_found),
+                                description = stringResource(R.string.product_not_found_details),
+                                item = EmptyResultPlaceholderItem.Arrow,
+                                onItemClick = { viewModel.navigateBack() }
                             )
                         }
 
                         ProductDetailsFlowViewModel.UiState.Success -> {
-
                             ProductDetailsScreen(
                                 viewState = viewState,
                                 viewModel = viewModel,

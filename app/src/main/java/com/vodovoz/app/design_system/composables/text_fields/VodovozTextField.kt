@@ -44,6 +44,7 @@ fun VodovozTextField(
     hint: String = "",
     label: String? = null,
     supportingText: String? = null,
+    prefix: String? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
     isError: Boolean = false,
     visualTransformation: VisualTransformation = VisualTransformation.None,
@@ -78,7 +79,7 @@ fun VodovozTextField(
         minLines = minLines
     ) { innerTextField ->
         Column {
-            if(!label.isNullOrEmpty()){
+            if (!label.isNullOrEmpty()) {
                 Text(
                     text = label,
                     color = if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceTint,
@@ -98,7 +99,16 @@ fun VodovozTextField(
                     .padding(horizontal = 16.dp, vertical = 10.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Box(modifier = Modifier.weight(1f),contentAlignment = Alignment.CenterStart) {
+                prefix?.let {
+                    Text(
+                        modifier = Modifier.padding(end = 6.dp),
+                        text = prefix,
+                        color = MaterialTheme.colorScheme.surfaceTint,
+                        style = MaterialTheme.typography.bodyMedium,
+                        maxLines = maxLines
+                    )
+                }
+                Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
                     this@Row.AnimatedVisibility(value.isEmpty()) {
                         Text(
                             text = hint,
@@ -110,12 +120,13 @@ fun VodovozTextField(
                         )
 
                     }
+
                     innerTextField()
                 }
                 trailingIcon?.let { trailingIcon() }
             }
 
-            if(!supportingText.isNullOrEmpty()){
+            if (!supportingText.isNullOrEmpty()) {
                 Text(
                     text = supportingText,
                     color = if (!isError) {
@@ -147,7 +158,8 @@ private fun VodovozTextFieldPreview() {
                 onValueChange = {},
                 label = "Поле ввода",
                 supportingText = "",
-                isError = false
+                isError = false,
+                prefix = "от"
             )
         }
     }

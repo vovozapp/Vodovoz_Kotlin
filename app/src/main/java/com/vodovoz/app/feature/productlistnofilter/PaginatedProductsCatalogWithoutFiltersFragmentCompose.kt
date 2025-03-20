@@ -30,6 +30,7 @@ import com.vodovoz.app.core.navigation.navigateToProductFilters
 import com.vodovoz.app.core.navigation.navigateToSearch
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.effects.LifecycleEffect
+import com.vodovoz.app.design_system.model.filters.FiltersUi
 import com.vodovoz.app.feature.home.model.CategoryUi
 import com.vodovoz.app.ui.model.CategoryUI
 import dagger.hilt.android.AndroidEntryPoint
@@ -50,11 +51,6 @@ class PaginatedProductsCatalogWithoutFiltersFragment : Fragment() {
     @Inject
     lateinit var ratingProductManager: RatingProductManager
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel.fetchProductListData()
-    }
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,6 +60,11 @@ class PaginatedProductsCatalogWithoutFiltersFragment : Fragment() {
         findNavController().currentBackStackEntry?.savedStateHandle?.remove<CategoryUi>("category")
             ?.let { category ->
                 viewModel.selectCategory(category)
+            }
+
+        findNavController().currentBackStackEntry?.savedStateHandle?.remove<FiltersUi>("filters")
+            ?.let { filters ->
+                viewModel.changeFilters(filters)
             }
 
         return ComposeView(requireContext()).apply {
@@ -107,7 +108,10 @@ class PaginatedProductsCatalogWithoutFiltersFragment : Fragment() {
                                 }
 
                                 is ProductsListNoFilterFlowViewModel.ProductListNoFilterEvent.GoToProductFilters -> {
-                                    findNavController().navigateToProductFilters(event.categoryId)
+                                    findNavController().navigateToProductFilters(
+                                        event.categoryId,
+                                        event.filters
+                                    )
                                 }
                             }
                         }

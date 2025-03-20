@@ -7,7 +7,6 @@ import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -38,6 +37,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
@@ -185,7 +185,9 @@ private fun TextFieldDefaults.SearchDecorationBox(
 ) {
     Row(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
+            .height(46.dp)
+            .background(MaterialTheme.colorScheme.surface, MaterialTheme.shapes.large)
             .padding(start = 8.dp, end = 0.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -238,7 +240,9 @@ private fun TextFieldDefaults.StaticSearchDecorationBox(
 ) {
     Row(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
+            .height(46.dp)
+            .background(MaterialTheme.colorScheme.surface, MaterialTheme.shapes.large)
             .padding(start = 8.dp, end = 0.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -281,13 +285,14 @@ private fun TextFieldDefaults.StaticSearchDecorationBox(
 }
 
 @Composable
-private fun BasicSearchField(
+fun BasicSearchField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     onSearchClick: () -> Unit,
     readOnly: Boolean = false,
     interactionSource: MutableInteractionSource? = null,
+    textStyle: TextStyle = MaterialTheme.typography.bodyMedium.copy(MaterialTheme.colorScheme.onBackground),
     decorationBox: @Composable (innerTextField: @Composable () -> Unit) -> Unit =
         @Composable { innerTextField -> innerTextField() },
 ) {
@@ -308,11 +313,8 @@ private fun BasicSearchField(
             textField = newValue
             onValueChange(newValue.text)
         },
-        textStyle = MaterialTheme.typography.bodyMedium.copy(MaterialTheme.colorScheme.onBackground),
-        modifier = modifier
-            .fillMaxWidth()
-            .height(46.dp)
-            .background(MaterialTheme.colorScheme.surface, MaterialTheme.shapes.large),
+        textStyle = textStyle,
+        modifier = modifier,
         singleLine = true,
         cursorBrush = SolidColor(MaterialTheme.colorScheme.onBackground),
         interactionSource = interactionSource,

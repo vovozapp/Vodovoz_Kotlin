@@ -37,6 +37,8 @@ fun VodovozChip(
     selected: Boolean,
     onSelect: () -> Unit = {},
     contentPadding: PaddingValues = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
+    containerColor: Color = if (selected) MaterialTheme.colorScheme.surfaceTint else MaterialTheme.colorScheme.surface,
+    contentColor: Color = if (selected) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.onBackground,
 ) {
     Box(
         modifier = modifier
@@ -46,7 +48,7 @@ fun VodovozChip(
                     MaterialTheme.colorScheme.surfaceVariant
                 ),
                 shape = MaterialTheme.shapes.small,
-                backgroundColor = if (selected) MaterialTheme.colorScheme.surfaceTint else MaterialTheme.colorScheme.surface,
+                backgroundColor = containerColor,
                 shadowElevation = 0f
             )
             .clickable(
@@ -60,11 +62,13 @@ fun VodovozChip(
             text = text,
             modifier = Modifier.padding(contentPadding),
             style = MaterialTheme.typography.bodySmall,
-            color = if (selected) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.onBackground,
+            color = contentColor,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
     }
+
+
 }
 
 @Composable
@@ -79,7 +83,7 @@ fun VodovozClosableChip(
         start = 12.dp,
         top = 6.dp,
         bottom = 6.dp
-    )
+    ),
 ) {
     Row(
         modifier = modifier
@@ -97,7 +101,8 @@ fun VodovozClosableChip(
                 indication = ripple(),
                 enabled = true,
                 onClick = onSelect
-            ).padding(contentPadding),
+            )
+            .padding(contentPadding),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(

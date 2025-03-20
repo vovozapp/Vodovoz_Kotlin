@@ -147,7 +147,6 @@ class SearchFlowViewModel @Inject constructor(
             val queries = miniSearchRecommendations.queries
             val section = miniSearchRecommendations.section.toUi()
 
-            debugLog { "searchByQuery: success" }
 
             uiStateListener.updateData { s ->
                 s.copy(
@@ -157,11 +156,8 @@ class SearchFlowViewModel @Inject constructor(
                 )
             }
 
-            debugLog { "searchByQuery: state updated" }
 
         }.onFailure { error ->
-
-            debugLog { "searchByQuery: error" }
 
             val uiState = when (error) {
                 is EmptyResultException -> UiState.Empty(error.htmlText)

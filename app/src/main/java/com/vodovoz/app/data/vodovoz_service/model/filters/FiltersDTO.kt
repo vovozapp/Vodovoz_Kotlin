@@ -36,5 +36,19 @@ data class FilterDTO(
 
     @Expose
     @Json(name = "CODE")
-    val CODE: String? = null
+    val CODE: String? = null,
+
+    @Expose
+    @Json(name = "ZNACHEIE")
+    val ZNACHEIE: FilterValuesDTO?
+)
+
+@Keep
+data class FilterValuesDTO(
+    @Expose
+    @Json(name = "COUNT")
+    val COUNT: Int?,
+    @Expose
+    @Json(name = "DATA")
+    val DATA: List<String>?
 )

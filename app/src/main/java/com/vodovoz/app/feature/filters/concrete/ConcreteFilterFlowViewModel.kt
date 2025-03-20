@@ -1,25 +1,21 @@
 package com.vodovoz.app.feature.filters.concrete
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.vodovoz.app.common.content.ErrorState
-import com.vodovoz.app.common.content.PagingStateViewModel
+import com.vodovoz.app.common.content.Event
+import com.vodovoz.app.common.content.PagingContractViewModel
 import com.vodovoz.app.common.content.State
-import com.vodovoz.app.common.content.toErrorState
+import com.vodovoz.app.common.content.updateData
 import com.vodovoz.app.data.MainRepository
-import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.mapper.mapToUI
-import com.vodovoz.app.ui.model.FilterUI
-import com.vodovoz.app.ui.model.FilterValueUI
+import com.vodovoz.app.design_system.model.filters.FilterUi
+import com.vodovoz.app.design_system.model.filters.FilterValueUi
+import com.vodovoz.app.design_system.model.filters.mapToUi
+import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.ui.model.custom.ConcreteFilterBundleUI
-import com.vodovoz.app.util.extensions.debugLog
+import com.vodovoz.app.util.extensions.singleResult
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,79 +23,116 @@ import javax.inject.Inject
 class ConcreteFilterFlowViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val mainRepository: MainRepository,
-) : PagingStateViewModel<ConcreteFilterFlowViewModel.ConcreteFilterState>(ConcreteFilterState()) {
+    private val vodovozServiceRepository: VodovozServiceRepository,
+) : PagingContractViewModel<ConcreteFilterFlowViewModel.ConcreteFilterState, ConcreteFilterFlowViewModel.ConcreteFilterEvent>(
+    ConcreteFilterState()
+) {
 
-    private val filterUI = savedStateHandle.get<FilterUI>("filter")
-    private val categoryId = savedStateHandle.get<Long>("categoryId")
+    private val filter = savedStateHandle.get<FilterUi>("filter")!!
+    private val categoryId = savedStateHandle.get<Long>("categoryId")!!.toInt()
 
-    fun fetchProductFilterById() {
-        val filter = filterUI ?: return
-        val id = categoryId ?: return
-        viewModelScope.launch {
-            uiStateListener.value = state.copy(isFirstLoad = true, loadingPage = true)
-            flow {
-                emit(
-                    mainRepository
-                        .fetchProductFilterById(
-                            categoryId = id,
-                            filterCode = filter.code
-                        )
+    init {
+        fetchFilterValues()
+    }
+
+
+    private fun fetchFilterValues() = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(uiState = ConcreteFilterUiState.Loading)
+        }
+        val filterValuesResult =
+            vodovozServiceRepository.getFilterValues(categoryId, filter.id).singleResult()
+        filterValuesResult.onSuccess { filterValues ->
+            uiStateListener.updateData { s ->
+                s.copy(
+                    filter = filter.copy(
+                        values = filterValues.mapToUi().map { value ->
+                            value.copy(selected = filter.values.firstOrNull { it -> it.id == value.id && it.selected } != null)
+                        }
+                    ),
+                    uiState = ConcreteFilterUiState.Success
+
                 )
             }
-                .onEach { response ->
-                    if (response is ResponseEntity.Success) {
-                        response.data.mapToUI().let { data ->
-                            validateData(data)
-                            uiStateListener.value = state.copy(
-                                data = state.data.copy(
-                                    concreteFilterBundleUI = ConcreteFilterBundleUI(
-                                        filterUI = filter,
-                                        filterValueList = data
-                                    )
-                                ),
-                                loadingPage = false,
-                                error = null
-                            )
-                        }
-                    } else {
-                        uiStateListener.value =
-                            state.copy(
-                                loadingPage = false,
-                                error = ErrorState.Error()
-                            )
+        }.onFailure { t ->
+            delay(300L)
+            navigateBack()
+        }
+    }
+
+    fun fetchProductFilterById() {
+
+    }
+
+    fun selectFilterValue(filterValue: FilterValueUi) = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            val filter = s.filter
+            s.copy(
+                filter = filter.copy(
+                    values = filter.values.toMutableList().apply {
+                        set(
+                            indexOf(filterValue),
+                            filterValue.copy(selected = !filterValue.selected)
+                        )
                     }
-                }
-                .catch {
-                    debugLog { "fetch filters by id error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
-                .collect()
+                ),
+                showApplyButton = true
+            )
         }
     }
 
-    private fun validateData(filterValueList: List<FilterValueUI>) {
-        filterUI?.filterValueList?.forEach { customFilterValue ->
-            filterValueList.find { it.id == customFilterValue.id }?.let {
-                it.isSelected = customFilterValue.isSelected
-            }
+    fun navigateBack() = viewModelScope.launch {
+        eventListener.emit(ConcreteFilterEvent.GoBack)
+    }
+
+    fun navigateToProductFilters() = viewModelScope.launch {
+        val currentFilter = dataState.filter
+
+        eventListener.emit(
+            ConcreteFilterEvent.GoToProductFilters(
+                filter = currentFilter.copy(
+                    values = currentFilter.values
+                )
+            )
+        )
+    }
+
+    fun changeSearchQuery(newSearchQuery: String) = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(searchQuery = newSearchQuery)
         }
     }
 
-    fun prepareFilter(filterValueList: List<FilterValueUI>): FilterUI? {
-        filterUI?.let { noNullFilter ->
-            noNullFilter.filterValueList.clear()
-            filterValueList.forEach { filterValue ->
-                if (filterValue.isSelected) {
-                    noNullFilter.filterValueList.add(filterValue)
-                }
-            }
+    fun changeSearchMode(searchMode: Boolean) = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(
+                isSearchMode = searchMode,
+                searchQuery = ""
+            )
         }
-        return filterUI
     }
 
+    @Immutable
     data class ConcreteFilterState(
         var concreteFilterBundleUI: ConcreteFilterBundleUI? = null,
-    ) : State
+
+        val filter: FilterUi = FilterUi.Empty,
+        val searchQuery: String = "",
+        val uiState: ConcreteFilterUiState = ConcreteFilterUiState.Loading,
+        val showApplyButton: Boolean = false,
+        val isSearchMode: Boolean = false
+    ) : State {
+    }
+
+    @Immutable
+    sealed interface ConcreteFilterUiState {
+        data object Loading : ConcreteFilterUiState
+        data object Success : ConcreteFilterUiState
+    }
+
+    sealed interface ConcreteFilterEvent : Event {
+        data object GoBack : ConcreteFilterEvent
+        data class GoToProductFilters(val filter: FilterUi) : ConcreteFilterEvent
+    }
 
 }

@@ -46,13 +46,15 @@ fun ProductListTitle(
                     overflow = TextOverflow.Ellipsis
                 )
             }
-            Text(
-                text = productsQuantity,
-                color = MaterialTheme.colorScheme.surfaceTint,
-                style = MaterialTheme.typography.labelSmall,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+            if(productsQuantity.isNotBlank()) {
+                Text(
+                    text = productsQuantity,
+                    color = MaterialTheme.colorScheme.surfaceTint,
+                    style = MaterialTheme.typography.labelSmall,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
         }
         Icon(
             painter = painterResource(id = R.drawable.icon_share),

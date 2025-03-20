@@ -24,7 +24,6 @@ import com.vodovoz.app.data.vodovoz_service.model.StoriesDTO
 import com.vodovoz.app.data.vodovoz_service.model.SuperTopAndBottomSectionsDTO
 import com.vodovoz.app.data.vodovoz_service.model.VodovozResponseDTO
 import com.vodovoz.app.data.vodovoz_service.model.catalog_details.CatalogDetailsDTO
-import com.vodovoz.app.data.vodovoz_service.model.filters.FilterValueDTO
 import com.vodovoz.app.data.vodovoz_service.model.filters.FiltersDTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.ProductDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.unrated_products.UnratedProductsSectionDTO
@@ -45,7 +44,7 @@ interface VodovozService {
     suspend fun getFilterValues(
         @Query("section") categoryId: Int,
         @Query("propCode") filterId: String,
-    ): Response<VodovozResponseDTO<List<FilterValueDTO>>>
+    ): Response<VodovozResponseDTO<List<String>>>
 
     /**
      *  Certificate activation screen
@@ -72,7 +71,9 @@ interface VodovozService {
         @Query("sort") sort: String = "",
         @Query("ascdesc") order: String = "",
         @Query("filter") filters: String? = null,
-        @Query("filtervalue") filtersAndValues: String? = null
+        @Query("filtervalue") filtersAndValues: String? = null,
+        @Query("price_to") priceTo: Float? = null,
+        @Query("price_from") priceFrom: Float? = null,
     ): Response<VodovozResponseDTO<ProductsSectionDTO>>
 
     /**

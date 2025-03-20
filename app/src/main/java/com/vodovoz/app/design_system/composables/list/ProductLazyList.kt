@@ -13,12 +13,11 @@ import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
@@ -28,9 +27,11 @@ import androidx.paging.compose.itemKey
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
+import com.vodovoz.app.R
 import com.vodovoz.app.design_system.composables.card.GridProductCard
 import com.vodovoz.app.design_system.composables.card.LinearProductCard
 import com.vodovoz.app.design_system.composables.decoration.SkeletonBox
+import com.vodovoz.app.design_system.composables.placeholders.EmptyResultPlaceholder
 import com.vodovoz.app.design_system.model.ProductUi
 
 
@@ -134,46 +135,59 @@ fun LazyGridScope.linearProducts(
     onProductLike: (ProductUi) -> Unit,
 ) {
 
-    if (loadState.refresh is LoadState.Loading || loadState.refresh is LoadState.Error) {
-        items(6, span = { GridItemSpan(2) }) { i ->
-            Column {
-                SkeletonBox(
-                    shimmerState = shimmerState,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(150.dp)
+    when(loadState.refresh){
+        is LoadState.Error -> {
+            item(span = { GridItemSpan(2) }){
+                EmptyResultPlaceholder(
+                    title = stringResource(id = R.string.empty_products_title),
+                    description = stringResource(id = R.string.empty_products_description)
                 )
-                if (i != products.size - 1) {
-                    Spacer(modifier = Modifier.height(16.dp))
+            }
+        }
+        LoadState.Loading -> {
+            items(6, span = { GridItemSpan(2) }) { i ->
+                Column {
+                    SkeletonBox(
+                        shimmerState = shimmerState,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(150.dp)
+                    )
+                    if (i != products.size - 1) {
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
                 }
             }
         }
-    }
+        is LoadState.NotLoading -> {
+            items(
+                items = products,
+                span = { GridItemSpan(2) },
+            ) { product ->
+                val currentIndex = products.indexOf(product)
 
-    items(
-        items = products,
-        span = { GridItemSpan(2) },
-    ) { product ->
+                SideEffect {
+                    onProductSee(currentIndex)
+                }
 
-        val currentIndex = products.indexOf(product)
+                Column {
+                    LinearProductCard(
+                        product = product,
+                        onClick = onProductClick,
+                        onLike = onProductLike,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    if (currentIndex != products.size - 1) {
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
+                }
 
-        SideEffect {
-            onProductSee(currentIndex)
-        }
-
-        Column {
-            LinearProductCard(
-                product = product,
-                onClick = onProductClick,
-                onLike = onProductLike,
-                modifier = Modifier.fillMaxWidth()
-            )
-            if (currentIndex != products.size - 1) {
-                Spacer(modifier = Modifier.height(16.dp))
             }
-        }
 
+        }
     }
+
+
 
     item(span = { GridItemSpan(2) }) {
         if (loadState.append is LoadState.Loading) {
@@ -202,42 +216,54 @@ fun LazyGridScope.gridProducts(
     onProductLike: (ProductUi) -> Unit,
 ) {
 
-    if (loadState.refresh is LoadState.Loading || loadState.refresh is LoadState.Error) {
-        items(8) { i ->
-            Column {
-                SkeletonBox(
-                    shimmerState = shimmerState,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(255.dp)
+    when (loadState.refresh) {
+        is LoadState.Error -> {
+            item(span = { GridItemSpan(2) }) {
+                EmptyResultPlaceholder(
+                    title = stringResource(id = R.string.empty_products_title),
+                    description = stringResource(id = R.string.empty_products_description)
                 )
-                if (i != products.size - 1) {
-                    Spacer(modifier = Modifier.height(8.dp))
+            }
+        }
+
+        LoadState.Loading -> {
+            items(8) { i ->
+                Column {
+                    SkeletonBox(
+                        shimmerState = shimmerState,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(255.dp)
+                    )
+                    if (i != products.size - 1) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
                 }
             }
         }
-    }
 
-    items(products.size, span = { GridItemSpan(1) }) { index ->
+        is LoadState.NotLoading -> {
+            items(products.size, span = { GridItemSpan(1) }) { index ->
 
-        LaunchedEffect(index) {
-            onProductSee(index)
-        }
+                LaunchedEffect(index) {
+                    onProductSee(index)
+                }
 
-        Column {
-            GridProductCard(
-                product = products[index],
-                onClick = onProductClick,
-                onLike = onProductLike,
-                modifier = Modifier.fillMaxWidth()
-            )
-            if (index != products.size - 1) {
-                Spacer(modifier = Modifier.height(8.dp))
+                Column {
+                    GridProductCard(
+                        product = products[index],
+                        onClick = onProductClick,
+                        onLike = onProductLike,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    if (index != products.size - 1) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                }
             }
+
         }
     }
-
-
 
     items((products.size % 2) + 2, span = { GridItemSpan(1) }) {
         if (loadState.append is LoadState.Loading) {

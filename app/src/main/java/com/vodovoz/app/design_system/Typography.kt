@@ -152,6 +152,20 @@ val vodovozTypography = Typography(
         ),
         fontWeight = FontWeight.Normal
     ),
+    bodyLarge = TextStyle(
+        fontSize = 18.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.25.sp,
+        fontFamily = robotoFontFamily,
+        lineHeightStyle = LineHeightStyle(
+            LineHeightStyle.Alignment.Center,
+            LineHeightStyle.Trim.None
+        ),
+        platformStyle = PlatformTextStyle(
+            includeFontPadding = false
+        ),
+        fontWeight = FontWeight.Normal
+    ),
 
     )
 

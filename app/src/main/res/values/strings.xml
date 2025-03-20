@@ -254,7 +254,7 @@
     <string name="analogs">Аналоги</string>
     <string name="popularity">Популярное</string>
     <string name="you_were_looking">Вы искали</string>
-    
+
     <string name="registration">Регистрация</string>
     <string name="registration_fail">Не удалось зарегистрироваться, попробуйте позже</string>
     <string name="register_button_text">Зарегистрироваться</string>
@@ -263,5 +263,15 @@
     <string name="filter">Фильтр</string>
     <string name="price_and_currency">Цена, ₽</string>
     <string name="see_more">Смотреть еще</string>
+    <string name="from">от</string>
+    <string name="to">до</string>
+    <string name="reset">Сбросить</string>
+
+    <string name="empty_products_title">Товары не найдены</string>
+    <string name="empty_products_description">К сожалению, по вашему запросу не удалось найти подходящие товары. Попробуйте изменить фильтры поиска или проверить введенные параметры.</string>
+
+    <string name="empty_filters_values_title">Ничего не найдено</string>
+    <string name="empty_filters_values_description">Попробуйте изменить или уточнить фильтры для получения более релевантных результатов</string>
+
 
 </resources>

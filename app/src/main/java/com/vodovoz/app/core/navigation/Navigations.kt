@@ -4,19 +4,37 @@ import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import com.vodovoz.app.R
+import com.vodovoz.app.design_system.model.filters.FilterUi
+import com.vodovoz.app.design_system.model.filters.FiltersUi
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
 import com.vodovoz.app.feature.catalog.model.CatalogCategoryUi
 import com.vodovoz.app.feature.home.model.CategoryUi
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 
-fun NavController.navigateToProductFilters(categoryId: Long) {
+
+fun NavController.navigateToProductFilterValues(categoryId: Long, filter: FilterUi) {
+    navigate(
+        R.id.concreteFilterFragment,
+        bundleOf("categoryId" to categoryId, "filter" to filter),
+        NavOptions.Builder()
+            .setEnterAnim(R.anim.slide_in_right)
+            .setExitAnim(R.anim.slide_out_left)
+            .setPopEnterAnim(R.anim.slide_in_left)
+            .setPopExitAnim(R.anim.slide_out_right)
+            .build()
+    )
+}
+
+fun NavController.navigateToProductFilters(categoryId: Long, filters: FiltersUi) {
     navigate(
         R.id.productFiltersFragment,
-        bundleOf("categoryId" to categoryId),
+        bundleOf(
+            "categoryId" to categoryId,
+            "filters" to filters
+        ),
         NavOptions.Builder()
             .setEnterAnim(R.anim.slide_in_botton)
             .setExitAnim(R.anim.slide_out_botton)
-            .setPopEnterAnim(R.anim.slide_in_botton)
             .setPopExitAnim(R.anim.slide_out_botton)
             .build()
     )

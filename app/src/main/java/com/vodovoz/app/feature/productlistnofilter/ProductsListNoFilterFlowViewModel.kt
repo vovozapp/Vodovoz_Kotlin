@@ -18,13 +18,18 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.design_system.model.ProductUi
+import com.vodovoz.app.design_system.model.filters.FiltersPriceUi
+import com.vodovoz.app.design_system.model.filters.FiltersUi
+import com.vodovoz.app.design_system.model.filters.toDomain
 import com.vodovoz.app.design_system.model.toUi
 import com.vodovoz.app.design_system.model.withUpdatedFavorites
+import com.vodovoz.app.domain.general.model.EmptyResultException
 import com.vodovoz.app.domain.general.model.ProductModel
 import com.vodovoz.app.domain.general.model.ProductsSectionModel
 import com.vodovoz.app.domain.general.model.ProductsSectionUi
 import com.vodovoz.app.domain.general.model.toUi
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
+import com.vodovoz.app.feature.catalog.CatalogFlowViewModel
 import com.vodovoz.app.feature.home.model.CategoryUi
 import com.vodovoz.app.feature.product_comments.model.SortUi
 import com.vodovoz.app.feature.product_comments.model.toDomain
@@ -75,6 +80,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
     init {
         listenFavorites()
         listenProductsLoadStates()
+        fetchProductListData()
     }
 
     fun fetchProductListData() = viewModelScope.launch {
@@ -82,14 +88,15 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
             s.copy(uiState = UiState.Loading)
         }
 
-        val currentCategory = if (dataSource is DataSource.Category && dataState.currentCategory == CategoryUi.Empty) {
-            val category = CategoryUi("", dataSource.categoryId.toInt())
-            uiStateListener.updateData { s ->
-                s.copy(currentCategory = category)
-            }
-            category
+        val currentCategory =
+            if (dataSource is DataSource.Category && dataState.currentCategory == CategoryUi.Empty) {
+                val category = CategoryUi("", dataSource.categoryId.toInt())
+                uiStateListener.updateData { s ->
+                    s.copy(currentCategory = category)
+                }
+                category
 
-        } else dataState.currentCategory
+            } else dataState.currentCategory
 
         val categoryId = currentCategory.id
         val sortModel = dataState.currentSort.toDomain()
@@ -170,15 +177,31 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
             }
 
             is DataSource.Category -> {
+                val dataStateFilters = dataState.currentFilters
+                val currentFilters = dataStateFilters.copy(
+                    filters = dataStateFilters.filters.filter { filterUi ->
+                        filterUi.values.any { filterValueUi -> filterValueUi.selected }
+                    }.map { filterUi ->
+                        filterUi.copy(values = filterUi.values.filter { value -> value.selected })
+                    },
+                    price = if (dataStateFilters == FiltersUi.Empty) {
+                        FiltersPriceUi(0, Int.MAX_VALUE)
+                    } else {
+                        dataStateFilters.price
+                    }
+                ).toDomain()
                 fetchProductsData(
                     fetchProductsSection = {
-                        vodovozServiceRepository.getCategoryProducts(dataSource.categoryId)
-                            .singleResult()
+                        vodovozServiceRepository.getCategoryProducts(
+                            categoryId.toLong(),
+                            currentFilters
+                        ).singleResult()
                     },
                     fetchPagedProductsFlow = {
                         vodovozServiceRepository.getCategoryProductsPaged(
-                            dataSource.categoryId,
-                            sortModel
+                            categoryId.toLong(),
+                            sortModel,
+                            currentFilters
                         )
                     }
                 )
@@ -214,21 +237,18 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
         fetchProductsSection: suspend () -> Result<ProductsSectionModel>,
         fetchPagedProductsFlow: () -> Flow<PagingData<ProductModel>>,
     ) {
-        val productsSectionResult = if (dataState.productsSection == ProductsSectionUi.Empty) {
-            fetchProductsSection().map { it.toUi() }
-        } else {
-            Result.success(dataState.productsSection)
-        }
+        val productsSectionResult =
+            fetchProductsSection().map { productsSectionModel -> productsSectionModel.toUi() }
+
 
 
 
         productsSectionResult.onSuccess { productsSection ->
 
-
             uiStateListener.updateData { state ->
                 state.copy(
                     productsSection = productsSection,
-                    uiState = UiState.Success,
+                    uiState = UiState.Body,
                     currentSort = state.currentSort.takeIf { sort ->
                         sort != SortUi.Empty
                     } ?: productsSection.sorting.firstOrNull() ?: SortUi.Empty,
@@ -239,9 +259,33 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
                 pagingData.map { productModel -> productModel.toUi() }
             }.collect { pagingData -> pagingProductsListener.collectPagingData(pagingData) }
 
-        }.onFailure {
-            uiStateListener.updateData { state ->
-                state.copy(uiState = UiState.Error)
+        }.onFailure { t ->
+            val uiState = when (t) {
+                is EmptyResultException -> UiState.Empty
+                else -> UiState.Error
+            }
+
+
+            if (uiState is UiState.Empty && dataState.productsSection == ProductsSectionUi.Empty) {
+                uiStateListener.updateData { s ->
+                    s.copy(uiState = uiState)
+                }
+            } else if (uiState is UiState.Empty && dataState.productsSection != ProductsSectionUi.Empty) {
+                uiStateListener.updateData { s ->
+                    s.copy(
+                        productsLoadStates = s.productsLoadStates.copy(
+                            refresh = LoadState.Error(t)
+                        ),
+                        uiState = UiState.Body,
+                        productsSection = s.productsSection.copy(
+                            productsQuantityText = ""
+                        )
+                    )
+                }
+            } else {
+                uiStateListener.updateData { s ->
+                    s.copy(uiState = uiState)
+                }
             }
         }
     }
@@ -363,7 +407,26 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
     }
 
     fun navigateToProductFilters() = viewModelScope.launch {
-        eventListener.emit(ProductListNoFilterEvent.GoToProductFilters(dataState.currentCategory.id.toLong()))
+        with(dataState) {
+            eventListener.emit(
+                ProductListNoFilterEvent.GoToProductFilters(
+                    currentCategory.id.toLong(),
+                    currentFilters
+                )
+            )
+        }
+    }
+
+    fun changeFilters(filters: FiltersUi) = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(
+                currentFilters = filters,
+                productsLoadStates = s.productsLoadStates.copy(refresh = LoadState.Loading),
+                products = emptyList()
+            )
+        }
+        eventListener.emit(ProductListNoFilterEvent.ScrollToTop)
+        fetchProductListData()
     }
 
     @Immutable
@@ -385,12 +448,14 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
         val uiState: UiState = UiState.Loading,
         val isGridView: Boolean = true,
         val showSortBottomSheet: Boolean = false,
+        val currentFilters: FiltersUi = FiltersUi.Empty,
     ) : State
 
     sealed interface UiState {
+        data object Empty : UiState
         data object Error : UiState
         data object Loading : UiState
-        data object Success : UiState
+        data object Body : UiState
     }
 
     sealed class ProductListNoFilterEvent : Event {
@@ -404,7 +469,8 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
         ) : ProductListNoFilterEvent()
 
         data class GoToProductDetails(val productId: Long) : ProductListNoFilterEvent()
-        data class GoToProductFilters(val categoryId: Long) : ProductListNoFilterEvent()
+        data class GoToProductFilters(val categoryId: Long, val filters: FiltersUi) :
+            ProductListNoFilterEvent()
     }
 
     companion object {

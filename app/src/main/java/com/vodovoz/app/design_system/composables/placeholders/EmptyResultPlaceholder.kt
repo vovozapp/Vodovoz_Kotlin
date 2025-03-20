@@ -30,18 +30,23 @@ import com.vodovoz.app.R
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.ClickableIcon
 
+
+enum class EmptyResultPlaceholderItem {
+    Arrow, Cross, None
+}
+
 @Composable
-fun ProductNotFoundPlaceholder(
+fun EmptyResultPlaceholder(
     modifier: Modifier = Modifier,
-    onBack: () -> Unit,
-    haveArrow: Boolean,
+    title: String,
+    description: String,
+    item: EmptyResultPlaceholderItem = EmptyResultPlaceholderItem.None,
+    onItemClick: () -> Unit = {  },
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .windowInsetsPadding(WindowInsets.systemBars)
-            .consumeWindowInsets(WindowInsets.systemBars),
+            .background(MaterialTheme.colorScheme.background),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
@@ -51,21 +56,27 @@ fun ProductNotFoundPlaceholder(
                 .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            if (haveArrow) {
-                ClickableIcon(
-                    modifier = Modifier.clip(CircleShape),
-                    painter = painterResource(id = R.drawable.ic_arrow_left),
-                    tint = MaterialTheme.colorScheme.onBackground,
-                    onClick = onBack
-                )
-            } else {
-                Spacer(modifier = Modifier.weight(1f))
-                ClickableIcon(
-                    modifier = Modifier.clip(CircleShape),
-                    painter = painterResource(id = R.drawable.icon_close),
-                    tint = MaterialTheme.colorScheme.onBackground,
-                    onClick = onBack
-                )
+            when(item){
+                EmptyResultPlaceholderItem.Arrow -> {
+                    ClickableIcon(
+                        modifier = Modifier.clip(CircleShape),
+                        painter = painterResource(id = R.drawable.ic_arrow_left),
+                        tint = MaterialTheme.colorScheme.onBackground,
+                        onClick = onItemClick
+                    )
+                }
+                EmptyResultPlaceholderItem.Cross -> {
+                    Spacer(modifier = Modifier.weight(1f))
+                    ClickableIcon(
+                        modifier = Modifier.clip(CircleShape),
+                        painter = painterResource(id = R.drawable.icon_close),
+                        tint = MaterialTheme.colorScheme.onBackground,
+                        onClick = onItemClick
+                    )
+                }
+                EmptyResultPlaceholderItem.None -> {
+
+                }
             }
         }
 
@@ -82,26 +93,18 @@ fun ProductNotFoundPlaceholder(
 
             Text(
                 modifier = Modifier.padding(top = 24.dp),
-                text = stringResource(R.string.product_not_found),
+                text = title,
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.headlineSmall
             )
 
             Text(
                 modifier = Modifier.padding(top = 24.dp),
-                text = stringResource(R.string.product_not_found_details),
+                text = description,
                 color = MaterialTheme.colorScheme.surfaceTint,
                 style = MaterialTheme.typography.bodySmall.copy(textAlign = TextAlign.Center)
             )
         }
         Spacer(modifier = Modifier.weight(2.4f))
-    }
-}
-
-@Preview
-@Composable
-private fun ProductNotFoundPlaceholderPreview() {
-    VodovozTheme {
-        ProductNotFoundPlaceholder(onBack = { /*TODO*/ }, haveArrow = false)
     }
 }

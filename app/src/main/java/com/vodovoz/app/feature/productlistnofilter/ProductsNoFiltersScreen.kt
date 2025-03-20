@@ -3,14 +3,10 @@ package com.vodovoz.app.feature.productlistnofilter
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,12 +29,14 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.paging.compose.collectAsLazyPagingItems
+import com.vodovoz.app.R
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.bottom_sheet.SortOptionsBottomSheet
+import com.vodovoz.app.design_system.composables.placeholders.EmptyResultPlaceholder
 import com.vodovoz.app.design_system.composables.placeholders.LoadingPlaceholder
 import com.vodovoz.app.design_system.composables.placeholders.NetworkErrorPlaceholder
 import com.vodovoz.app.design_system.composables.top_bar.StaticSearchTopBar
@@ -86,7 +84,7 @@ fun ProductsNoFiltersScreen(
                 LoadingPlaceholder()
             }
 
-            ProductsListNoFilterFlowViewModel.UiState.Success -> {
+            ProductsListNoFilterFlowViewModel.UiState.Body -> {
                 ProductsNoFilterBody(
                     lazyGridState = lazyGridState,
                     title = productsSection.title,
@@ -121,6 +119,13 @@ fun ProductsNoFiltersScreen(
                     onFiltersClick = if(viewModel.dataSource is PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Category){
                         {  viewModel.navigateToProductFilters()  }
                     } else null
+                )
+            }
+
+            ProductsListNoFilterFlowViewModel.UiState.Empty -> {
+                EmptyResultPlaceholder(
+                    title = stringResource(id = R.string.empty_products_title),
+                    description = stringResource(id = R.string.empty_products_description)
                 )
             }
         }

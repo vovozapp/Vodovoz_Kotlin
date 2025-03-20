@@ -3,7 +3,6 @@ package com.vodovoz.app.design_system.composables.slider
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -15,30 +14,30 @@ import androidx.compose.material3.RangeSlider
 import androidx.compose.material3.RangeSliderState
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.vodovoz.app.design_system.VodovozTheme
+import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VodovozRangeSlider(
     modifier: Modifier = Modifier,
-    onValueChanged: (ClosedFloatingPointRange<Float>) -> Unit,
-) {
-    val rangeSliderState = remember {
+    state: RangeSliderState = remember {
         RangeSliderState(
             activeRangeStart = 0f,
             activeRangeEnd = 1f,
             valueRange = 0f..1f,
-        ).apply {
-            onValueChangeFinished = { onValueChanged(valueRange) }
-        }
-    }
-
+        )
+    },
+    onValueChange: (ClosedFloatingPointRange<Float>) -> Unit,
+) {
     val startThumbAndTrackColors =
         SliderDefaults.colors(
             thumbColor = MaterialTheme.colorScheme.primary,
@@ -49,7 +48,7 @@ fun VodovozRangeSlider(
     Column(modifier = modifier) {
         RangeSlider(
             modifier = modifier.requiredHeight(48.dp),
-            state = rangeSliderState,
+            state = state,
             startThumb = {
                 VodovozThumb()
             },
@@ -67,6 +66,12 @@ fun VodovozRangeSlider(
                 )
             }
         )
+    }
+
+    LaunchedEffect(Unit) {
+        snapshotFlow { state.activeRangeStart..state.activeRangeEnd }.collectLatest {
+            onValueChange(it)
+        }
     }
 }
 
@@ -87,11 +92,15 @@ private fun VodovozThumb(modifier: Modifier = Modifier) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 private fun VodovozRangeSliderPreview() {
     VodovozTheme {
 
-        VodovozRangeSlider(modifier = Modifier.background(MaterialTheme.colorScheme.background), onValueChanged = {})
+        VodovozRangeSlider(
+            modifier = Modifier.background(MaterialTheme.colorScheme.background),
+            onValueChange = {}
+        )
     }
 }
