@@ -93,10 +93,14 @@ class MainFragment : BaseFragment() {
         )
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        activity?.enableEdgeToEdge()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        activity?.enableEdgeToEdge()
 
 
 
@@ -274,8 +278,8 @@ class MainFragment : BaseFragment() {
             },
             activity = requireActivity(),
             lifecycleOwner = viewLifecycleOwner
-        ).observe(viewLifecycleOwner) {
-            Navigation.setViewNavController(requireView(), it)
+        ).observe(viewLifecycleOwner) { navController ->
+            Navigation.setViewNavController(requireView(), navController)
         }
     }
 }

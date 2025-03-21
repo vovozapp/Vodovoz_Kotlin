@@ -18,7 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class WaterAppFragment : BaseFragment() {
+class WaterAppFragment1 : BaseFragment() {
 
     override fun layout(): Int = R.layout.fragment_water_app
 

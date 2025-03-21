@@ -272,6 +272,14 @@
 
     <string name="empty_filters_values_title">Ничего не найдено</string>
     <string name="empty_filters_values_description">Попробуйте изменить или уточнить фильтры для получения более релевантных результатов</string>
+    <string name="water_app_welcome_title">Вливайся\nв здоровый поток</string>
+    <string name="water_app_welcome_text">Пей чистую воду и заботься\nо своем здоровье</string>
+    <string name="start">Начать</string>
+    <string name="next">Далее</string>
+    <string name="you_sex">Ваш пол</string>
+    <string name="man">Мужчина</string>
+    <string name="girl">Женщина</string>
+    <string name="you_height">Ваш рост</string>
 
 
 </resources>
