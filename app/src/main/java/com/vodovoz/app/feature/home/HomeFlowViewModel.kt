@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.home
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
@@ -111,8 +112,6 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     private suspend fun fetchPrimaryDetails(): Boolean {
-        uiStateListener.updateData { s -> s.copy(uiState = HomeUiState.Loading) }
-
         val bannersDeferred = viewModelScope.async {
             vodovozServiceRepository.getBanners().singleResult()
         }
@@ -150,7 +149,7 @@ class HomeFlowViewModel @Inject constructor(
                     orderWithMenu = orderMenu.toUi(),
                     banners = banners.mapToUi(),
                     stories = stories.mapToUi(),
-                    uiState = HomeUiState.Success
+                    uiState = HomeUiState.Success,
                 )
             }
         } else {
@@ -219,11 +218,11 @@ class HomeFlowViewModel @Inject constructor(
         return sectionViewedProducts != null
     }
 
-    private fun fetchHomeDetails() = viewModelScope.launch {
+
+    fun fetchHomeDetails() = viewModelScope.launch {
+        uiStateListener.updateData { s -> s.copy(uiState = HomeUiState.Loading) }
         fetchPrimaryDetails()
         fetchSecondaryDetails()
-        //TODO - remove
-        return@launch
         fetchOptionalDetails()
     }
 
@@ -287,51 +286,60 @@ class HomeFlowViewModel @Inject constructor(
         }
     }
 
-    fun refresh() {
-        if (state.data.uiState !is HomeUiState.Loading) {
-            fetchHomeDetails()
+    fun refresh() = viewModelScope.launch {
+        if (dataState.uiState is HomeUiState.Loading) return@launch
+
+        uiStateListener.updateData { s ->
+            s.copy(showRefreshIndicator = true)
         }
 
-        if (!state.loadingPage) {
-            uiStateListener.value =
-                state.copy(
-                    loadingPage = true,
-                    data = state.data.copy(
-                        items = HomeState.idle().items,
-                        positionItems = HomeState.idle().positionItems,
-                        isSecondLoad = false
-                    ),
-                    isFirstLoad = false
-                )
-            viewModelScope.launch {
-                val userId = accountManager.fetchAccountId()
-                val tasks = firstLoadTasks() + secondLoadTasks(userId)
-                val start = System.currentTimeMillis()
-                val result = awaitAll(*tasks).flatten()
-                debugLog { "refresh load task ${System.currentTimeMillis() - start} result size ${result.size}" }
-                val mappedResult = if (result.isNotEmpty()) {
-                    result + HomeState.fetchStaticItems()
-                } else {
-                    result
-                }
-                val positionItemsSorted =
-                    (state.data.positionItems + mappedResult).toSet().sortedBy { it.position }
-                uiStateListener.value = state.copy(
-                    loadingPage = false,
-                    data = state.data.copy(
-                        positionItems = positionItemsSorted,
-                        items = positionItemsSorted.map { it.item },
-                        isSecondLoad = true
-                    ),
-                    error = if (mappedResult.isNotEmpty()) {
-                        null
-                    } else {
-                        state.error
-                    },
-                    isFirstLoad = true
-                )
-            }
+        fetchHomeDetails().join()
+
+        uiStateListener.updateData { s ->
+            s.copy(showRefreshIndicator = false)
         }
+
+
+//        if (!state.loadingPage) {
+//            uiStateListener.value =
+//                state.copy(
+//                    loadingPage = true,
+//                    data = state.data.copy(
+//                        items = HomeState.idle().items,
+//                        positionItems = HomeState.idle().positionItems,
+//                        isSecondLoad = false
+//                    ),
+//                    isFirstLoad = false
+//                )
+//            viewModelScope.launch {
+//                val userId = accountManager.fetchAccountId()
+//                val tasks = firstLoadTasks() + secondLoadTasks(userId)
+//                val start = System.currentTimeMillis()
+//                val result = awaitAll(*tasks).flatten()
+//                debugLog { "refresh load task ${System.currentTimeMillis() - start} result size ${result.size}" }
+//                val mappedResult = if (result.isNotEmpty()) {
+//                    result + HomeState.fetchStaticItems()
+//                } else {
+//                    result
+//                }
+//                val positionItemsSorted =
+//                    (state.data.positionItems + mappedResult).toSet().sortedBy { it.position }
+//                uiStateListener.value = state.copy(
+//                    loadingPage = false,
+//                    data = state.data.copy(
+//                        positionItems = positionItemsSorted,
+//                        items = positionItemsSorted.map { it.item },
+//                        isSecondLoad = true
+//                    ),
+//                    error = if (mappedResult.isNotEmpty()) {
+//                        null
+//                    } else {
+//                        state.error
+//                    },
+//                    isFirstLoad = true
+//                )
+//            }
+//        }
     }
 
     private fun CoroutineScope.firstLoadTasks() = arrayOf(
@@ -1128,6 +1136,7 @@ class HomeFlowViewModel @Inject constructor(
         val item: Item,
     )
 
+    @Immutable
     sealed class HomeEvents : Event {
         data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) :
             HomeEvents()
@@ -1146,12 +1155,14 @@ class HomeFlowViewModel @Inject constructor(
         data class GoToCategoryProductList(val categoryId: Long) : HomeEvents()
     }
 
+    @Immutable
     sealed class HomeUiState {
         data object Success : HomeUiState()
         data object Loading : HomeUiState()
         data object NetworkError : HomeUiState()
     }
 
+    @Immutable
     data class HomeState(
         val positionItems: List<PositionItem> = emptyList(),
         val items: List<Item> = emptyList(),
@@ -1171,32 +1182,20 @@ class HomeFlowViewModel @Inject constructor(
         val currentCategoryWithProducts: CategoryWithProductsUi = CategoryWithProductsUi.Empty,
         val sectionBottom: SectionUi<CategoryWithProductsUi> = SectionUi.empty(),
         val sectionViewedProducts: SectionUi<ProductUi> = SectionUi.empty(),
-        val sectionUnratedProducts: UnratedProductsSectionUi = UnratedProductsSectionUi.Empty        ,
+        val sectionUnratedProducts: UnratedProductsSectionUi = UnratedProductsSectionUi.Empty,
         val specialPromotion: SpecialPromotionUi = SpecialPromotionUi.Empty,
 
         val uiState: HomeUiState = HomeUiState.Success,
         val showSpecialPromotion: Boolean = false,
-        val showUnratedProducts: Boolean = false
-        ) : State {
+        val showUnratedProducts: Boolean = false,
+        val showRefreshIndicator: Boolean = false,
+    ) : State {
         companion object {
             fun idle(): HomeState {
 
                 return HomeState(
                     positionItems = emptyList(),
                     items = emptyList()
-                )
-            }
-
-            fun fetchStaticItems(): List<PositionItem> {
-                return listOf(
-                    PositionItem(
-                        POSITION_130,
-                        HomeTripleNav(POSITION_130)
-                    ),
-                    PositionItem(
-                        POSITION_270,
-                        HomeBottomInfo(POSITION_270)
-                    )
                 )
             }
 

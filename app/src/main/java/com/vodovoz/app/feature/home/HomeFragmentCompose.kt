@@ -11,6 +11,8 @@ import android.view.ViewGroup
 import android.webkit.CookieManager
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -97,6 +99,7 @@ class HomeFragment : Fragment() {
         observeTabReselect()
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -106,11 +109,10 @@ class HomeFragment : Fragment() {
 
             setViewCompositionStrategy(ViewCompositionStrategy.Default)
             setContent {
-
-
                 VodovozTheme {
                     val viewState by flowViewModel.observeUiState().collectAsStateWithLifecycle()
                     val topProductLazyListState = rememberLazyListState()
+                    val pullRefreshState = rememberPullToRefreshState()
 
                     when (viewState.data.uiState) {
                         HomeFlowViewModel.HomeUiState.NetworkError -> {
@@ -121,6 +123,7 @@ class HomeFragment : Fragment() {
                             HomeScreen(
                                 viewState = viewState.data,
                                 viewModel = flowViewModel,
+                                pullRefreshState = pullRefreshState,
                                 topProductsLazyListState = topProductLazyListState,
                                 onNavigateToQrCodeFragment = {
                                     navigateToQrCodeFragment()

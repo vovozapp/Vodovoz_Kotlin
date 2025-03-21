@@ -28,6 +28,7 @@ import com.vodovoz.app.domain.general.model.StoryModel
 import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
 import com.vodovoz.app.domain.general.model.UnratedProductsSectionModel
 import com.vodovoz.app.feature.preorder.model.FieldUi
+import com.yandex.mapkit.search.Advertisement.Product
 import kotlinx.coroutines.flow.Flow
 
 interface VodovozServiceRepository {
@@ -62,6 +63,8 @@ interface VodovozServiceRepository {
     ): Flow<PagingData<ProductModel>>
 
     fun getSearchProducts(query: String): Flow<Result<ProductsSectionModel>>
+
+    fun getBarCodeProducts(barCode: String): Flow<Result<List<ProductModel>>>
 
     fun getSearchRecommendations(): Flow<Result<SearchRecommendationsModel>>
 

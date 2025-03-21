@@ -1,13 +1,11 @@
 package com.vodovoz.app.feature.home.composables
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
@@ -22,11 +20,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.isUnspecified
 import coil3.compose.AsyncImage
-import coil3.compose.LocalPlatformContext
-import coil3.compose.rememberAsyncImagePainter
-import coil3.compose.rememberConstraintsSizeResolver
-import coil3.request.ImageRequest
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
@@ -39,8 +34,6 @@ fun AuthScrollImagePager(
     onImageClick: (page: Int) -> Unit,
     pageWidth: Dp,
 ) {
-
-
     val isDraggedState = pagerState.interactionSource.collectIsDraggedAsState()
 
     HorizontalPager(
@@ -48,7 +41,7 @@ fun AuthScrollImagePager(
         state = pagerState,
         contentPadding = PaddingValues(horizontal = 16.dp),
         pageSpacing = 8.dp,
-        pageSize = PageSize.Fixed(pageWidth),
+        pageSize = if (pageWidth.isUnspecified) PageSize.Fill else PageSize.Fixed(pageWidth),
         verticalAlignment = Alignment.CenterVertically,
         beyondViewportPageCount = images.size,
         snapPosition = SnapPosition.Start,
@@ -67,7 +60,8 @@ fun AuthScrollImagePager(
                 .clickable {
                     onImageClick(page)
                 },
-            contentScale = ContentScale.FillBounds
+            contentScale = ContentScale.Crop,
+            alignment = Alignment.TopStart
         )
     }
 

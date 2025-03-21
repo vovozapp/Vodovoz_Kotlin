@@ -16,12 +16,16 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -33,6 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.bottom_sheet.SortOptionsBottomSheet
@@ -48,9 +53,11 @@ import com.vodovoz.app.feature.productlistnofilter.composables.ProductsNoFilterB
 fun ProductsNoFiltersScreen(
     viewModel: ProductsListNoFilterFlowViewModel,
     viewState: ProductsListNoFilterFlowViewModel.ProductListNoFilterState,
-    lazyGridState: LazyGridState
+    lazyGridState: LazyGridState,
 ) {
     val productsSection = viewState.productsSection
+    val pullRefreshState = rememberPullToRefreshState()
+
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -75,61 +82,78 @@ fun ProductsNoFiltersScreen(
             }
         )
 
-        when (viewState.uiState) {
-            ProductsListNoFilterFlowViewModel.UiState.Error -> {
-                NetworkErrorPlaceholder { viewModel.fetchProductListData() }
-            }
 
-            ProductsListNoFilterFlowViewModel.UiState.Loading -> {
-                LoadingPlaceholder()
-            }
-
-            ProductsListNoFilterFlowViewModel.UiState.Body -> {
-                ProductsNoFilterBody(
-                    lazyGridState = lazyGridState,
-                    title = productsSection.title,
-                    productsQuantity = productsSection.productsQuantityText,
-                    categories = productsSection.categories,
-                    currentCategory = viewState.currentCategory,
-                    currentSort = viewState.currentSort,
-                    products = viewState.products,
-                    productsLoadStates = viewState.productsLoadStates,
-                    isGridView = viewState.isGridView,
-                    onProductSee = { index ->
-                        viewModel.notifyPagingProducts(index)
-                    },
-                    onSortingClick = {
-                        viewModel.showSortBottomSheet()
-                    },
-                    onSwitchLayoutClick = {
-                        viewModel.switchLayout()
-                    },
-                    onCategoryClick = { category ->
-                        viewModel.selectCategory(category)
-                    },
-                    onCategoriesListClick = {
-                        viewModel.navigateToCategories()
-                    },
-                    onProductClick = { product ->
-                        viewModel.navigateToProductDetails(product)
-                    },
-                    onProductLike = { product ->
-                        viewModel.changeFavorite(product)
-                    },
-                    onFiltersClick = if(viewModel.dataSource is PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Category){
-                        {  viewModel.navigateToProductFilters()  }
-                    } else null
+        PullToRefreshBox(
+            modifier = Modifier.fillMaxSize(),
+            state = pullRefreshState,
+            isRefreshing = viewState.showRefreshIndicator,
+            onRefresh = { viewModel.refresh() },
+            indicator = {
+                Indicator(
+                    modifier = Modifier.align(Alignment.TopCenter),
+                    state = pullRefreshState,
+                    containerColor = MaterialTheme.colorScheme.background,
+                    color = MaterialTheme.colorScheme.primary,
+                    isRefreshing = viewState.showRefreshIndicator
                 )
             }
+        ) {
 
-            ProductsListNoFilterFlowViewModel.UiState.Empty -> {
-                EmptyResultPlaceholder(
-                    title = stringResource(id = R.string.empty_products_title),
-                    description = stringResource(id = R.string.empty_products_description)
-                )
+            when (viewState.uiState) {
+                ProductsListNoFilterFlowViewModel.UiState.Error -> {
+                    NetworkErrorPlaceholder { viewModel.refresh() }
+                }
+
+                ProductsListNoFilterFlowViewModel.UiState.Loading -> {
+                    LoadingPlaceholder()
+                }
+
+                ProductsListNoFilterFlowViewModel.UiState.Body -> {
+                    ProductsNoFilterBody(
+                        lazyGridState = lazyGridState,
+                        title = productsSection.title,
+                        productsQuantity = productsSection.productsQuantityText,
+                        categories = productsSection.categories,
+                        currentCategory = viewState.currentCategory,
+                        currentSort = viewState.currentSort,
+                        products = viewState.products,
+                        productsLoadStates = viewState.productsLoadStates,
+                        isGridView = viewState.isGridView,
+                        onProductSee = { index ->
+                            viewModel.notifyPagingProducts(index)
+                        },
+                        onSortingClick = {
+                            viewModel.showSortBottomSheet()
+                        },
+                        onSwitchLayoutClick = {
+                            viewModel.switchLayout()
+                        },
+                        onCategoryClick = { category ->
+                            viewModel.selectCategory(category)
+                        },
+                        onCategoriesListClick = {
+                            viewModel.navigateToCategories()
+                        },
+                        onProductClick = { product ->
+                            viewModel.navigateToProductDetails(product)
+                        },
+                        onProductLike = { product ->
+                            viewModel.changeFavorite(product)
+                        },
+                        onFiltersClick = if (viewModel.dataSource is PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Category) {
+                            { viewModel.navigateToProductFilters() }
+                        } else null
+                    )
+                }
+
+                ProductsListNoFilterFlowViewModel.UiState.Empty -> {
+                    EmptyResultPlaceholder(
+                        title = stringResource(id = R.string.empty_products_title),
+                        description = stringResource(id = R.string.empty_products_description)
+                    )
+                }
             }
         }
-
     }
 
     if (viewState.showSortBottomSheet) {

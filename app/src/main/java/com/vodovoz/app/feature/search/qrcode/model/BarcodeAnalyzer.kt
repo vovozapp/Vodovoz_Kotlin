@@ -12,9 +12,8 @@ import com.google.mlkit.vision.common.InputImage
 
 class BarcodeAnalyzer(
     private val context: Context,
-    private val onScanSuccess: () -> Unit,
-) :
-    ImageAnalysis.Analyzer {
+    private val onScanSuccess: (String) -> Unit,
+) : ImageAnalysis.Analyzer {
 
     private val options = BarcodeScannerOptions.Builder()
         .setBarcodeFormats(Barcode.FORMAT_ALL_FORMATS)
@@ -30,11 +29,10 @@ class BarcodeAnalyzer(
                     image, imageProxy.imageInfo.rotationDegrees
                 )
             ).addOnSuccessListener { barcode ->
-                barcode?.takeIf { it.isNotEmpty() }
+                val barCode = barcode?.takeIf { barcodes -> barcodes.isNotEmpty() }
                     ?.mapNotNull { it.rawValue }
-                    ?.joinToString(",")
-                    ?.let { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }
-                onScanSuccess()
+                    ?.joinToString(",") ?: return@addOnSuccessListener
+                onScanSuccess(barCode)
             }.addOnCompleteListener {
                 imageProxy.close()
             }

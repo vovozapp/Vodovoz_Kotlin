@@ -39,12 +39,6 @@ class EmptyResultException(
     message, cause
 )
 
-data class ErrorPlaceholder(
-    val title: String,
-    val text: String,
-    val image: String
-)
-
 class UserNotRegisterException(
     message: String = "",
     cause: Throwable? = null

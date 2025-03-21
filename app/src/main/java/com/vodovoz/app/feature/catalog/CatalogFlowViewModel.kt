@@ -51,7 +51,7 @@ class CatalogFlowViewModel @Inject constructor(
         fetchCatalogOld()
     }
 
-    private fun fetchCatalogDetails() = viewModelScope.launch {
+    fun fetchCatalogDetails() = viewModelScope.launch {
         uiStateListener.updateData { s ->
             s.copy(uiState = UiState.Loading)
         }

@@ -94,6 +94,7 @@ interface VodovozService {
         @Query("sect") categoryId: Int? = null,
         @Query("sort") sort: String = "",
         @Query("ascdesc") order: String = "",
+        @Query("kamera") isCamera: String? = null
     ): Response<VodovozResponseDTO<ProductsSectionDTO>>
 
     /**
@@ -329,12 +330,6 @@ interface VodovozService {
         @Query("sort") sort: String = "",
         @Query("ascdesc") order: String = "",
         @Query("id") productsIds: String? = null,
-    ): Response<VodovozResponseDTO<ProductsSectionDTO>>
-
-    @GET("osnova/izbrannoe/izbrannoe.php?action=izbrannoe")
-    suspend fun addFavoriteProducts(
-        @Query("userid") userId: Long,
-        @Query("id") productIds: String,
     ): Response<VodovozResponseDTO<ProductsSectionDTO>>
 
     @GET("osnova/izbrannoe/adddel.php?action=add")

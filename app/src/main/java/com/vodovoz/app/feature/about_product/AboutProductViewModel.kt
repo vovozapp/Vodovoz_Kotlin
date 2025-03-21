@@ -5,7 +5,6 @@ import com.vodovoz.app.common.about_product.AboutProductManager
 import com.vodovoz.app.design_system.model.DocumentUi
 import com.vodovoz.app.feature.about_product.model.AboutProductEvent
 import com.vodovoz.app.feature.about_product.model.AboutProductState
-import com.vodovoz.app.feature.document_viewer.model.DocumentViewerEvent
 import com.vodovoz.app.ui.mvi.MviViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.update
@@ -17,8 +16,11 @@ class AboutProductViewModel @Inject constructor(
     private val aboutProductManager: AboutProductManager,
 ) : MviViewModel<AboutProductState, AboutProductEvent>(AboutProductState()) {
 
+    init {
+        fetchAboutProductInfo()
+    }
 
-    fun loadAboutProductInfo() = viewModelScope.launch {
+    private fun fetchAboutProductInfo() = viewModelScope.launch {
         _state.update { s ->
             s.copy(
                 tabs = aboutProductManager.tabs,

@@ -2,6 +2,7 @@ package com.vodovoz.app.feature.about_product
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
@@ -83,7 +84,7 @@ fun AboutProductScreen(
             AnimatedContent(
                 targetState = currentTab.dataId,
                 transitionSpec = {
-                    fadeIn() togetherWith  fadeOut()
+                    fadeIn(tween()) togetherWith  fadeOut()
                 },
                 label = "TabSwitchAnimation"
             ) { tabId ->

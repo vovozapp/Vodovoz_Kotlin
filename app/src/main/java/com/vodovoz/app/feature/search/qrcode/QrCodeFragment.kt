@@ -36,13 +36,13 @@ class QrCodeFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         tabManager.changeTabVisibility(false)
-        requireActivity().enableEdgeToEdge()
     }
 
     override fun onStop() {
         super.onStop()
         tabManager.changeTabVisibility(true)
-        requireActivity().disableFullScreen()
+        //todo - do something
+        //requireActivity().disableFullScreen()
 
     }
 
@@ -93,6 +93,13 @@ class QrCodeFragment : Fragment() {
 
                             QrCodeViewModel.QrCodeEvents.GoBack -> {
                                 findNavController().popBackStack()
+                            }
+
+                            is QrCodeViewModel.QrCodeEvents.GoToProductDetails -> {
+
+                            }
+                            is QrCodeViewModel.QrCodeEvents.GoToSearchProducts -> {
+
                             }
                         }
                     }

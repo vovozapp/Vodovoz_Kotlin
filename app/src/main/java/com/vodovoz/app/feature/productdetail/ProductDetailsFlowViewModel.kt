@@ -151,8 +151,15 @@ class ProductDetailsFlowViewModel @Inject constructor(
                             s.copy(
                                 comments = productDetailsScreenModel.comments.mapToUi(),
                                 productDetails = productDetailsScreenModel.productDetails.toUi(),
-                                sectionAccessory = moreProducts.sectionAccessory.toUi { list -> list.map { productModel -> productModel.toUi() } },
-                                sectionSimilarProducts = moreProducts.sectionSimilar.toUi { list -> list.map { productModel -> productModel.toUi() } },
+                                sectionAccessory = moreProducts.sectionAccessory.toUi { list ->
+                                    val uiList = list.map { productModel -> productModel.toUi() }
+                                    uiList.take(list.size - (list.size % 2))
+
+                                },
+                                sectionSimilarProducts = moreProducts.sectionSimilar.toUi { list ->
+                                    val uiList = list.map { productModel -> productModel.toUi() }
+                                    uiList.take(list.size - (list.size % 2))
+                                },
                                 buttons = productDetailsScreenModel.buttons.toUi(),
                                 tabs = productDetailsScreenModel.tabs.map { it.toUi() },
                                 uiState = UiState.Success

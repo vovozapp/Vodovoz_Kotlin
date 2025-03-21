@@ -318,6 +318,17 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         )
     }
 
+    override fun getBarCodeProducts(barCode: String): Flow<Result<List<ProductModel>>> {
+        return executeRequest(
+            request = {
+                vodovozService.getSearchProducts(query = barCode, isCamera = "Y")
+            },
+            mapper = {
+                it.data!!.TOVAR!!.mapToDomain()
+            }
+        )
+    }
+
     override fun getSearchRecommendations(): Flow<Result<SearchRecommendationsModel>> {
         return executeRequest(
             request = {

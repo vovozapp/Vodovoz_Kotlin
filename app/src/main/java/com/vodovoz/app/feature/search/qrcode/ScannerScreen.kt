@@ -51,8 +51,8 @@ fun ScannerScreen(
             onCameraOpenFail = {
                 viewModel.navigateBack()
             },
-            onScanSuccess = {
-                //todo - handle scan
+            onScanSuccess = { barCode ->
+                viewModel.searchByBarCode(barCode)
             },
             flashOn = viewState.flashOn
         )

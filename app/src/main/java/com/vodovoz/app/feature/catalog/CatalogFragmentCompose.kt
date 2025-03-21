@@ -72,7 +72,7 @@ class CatalogFragment : Fragment() {
 
                     when (viewState.uiState) {
                         CatalogFlowViewModel.UiState.Error -> {
-                            NetworkErrorPlaceholder {  }
+                            NetworkErrorPlaceholder { viewModel.fetchCatalogDetails() }
                         }
 
                         else -> {

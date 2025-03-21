@@ -326,7 +326,6 @@ class ProfileFlowViewModel @Inject constructor(
             } else {
                 result
             }
-            debugLog { "profile second load task ${System.currentTimeMillis() - start} result size ${mappedResult.size}" }
             val positionItemsSorted =
                 (state.data.positionItems + mappedResult).sortedBy { it.position }
             uiStateListener.value = state.copy(

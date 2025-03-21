@@ -5,14 +5,20 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
+import androidx.compose.material3.pulltorefresh.PullToRefreshState
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.vodovoz.app.feature.home.composables.HomeBody
 import com.vodovoz.app.feature.home.composables.HomeLoadingPlaceholder
@@ -26,10 +32,10 @@ import com.vodovoz.app.feature.home.composables.UnratedProductsBottomSheet
 fun HomeScreen(
     viewState: HomeFlowViewModel.HomeState,
     viewModel: HomeFlowViewModel,
+    pullRefreshState: PullToRefreshState,
     topProductsLazyListState: LazyListState,
     onNavigateToQrCodeFragment: () -> Unit,
 ) {
-
     Scaffold(
         topBar = {
             HomeTopBar(
@@ -41,7 +47,7 @@ fun HomeScreen(
                 },
                 onScanClick = {
                     onNavigateToQrCodeFragment()
-                              },
+                },
                 onSearchClick = {
                     viewModel.navigateToSearch()
                 }
@@ -49,10 +55,29 @@ fun HomeScreen(
         },
         contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) { paddingValues ->
-        Box(
+
+
+        PullToRefreshBox(
             modifier = Modifier
+                .fillMaxSize()
                 .padding(paddingValues)
-                .consumeWindowInsets(paddingValues)
+                .consumeWindowInsets(paddingValues),
+            isRefreshing = viewState.showRefreshIndicator,
+            onRefresh = {
+                viewModel.refresh()
+            },
+            state = pullRefreshState,
+            indicator = {
+                Indicator(
+                    modifier = Modifier.align(Alignment.TopCenter),
+                    isRefreshing = viewState.showRefreshIndicator,
+                    state = pullRefreshState,
+                    containerColor = MaterialTheme.colorScheme.background,
+                    color = MaterialTheme.colorScheme.primary
+                )
+
+            }
+
         ) {
             when (viewState.uiState) {
                 HomeFlowViewModel.HomeUiState.Loading -> {
@@ -105,7 +130,6 @@ fun HomeScreen(
                 }
             }
 
-
             AnimatedVisibility(
                 visible = viewState.showUnratedProducts,
                 enter = slideInVertically(
@@ -128,6 +152,8 @@ fun HomeScreen(
                     }
                 )
             }
+
+
         }
 
     }

@@ -82,7 +82,8 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
         fetchProductListData()
     }
 
-    fun fetchProductListData() = viewModelScope.launch {
+
+    private fun fetchProductListData() = viewModelScope.launch {
         uiStateListener.updateData { s ->
             s.copy(uiState = UiState.Loading)
         }
@@ -215,6 +216,19 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
 
     }
 
+    fun refresh() = viewModelScope.launch {
+        if (dataState.uiState is UiState.Loading) return@launch
+
+        uiStateListener.updateData { s ->
+            s.copy(showRefreshIndicator = true)
+        }
+        fetchProductListData().join()
+
+        uiStateListener.updateData { s ->
+            s.copy(showRefreshIndicator = false)
+        }
+    }
+
     fun showSortBottomSheet() = viewModelScope.launch {
         uiStateListener.updateData { s ->
             s.copy(
@@ -240,8 +254,6 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
             fetchProductsSection().map { productsSectionModel -> productsSectionModel.toUi() }
 
 
-
-
         productsSectionResult.onSuccess { productsSection ->
 
             uiStateListener.updateData { state ->
@@ -254,9 +266,11 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
                 )
             }
 
-            fetchPagedProductsFlow().map { pagingData ->
-                pagingData.map { productModel -> productModel.toUi() }
-            }.collect { pagingData -> pagingProductsListener.collectPagingData(pagingData) }
+            viewModelScope.launch {
+                fetchPagedProductsFlow().map { pagingData ->
+                    pagingData.map { productModel -> productModel.toUi() }
+                }.collect { pagingData -> pagingProductsListener.collectPagingData(pagingData) }
+            }
 
         }.onFailure { t ->
             val uiState = when (t) {
@@ -449,6 +463,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
         val uiState: UiState = UiState.Loading,
         val isGridView: Boolean = true,
         val showSortBottomSheet: Boolean = false,
+        val showRefreshIndicator: Boolean = false,
         val currentFilters: FiltersUi = FiltersUi.Empty,
     ) : State
 

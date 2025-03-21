@@ -57,10 +57,7 @@ fun ProductDetailsButtonsBlock(
     onAnalogButtonClick: () -> Unit,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-            .isElementVisible(onFloatingButtonChange)
+        modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp)
     ) {
 
         Spacer(Modifier.height(24.dp))
@@ -115,7 +112,7 @@ fun ProductDetailsButtonsBlock(
                 VodovozButton(
                     text = stringResource(R.string.to_cart),
                     onClick = onAddToCart,
-                    modifier = Modifier
+                    modifier = Modifier.isElementVisible(onFloatingButtonChange),
                 )
             }
 
@@ -126,7 +123,9 @@ fun ProductDetailsButtonsBlock(
                     colors = ButtonDefaults.filledTonalButtonColors(
                         contentColor = analogButton.textColor,
                         containerColor = analogButton.backgroundColor
-                    )
+                    ),
+                    modifier = Modifier.isElementVisible(onFloatingButtonChange),
+
                 )
             }
         }
@@ -193,7 +192,7 @@ fun ProductDetailsButtonsBlock(
 private fun ProductDetailsButtonsBlockPreview() {
     VodovozTheme {
         ProductDetailsButtonsBlock(
-            isAvailable = true,
+            isAvailable = false,
             quantityButtonIsLoading = false,
             cartQuantity = 0,
             buttons = productDetailsButtonsUi.copy(multiBuyButton = null),

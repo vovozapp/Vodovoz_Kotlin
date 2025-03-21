@@ -124,11 +124,6 @@ class FavoriteFlowViewModel @Inject constructor(
             }
     }
 
-
-    fun fetchFavoriteProductsLocal() {
-        //TODO - need implement
-    }
-
     fun fetchFavoriteProducts() = viewModelScope.launch {
         if (dataState.uiState != FavoriteUiState.Success) {
             uiStateListener.updateData { s ->
@@ -154,7 +149,8 @@ class FavoriteFlowViewModel @Inject constructor(
                     productsSection = productsSectionUi,
                     currentSort = currentSort,
                     uiState = FavoriteUiState.Success,
-                    products = emptyList()
+                    products = emptyList(),
+                    showRefreshIndicator = false
                 )
             }
 
@@ -197,9 +193,13 @@ class FavoriteFlowViewModel @Inject constructor(
 //        }
     }
 
-    fun refresh() {
-        uiStateListener.value = state.copy(loadingPage = true)
-        fetchFavoriteProductsHeader()
+    fun refresh() = viewModelScope.launch {
+        if (dataState.uiState !is FavoriteUiState.Loading) {
+            uiStateListener.updateData { s ->
+                s.copy(showRefreshIndicator = true)
+            }
+            fetchFavoriteProducts()
+        }
     }
 
     fun refreshIdle() {
@@ -592,6 +592,7 @@ class FavoriteFlowViewModel @Inject constructor(
         val currentCategory: CategoryUi = CategoryUi.Empty,
         val isGridView: Boolean = true,
         val showSortBottomSheet: Boolean = false,
+        val showRefreshIndicator: Boolean = false,
         val uiState: FavoriteUiState = FavoriteUiState.Loading,
         val products: List<ProductUi> = emptyList(),
         val productsLoadStates: CombinedLoadStates = emptyCombinedLoadStates,

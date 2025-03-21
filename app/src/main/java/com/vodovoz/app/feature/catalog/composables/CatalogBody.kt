@@ -24,6 +24,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
@@ -55,13 +56,13 @@ fun CatalogBody(
                 modifier = Modifier
                     .padding(top = 8.dp)
                     .fillMaxWidth()
-                    .height(150.dp),
+                    .height(68.dp),
                 images = pictures,
                 onImageClick = { page ->
                     onBannerClick(banners[page])
                 },
                 pagerState = pagerState,
-                pageWidth = 315.dp
+                pageWidth = Dp.Unspecified
             )
         }
 

@@ -25,7 +25,7 @@ import timber.log.Timber
 fun CameraView(
     modifier: Modifier = Modifier,
     onCameraOpenFail: () -> Unit,
-    onScanSuccess: () -> Unit,
+    onScanSuccess: (String) -> Unit,
     flashOn: Boolean
 ) {
 
@@ -52,8 +52,8 @@ fun CameraView(
 
             imageAnalysis.setAnalyzer(
                 ContextCompat.getMainExecutor(context),
-                BarcodeAnalyzer(context) {
-                    onScanSuccess()
+                BarcodeAnalyzer(context) { barCode ->
+                    onScanSuccess(barCode)
                 }
             )
 
@@ -66,7 +66,6 @@ fun CameraView(
                 )
             }.onFailure {
                 onCameraOpenFail()
-                Timber.tag("CAMERA").e(it, "Camera bind error " + it.localizedMessage)
             }
             previewView
         }
