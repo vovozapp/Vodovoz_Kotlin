@@ -16,6 +16,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.vodovoz.app.common.tab.TabManager
+import com.vodovoz.app.core.navigation.navigateToCategoryProductList
+import com.vodovoz.app.core.navigation.navigateToProductDetails
+import com.vodovoz.app.core.navigation.navigateToSearch
+import com.vodovoz.app.core.navigation.navigateToSearchProductList
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.util.extensions.disableFullScreen
 import com.vodovoz.app.util.extensions.snack
@@ -96,10 +100,10 @@ class QrCodeFragment : Fragment() {
                             }
 
                             is QrCodeViewModel.QrCodeEvents.GoToProductDetails -> {
-
+                                findNavController().navigateToProductDetails(qrCodeEvents.id)
                             }
                             is QrCodeViewModel.QrCodeEvents.GoToSearchProducts -> {
-
+                                findNavController().navigateToSearchProductList(qrCodeEvents.barCode)
                             }
                         }
                     }

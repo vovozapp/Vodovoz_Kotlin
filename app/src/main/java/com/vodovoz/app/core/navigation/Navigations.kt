@@ -108,6 +108,18 @@ fun NavController.navigateToBrandProductList(brandId: Long) {
     )
 }
 
+fun NavController.navigateToSearchProductList(query: String) {
+    navigate(
+        R.id.paginatedProductsCatalogWithoutFiltersFragment,
+        bundleOf(
+            "dataSource" to PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Search(
+                query
+            )
+        )
+    )
+}
+
+
 fun NavController.navigateToCategoryProductList(categoryId: Long) {
     navigate(
         R.id.paginatedProductsCatalogWithoutFiltersFragment,

@@ -11,7 +11,6 @@ import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
 
 class BarcodeAnalyzer(
-    private val context: Context,
     private val onScanSuccess: (String) -> Unit,
 ) : ImageAnalysis.Analyzer {
 

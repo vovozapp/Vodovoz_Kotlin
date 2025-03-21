@@ -52,7 +52,7 @@ fun CameraView(
 
             imageAnalysis.setAnalyzer(
                 ContextCompat.getMainExecutor(context),
-                BarcodeAnalyzer(context) { barCode ->
+                BarcodeAnalyzer { barCode ->
                     onScanSuccess(barCode)
                 }
             )
