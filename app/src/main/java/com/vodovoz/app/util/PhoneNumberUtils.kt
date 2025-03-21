@@ -13,8 +13,6 @@ fun String.isValidRussianPhoneNumber(): Boolean{
     val phoneNumberUtil = PhoneNumberUtil.getInstance()
     return try {
         val number = phoneNumberUtil.parse(this, "RU")
-
-        val formNumber = PhoneNumberUtils.formatNumber(this, "RU")
         phoneNumberUtil.isValidNumber(number)
     } catch (e: Exception) {
         false

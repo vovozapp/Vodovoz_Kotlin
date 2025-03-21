@@ -61,7 +61,7 @@ fun FilterValuesTopBar(
             AnimatedContent(
                 modifier = Modifier.weight(1f),
                 targetState = isSearchMode,
-                label = "",
+                label = "AnimatedTitleSearch",
                 transitionSpec = {
                     slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right).togetherWith(
                         slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left)

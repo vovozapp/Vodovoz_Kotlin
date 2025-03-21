@@ -52,6 +52,9 @@ class CatalogFlowViewModel @Inject constructor(
     }
 
     private fun fetchCatalogDetails() = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(uiState = UiState.Loading)
+        }
         vodovozServiceRepository.getCatalogDetails().collect { catalogDetailsResult ->
             catalogDetailsResult.onSuccess { catalogDetails ->
                 val (banners, categories) = catalogDetails.toUi()
@@ -140,10 +143,11 @@ class CatalogFlowViewModel @Inject constructor(
 
         val categories: List<CatalogCategoryUi> = emptyList(),
         val banners: List<BannerUi> = emptyList(),
-        val uiState: UiState = UiState.Success,
+        val uiState: UiState = UiState.Loading,
     ) : State
 
     sealed interface UiState {
+        data object Loading: UiState
         data object Success : UiState
         data object Error : UiState
     }

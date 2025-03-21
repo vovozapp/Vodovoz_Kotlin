@@ -39,7 +39,7 @@ import com.vodovoz.app.design_system.composables.bottom_sheet.SortOptionsBottomS
 import com.vodovoz.app.design_system.composables.placeholders.EmptyResultPlaceholder
 import com.vodovoz.app.design_system.composables.placeholders.LoadingPlaceholder
 import com.vodovoz.app.design_system.composables.placeholders.NetworkErrorPlaceholder
-import com.vodovoz.app.design_system.composables.top_bar.StaticSearchTopBar
+import com.vodovoz.app.design_system.composables.top_bar.VodovozSearchTopBar
 import com.vodovoz.app.feature.productlistnofilter.composables.ProductsNoFilterBody
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,7 +59,7 @@ fun ProductsNoFiltersScreen(
             (viewModel.dataSource as? PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Search)?.query
                 ?: ""
 
-        StaticSearchTopBar(
+        VodovozSearchTopBar(
             value = searchQuery,
             onFocus = {
                 viewModel.navigateToSearch(searchQuery)

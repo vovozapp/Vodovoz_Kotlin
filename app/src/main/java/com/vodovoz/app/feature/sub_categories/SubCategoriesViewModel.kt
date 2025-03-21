@@ -51,5 +51,9 @@ class SubCategoriesViewModel(
         _events.emit(SubCategoriesEvent.GoToProductList(catalogCategory.id))
     }
 
+    fun changeSearchQuery(query: String) = viewModelScope.launch {
+        _state.update { s -> s.copy(searchQuery = query) }
+    }
+
 
 }

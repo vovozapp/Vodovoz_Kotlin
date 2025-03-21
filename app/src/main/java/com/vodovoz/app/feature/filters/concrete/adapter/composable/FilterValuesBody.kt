@@ -16,6 +16,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.composables.placeholders.EmptyResultPlaceholder
 import com.vodovoz.app.design_system.model.filters.FilterValueUi
+import com.vodovoz.app.util.TransliterationUtils
 
 @Suppress("NonSkippableComposable")
 @Composable
@@ -33,10 +35,15 @@ fun FilterValuesBody(
     filterValues: List<FilterValueUi>,
     onFilterValueSelect: (FilterValueUi) -> Unit,
 ) {
-    val filteredValues = filterValues.filter { valueUi ->
-        valueUi.name.contains(searchQuery, true) || customTransliterate(valueUi.name).contains(searchQuery, true)
+    val filteredValues = remember(filterValues, searchQuery) {
+        val cyrillicSearchQuery = TransliterationUtils.latinToCyrillic(searchQuery)
+        filterValues.filter { valueUi ->
+            valueUi.name.contains(
+                searchQuery,
+                true
+            ) || valueUi.name.contains(cyrillicSearchQuery, true)
+        }
     }
-
 
     LazyColumn(modifier = modifier.fillMaxSize()) {
 
@@ -50,7 +57,7 @@ fun FilterValuesBody(
         } else {
             itemsIndexed(
                 items = filteredValues,
-                key = { _, item -> item.name + item.id }
+                key = { _, item -> item.id }
             ) { i, filterValue ->
                 Column(modifier = Modifier.animateItem(fadeOutSpec = null)) {
                     FilterValueItem(
@@ -112,30 +119,3 @@ private fun FilterValueItem(
     }
 }
 
-@Composable
-private fun customTransliterate(text: String): String {
-    val charMap = mapOf(
-        'а' to "a", 'б' to "b", 'в' to "v", 'г' to "g",
-        'д' to "d", 'е' to "e", 'ё' to "yo", 'ж' to "zh",
-        'з' to "z", 'и' to "i", 'й' to "y", 'к' to "k",
-        'л' to "l", 'м' to "m", 'н' to "n", 'о' to "o",
-        'п' to "p", 'р' to "r", 'с' to "s", 'т' to "t",
-        'у' to "u", 'ф' to "f", 'х' to "h", 'ц' to "ts",
-        'ч' to "ch", 'ш' to "sh", 'щ' to "sch", 'ъ' to "",
-        'ы' to "y", 'ь' to "", 'э' to "e", 'ю' to "yu",
-        'я' to "ya",
-
-        'А' to "A", 'Б' to "B", 'В' to "V", 'Г' to "G",
-        'Д' to "D", 'Е' to "E", 'Ё' to "Yo", 'Ж' to "Zh",
-        'З' to "Z", 'И' to "I", 'Й' to "Y", 'К' to "K",
-        'Л' to "L", 'М' to "M", 'Н' to "N", 'О' to "O",
-        'П' to "P", 'Р' to "R", 'С' to "S", 'Т' to "T",
-        'У' to "U", 'Ф' to "F", 'Х' to "H", 'Ц' to "Ts",
-        'Ч' to "Ch", 'Ш' to "Sh", 'Щ' to "Sch", 'Ъ' to "",
-        'Ы' to "Y", 'Ь' to "", 'Э' to "E", 'Ю' to "Yu",
-        'Я' to "Ya"
-    )
-    return text.map { char ->
-        charMap[char] ?: char.toString()
-    }.joinToString("")
-}

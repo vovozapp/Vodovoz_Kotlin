@@ -75,7 +75,7 @@ class CatalogFragment : Fragment() {
                             NetworkErrorPlaceholder {  }
                         }
 
-                        CatalogFlowViewModel.UiState.Success -> {
+                        else -> {
                             CatalogScreen(viewModel = viewModel, viewState = viewState)
                         }
                     }

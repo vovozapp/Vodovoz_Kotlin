@@ -20,7 +20,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -31,8 +30,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -45,82 +42,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.VodovozTheme
-import kotlinx.coroutines.delay
 import kotlin.math.abs
 
 
-@Composable
-fun SearchTopBar(
-    modifier: Modifier = Modifier,
-    value: String,
-    onValueChange: (String) -> Unit,
-    onClearClick: () -> Unit,
-    onScanClick: () -> Unit,
-    onSearchClick: () -> Unit,
-    onNavigationClick: () -> Unit,
-) {
-    val focusRequester = remember { FocusRequester() }
-
-    LaunchedEffect(Unit) {
-        delay(50L)
-        focusRequester.requestFocus()
-    }
-
-    Row(
-        modifier = modifier
-            .height(54.dp)
-            .background(MaterialTheme.colorScheme.background)
-            .padding(start = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            painter = painterResource(id = R.drawable.ic_arrow_left),
-            contentDescription = null,
-            modifier = Modifier
-                .size(24.dp)
-                .clip(
-                    CircleShape
-                )
-                .clickable { onNavigationClick() },
-            tint = MaterialTheme.colorScheme.onBackground
-        )
-
-        Spacer(modifier = Modifier.width(16.dp))
-
-        BasicSearchField(
-            modifier = Modifier
-                .weight(1f)
-                .focusRequester(focusRequester),
-            value = value,
-            onValueChange = onValueChange,
-            onSearchClick = onSearchClick,
-        ) { innerTextField ->
-            TextFieldDefaults.SearchDecorationBox(
-                value = value,
-                innerTextField = innerTextField,
-                onClearClick = onClearClick,
-                onSearchClick = onSearchClick
-            )
-        }
-
-        Spacer(modifier = Modifier.width(4.dp))
-
-        IconButton(onClick = onScanClick, modifier = Modifier.size(48.dp)) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_scan),
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onBackground
-            )
-        }
-
-    }
-}
 
 @Composable
-fun StaticSearchTopBar(
+fun VodovozSearchTopBar(
     modifier: Modifier = Modifier,
     value: String = "",
-    onFocus: () -> Unit,
+    readOnly: Boolean = true,
+    hint: String = stringResource(R.string.search_product),
+    onValueChange: (String) -> Unit = {},
+    onFocus: () -> Unit = { },
     onMicClick: () -> Unit,
     onScanClick: () -> Unit,
     onNavigationClick: () -> Unit,
@@ -154,13 +87,14 @@ fun StaticSearchTopBar(
 
         BasicSearchField(
             value = value,
-            onValueChange = {},
+            onValueChange = onValueChange,
             interactionSource = interactionSource,
             onSearchClick = {},
-            readOnly = true
+            readOnly = readOnly
         ) { innerTextField ->
-            TextFieldDefaults.StaticSearchDecorationBox(
+            VodovozSearchDecorationBox(
                 value = value,
+                hint = hint,
                 innerTextField = innerTextField,
                 onMicClick = onMicClick,
                 onScanClick = onScanClick
@@ -176,64 +110,11 @@ fun StaticSearchTopBar(
 
 }
 
-@Composable
-private fun TextFieldDefaults.SearchDecorationBox(
-    value: String,
-    innerTextField: @Composable () -> Unit,
-    onClearClick: () -> Unit,
-    onSearchClick: () -> Unit,
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(46.dp)
-            .background(MaterialTheme.colorScheme.surface, MaterialTheme.shapes.large)
-            .padding(start = 8.dp, end = 0.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            modifier = Modifier
-                .size(24.dp)
-                .clip(CircleShape)
-                .clickable { onSearchClick() },
-            painter = painterResource(id = R.drawable.icon_search),
-            tint = MaterialTheme.colorScheme.surfaceTint,
-            contentDescription = null
-        )
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Box(
-                modifier = Modifier
-                    .padding(start = 8.dp)
-                    .weight(1f)
-            ) {
-                if (value.isBlank()) {
-                    Text(
-                        text = stringResource(R.string.search_product),
-                        color = MaterialTheme.colorScheme.surfaceTint,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-                innerTextField()
-            }
-
-            if (value.isNotBlank()) {
-                IconButton(onClick = onClearClick, modifier = Modifier.size(48.dp)) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_clean),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-            }
-
-        }
-    }
-
-}
 
 @Composable
-private fun TextFieldDefaults.StaticSearchDecorationBox(
+private fun VodovozSearchDecorationBox(
     value: String,
+    hint: String,
     innerTextField: @Composable () -> Unit,
     onMicClick: () -> Unit,
     onScanClick: () -> Unit,
@@ -259,7 +140,7 @@ private fun TextFieldDefaults.StaticSearchDecorationBox(
         ) {
             if (value.isBlank()) {
                 Text(
-                    text = stringResource(R.string.search_product),
+                    text = hint,
                     color = MaterialTheme.colorScheme.surfaceTint,
                     style = MaterialTheme.typography.bodyMedium
                 )
@@ -335,26 +216,11 @@ fun BasicSearchField(
 @Composable
 private fun StaticSearchTopBarPreview() {
     VodovozTheme {
-        StaticSearchTopBar(
+        VodovozSearchTopBar(
             value = "",
             onFocus = { },
             onMicClick = {},
             onScanClick = { /*TODO*/ },
-            onNavigationClick = {}
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun SearchTopBarPreview() {
-    VodovozTheme {
-        SearchTopBar(
-            value = "dwqdqw",
-            onValueChange = {},
-            onScanClick = { /*TODO*/ },
-            onClearClick = {},
-            onSearchClick = {},
             onNavigationClick = {}
         )
     }

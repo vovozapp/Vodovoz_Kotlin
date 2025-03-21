@@ -21,10 +21,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.vodovoz.app.design_system.model.BannerUi
 import com.vodovoz.app.feature.catalog.model.CatalogCategoryUi
 import com.vodovoz.app.feature.home.composables.AuthScrollImagePager
@@ -107,10 +110,14 @@ private fun CatalogCard(
             .clickable { onClick() }
     ) {
         AsyncImage(
-            model = image,
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(image)
+                .crossfade(true)
+                .build(),
             contentDescription = null,
             modifier = Modifier.matchParentSize(),
-            contentScale = ContentScale.FillBounds,
+            contentScale = ContentScale.Crop,
+            alignment = Alignment.BottomEnd
         )
         Text(
             modifier = Modifier

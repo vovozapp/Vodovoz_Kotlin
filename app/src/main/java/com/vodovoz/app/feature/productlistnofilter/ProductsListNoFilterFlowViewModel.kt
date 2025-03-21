@@ -29,7 +29,6 @@ import com.vodovoz.app.domain.general.model.ProductsSectionModel
 import com.vodovoz.app.domain.general.model.ProductsSectionUi
 import com.vodovoz.app.domain.general.model.toUi
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
-import com.vodovoz.app.feature.catalog.CatalogFlowViewModel
 import com.vodovoz.app.feature.home.model.CategoryUi
 import com.vodovoz.app.feature.product_comments.model.SortUi
 import com.vodovoz.app.feature.product_comments.model.toDomain
@@ -402,8 +401,10 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
         likeManager.changeFavorite(product.id, !product.isFavorite)
     }
 
-    fun notifyPagingProducts(index: Int) = kotlin.runCatching {
-        pagingProductsListener[index]
+    fun notifyPagingProducts(index: Int) = viewModelScope.launch {
+        kotlin.runCatching {
+            pagingProductsListener[index]
+        }
     }
 
     fun navigateToProductFilters() = viewModelScope.launch {

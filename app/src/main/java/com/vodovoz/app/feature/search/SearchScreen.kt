@@ -7,10 +7,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.vodovoz.app.design_system.composables.top_bar.SearchTopBar
 import com.vodovoz.app.feature.search.composables.SearchEmptyPlaceholder
 import com.vodovoz.app.feature.search.composables.SearchLoadingPlaceholder
 import com.vodovoz.app.feature.search.composables.SearchScreenBody
+import com.vodovoz.app.feature.search.composables.SearchTopBar
 
 @Suppress("NonSkippableComposable")
 @Composable
