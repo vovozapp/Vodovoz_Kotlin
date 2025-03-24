@@ -24,7 +24,7 @@ fun SearchEmptyPlaceholder(
 ) {
     Column(modifier = modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         Image(
-            painter = painterResource(id = R.drawable.search),
+            painter = painterResource(id = R.drawable.pic_search),
             contentDescription = null,
             modifier = Modifier
                 .padding(top = 62.dp)

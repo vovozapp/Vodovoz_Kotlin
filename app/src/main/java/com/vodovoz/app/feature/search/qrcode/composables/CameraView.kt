@@ -8,6 +8,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,14 +20,13 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.vodovoz.app.feature.search.qrcode.model.BarcodeAnalyzer
-import timber.log.Timber
 
 @Composable
 fun CameraView(
     modifier: Modifier = Modifier,
     onCameraOpenFail: () -> Unit,
     onScanSuccess: (String) -> Unit,
-    flashOn: Boolean
+    flashOn: Boolean,
 ) {
 
     val localContext = LocalContext.current
@@ -34,8 +34,8 @@ fun CameraView(
     val cameraProviderFuture = remember {
         ProcessCameraProvider.getInstance(localContext)
     }
+    var camera2 by remember { mutableStateOf<Camera?>(null) }
 
-    var camera: Camera? by remember { mutableStateOf(null) }
 
     AndroidView(
         modifier = modifier.fillMaxSize(),
@@ -58,21 +58,30 @@ fun CameraView(
             )
 
             runCatching {
-                camera = cameraProviderFuture.get().bindToLifecycle(
-                    lifecycleOwner,
-                    selector,
-                    preview,
-                    imageAnalysis
-                )
+                if (camera2 == null) {
+                    camera2 = cameraProviderFuture.get().bindToLifecycle(
+                        lifecycleOwner,
+                        selector,
+                        preview,
+                        imageAnalysis
+                    )
+                }
             }.onFailure {
                 onCameraOpenFail()
             }
+
             previewView
         }
     )
 
     LaunchedEffect(flashOn) {
-        camera?.cameraControl?.enableTorch(flashOn)
+        camera2?.cameraControl?.enableTorch(flashOn)
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            cameraProviderFuture.get().unbindAll()
+        }
     }
 
 }

@@ -13,11 +13,9 @@ import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.anchoredDraggable
-import androidx.compose.foundation.gestures.animateTo
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,6 +24,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
@@ -46,6 +45,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -56,13 +56,11 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
-import coil3.request.crossfade
 import com.gowtham.ratingbar.RatingBar
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.composables.bottom_sheet.VodovozDragHandle
 import com.vodovoz.app.feature.home.model.UnratedProductUi
 import com.vodovoz.app.feature.home.model.UnratedProductsSectionUi
-import kotlinx.coroutines.delay
 import mx.platacard.pagerindicator.PagerWormIndicator
 
 
@@ -86,11 +84,11 @@ fun UnratedProductsBottomSheet(
 
 
     BoxWithConstraints(modifier = modifier.fillMaxSize()) {
-        val layoutHeight = constraints.maxHeight
+        val layoutHeight = constraints.maxHeight.toFloat()
 
         val anchors = DraggableAnchors {
-            SheetValue.Hidden at layoutHeight.toFloat()
-            SheetValue.PartiallyExpanded at layoutHeight.toFloat() - partiallyExpandedHeight
+            SheetValue.Hidden at layoutHeight
+            SheetValue.PartiallyExpanded at layoutHeight - partiallyExpandedHeight
             SheetValue.Expanded at 0f
         }
 
@@ -104,13 +102,14 @@ fun UnratedProductsBottomSheet(
                 snapAnimationSpec = tween(100),
                 decayAnimationSpec = exponentialDecay(),
                 confirmValueChange = { value ->
-                    if(value == SheetValue.PartiallyExpanded){
+                    if (value == SheetValue.PartiallyExpanded) {
                         onDispose()
                     }
                     return@AnchoredDraggableState true
                 }
             )
         }
+
 
         Surface(
             shape = RoundedCornerShape(
@@ -129,7 +128,7 @@ fun UnratedProductsBottomSheet(
                     state = state,
                     orientation = Orientation.Vertical,
                 ),
-            color = MaterialTheme.colorScheme.background
+            color = MaterialTheme.colorScheme.background,
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 VodovozDragHandle()
@@ -161,6 +160,7 @@ fun UnratedProductsBottomSheet(
                             SheetValue.PartiallyExpanded -> {
                                 UnratedProductsPartially(
                                     modifier = Modifier.fillMaxHeight(),
+                                    anchorDraggableState = state,
                                     animatedVisibilityScope = this@AnimatedContent,
                                     title = sectionUnratedProducts.title,
                                     countProductsText = sectionUnratedProducts.countProductsText,
@@ -294,11 +294,16 @@ fun SharedTransitionScope.UpdatedProductsExpanded(
     }
 }
 
-@OptIn(ExperimentalSharedTransitionApi::class)
+@OptIn(
+    ExperimentalSharedTransitionApi::class,
+    ExperimentalFoundationApi::class,
+    ExperimentalMaterial3Api::class
+)
 @Suppress("NonSkippableComposable")
 @Composable
-private fun SharedTransitionScope.UnratedProductsPartially(
+fun SharedTransitionScope.UnratedProductsPartially(
     modifier: Modifier = Modifier,
+    anchorDraggableState: AnchoredDraggableState<SheetValue>,
     title: String,
     countProductsText: String,
     products: List<UnratedProductUi>,
@@ -321,6 +326,7 @@ private fun SharedTransitionScope.UnratedProductsPartially(
                 AsyncImage(
                     modifier = Modifier
                         .size(110.dp)
+                        .wrapContentSize()
                         .sharedBounds(
                             rememberSharedContentState(
                                 key = "image-key${product.id}"

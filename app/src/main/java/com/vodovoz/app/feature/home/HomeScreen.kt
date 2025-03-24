@@ -130,30 +130,6 @@ fun HomeScreen(
                 }
             }
 
-            AnimatedVisibility(
-                visible = viewState.showUnratedProducts,
-                enter = slideInVertically(
-                    tween(
-                        durationMillis = 300,
-                        easing = LinearEasing
-                    )
-                ) { it },
-                exit = slideOutVertically(tween(durationMillis = 300, easing = LinearEasing)) { it }
-            ) {
-                UnratedProductsBottomSheet(
-                    sectionUnratedProducts = viewState.sectionUnratedProducts,
-                    onProductRatingChanged = { product, rating ->
-                    },
-                    onProductRatingChange = { product, rating ->
-                        viewModel.changeUnratedProductRating(product, rating)
-                    },
-                    onDispose = {
-                        viewModel.closeUnratedProductsBottomSheet()
-                    }
-                )
-            }
-
-
         }
 
     }
@@ -163,6 +139,29 @@ fun HomeScreen(
             specialPromotionUi = viewState.specialPromotion,
             onDismissRequest = { viewModel.closeSpecialPromotionBottomSheet() },
             onButtonClick = { }
+        )
+    }
+
+    AnimatedVisibility(
+        visible = viewState.showUnratedProducts,
+        enter = slideInVertically(
+            tween(
+                durationMillis = 300,
+                easing = LinearEasing
+            )
+        ) { it -> it },
+        exit = slideOutVertically(tween(durationMillis = 300, easing = LinearEasing)) { it }
+    ) {
+        UnratedProductsBottomSheet(
+            sectionUnratedProducts = viewState.sectionUnratedProducts,
+            onProductRatingChanged = { product, rating ->
+            },
+            onProductRatingChange = { product, rating ->
+                viewModel.changeUnratedProductRating(product, rating)
+            },
+            onDispose = {
+                viewModel.closeUnratedProductsBottomSheet()
+            }
         )
     }
 

@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.painterResource
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -15,14 +15,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import coil3.compose.rememberAsyncImagePainter
+import com.vodovoz.app.R
 import com.vodovoz.app.common.tab.TabManager
-import com.vodovoz.app.core.navigation.navigateToCategoryProductList
 import com.vodovoz.app.core.navigation.navigateToProductDetails
-import com.vodovoz.app.core.navigation.navigateToSearch
 import com.vodovoz.app.core.navigation.navigateToSearchProductList
 import com.vodovoz.app.design_system.VodovozTheme
-import com.vodovoz.app.util.extensions.disableFullScreen
-import com.vodovoz.app.util.extensions.snack
+import com.vodovoz.app.design_system.composables.placeholders.EmptyResultPlaceholder
+import com.vodovoz.app.design_system.composables.placeholders.EmptyResultPlaceholderItem
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -47,7 +47,6 @@ class QrCodeFragment : Fragment() {
         tabManager.changeTabVisibility(true)
         //todo - do something
         //requireActivity().disableFullScreen()
-
     }
 
     override fun onCreateView(
@@ -62,10 +61,30 @@ class QrCodeFragment : Fragment() {
                     val viewState by viewModel.observeUiState().collectAsStateWithLifecycle()
                     val dataState = viewState.data
 
-                    ScannerScreen(
-                        viewState = dataState,
-                        viewModel = viewModel
-                    )
+                    when (val uiState = dataState.uiState) {
+                        is QrCodeViewModel.QrCodeUiState.EmptyResult -> {
+                            EmptyResultPlaceholder(
+                                title = uiState.title,
+                                description = uiState.description,
+                                item = EmptyResultPlaceholderItem.Cross,
+                                imagePainter = if (uiState.imageUrl.isBlank()) {
+                                    painterResource(id = R.drawable.pic_search)
+                                } else {
+                                    rememberAsyncImagePainter(model = uiState.imageUrl)
+                                },
+                                onItemClick = {
+                                    viewModel.setScannerState()
+                                }
+                            )
+                        }
+
+                        QrCodeViewModel.QrCodeUiState.Scanner -> {
+                            ScannerScreen(
+                                viewState = dataState,
+                                viewModel = viewModel,
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -91,10 +110,6 @@ class QrCodeFragment : Fragment() {
                                 )
                             }
 
-                            is QrCodeViewModel.QrCodeEvents.Error -> {
-                                requireActivity().snack(qrCodeEvents.message)
-                            }
-
                             QrCodeViewModel.QrCodeEvents.GoBack -> {
                                 findNavController().popBackStack()
                             }
@@ -102,6 +117,7 @@ class QrCodeFragment : Fragment() {
                             is QrCodeViewModel.QrCodeEvents.GoToProductDetails -> {
                                 findNavController().navigateToProductDetails(qrCodeEvents.id)
                             }
+
                             is QrCodeViewModel.QrCodeEvents.GoToSearchProducts -> {
                                 findNavController().navigateToSearchProductList(qrCodeEvents.barCode)
                             }

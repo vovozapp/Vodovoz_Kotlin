@@ -11,12 +11,13 @@ data class VodovozResponseDTO<T>(
     val message: String?,
     @Json(name = "data")
     val data: T?,
+    @Json(name = "errordata")
     val error: ErrorDataDTO?
 )
 
 @JsonClass(generateAdapter = true)
 data class ErrorDataDTO(
-    @Json(name = "ZAGALOVOK") val title: String,
-    @Json(name = "MESSAGE") val message: String,
-    @Json(name = "IMAGE") val imageUrl: String,
+    @Json(name = "ZAGALOVOK") val title: String?,
+    @Json(name = "MESSAGE") val message: String?,
+    @Json(name = "IMAGE") val imageUrl: String?,
 )

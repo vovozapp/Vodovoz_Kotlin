@@ -1,5 +1,6 @@
 package com.vodovoz.app.data.vodovoz_service.mappers
 
+import com.vodovoz.app.data.vodovoz_service.di.toFullUrl
 import com.vodovoz.app.data.vodovoz_service.model.unrated_products.UnratedProductDTO
 import com.vodovoz.app.data.vodovoz_service.model.unrated_products.UnratedProductsSectionDTO
 import com.vodovoz.app.domain.general.model.EmptyResultException
@@ -20,6 +21,6 @@ fun UnratedProductDTO.toDomain(): UnratedProductModel? {
     return UnratedProductModel(
         id = ID ?: return null,
         name = NAME ?: return null,
-        detailPicture = DETAIL_PICTURE ?: return null
+        detailPicture = DETAIL_PICTURE?.toFullUrl() ?: return null
     )
 }

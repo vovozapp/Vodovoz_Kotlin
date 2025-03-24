@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.search.qrcode
 
+import androidx.camera.core.Preview
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.content.Event
 import com.vodovoz.app.common.content.PagingContractViewModel
@@ -12,6 +13,7 @@ import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.util.extensions.singleResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,16 +22,23 @@ class QrCodeViewModel @Inject constructor(
     private val vodovozServiceRepository: VodovozServiceRepository,
 ) : PagingContractViewModel<QrCodeViewModel.QrCodeState, QrCodeViewModel.QrCodeEvents>(QrCodeState()) {
 
+    private val mutex = Mutex()
+
     fun searchByBarCode(barCode: String) = viewModelScope.launch {
+        if (!mutex.tryLock()) return@launch
+
         uiStateListener.updateData { s ->
-            s.copy(uiState = QrCodeUiState.Scanner)
+            s.copy(barCode = barCode)
         }
-        uiStateListener.updateData { s -> s.copy(barCode = barCode, uiState = QrCodeUiState.Scanner) }
 
         val barCodeProductsResult =
-            vodovozServiceRepository.getBarCodeProducts(dataState.barCode).singleResult()
+            vodovozServiceRepository.getBarCodeProducts(barCode).singleResult()
 
         barCodeProductsResult.onSuccess { products ->
+            uiStateListener.updateData { s ->
+                s.copy(uiState = QrCodeUiState.Scanner)
+            }
+
             val product = products.firstOrNull()
             if (products.size == 1 && product != null) {
                 eventListener.emit(QrCodeEvents.GoToProductDetails(product.id))
@@ -40,44 +49,22 @@ class QrCodeViewModel @Inject constructor(
 
             when (t) {
                 is EmptyResultException -> {
+
+                    val errorModel = t.data
+
                     uiStateListener.updateData { s ->
-                        s.copy(uiState = QrCodeUiState.Scanner)
+                        s.copy(
+                            uiState = QrCodeUiState.EmptyResult(
+                                errorModel.titleHtml,
+                                errorModel.descriptionHtml,
+                                errorModel.imageUrl
+                            )
+                        )
                     }
-                }
-
-                else -> {
-                    navigateBack()
                 }
             }
         }
-    }
-
-    fun startSearchByQrCode(text: String?) {
-        viewModelScope.launch {
-            if (text.isNullOrEmpty()) {
-                eventListener.emit(QrCodeEvents.Error("Ничего не найдено"))
-                return@launch
-            }
-
-            runCatching { repository.fetchSearchDataByQrCode(text) }
-                .onSuccess {
-                    val list = it.listData
-                    if (list.isNullOrEmpty()) {
-                        eventListener.emit(QrCodeEvents.Error("Ничего не найдено"))
-                        return@launch
-                    }
-                    val id = list[0].id
-                    if (id.isNullOrEmpty()) {
-                        eventListener.emit(QrCodeEvents.Error("Ничего не найдено"))
-                        return@launch
-                    }
-                    eventListener.emit(QrCodeEvents.Success(id))
-                }
-                .onFailure {
-                    eventListener.emit(QrCodeEvents.Error("Ничего не найдено"))
-                }
-        }
-    }
+    }.invokeOnCompletion { if(mutex.isLocked){ mutex.unlock() } }
 
     fun switchFlashOn() = viewModelScope.launch {
         uiStateListener.updateData { s ->
@@ -91,24 +78,33 @@ class QrCodeViewModel @Inject constructor(
         eventListener.emit(QrCodeEvents.GoBack)
     }
 
+    fun setScannerState() = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(uiState = QrCodeUiState.Scanner)
+        }
+    }
+
 
     data class QrCodeState(
         val item: Item? = null,
         val flashOn: Boolean = false,
         val barCode: String = "",
-        val uiState: QrCodeUiState = QrCodeUiState.Scanner
+        val uiState: QrCodeUiState = QrCodeUiState.Scanner,
     ) : State
 
     sealed interface QrCodeUiState {
 
         data object Scanner : QrCodeUiState
-        data object EmptyResult : QrCodeUiState
+        data class EmptyResult(
+            val title: String,
+            val description: String,
+            val imageUrl: String,
+        ) : QrCodeUiState
 
     }
 
     sealed class QrCodeEvents : Event {
         data class Success(val id: String) : QrCodeEvents()
-        data class Error(val message: String) : QrCodeEvents()
         data class GoToProductDetails(val id: Long) : QrCodeEvents()
         data class GoToSearchProducts(val barCode: String) : QrCodeEvents()
         data object GoBack : QrCodeEvents()

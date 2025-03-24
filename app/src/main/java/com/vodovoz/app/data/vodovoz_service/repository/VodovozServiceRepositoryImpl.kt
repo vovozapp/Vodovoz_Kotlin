@@ -324,7 +324,16 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                 vodovozService.getSearchProducts(query = barCode, isCamera = "Y")
             },
             mapper = {
+                if (it.error != null) {
+                    throw EmptyResultException(data = it.error.toDomain())
+                }
                 it.data!!.TOVAR!!.mapToDomain()
+            },
+            onFail = { response ->
+                if (response.code() == 404) {
+                    throw EmptyResultException(htmlText = "", message = response.messageWithCode())
+                }
+                throw RequestException(response.messageWithCode())
             }
         )
     }

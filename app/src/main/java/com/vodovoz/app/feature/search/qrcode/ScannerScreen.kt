@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.search.qrcode
 
+import androidx.camera.core.Camera
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -48,13 +49,13 @@ fun ScannerScreen(
 ) {
     Box {
         CameraView(
+            flashOn = viewState.flashOn,
             onCameraOpenFail = {
                 viewModel.navigateBack()
             },
             onScanSuccess = { barCode ->
                 viewModel.searchByBarCode(barCode)
-            },
-            flashOn = viewState.flashOn
+            }
         )
         ScannerDecorations(
             flashOn = viewState.flashOn,
@@ -85,7 +86,7 @@ fun ScannerTopBar(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            painter = painterResource(id = R.drawable.ic_close_stories),
+            painter = painterResource(id = R.drawable.icon_close),
             contentDescription = null,
             modifier = Modifier
                 .size(24.dp)

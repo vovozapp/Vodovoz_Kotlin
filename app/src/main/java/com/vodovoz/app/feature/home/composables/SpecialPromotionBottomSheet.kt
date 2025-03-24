@@ -58,7 +58,6 @@ fun SpecialPromotionBottomSheet(
             val imageState by painter.state.collectAsStateWithLifecycle()
 
             if (imageState is AsyncImagePainter.State.Success) {
-
                 Image(
                     painter = painter,
                     contentDescription = null,
