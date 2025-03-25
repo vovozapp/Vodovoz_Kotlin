@@ -1,6 +1,5 @@
 package com.vodovoz.app.feature.search.qrcode
 
-import androidx.camera.core.Preview
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.content.Event
 import com.vodovoz.app.common.content.PagingContractViewModel
@@ -47,24 +46,26 @@ class QrCodeViewModel @Inject constructor(
             }
         }.onFailure { t ->
 
-            when (t) {
-                is EmptyResultException -> {
+            if (t is EmptyResultException && t.errorData != null) {
+                val errorModel = t.errorData
 
-                    val errorModel = t.data
-
-                    uiStateListener.updateData { s ->
-                        s.copy(
-                            uiState = QrCodeUiState.EmptyResult(
-                                errorModel.titleHtml,
-                                errorModel.descriptionHtml,
-                                errorModel.imageUrl
-                            )
+                uiStateListener.updateData { s ->
+                    s.copy(
+                        uiState = QrCodeUiState.EmptyResult(
+                            errorModel.headerHtml,
+                            errorModel.descriptionHtml,
+                            errorModel.imageUrl
                         )
-                    }
+                    )
                 }
             }
+
         }
-    }.invokeOnCompletion { if(mutex.isLocked){ mutex.unlock() } }
+    }.invokeOnCompletion {
+        if (mutex.isLocked) {
+            mutex.unlock()
+        }
+    }
 
     fun switchFlashOn() = viewModelScope.launch {
         uiStateListener.updateData { s ->

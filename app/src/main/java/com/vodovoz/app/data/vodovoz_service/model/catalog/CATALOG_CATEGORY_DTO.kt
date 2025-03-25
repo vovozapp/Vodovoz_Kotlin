@@ -1,4 +1,4 @@
-package com.vodovoz.app.data.vodovoz_service.model.catalog_details
+package com.vodovoz.app.data.vodovoz_service.model.catalog
 
 
 import com.squareup.moshi.Json

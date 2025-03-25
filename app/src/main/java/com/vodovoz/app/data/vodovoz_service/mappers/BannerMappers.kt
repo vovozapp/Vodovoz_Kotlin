@@ -5,7 +5,7 @@ import com.vodovoz.app.data.vodovoz_service.model.BannerDTO
 import com.vodovoz.app.domain.general.model.BannerModel
 
 
-fun List<BannerDTO>.toDomain(): List<BannerModel> {
+fun List<BannerDTO>.mapToDomain(): List<BannerModel> {
     return mapNotNull { it.toDomain() }
 }
 

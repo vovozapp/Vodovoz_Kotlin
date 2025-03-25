@@ -2,6 +2,7 @@ package com.vodovoz.app.data.vodovoz_service.model
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import com.vodovoz.app.domain.general.model.ColorfulButtonModel
 
 @JsonClass(generateAdapter = true)
 data class VodovozResponseDTO<T>(
@@ -12,12 +13,26 @@ data class VodovozResponseDTO<T>(
     @Json(name = "data")
     val data: T?,
     @Json(name = "errordata")
-    val error: ErrorDataDTO?
+    val error: ErrorDataDTO?,
 )
 
 @JsonClass(generateAdapter = true)
 data class ErrorDataDTO(
-    @Json(name = "ZAGALOVOK") val title: String?,
+    @Json(name = "TITLE") val title: String?,
+    @Json(name = "ZAGALOVOK") val header: String?,
     @Json(name = "MESSAGE") val message: String?,
     @Json(name = "IMAGE") val imageUrl: String?,
+    @Json(name = "KNOPKA") val button: ErrorDataButtonDTO?,
+)
+
+@JsonClass(generateAdapter = true)
+data class ErrorDataButtonDTO(
+    @Json(name = "TEXT")
+    val text: String?,
+    @Json(name = "COLOR")
+    val color: String?,
+    @Json(name = "BACKGROUND")
+    val background: String?,
+    @Json(name = "ID")
+    val id: String?,
 )

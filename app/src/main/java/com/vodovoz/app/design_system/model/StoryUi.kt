@@ -38,6 +38,7 @@ data class ColorfulButtonUi(
     val name: String,
     val backgroundColor: Color,
     val textColor: Color,
+    val id: String = ""
 ) {
     companion object {
         val Empty = ColorfulButtonUi("", Color.Unspecified, Color.Unspecified)
@@ -70,6 +71,7 @@ fun ColorfulButtonModel.toUi(): ColorfulButtonUi {
     return ColorfulButtonUi(
         name = name,
         backgroundColor = Color.fromHexOrUnspecified(backgroundColor),
-        textColor = Color.fromHexOrUnspecified(textColor)
+        textColor = Color.fromHexOrUnspecified(textColor),
+        id = id
     )
 }

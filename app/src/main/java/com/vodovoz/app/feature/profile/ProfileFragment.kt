@@ -22,7 +22,7 @@ import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
-import com.vodovoz.app.core.navigation.navigateToCertificateActivation
+import com.vodovoz.app.core.navigation.navigateToLogin
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.databinding.FragmentProfileFlowBinding
 import com.vodovoz.app.feature.cart.CartFlowViewModel
@@ -40,7 +40,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ProfileFragment : BaseFragment() {
+class ProfileFragment1 : BaseFragment() {
 
     override fun layout(): Int = R.layout.fragment_profile_flow
 
@@ -152,6 +152,10 @@ class ProfileFragment : BaseFragment() {
                                     }
                                     .setNegativeButton("Нет") { dialog, _ -> dialog.dismiss() }
                                     .show()
+                            }
+
+                            ProfileFlowViewModel.ProfileEvents.GoToLogin -> {
+                                findNavController().navigateToLogin()
                             }
                         }
                     }

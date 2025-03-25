@@ -1,14 +1,24 @@
 package com.vodovoz.app.domain.general.model
 
 
-class RequestException(
+open class RequestException(
     message: String = "",
     cause: Throwable? = null,
+    val errorData: ErrorDataModel? = null,
 ) : IllegalStateException(
     message, cause
 )
 
 class WebsiteErrorException(
+    message: String = "",
+    cause: Throwable? = null,
+) : RequestException(
+    message, cause
+)
+
+
+
+class ValidationException(
     message: String = "",
     cause: Throwable? = null,
 ) : IllegalStateException(
@@ -18,35 +28,38 @@ class WebsiteErrorException(
 class FavoritesNotFoundException(
     message: String = "",
     cause: Throwable? = null,
-) : IllegalStateException(
-    message, cause
-)
-
-class ValidationException(
-    message: String = "",
-    cause: Throwable? = null,
-) : IllegalStateException(
-    message, cause
+    errorData: ErrorDataModel? = null,
+) : RequestException(
+    message, cause, errorData
 )
 
 class EmptyResultException(
     val htmlText: String = "",
-    val data: ErrorDataModel = ErrorDataModel("", "", ""),
     message: String = "",
+    errorData: ErrorDataModel? = null,
     cause: Throwable? = null,
-) : IllegalStateException(
-    message, cause
+) : RequestException(
+    message, cause, errorData
 )
 
-class UserNotRegisterException(
+class UserNotLoginException(
     message: String = "",
     cause: Throwable? = null,
-) : IllegalStateException(
-    message, cause
+    errorData: ErrorDataModel? = null,
+) : RequestException(
+    message, cause, errorData
 )
 
 data class ErrorDataModel(
-    val titleHtml: String,
+    val title: String,
+    val headerHtml: String,
     val descriptionHtml: String,
     val imageUrl: String,
-)
+    val button: ColorfulButtonModel? = null,
+) {
+    companion object {
+        val Empty = ErrorDataModel(
+            "", "", "", ""
+        )
+    }
+}

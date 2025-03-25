@@ -17,6 +17,7 @@ import com.vodovoz.app.domain.general.model.ProductDetailsScreenModel
 import com.vodovoz.app.domain.general.model.ProductModel
 import com.vodovoz.app.domain.general.model.ProductsSectionModel
 import com.vodovoz.app.domain.general.model.ProductsTitle
+import com.vodovoz.app.domain.general.model.ProfileDetailsModel
 import com.vodovoz.app.domain.general.model.PromotionDetailsModel
 import com.vodovoz.app.domain.general.model.PromotionModel
 import com.vodovoz.app.domain.general.model.PromotionsSectionModel
@@ -28,10 +29,11 @@ import com.vodovoz.app.domain.general.model.StoryModel
 import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
 import com.vodovoz.app.domain.general.model.UnratedProductsSectionModel
 import com.vodovoz.app.feature.preorder.model.FieldUi
-import com.yandex.mapkit.search.Advertisement.Product
 import kotlinx.coroutines.flow.Flow
 
 interface VodovozServiceRepository {
+
+    fun getProfileDetails(): Flow<Result<ProfileDetailsModel>>
 
     fun getFilters(categoryId: Int): Flow<Result<FiltersModel>>
 
@@ -52,9 +54,16 @@ interface VodovozServiceRepository {
 
     fun getCatalogDetails(): Flow<Result<CatalogDetailsModel>>
 
-    fun getCategoryProducts(categoryId: Long, filters: FiltersModel): Flow<Result<ProductsSectionModel>>
+    fun getCategoryProducts(
+        categoryId: Long,
+        filters: FiltersModel,
+    ): Flow<Result<ProductsSectionModel>>
 
-    fun getCategoryProductsPaged(categoryId: Long, sort: SortModel, filters: FiltersModel): Flow<PagingData<ProductModel>>
+    fun getCategoryProductsPaged(
+        categoryId: Long,
+        sort: SortModel,
+        filters: FiltersModel,
+    ): Flow<PagingData<ProductModel>>
 
     fun getSearchProductsPaged(
         query: String,
@@ -79,13 +88,13 @@ interface VodovozServiceRepository {
     fun getUnratedProductsDetails(): Flow<Result<UnratedProductsSectionModel>>
 
     fun getFavoriteProducts(
-        productsIds: String = ""
+        productsIds: String = "",
     ): Flow<Result<ProductsSectionModel>>
 
     fun getFavoriteProductsPaged(
         categoryId: Int = -1,
         sort: SortModel = SortModel.Empty,
-        productsIds: String = ""
+        productsIds: String = "",
     ): Flow<PagingData<ProductModel>>
 
     suspend fun addFavoriteProducts(

@@ -1,6 +1,7 @@
 package com.vodovoz.app.feature.profile
 
 import android.app.Application
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
@@ -10,17 +11,30 @@ import com.vodovoz.app.common.content.PagingContractViewModel
 import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.toErrorState
+import com.vodovoz.app.common.content.updateData
 import com.vodovoz.app.common.cookie.CookieManager
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.design_system.model.BannerUi
+import com.vodovoz.app.design_system.model.ColorfulButtonUi
+import com.vodovoz.app.design_system.model.mapToUi
+import com.vodovoz.app.design_system.model.toUi
+import com.vodovoz.app.domain.general.model.UserNotLoginException
+import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.feature.profile.ProfileFlowViewModel.ProfileState.Companion.fetchStaticItems
 import com.vodovoz.app.feature.profile.cats.mapToUi
+import com.vodovoz.app.feature.profile.model.ProfileCardUi
+import com.vodovoz.app.feature.profile.model.ProfileMenuItemUi
+import com.vodovoz.app.feature.profile.model.ProfileWalletItemUi
+import com.vodovoz.app.feature.profile.model.UserInfoBlockUi
+import com.vodovoz.app.feature.profile.model.mapToUi
+import com.vodovoz.app.feature.profile.model.toUi
 import com.vodovoz.app.feature.profile.viewholders.models.ProfileBestForYou
 import com.vodovoz.app.feature.profile.viewholders.models.ProfileBlock
 import com.vodovoz.app.feature.profile.viewholders.models.ProfileHeader
@@ -33,6 +47,7 @@ import com.vodovoz.app.mapper.CategoryDetailMapper.mapToUI
 import com.vodovoz.app.mapper.UserDataMapper.mapToUI
 import com.vodovoz.app.ui.extensions.ContextExtensions.isTablet
 import com.vodovoz.app.util.extensions.debugLog
+import com.vodovoz.app.util.extensions.singleResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -60,13 +75,57 @@ class ProfileFlowViewModel @Inject constructor(
     private val tabManager: TabManager,
     private val application: Application,
     private val waterAppHelper: WaterAppHelper,
+    private val vodovozServiceRepository: VodovozServiceRepository,
 ) : PagingContractViewModel<ProfileFlowViewModel.ProfileState, ProfileFlowViewModel.ProfileEvents>(
     ProfileState.idle()
 ) {
 
     init {
+        fetchProfileDetails()
         viewModelScope.launch {
             siteStateManager.requestSiteState()
+        }
+    }
+
+    fun fetchProfileDetails() = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(uiState = ProfileUiState.Loading)
+        }
+        val profileDetailsResult = vodovozServiceRepository.getProfileDetails().singleResult()
+        profileDetailsResult.onSuccess { profileDetails ->
+            uiStateListener.updateData { s ->
+                s.copy(
+                    uiState = ProfileUiState.Profile,
+                    banners = profileDetails.banners.mapToUi(),
+                    userInfoBlock = profileDetails.userInfoBlock.toUi(),
+                    cards = profileDetails.cards.mapToUi(),
+                    smallMenu = profileDetails.smallMenu.mapToUi(),
+                    normalMenu = profileDetails.normalMenu.mapToUi(),
+                    walletItems = profileDetails.walletItems.mapToUi()
+                )
+            }
+        }.onFailure { t ->
+
+            val uiState = when {
+                t is UserNotLoginException && t.errorData != null -> with(t.errorData) {
+                    val button = button?.toUi() ?: return@with ProfileUiState.Error
+                    ProfileUiState.UserNotFound(
+                        title,
+                        headerHtml,
+                        descriptionHtml,
+                        imageUrl,
+                        button
+                    )
+                }
+
+                else -> ProfileUiState.Error
+            }
+
+            uiStateListener.updateData { s ->
+                s.copy(
+                    uiState = uiState
+                )
+            }
         }
     }
 
@@ -347,6 +406,9 @@ class ProfileFlowViewModel @Inject constructor(
     }
 
     fun refresh() {
+
+        fetchProfileDetails()
+
         if (!state.loadingPage) {
             val userId = accountManager.fetchAccountId()
 
@@ -397,17 +459,17 @@ class ProfileFlowViewModel @Inject constructor(
     }
 
     fun logout() = viewModelScope.launch {
-            val userId = accountManager.fetchAccountId() ?: return@launch
-            flow { emit(repository.logout(userId)) }
-                .onEach {
-                    cookieManager.removeCookieSessionId()
-                }.firstOrNull()
-            accountManager.removeUserId()
-            accountManager.removeUserToken()
-            tabManager.clearBottomNavProfileState()
-            cartManager.clearCart()
-            eventListener.emit(ProfileEvents.Logout)
-            waterAppHelper.clearData()
+        val userId = accountManager.fetchAccountId() ?: return@launch
+        flow { emit(repository.logout(userId)) }
+            .onEach {
+                cookieManager.removeCookieSessionId()
+            }.firstOrNull()
+        accountManager.removeUserId()
+        accountManager.removeUserToken()
+        tabManager.clearBottomNavProfileState()
+        cartManager.clearCart()
+        eventListener.emit(ProfileEvents.Logout)
+        waterAppHelper.clearData()
     }
 
     fun checkLogin() {
@@ -526,11 +588,24 @@ class ProfileFlowViewModel @Inject constructor(
         }
     }
 
+    fun navigateToLogin(btn: ColorfulButtonUi) = viewModelScope.launch {
+        eventListener.emit(ProfileEvents.GoToLogin)
+    }
+
+    @Immutable
     data class ProfileState(
         val positionItems: List<PositionItem>,
         val items: List<Item>,
         val isLogin: Boolean = true,
         val isSecondLoad: Boolean = false,
+
+        val uiState: ProfileUiState = ProfileUiState.Loading,
+        val userInfoBlock: UserInfoBlockUi = UserInfoBlockUi.Empty,
+        val banners: List<BannerUi> = emptyList(),
+        val cards: List<ProfileCardUi> = emptyList(),
+        val walletItems: List<ProfileWalletItemUi> = emptyList(),
+        val smallMenu: List<ProfileMenuItemUi> = emptyList(),
+        val normalMenu: List<ProfileMenuItemUi> = emptyList(),
     ) : State {
         companion object {
             fun idle(): ProfileState {
@@ -551,9 +626,26 @@ class ProfileFlowViewModel @Inject constructor(
         }
     }
 
+    sealed interface ProfileUiState {
+
+        data object Loading : ProfileUiState
+        data object Profile : ProfileUiState
+        data class UserNotFound(
+            val title: String,
+            val header: String,
+            val description: String,
+            val imageUrl: String,
+            val button: ColorfulButtonUi,
+        ) : ProfileUiState
+
+        data object Error : ProfileUiState
+
+    }
+
     sealed class ProfileEvents : Event {
         data object Logout : ProfileEvents()
         data object GoToCart : ProfileEvents()
+        data object GoToLogin : ProfileEvents()
     }
 
     data class PositionItem(

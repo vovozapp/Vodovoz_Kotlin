@@ -1,6 +1,7 @@
 package com.vodovoz.app.data.vodovoz_service.mappers
 
 import com.vodovoz.app.core.network.messageWithCode
+import com.vodovoz.app.domain.general.model.EmptyResultException
 import com.vodovoz.app.domain.general.model.RequestException
 import com.vodovoz.app.util.extensions.catchResult
 import com.vodovoz.app.util.extensions.debugLog
@@ -12,21 +13,23 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
 import retrofit2.Response
 
- inline fun <T, R> executeRequest(
-     crossinline request: suspend () -> Response<T>,
-     crossinline mapper: (T) -> R,
-     noinline onFail: ((Response<T>) -> Result<R>)? = null,
+inline fun <T, R> executeRequest(
+    crossinline request: suspend () -> Response<T>,
+    crossinline mapper: (T) -> R,
+    noinline onFail: ((Response<T>) -> Result<R>)? = null,
 ): Flow<Result<R>> {
     return flow {
         val response = request()
+        val body = response.body()
 
-        if (response.isSuccessful && response.body() != null) {
-            val result = mapper(response.body()!!)
+        if (response.isSuccessful && body != null) {
+            val result = mapper(body)
             emit(Result.success(result))
         } else if (onFail != null) {
             emit(onFail(response))
         } else {
-            emit(Result.failure(RequestException(response.messageWithCode())))
+            val exception = RequestException(response.messageWithCode())
+            emit(Result.failure(exception))
         }
     }.catchResult().take(1).onEach { result ->
         result.onFailure { throwable -> debugLog { throwable.stackTraceToString() } }

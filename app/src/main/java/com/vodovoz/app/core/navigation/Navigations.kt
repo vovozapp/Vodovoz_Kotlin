@@ -11,6 +11,9 @@ import com.vodovoz.app.feature.catalog.model.CatalogCategoryUi
 import com.vodovoz.app.feature.home.model.CategoryUi
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 
+fun NavController.navigateToLogin() {
+    navigate(R.id.loginFragment)
+}
 
 fun NavController.navigateToProductFilterValues(categoryId: Long, filter: FilterUi) {
     navigate(

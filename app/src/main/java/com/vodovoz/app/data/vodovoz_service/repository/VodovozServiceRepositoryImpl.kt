@@ -35,6 +35,7 @@ import com.vodovoz.app.domain.general.model.ProductDetailsScreenModel
 import com.vodovoz.app.domain.general.model.ProductModel
 import com.vodovoz.app.domain.general.model.ProductsSectionModel
 import com.vodovoz.app.domain.general.model.ProductsTitle
+import com.vodovoz.app.domain.general.model.ProfileDetailsModel
 import com.vodovoz.app.domain.general.model.PromotionDetailsModel
 import com.vodovoz.app.domain.general.model.PromotionModel
 import com.vodovoz.app.domain.general.model.PromotionsSectionModel
@@ -46,7 +47,7 @@ import com.vodovoz.app.domain.general.model.SortModel
 import com.vodovoz.app.domain.general.model.StoryModel
 import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
 import com.vodovoz.app.domain.general.model.UnratedProductsSectionModel
-import com.vodovoz.app.domain.general.model.UserNotRegisterException
+import com.vodovoz.app.domain.general.model.UserNotLoginException
 import com.vodovoz.app.domain.general.model.ValidationException
 import com.vodovoz.app.domain.general.model.format
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
@@ -65,6 +66,38 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     private val accountManager: AccountManager,
     private val moshi: Moshi,
 ) : VodovozServiceRepository {
+
+    override fun getProfileDetails(): Flow<Result<ProfileDetailsModel>> {
+        return executeRequest(
+            request = {
+                vodovozService.getProfileDetails(accountManager.fetchAccountId() ?: -1)
+            },
+            mapper = {
+                val errorData = it.error?.toDomain()
+                if (errorData != null) {
+                    throw UserNotLoginException(
+                        message = it.message ?: "",
+                        errorData = errorData,
+                    )
+                }
+                it.data!!.toDomain()
+            },
+            onFail = { response ->
+                val code = response.code()
+                val errorData = moshi.fromJson<VodovozResponseDTO<String>>(
+                    response.stringBody(),
+                    Types.newParameterizedType(VodovozResponseDTO::class.java, String::class.java)
+                ).error
+
+                val exception = when {
+                    code == 404 && errorData != null -> UserNotLoginException(errorData = errorData.toDomain())
+                    else -> RequestException(response.messageWithCode())
+                }
+                Result.failure(exception)
+            }
+        )
+    }
+
     override fun getFilters(categoryId: Int): Flow<Result<FiltersModel>> {
         return executeRequest(
             request = {
@@ -128,7 +161,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     override fun activateCertificate(field: FieldUi): Flow<Result<String>> {
         return executeRequest(
             request = {
-                val userId = accountManager.fetchAccountId() ?: throw UserNotRegisterException("")
+                val userId = accountManager.fetchAccountId() ?: throw UserNotLoginException("")
                 vodovozService.activateCertificate(userId, mapOf(field.id to field.value.trim()))
             },
             mapper = {
@@ -325,7 +358,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
             },
             mapper = {
                 if (it.error != null) {
-                    throw EmptyResultException(data = it.error.toDomain())
+                    throw EmptyResultException(errorData = it.error.toDomain())
                 }
                 it.data!!.TOVAR!!.mapToDomain()
             },
@@ -428,7 +461,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     override fun getUnratedProductsDetails(): Flow<Result<UnratedProductsSectionModel>> {
         return executeRequest(
             request = {
-                val userId = accountManager.fetchAccountId() ?: throw UserNotRegisterException()
+                val userId = accountManager.fetchAccountId() ?: throw UserNotLoginException()
                 vodovozService.getUnratedProductsDetails(userId)
             },
             mapper = {
@@ -492,7 +525,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     override suspend fun addFavoriteProducts(productsIds: String): Flow<Result<ProductsSectionModel>> {
         return executeRequest(
             request = {
-                val userId = accountManager.fetchAccountId() ?: throw UserNotRegisterException("")
+                val userId = accountManager.fetchAccountId() ?: throw UserNotLoginException("")
                 vodovozService.getFavoriteProducts(userId = userId, productsIds = productsIds)
             },
             mapper = { it ->
@@ -504,7 +537,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     override suspend fun addProductToFavorites(productId: Long): Flow<Result<String>> {
         return executeRequest(
             request = {
-                val userId = accountManager.fetchAccountId() ?: throw UserNotRegisterException()
+                val userId = accountManager.fetchAccountId() ?: throw UserNotLoginException()
                 vodovozService.addToFavorites(productId, userId)
             },
             mapper = {
@@ -516,7 +549,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     override suspend fun removeProductFromFavorites(productId: Long): Flow<Result<String>> {
         return executeRequest(
             request = {
-                val userId = accountManager.fetchAccountId() ?: throw UserNotRegisterException()
+                val userId = accountManager.fetchAccountId() ?: throw UserNotLoginException()
                 vodovozService.removeFromFavorites(productId, userId)
             },
             mapper = {
@@ -642,7 +675,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
             vodovozService.getBanners()
         },
         mapper = { promotionsDTOVodovozResponseDTO ->
-            promotionsDTOVodovozResponseDTO.data?.toDomain()!!
+            promotionsDTOVodovozResponseDTO.data?.mapToDomain()!!
         }
     )
 

@@ -50,9 +50,7 @@ fun SpecialPromotionBottomSheet(
                 text = specialPromotionUi.name,
                 modifier = Modifier.padding(top = 8.dp),
                 color = MaterialTheme.colorScheme.onBackground,
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    fontWeight = FontWeight.Medium
-                )
+                style = MaterialTheme.typography.titleMedium
             )
             val painter = rememberAsyncImagePainter(specialPromotionUi.picture)
             val imageState by painter.state.collectAsStateWithLifecycle()
@@ -67,7 +65,7 @@ fun SpecialPromotionBottomSheet(
                         .height(220.dp)
                         .clip(MaterialTheme.shapes.large),
                     contentScale = ContentScale.Crop,
-                    alignment = Alignment.TopCenter
+                    alignment = Alignment.Center
                 )
             }
 
