@@ -10,16 +10,19 @@ import com.vodovoz.app.core.network.messageWithCode
 import com.vodovoz.app.core.network.serialization.fromJson
 import com.vodovoz.app.core.network.stringBody
 import com.vodovoz.app.data.vodovoz_service.VodovozService
+import com.vodovoz.app.data.vodovoz_service.mappers.checkError
 import com.vodovoz.app.data.vodovoz_service.mappers.executeRequest
+import com.vodovoz.app.data.vodovoz_service.mappers.executeVodovozRequest
 import com.vodovoz.app.data.vodovoz_service.mappers.mapToDomain
 import com.vodovoz.app.data.vodovoz_service.mappers.toDomain
 import com.vodovoz.app.data.vodovoz_service.model.ErrorMessageResponseDTO
-import com.vodovoz.app.data.vodovoz_service.model.PreOrderResponseDTO
+import com.vodovoz.app.data.vodovoz_service.model.VodovozErrorResponseDTO
 import com.vodovoz.app.data.vodovoz_service.model.VodovozResponseDTO
 import com.vodovoz.app.domain.general.VodovozPagingSource
 import com.vodovoz.app.domain.general.model.BannerModel
 import com.vodovoz.app.domain.general.model.CatalogDetailsModel
 import com.vodovoz.app.domain.general.model.CertificateActivationDetailsModel
+import com.vodovoz.app.domain.general.model.ChangePasswordDetailsModel
 import com.vodovoz.app.domain.general.model.CommentModel
 import com.vodovoz.app.domain.general.model.EmptyResultException
 import com.vodovoz.app.domain.general.model.FavoritesNotFoundException
@@ -71,11 +74,41 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     private val accountManager: AccountManager,
     private val moshi: Moshi,
 ) : VodovozServiceRepository {
+
+    override fun updatePassword(password: String): Flow<Result<Unit>> {
+        return executeVodovozRequest(
+            request = {
+                vodovozService.updatePassword(accountManager.fetchAccountId() ?: -1, password)
+            },
+            mapper = { vodovozResponseDTO ->
+                vodovozResponseDTO?.checkError { error -> throw UserNotLoginException(errorData = error) }
+            },
+            onFail = { response ->
+                val errorBody = moshi.fromJson<VodovozErrorResponseDTO>(response.stringBody())
+                val message = errorBody.message ?: throw RequestException(response.messageWithCode())
+                throw ValidationException(message = message)
+            }
+        )
+    }
+
+    override fun getChangePasswordDetails(): Flow<Result<ChangePasswordDetailsModel>> {
+        return executeVodovozRequest(
+            request = {
+                vodovozService.getChangePasswordDetails(accountManager.fetchAccountId() ?: -1)
+            },
+            mapper = { vodovozResponse ->
+                vodovozResponse!!.checkError { error -> throw UserNotLoginException(errorData = error) }
+                vodovozResponse.data!!.toDomain()
+            }
+        )
+    }
+
     override fun updateUserAvatar(avatarFile: File): Flow<Result<String>> {
         return executeRequest(
             request = {
                 val requestBody = avatarFile.asRequestBody(avatarFile.extension.toMediaTypeOrNull())
-                val filePart = MultipartBody.Part.createFormData("userpic", avatarFile.name, requestBody)
+                val filePart =
+                    MultipartBody.Part.createFormData("userpic", avatarFile.name, requestBody)
                 vodovozService.updateUserAvatar(accountManager.fetchAccountId() ?: -1, filePart)
             },
             mapper = {
@@ -506,7 +539,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
             mapper = { response -> response.message ?: "" },
             onFail = { response ->
                 val jsonBody = response.stringBody()
-                val responseBody = moshi.fromJson<PreOrderResponseDTO>(jsonBody)
+                val responseBody = moshi.fromJson<VodovozErrorResponseDTO>(jsonBody)
                 Result.failure(ValidationException(responseBody.message ?: ""))
             }
         )

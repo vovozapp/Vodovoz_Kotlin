@@ -5,7 +5,7 @@ import com.squareup.moshi.Json
 import androidx.annotation.Keep
 
 @Keep
-data class USER_DATA_POLE_DTO(
+data class PROFILE_POLE_DTO(
     @Json(name = "TEXT")
     val TEXT: String?,
     @Json(name = "CODE")
@@ -21,5 +21,7 @@ data class USER_DATA_POLE_DTO(
     @Json(name = "TEXTOPIS")
     val TEXTOPIS: String?,
     @Json(name = "SPISOK")
-    val SPISOK: List<SPISOK?>?
+    val SPISOK: List<SPISOK?>?,
+    @Json(name = "OPIS")
+    val OPIS: String?
 )

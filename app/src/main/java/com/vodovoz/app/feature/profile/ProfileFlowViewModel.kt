@@ -89,7 +89,7 @@ class ProfileFlowViewModel @Inject constructor(
 
     fun fetchProfileDetails() = viewModelScope.launch {
         uiStateListener.updateData { s ->
-            s.copy(uiState = if(s.normalMenu.isEmpty()) ProfileUiState.Loading else s.uiState)
+            s.copy(uiState = if (s.normalMenu.isEmpty()) ProfileUiState.Loading else s.uiState)
         }
         val profileDetailsResult = vodovozServiceRepository.getProfileDetails().singleResult()
 
@@ -595,6 +595,10 @@ class ProfileFlowViewModel @Inject constructor(
         eventListener.emit(ProfileEvents.GoToUserData)
     }
 
+    fun activateMenuItem(menuItem: ProfileMenuItemUi) = viewModelScope.launch {
+        eventListener.emit(ProfileEvents.GoByMenuItemId(menuItem.id))
+    }
+
     @Immutable
     data class ProfileState(
         val positionItems: List<PositionItem>,
@@ -651,6 +655,7 @@ class ProfileFlowViewModel @Inject constructor(
         data object GoToCart : ProfileEvents()
         data object GoToLogin : ProfileEvents()
         data object GoToUserData : ProfileEvents()
+        data class GoByMenuItemId(val itemId: String) : ProfileEvents()
     }
 
     data class PositionItem(

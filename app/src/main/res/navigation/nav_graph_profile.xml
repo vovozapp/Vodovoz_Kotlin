@@ -5,6 +5,13 @@
     android:id="@+id/graph_profile"
     app:startDestination="@id/profileFragment">
 
+
+    <fragment
+        android:id="@+id/changePasswordFragment"
+        android:name="com.vodovoz.app.feature.profile.change_password.ChangePasswordFragment"
+        android:label="ChangePasswordFragment"
+        />
+
     <fragment
         android:id="@+id/certificateActivationFragment"
         android:name="com.vodovoz.app.feature.certificate_activation.CertificateActivationFragment"
@@ -1063,6 +1070,7 @@
             android:name="image picker receiver"
             app:argType="long" />
     </fragment>
+
 
     <fragment
         android:id="@+id/serviceDetailNewFragment"

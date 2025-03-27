@@ -7,7 +7,7 @@ import com.squareup.moshi.JsonClass
 
 @Keep
 @JsonClass(generateAdapter = true)
-data class PreOrderResponseDTO(
+data class VodovozErrorResponseDTO(
     @Json(name = "message")
     val message: String?,
     @Json(name = "status")

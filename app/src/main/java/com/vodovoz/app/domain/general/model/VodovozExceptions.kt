@@ -16,8 +16,6 @@ class WebsiteErrorException(
     message, cause
 )
 
-
-
 class ValidationException(
     message: String = "",
     cause: Throwable? = null,

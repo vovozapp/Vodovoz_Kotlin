@@ -15,9 +15,11 @@ import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsCompat.CONSUMED
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -95,34 +97,24 @@ class MainFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activity?.enableEdgeToEdge()
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-
-
         observeTabState()
         observeCartState()
         observeProfileState()
-        //  observeCartLoading()
+        // observeCartLoading()
         observeTabVisibility()
 
         checkForUpdate()
 
-        lifecycleScope.launch {
-            ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, windowInsets ->
-                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-
-                v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                    bottomMargin = insets.bottom
-                    topMargin = insets.top
-                }
-
-                WindowInsetsCompat.CONSUMED
-            }
+        ViewCompat.setOnApplyWindowInsetsListener(
+            binding.nvNavigation
+        ) { _, _ ->
+            return@setOnApplyWindowInsetsListener CONSUMED
         }
     }
 
@@ -182,6 +174,7 @@ class MainFragment : BaseFragment() {
                     .observeTabVisibility()
                     .collect {
                         binding.nvNavigation.isVisible = it
+                        //binding.nvNavigation.visibility = if(it) View.VISIBLE else View.GONE
                     }
             }
         }

@@ -4,6 +4,7 @@ import androidx.paging.PagingData
 import com.vodovoz.app.domain.general.model.BannerModel
 import com.vodovoz.app.domain.general.model.CatalogDetailsModel
 import com.vodovoz.app.domain.general.model.CertificateActivationDetailsModel
+import com.vodovoz.app.domain.general.model.ChangePasswordDetailsModel
 import com.vodovoz.app.domain.general.model.CommentModel
 import com.vodovoz.app.domain.general.model.FieldModel
 import com.vodovoz.app.domain.general.model.FilterValueModel
@@ -34,6 +35,10 @@ import kotlinx.coroutines.flow.Flow
 import java.io.File
 
 interface VodovozServiceRepository {
+
+    fun updatePassword(password: String): Flow<Result<Unit>>
+
+    fun getChangePasswordDetails(): Flow<Result<ChangePasswordDetailsModel>>
 
     fun updateUserAvatar(avatarFile: File): Flow<Result<String>>
 

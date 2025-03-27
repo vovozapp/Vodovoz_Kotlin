@@ -4,12 +4,13 @@ import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.data.vodovoz_service.model.AnalogsSectionDTO
 import com.vodovoz.app.data.vodovoz_service.model.BannerDTO
 import com.vodovoz.app.data.vodovoz_service.model.CertificateActivationDetailsDTO
+import com.vodovoz.app.data.vodovoz_service.model.FieldsDTO
 import com.vodovoz.app.data.vodovoz_service.model.MiniSearchRecommendationsDTO
 import com.vodovoz.app.data.vodovoz_service.model.OrderMenuDTO
 import com.vodovoz.app.data.vodovoz_service.model.PopularCategoriesDTO
 import com.vodovoz.app.data.vodovoz_service.model.PopupWindowDTO
 import com.vodovoz.app.data.vodovoz_service.model.PreOrderDTO
-import com.vodovoz.app.data.vodovoz_service.model.PreOrderResponseDTO
+import com.vodovoz.app.data.vodovoz_service.model.VodovozErrorResponseDTO
 import com.vodovoz.app.data.vodovoz_service.model.PresentDTO
 import com.vodovoz.app.data.vodovoz_service.model.ProductCommentsDTO
 import com.vodovoz.app.data.vodovoz_service.model.ProductsSectionDTO
@@ -41,7 +42,7 @@ import retrofit2.http.QueryMap
 interface VodovozService {
 
     /**
-     * Profile request
+     * Profile requests
      * */
     @GET("profile/index.php?action=glav")
     suspend fun getProfileDetails(
@@ -62,8 +63,19 @@ interface VodovozService {
     @Multipart
     @POST("profile/index.php?action=uploadPhoto")
     suspend fun updateUserAvatar(
-        @Part("userid") userId: Long,
+        @Query("userid") userId: Long,
         @Part file: MultipartBody.Part,
+    ): Response<VodovozResponseDTO<String>>
+
+    @GET("profile/index.php?action=parol")
+    suspend fun getChangePasswordDetails(
+        @Query("userid") userId: Long,
+    ): Response<VodovozResponseDTO<FieldsDTO>>
+
+    @GET("profile/index.php?action=edit")
+    suspend fun updatePassword(
+        @Query("userid") userId: Long,
+        @Query("password") password: String,
     ): Response<VodovozResponseDTO<String>>
 
     /**
@@ -173,7 +185,7 @@ interface VodovozService {
         @Query("userid") userId: Long?,
         @Query("tovar") productId: Long,
         @QueryMap queries: Map<String, String>,
-    ): Response<PreOrderResponseDTO>
+    ): Response<VodovozErrorResponseDTO>
 
     /**
      * Cart requests

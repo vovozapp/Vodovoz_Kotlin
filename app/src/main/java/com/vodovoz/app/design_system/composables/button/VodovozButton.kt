@@ -27,27 +27,29 @@ fun VodovozButton(
     onClick: () -> Unit,
     enabled: Boolean = true,
     colors: ButtonColors = VodovozButtonDefaults.primaryColors(),
-    textStyle: TextStyle = ExtendedTheme.typography.buttonMedium
+    textStyle: TextStyle = ExtendedTheme.typography.buttonMedium,
 ) {
     FilledTonalButton(
         modifier = modifier
             .height(48.dp)
             .fillMaxWidth(),
-        onClick = onClick,
+        onClick = {
+            if (!isLoading) { onClick() }
+        },
         colors = colors,
         shape = MaterialTheme.shapes.large,
         contentPadding = PaddingValues(horizontal = 16.dp),
         enabled = enabled,
         elevation = null
     ) {
-        if(isLoading && enabled) {
+        if (isLoading && enabled) {
             CircularProgressIndicator(
                 modifier = Modifier.size(24.dp),
                 strokeWidth = 2.dp,
                 color = MaterialTheme.colorScheme.background,
                 trackColor = Color.Transparent
             )
-        }else{
+        } else {
             Text(text = text, style = textStyle, maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
     }
@@ -61,7 +63,7 @@ fun VodovozButton(
     onClick: () -> Unit,
     enabled: Boolean = true,
     colors: ButtonColors = VodovozButtonDefaults.primaryColors(),
-    textStyle: TextStyle = ExtendedTheme.typography.buttonMedium
+    textStyle: TextStyle = ExtendedTheme.typography.buttonMedium,
 ) {
     FilledTonalButton(
         modifier = modifier
@@ -85,7 +87,7 @@ fun VodovozButton(
     onClick: () -> Unit,
     enabled: Boolean = true,
     colors: ButtonColors = VodovozButtonDefaults.primaryColors(),
-    textStyle: TextStyle = ExtendedTheme.typography.buttonMedium
+    textStyle: TextStyle = ExtendedTheme.typography.buttonMedium,
 ) {
     FilledTonalButton(
         modifier = modifier
@@ -109,7 +111,7 @@ fun VodovozButtonSmall(
     onClick: () -> Unit,
     enabled: Boolean = true,
     colors: ButtonColors = VodovozButtonDefaults.primaryColors(),
-    textStyle: TextStyle = ExtendedTheme.typography.buttonSmall
+    textStyle: TextStyle = ExtendedTheme.typography.buttonSmall,
 ) {
     FilledTonalButton(
         modifier = modifier
@@ -125,7 +127,6 @@ fun VodovozButtonSmall(
         Text(text = text, style = textStyle, maxLines = 1)
     }
 }
-
 
 
 data object VodovozButtonDefaults {

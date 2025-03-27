@@ -46,12 +46,16 @@ fun ProfileScreen(
         ) {
             ProfileUserInfoRow(
                 userInfoBlock = viewState.userInfoBlock,
-                onClick = { viewModel.navigateToUserData() }
+                onClick = {
+                    viewModel.navigateToUserData()
+                }
             )
             ProfileCardsRow(
                 modifier = Modifier.padding(top = 16.dp),
                 cards = viewState.cards,
-                onCardClick = { }
+                onCardClick = {
+
+                }
             )
             ProfileWalletItemsRow(
                 modifier = Modifier.padding(top = 16.dp),
@@ -97,8 +101,8 @@ fun ProfileScreen(
                     )
                 ),
             menuItems = viewState.normalMenu,
-            onItemClick = {
-
+            onItemClick = { menuItem ->
+                viewModel.activateMenuItem(menuItem)
             }
         )
     }

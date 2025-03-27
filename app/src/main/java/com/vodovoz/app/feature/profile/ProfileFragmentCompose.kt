@@ -20,6 +20,7 @@ import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
+import com.vodovoz.app.core.navigation.NavigationHandler
 import com.vodovoz.app.core.navigation.navigateToLogin
 import com.vodovoz.app.core.navigation.navigateToUserData
 import com.vodovoz.app.design_system.VodovozTheme
@@ -122,8 +123,8 @@ class ProfileFragment : Fragment() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.observeEvent()
-                    .collect {
-                        when (it) {
+                    .collect { events ->
+                        when (events) {
                             is ProfileFlowViewModel.ProfileEvents.Logout -> {
 
                                 flowViewModel.refresh()
@@ -149,6 +150,10 @@ class ProfileFragment : Fragment() {
 
                             ProfileFlowViewModel.ProfileEvents.GoToUserData -> {
                                 findNavController().navigateToUserData()
+                            }
+
+                            is ProfileFlowViewModel.ProfileEvents.GoByMenuItemId -> {
+                                NavigationHandler.navigate(events.itemId, findNavController())
                             }
                         }
                     }

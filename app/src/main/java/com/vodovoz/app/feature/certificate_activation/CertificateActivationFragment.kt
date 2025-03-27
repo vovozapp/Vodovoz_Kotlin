@@ -35,6 +35,7 @@ class CertificateActivationFragment : Fragment() {
                 VodovozTheme {
                     val viewState by viewModel.state.collectAsStateWithLifecycle()
                     when (val uiState = viewState.uiState) {
+
                         is CertificateActivationUiState.CertificateActivated -> {
                             CertificateActivatedPlaceholder(
                                 message = uiState.message,

@@ -75,7 +75,6 @@ class FullScreenHistoriesSliderFlowFragment : Fragment() {
                         }
 
                         FullScreenHistoriesSliderFlowViewModel.UiState.Loading -> {
-
                         }
 
                         FullScreenHistoriesSliderFlowViewModel.UiState.NetworkError -> {

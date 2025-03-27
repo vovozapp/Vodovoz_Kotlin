@@ -40,7 +40,8 @@ fun VodovozSnackbar(
             .fillMaxWidth()
             .shadow(5.dp, MaterialTheme.shapes.large)
             .background(MaterialTheme.colorScheme.primaryContainer, MaterialTheme.shapes.large)
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        contentAlignment = Alignment.Center
     ) {
         Text(
             text = snackbarData.visuals.message,

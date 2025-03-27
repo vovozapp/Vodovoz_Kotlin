@@ -165,23 +165,22 @@ fun List<FieldUi>.checkFields(
 
 fun FieldModel.toUi(): FieldUi {
 
-    val keyboardType = when {
-        id.contains("email") -> {
+    val keyboardType = when (id) {
+        "email" -> {
             KeyboardType.Email
         }
-
-        id.contains("phone") -> {
+        "phone" -> {
             KeyboardType.Phone
         }
-
-        id.contains("pass") -> {
+        "pass" -> {
             KeyboardType.Password
         }
-
-        id == "data" || id == "date" -> {
+        "parol" -> {
+            KeyboardType.Password
+        }
+        "data", "date" -> {
             KeyboardType.Decimal
         }
-
         else -> {
             when (valueType.lowercase()) {
                 "text" -> KeyboardType.Text

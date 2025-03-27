@@ -280,6 +280,11 @@
     <string name="man">Мужчина</string>
     <string name="girl">Женщина</string>
     <string name="you_height">Ваш рост</string>
+    <string name="change">Изменить</string>
 
+    <string name="error_password_validation">Пароль не соответствует требованиям. Проверьте введенные данные.</string>
+    <string name="error_password_unknown">Не удалось изменить пароль. Попробуйте еще раз позже.</string>
+    <string name="success_password_change">Пароль успешно\n изменен!</string>
+    <string name="fine">Хорошо</string>
 
 </resources>

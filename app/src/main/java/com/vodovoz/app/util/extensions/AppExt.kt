@@ -329,13 +329,15 @@ fun Activity.enableFullScreen() {
     WindowCompat.setDecorFitsSystemWindows(window, false)
     val insetsController = WindowCompat.getInsetsController(window, window.decorView)
     insetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_DEFAULT
+
     //insetsController.hide(WindowInsetsCompat.Type.statusBars())
-    insetsController.hide(WindowInsetsCompat.Type.navigationBars())
+    //insetsController.hide(WindowInsetsCompat.Type.navigationBars())
 }
 
 fun Activity.disableFullScreen() {
     WindowCompat.setDecorFitsSystemWindows(window, true)
     val insetsController = WindowCompat.getInsetsController(window, window.decorView)
+
     insetsController.show(WindowInsetsCompat.Type.statusBars())
     insetsController.show(WindowInsetsCompat.Type.navigationBars())
 }
@@ -356,7 +358,7 @@ inline fun <T : View> T.preDraw(crossinline callBack: (isReady: Boolean) -> Unit
     })
 }
 
-/**
+/*
  * <item name="android:statusBarColor">@android:color/transparent</item>
  * <item name="android:navigationBarColor">@android:color/transparent</item>
  * <item name="android:enforceNavigationBarContrast">false</item>

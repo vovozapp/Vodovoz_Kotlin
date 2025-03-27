@@ -3,14 +3,19 @@ package com.vodovoz.app.ui.base
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsCompat.CONSUMED
+import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.firebase.messaging.RemoteMessage
+import com.vodovoz.app.R
 import com.vodovoz.app.common.account.data.ReloginManager
 import com.vodovoz.app.common.permissions.PermissionsManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
@@ -23,11 +28,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import pub.devrel.easypermissions.EasyPermissions
-import java.util.Locale
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks, EasyPermissions.RationaleCallbacks {
+class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks,
+    EasyPermissions.RationaleCallbacks {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -46,12 +51,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks, E
     private val viewModel: SplashFileViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         installSplashScreen().apply {
             setKeepOnScreenCondition { viewModel.isLoading.value }
         }
-        super.onCreate(savedInstanceState)
 
-        enableEdgeToEdge()
 
         MapKitFactory.initialize(this)
         binding = ActivityMainBinding.inflate(layoutInflater).apply { setContentView(root) }
@@ -126,6 +130,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks, E
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }
+
     override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
 
         debugLog { "Permissions: onPermissionsGranted $requestCode" }
@@ -135,13 +140,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks, E
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
 
         debugLog { "Permissions: onPermissionsDenied $requestCode" }
-        if(EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
             debugLog { "Permissions: somePermissionPermanentlyDenied $requestCode" }
             permissionsManager.setPermissionChecked(requestCode, true)
         }
     }
 
-    override fun onRationaleAccepted(requestCode: Int) { }
+    override fun onRationaleAccepted(requestCode: Int) {}
 
     override fun onRationaleDenied(requestCode: Int) {
         debugLog { "Permissions: onRationaleDenied $requestCode" }

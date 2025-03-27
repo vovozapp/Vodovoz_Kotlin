@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
@@ -30,9 +29,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,7 +38,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import coil3.compose.AsyncImage
@@ -75,9 +70,15 @@ fun StoriesScreen(
     val onBackgroundColor = MaterialTheme.colorScheme.onBackground
 
     DisposableEffect(Unit) {
-        systemUiController.setSystemBarsColor(onBackgroundColor)
+        systemUiController.setSystemBarsColor(
+            color = onBackgroundColor,
+            isNavigationBarContrastEnforced = false
+        )
         onDispose {
-            systemUiController.setSystemBarsColor(backgroundColor)
+            systemUiController.setSystemBarsColor(
+                color = backgroundColor,
+                isNavigationBarContrastEnforced = false
+            )
         }
     }
 
