@@ -12,7 +12,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.vodovoz.app.design_system.model.BrandCategoryBlockUi
 import com.vodovoz.app.design_system.model.BrandCategoryItemUi
 import com.vodovoz.app.design_system.model.CommentUi
 import com.vodovoz.app.design_system.model.ProductDetailsButtonsUi
@@ -58,7 +57,7 @@ fun ProductDetailsBody(
 
     onCategoryClick: (BrandCategoryItemUi) -> Unit,
     onProductClick: (ProductUi) -> Unit,
-    onProductLikeClick: (ProductUi) -> Unit
+    onProductLikeClick: (ProductUi) -> Unit,
 ) {
     val scrollState = rememberScrollState()
 
@@ -155,7 +154,7 @@ fun ProductDetailsBody(
         )
 
 
-        if (productDetails.sectionQueries.items.isNotEmpty()) {
+        if (productDetails.sectionQueries.items.any { s -> s.isNotBlank() }) {
             ProductDetailsSearchQueries(
                 modifier = Modifier.padding(top = 32.dp),
                 sectionQueries = productDetails.sectionQueries,

@@ -7,6 +7,7 @@ import com.vodovoz.app.feature.certificate_activation.model.CertificateActivatio
 import com.vodovoz.app.feature.certificate_activation.model.CertificateActivationState
 import com.vodovoz.app.feature.certificate_activation.model.CertificateActivationUiState
 import com.vodovoz.app.feature.preorder.model.FieldUi
+import com.vodovoz.app.feature.preorder.model.FieldValidationResult
 import com.vodovoz.app.feature.preorder.model.KeyboardTypeValidator
 import com.vodovoz.app.feature.preorder.model.toUi
 import com.vodovoz.app.ui.mvi.MviViewModel
@@ -86,12 +87,13 @@ class CertificateActivationViewModel @Inject constructor(
 
     fun changeFieldValue(field: FieldUi, newValue: String) = viewModelScope.launch {
         val validators = listOf(KeyboardTypeValidator)
+        val updatedField = field.copy(value = newValue, isError = false, supportingText = "")
 
         _state.update { s ->
             s.copy(
-                field = field.copy(value = newValue, isError = false, supportingText = ""),
+                field = updatedField,
                 activationButtonEnabled = newValue.isNotBlank() && validators.any { fieldValidator ->
-                    fieldValidator.isValid(field)
+                    fieldValidator.isValid(updatedField) != FieldValidationResult.INVALID
                 }
             )
         }

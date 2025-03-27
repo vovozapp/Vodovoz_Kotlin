@@ -26,6 +26,7 @@ fun REGISTRATION_FIELD_DTO.toDomain(): FieldModel? {
         valueType = POLE ?: "text",
         isRequired = OBYZATELNO == "Y",
         readOnly = false,
-        supportingText = ""
+        supportingText = "",
+        hint = TEXT_V_POLE ?: ""
     )
 }

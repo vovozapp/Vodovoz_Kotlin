@@ -9,6 +9,7 @@ import com.vodovoz.app.util.extensions.singleResult
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.singleOrNull
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.util.concurrent.ConcurrentHashMap
@@ -34,7 +35,7 @@ class LikeManager @Inject constructor(
     private fun getLikeVersion(productId: Long) = likesVersions.getOrDefault(productId, 0)
 
     private val likes = ConcurrentHashMap<Long, Boolean>()
-    private val likesStateListener = MutableSharedFlow<Map<Long, Boolean>>()
+    private val likesStateListener = MutableSharedFlow<Map<Long, Boolean>>(1)
 
     private val viewPool: RecyclerView.RecycledViewPool = RecyclerView.RecycledViewPool().apply {
         setMaxRecycledViews(ProductUI.PRODUCT_VIEW_TYPE, 5)

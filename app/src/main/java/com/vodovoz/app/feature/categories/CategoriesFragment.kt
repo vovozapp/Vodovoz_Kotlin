@@ -11,15 +11,34 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.fragment.findNavController
+import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.effects.LifecycleEffect
 import com.vodovoz.app.feature.categories.model.CategoriesEvent
 import com.vodovoz.app.feature.home.model.CategoryUi
 import com.vodovoz.app.feature.home.model.PopularCategoryUi
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class CategoriesFragment : Fragment() {
 
+
+    @Inject
+    internal lateinit var tabManager: TabManager
+
     val viewModel by viewModels<CategoriesViewModel>()
+
+    override fun onStart() {
+        super.onStart()
+        tabManager.changeTabVisibility(false)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        tabManager.changeTabVisibility(true)
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,

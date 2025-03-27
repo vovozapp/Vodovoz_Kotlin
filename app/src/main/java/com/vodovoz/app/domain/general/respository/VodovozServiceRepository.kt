@@ -28,10 +28,18 @@ import com.vodovoz.app.domain.general.model.SortModel
 import com.vodovoz.app.domain.general.model.StoryModel
 import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
 import com.vodovoz.app.domain.general.model.UnratedProductsSectionModel
+import com.vodovoz.app.domain.general.model.UserDataModel
 import com.vodovoz.app.feature.preorder.model.FieldUi
 import kotlinx.coroutines.flow.Flow
+import java.io.File
 
 interface VodovozServiceRepository {
+
+    fun updateUserAvatar(avatarFile: File): Flow<Result<String>>
+
+    fun updateUserData(fields: List<FieldModel>): Flow<Result<String>>
+
+    fun getUserData(): Flow<Result<UserDataModel>>
 
     fun getProfileDetails(): Flow<Result<ProfileDetailsModel>>
 

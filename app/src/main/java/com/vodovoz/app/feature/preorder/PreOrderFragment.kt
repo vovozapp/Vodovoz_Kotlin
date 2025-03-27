@@ -21,6 +21,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.vodovoz.app.R
+import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.navigation.tryNavigate
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.placeholders.LoadingPlaceholder
@@ -30,11 +31,25 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class PreOrderFragment : Fragment() {
 
     private val viewModel: PreOrderFlowViewModel by viewModels()
+
+    @Inject
+    lateinit var tabManager: TabManager
+
+    override fun onStart() {
+        super.onStart()
+        tabManager.changeTabVisibility(false)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        tabManager.changeTabVisibility(true)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,10 +102,10 @@ class PreOrderFragment : Fragment() {
                                 }
 
                                 is PreOrderFlowViewModel.PreOrderEvent.ShowSnackbar -> {
-                                    withTimeoutOrNull(if (event.isVeryShort) 150L else 900L) {
+                                    withTimeoutOrNull(if (event.isVeryShort) 150L else 1200L) {
                                         snackbarHostState.showSnackbar(
                                             message = event.message,
-                                            duration = SnackbarDuration.Short
+                                            duration = SnackbarDuration.Indefinite
                                         )
                                     }
                                 }

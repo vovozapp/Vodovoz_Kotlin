@@ -157,6 +157,7 @@ class ProfileFragment1 : BaseFragment() {
                             ProfileFlowViewModel.ProfileEvents.GoToLogin -> {
                                 findNavController().navigateToLogin()
                             }
+                            else -> {}
                         }
                     }
             }

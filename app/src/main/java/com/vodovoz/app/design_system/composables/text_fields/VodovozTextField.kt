@@ -2,6 +2,8 @@ package com.vodovoz.app.design_system.composables.text_fields
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.snap
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
@@ -109,7 +111,7 @@ fun VodovozTextField(
                     )
                 }
                 Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
-                    this@Row.AnimatedVisibility(value.isEmpty()) {
+                    this@Row.AnimatedVisibility(value.isEmpty(), exit = fadeOut(snap(50))) {
                         Text(
                             text = hint,
                             color = MaterialTheme.colorScheme.surfaceTint,

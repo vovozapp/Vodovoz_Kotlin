@@ -28,14 +28,15 @@ class CategoriesViewModel(
         _state.update { s ->
             s.copy(
                 currentCategory = categoryArg,
-                categories = categoriesArg.toList()
+                categories = categoriesArg.toList(),
+                showApplyButton = false
             )
         }
     }
 
 
     fun selectCategory(category: CategoryUi) = viewModelScope.launch {
-        _state.update { s -> s.copy(currentCategory = category) }
+        _state.update { s -> s.copy(currentCategory = category, showApplyButton = true) }
     }
 
     fun navigateBackWithArgs() = viewModelScope.launch {

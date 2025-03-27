@@ -21,45 +21,26 @@ data class PreOrderSectionUi(
     }
 }
 
-fun interface FieldValidator {
-    fun isValid(field: FieldUi): Boolean
+fun PreOrderSectionModel.toUi(): PreOrderSectionUi {
+    return PreOrderSectionUi(
+        title = title,
+        fields = fields.map { field -> field.toUi() },
+        colorfulButton = colorfulButton.toUi()
+    )
 }
 
-val KeyboardTypeValidator = FieldValidator { field ->
+enum class FieldValidationResult {
+    VALID,
+    INVALID,
+    NOT_APPLICABLE;
 
-    val value = field.value
-
-    return@FieldValidator when (field.keyboardType) {
-        KeyboardType.Text -> {
-            value.length in 2..100 && value.isNotBlank()
+    companion object {
+        fun from(isValid: Boolean): FieldValidationResult {
+            return if (isValid) VALID else INVALID
         }
-
-        KeyboardType.Phone -> {
-            value.isValidRussianPhoneNumber()
-        }
-
-        KeyboardType.Email -> {
-            FieldValidationsSettings.EMAIL_REGEX.matches(value)
-        }
-
-        KeyboardType.Password -> {
-            value.length in PASSWORD_LENGTH
-        }
-
-        else -> true
     }
 }
 
-val NameValidator = FieldValidator { field ->
-    val value = field.value
-    when {
-        value.contains("name") -> {
-            value.length in 3..30 && value.isNotBlank()
-        }
-
-        else -> true
-    }
-}
 
 
 @Immutable
@@ -89,13 +70,98 @@ data class FieldUi(
     }
 }
 
-fun PreOrderSectionModel.toUi(): PreOrderSectionUi {
-    return PreOrderSectionUi(
-        title = title,
-        fields = fields.map { field -> field.toUi() },
-        colorfulButton = colorfulButton.toUi()
-    )
+
+
+fun interface FieldValidator {
+    fun isValid(field: FieldUi): FieldValidationResult
 }
+
+
+val NoRequiredValidator = FieldValidator { field ->
+    return@FieldValidator when {
+        !field.isRequired && field.value.isNotBlank() -> FieldValidationResult.VALID
+        else -> FieldValidationResult.NOT_APPLICABLE
+    }
+}
+
+val KeyboardTypeValidator = FieldValidator { field ->
+    val value = field.value
+
+    return@FieldValidator when (field.keyboardType) {
+        KeyboardType.Text -> {
+            FieldValidationResult.from(value.length in 2..100 && value.isNotBlank())
+        }
+
+        KeyboardType.Phone -> {
+            FieldValidationResult.from(value.isValidRussianPhoneNumber())
+        }
+
+        KeyboardType.Email -> {
+            FieldValidationResult.from(FieldValidationsSettings.EMAIL_REGEX.matches(value))
+        }
+
+        KeyboardType.Password -> {
+            FieldValidationResult.from(value.length in PASSWORD_LENGTH)
+        }
+
+        else -> FieldValidationResult.NOT_APPLICABLE
+    }
+}
+
+val NameValidator = FieldValidator { field ->
+    val value = field.value
+    when {
+        value.contains("name") -> {
+            FieldValidationResult.from(value.length in 3..30 && value.isNotBlank())
+        }
+
+        else -> FieldValidationResult.NOT_APPLICABLE
+    }
+}
+
+fun List<FieldUi>.updateFieldValueAndResetErrors(field: FieldUi, newValue: String): List<FieldUi> {
+    val fieldIndex = indexOfFirst { field.id == it.id }
+    return toMutableList()
+        .apply { set(fieldIndex, this[fieldIndex].copy(value = newValue)) }
+        .map { it.copy(isError = false) }
+}
+
+fun List<FieldUi>.updateFieldAndResetErrors(field: FieldUi, newField: FieldUi): List<FieldUi> {
+    val fieldIndex = indexOfFirst { field.id == it.id }
+    return toMutableList()
+        .apply { set(fieldIndex, newField) }
+        .map { it.copy(isError = false) }
+}
+
+
+
+
+fun List<FieldUi>.checkFields(
+    putErrors: Boolean = false,
+    validators: List<FieldValidator> = listOf(NoRequiredValidator, NameValidator, KeyboardTypeValidator),
+    onResult: (List<FieldUi>, isValid: Boolean) -> Unit = { p1, p2 -> },
+): Boolean {
+    var isValidFields = true
+
+    val newFields = map { field ->
+        val currentValidator = validators.firstOrNull { fieldValidator ->
+            fieldValidator.isValid(field) != FieldValidationResult.NOT_APPLICABLE
+        } ?: return@map field
+
+        val isValid = currentValidator.isValid(field) == FieldValidationResult.VALID
+
+        if (!isValid) {
+            isValidFields = false
+            if (putErrors) return@map field.copy(isError = true)
+        }
+        field
+    }
+
+    onResult(newFields, isValidFields)
+
+    return isValidFields
+}
+
 
 fun FieldModel.toUi(): FieldUi {
 
@@ -112,6 +178,10 @@ fun FieldModel.toUi(): FieldUi {
             KeyboardType.Password
         }
 
+        id == "data" || id == "date" -> {
+            KeyboardType.Decimal
+        }
+
         else -> {
             when (valueType.lowercase()) {
                 "text" -> KeyboardType.Text
@@ -119,6 +189,7 @@ fun FieldModel.toUi(): FieldUi {
                 "email" -> KeyboardType.Email
                 "number" -> KeyboardType.Number
                 "password" -> KeyboardType.Password
+                "date" -> KeyboardType.Decimal
                 else -> KeyboardType.Unspecified
             }
         }
@@ -135,6 +206,10 @@ fun FieldModel.toUi(): FieldUi {
         supportingText = supportingText,
         hint = hint
     )
+}
+
+fun List<FieldUi>.mapToDomain(): List<FieldModel>{
+    return map { it.toDomain() }
 }
 
 fun FieldUi.toDomain(): FieldModel {

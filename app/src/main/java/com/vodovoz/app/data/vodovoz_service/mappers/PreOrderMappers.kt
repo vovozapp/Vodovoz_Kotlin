@@ -22,7 +22,8 @@ fun FIELD_DTO.toDomain(): FieldModel? {
         valueType = TITLE_TYPE ?: "text",
         isRequired = REQUIRED == "Y",
         readOnly = ZAPRETREDAKTOR == "Y",
-        supportingText = COMMENTS ?: ""
+        supportingText = COMMENTS ?: "",
+        hint = TEXT_V_POLE ?: ""
     )
 }
 

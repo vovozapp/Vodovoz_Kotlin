@@ -296,8 +296,7 @@ fun ProductDetailsDTO.toDomain(): ProductDetailsScreenModel {
         productDetails = TOVAR?.toDomain(
             shareUrlText = PODILITSYA?.detail_page_url ?: "",
             commentsCount = commentsCount
-        )
-            ?: throw NoSuchElementException("Product details not found."),
+        ) ?: throw NoSuchElementException("Product details not found."),
         buttons = ProductDetailsButtonsModel(
             blockButton = moreButtons?.BLOK_KNOPKA?.toDomain(),
             blockDesignButton = moreButtons?.BLOK_KNOPKA_DIZAIN?.toDomain(),

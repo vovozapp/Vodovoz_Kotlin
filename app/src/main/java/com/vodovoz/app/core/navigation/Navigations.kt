@@ -11,6 +11,10 @@ import com.vodovoz.app.feature.catalog.model.CatalogCategoryUi
 import com.vodovoz.app.feature.home.model.CategoryUi
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 
+fun NavController.navigateToUserData() {
+    navigate(R.id.userDataFragment)
+}
+
 fun NavController.navigateToLogin() {
     navigate(R.id.loginFragment)
 }

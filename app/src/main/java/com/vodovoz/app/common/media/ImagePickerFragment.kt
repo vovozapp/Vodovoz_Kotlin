@@ -4,6 +4,8 @@ import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -12,19 +14,23 @@ import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
+import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.longArgs
 import com.vodovoz.app.util.extensions.millisToItemDate
 import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class ImagePickerFragment : BaseFragment() {
+class ImagePickerFragment : Fragment(R.layout.fragment_image_picker) {
 
     companion object {
         private const val READ_EXTERNAL = Manifest.permission.READ_EXTERNAL_STORAGE
@@ -36,9 +42,32 @@ class ImagePickerFragment : BaseFragment() {
 
     private val receiver by longArgs(IMAGE_PICKER_RECEIVER)
 
-    override fun layout(): Int = R.layout.fragment_image_picker
+    @Inject
+    internal lateinit var tabManager: TabManager
+
 
     private val viewModel: ImagePickerViewModel by viewModels()
+
+    override fun onStart() {
+        super.onStart()
+        tabManager.changeTabVisibility(false)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        tabManager.changeTabVisibility(true)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        storagePermission.launch(
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                READ_IMAGES
+            } else {
+                READ_EXTERNAL
+            }
+        )
+    }
 
     private val storagePermission: ActivityResultLauncher<String> =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
@@ -56,7 +85,7 @@ class ImagePickerFragment : BaseFragment() {
                     viewModel.saveAvatarImage(file)
                 }
             }
-            navigateUp()
+            findNavController().navigateUp()
         }
 
     private val getMultiplePictureFromGalleryResultLauncher =
@@ -68,7 +97,8 @@ class ImagePickerFragment : BaseFragment() {
                 if (clipData != null && clipData.itemCount > 0) {
                     if (clipData.itemCount > 5) {
                         requireActivity().snack("Максимум 5 изображений")
-                        navigateUp()
+                        findNavController().navigateUp()
+
                         return@registerForActivityResult
                     }
 
@@ -89,21 +119,9 @@ class ImagePickerFragment : BaseFragment() {
                 }
             }
             viewModel.show()
-            navigateUp()
+            findNavController().navigateUp()
+
         }
-
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        storagePermission.launch(
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                READ_IMAGES
-            } else {
-                READ_EXTERNAL
-            }
-        )
-    }
 
     private fun saveFileFromGallery(uri: Uri): File {
         val inputStream = requireContext().contentResolver.openInputStream(uri)

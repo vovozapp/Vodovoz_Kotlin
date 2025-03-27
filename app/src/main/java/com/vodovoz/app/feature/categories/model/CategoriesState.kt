@@ -7,5 +7,6 @@ import com.vodovoz.app.feature.home.model.PopularCategoryUi
 @Immutable
 data class CategoriesState(
     val currentCategory: CategoryUi = CategoryUi.Empty.copy(name = "isn't name"),
-    val categories: List<CategoryUi> = emptyList()
+    val categories: List<CategoryUi> = emptyList(),
+    val showApplyButton: Boolean = false
 )

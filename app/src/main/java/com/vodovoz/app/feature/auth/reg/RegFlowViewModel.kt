@@ -18,11 +18,12 @@ import com.vodovoz.app.data.config.AuthConfig
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.preorder.model.FieldUi
-import com.vodovoz.app.feature.preorder.model.KeyboardTypeValidator
-import com.vodovoz.app.feature.preorder.model.NameValidator
+import com.vodovoz.app.feature.preorder.model.checkFields
 import com.vodovoz.app.feature.preorder.model.toDomain
 import com.vodovoz.app.feature.preorder.model.toUi
+import com.vodovoz.app.feature.preorder.model.updateFieldValueAndResetErrors
 import com.vodovoz.app.util.extensions.debugLog
+import com.vodovoz.app.util.extensions.singleResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
@@ -45,10 +46,10 @@ class RegFlowViewModel @Inject constructor(
 ) : PagingContractViewModel<RegFlowViewModel.RegState, RegFlowViewModel.RegEvents>(RegState()) {
 
     init {
-        fetchFields()
+        fetchRegisterFields()
     }
 
-    fun fetchFields() = viewModelScope.launch {
+    fun fetchRegisterFields() = viewModelScope.launch {
         uiStateListener.updateData { s -> s.copy(uiState = UiState.Loading) }
 
         val registerFieldsResult =
@@ -72,21 +73,23 @@ class RegFlowViewModel @Inject constructor(
     }
 
     fun register() = viewModelScope.launch {
-        if(!checkFields(true)) return@launch
-        uiStateListener.updateData { s -> s.copy(buttonLoading = true) }
+        val isValidFields = dataState.fields.checkFields(true) { updatedFields, isValid ->
+            uiStateListener.updateData { s ->
+                s.copy(fields = updatedFields, buttonLoading = true)
+            }
+        }
+        if (isValidFields) return@launch
 
         val failMessage = resourceProvider.getString(R.string.registration_fail)
 
         val registerResult = vodovozServiceRepository.register(
             dataState.fields.map { fieldUi -> fieldUi.toDomain() }
-        ).singleOrNull() ?: run {
-            eventListener.emit(RegEvents.ShowSnackbar(failMessage))
-            return@launch
-        }
+        ).singleResult()
 
         registerResult.onSuccess { userId ->
             accountManager.updateUserId(userId)
             likeManager.updateLikesAfterLogin(userId)
+            //Todo - save last login data
 //            accountManager.updateLastLoginSetting(
 //                AccountManager.UserSettings(
 //                    email,
@@ -97,34 +100,11 @@ class RegFlowViewModel @Inject constructor(
             firebaseTokenManager.sendFirebaseToken()
             eventListener.emit(RegEvents.RegSuccess)
         }.onFailure { t ->
-            eventListener.emit(RegEvents.ShowSnackbar(t.message ?: failMessage))
+            eventListener.emit(RegEvents.ShowSnackbar(failMessage))
         }
 
 
     }.invokeOnCompletion { uiStateListener.updateData { s -> s.copy(buttonLoading = false) } }
-
-    private fun checkFields(hasErrors: Boolean = false): Boolean {
-        var isValidFields = true
-        val validators = listOf(NameValidator, KeyboardTypeValidator)
-
-        val newFields = dataState.fields.map { field ->
-            val isCorrect = validators.all { fieldValidator -> fieldValidator.isValid(field) }
-            if (!isCorrect) {
-                isValidFields = false
-                if (hasErrors) return@map field.copy(isError = true)
-            }
-            field
-        }
-
-        uiStateListener.updateData { s ->
-            s.copy(
-                buttonEnabled = isValidFields,
-                fields = newFields
-            )
-        }
-
-        return isValidFields
-    }
 
     fun register(
         firstName: String,
@@ -182,18 +162,16 @@ class RegFlowViewModel @Inject constructor(
     }
 
     fun changeFieldValue(field: FieldUi, newValue: String) = viewModelScope.launch {
-        uiStateListener.updateData { s ->
-            val fields = s.fields
-            val fieldIndex = fields.indexOfFirst { field.id == it.id }
+        val updatedFields = dataState.fields.updateFieldValueAndResetErrors(field, newValue)
 
-            s.copy(
-                fields = fields.toMutableList()
-                    .apply { set(index = fieldIndex, element = field.copy(value = newValue)) }
-                    .map { field -> field.copy(isError = false) }
-            )
+        updatedFields.checkFields { fields, isValid ->
+            uiStateListener.updateData { s ->
+                s.copy(
+                    fields = fields,
+                    buttonEnabled = isValid
+                )
+            }
         }
-
-        checkFields()
     }
 
     fun changeFieldVisibility(field: FieldUi) = viewModelScope.launch {
@@ -203,7 +181,12 @@ class RegFlowViewModel @Inject constructor(
 
             s.copy(
                 fields = fields.toMutableList()
-                    .apply { set(index = fieldIndex, element = field.copy(isValueVisible = !field.isValueVisible)) }
+                    .apply {
+                        set(
+                            index = fieldIndex,
+                            element = field.copy(isValueVisible = !field.isValueVisible)
+                        )
+                    }
                     .map { fieldUi -> fieldUi.copy(isError = false) }
             )
         }
@@ -224,7 +207,7 @@ class RegFlowViewModel @Inject constructor(
         val uiState: UiState = UiState.Loading,
         val title: String = "",
         val buttonEnabled: Boolean = false,
-        val buttonLoading: Boolean = false
+        val buttonLoading: Boolean = false,
     ) : State
 
     sealed interface UiState {

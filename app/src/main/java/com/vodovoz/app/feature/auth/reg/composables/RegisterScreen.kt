@@ -40,7 +40,7 @@ fun RegisterScreen(viewModel: RegFlowViewModel, viewState: RegFlowViewModel.RegS
         ) {
             when (viewState.uiState) {
                 RegFlowViewModel.UiState.Error -> {
-                    NetworkErrorPlaceholder { viewModel.fetchFields() }
+                    NetworkErrorPlaceholder { viewModel.fetchRegisterFields() }
                 }
 
                 RegFlowViewModel.UiState.Loading -> {

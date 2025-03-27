@@ -26,11 +26,7 @@ fun PreOrderScreen(
 
     val sectionPreOrder = viewState.sectionPreOrder
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .windowInsetsPadding(WindowInsets.systemBars)
-            .consumeWindowInsets(WindowInsets.systemBars)
+        modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)
 
     ) {
         PreOrderTopBar(title = sectionPreOrder.title, onCloseClick = { viewModel.navigateBack() })

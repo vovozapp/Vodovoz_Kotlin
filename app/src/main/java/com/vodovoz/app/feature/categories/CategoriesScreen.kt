@@ -1,5 +1,8 @@
 package com.vodovoz.app.feature.categories
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -57,12 +60,15 @@ fun CategoriesScreen(viewModel: CategoriesViewModel, viewState: CategoriesState)
 
         }
 
-        BottomFloatingContainer {
-            VodovozButton(
-                text = stringResource(R.string.apply),
-                onClick = { viewModel.navigateBackWithArgs() },
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
+        AnimatedVisibility(visible = viewState.showApplyButton, enter = slideInVertically { it }, exit = slideOutVertically { -it }) {
+            BottomFloatingContainer {
+                VodovozButton(
+                    text = stringResource(R.string.apply),
+                    onClick = { viewModel.navigateBackWithArgs() },
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+            }
+
         }
     }
 }

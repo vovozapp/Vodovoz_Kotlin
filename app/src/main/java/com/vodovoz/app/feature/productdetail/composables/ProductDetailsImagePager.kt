@@ -51,17 +51,19 @@ fun ProductDetailsImagePager(
             )
         }
 
-        PagerWormIndicator(
-            modifier = Modifier.padding(top = 8.dp),
-            pagerState = pagerState,
-            activeDotColor = MaterialTheme.colorScheme.primary,
-            dotColor = MaterialTheme.colorScheme.surfaceVariant,
-            dotCount = productImages.count(),
-            orientation = PagerIndicatorOrientation.Horizontal,
-            minDotSize = 5.dp,
-            activeDotSize = 5.dp,
-            space = 6.dp
-        )
+        if(productImages.size > 1) {
+            PagerWormIndicator(
+                modifier = Modifier.padding(top = 8.dp),
+                pagerState = pagerState,
+                activeDotColor = MaterialTheme.colorScheme.primary,
+                dotColor = MaterialTheme.colorScheme.surfaceVariant,
+                dotCount = productImages.count(),
+                orientation = PagerIndicatorOrientation.Horizontal,
+                minDotSize = 5.dp,
+                activeDotSize = 5.dp,
+                space = 6.dp
+            )
+        }
 
     }
 

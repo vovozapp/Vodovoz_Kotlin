@@ -47,6 +47,7 @@ import com.vodovoz.app.domain.general.model.SortModel
 import com.vodovoz.app.domain.general.model.StoryModel
 import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
 import com.vodovoz.app.domain.general.model.UnratedProductsSectionModel
+import com.vodovoz.app.domain.general.model.UserDataModel
 import com.vodovoz.app.domain.general.model.UserNotLoginException
 import com.vodovoz.app.domain.general.model.ValidationException
 import com.vodovoz.app.domain.general.model.format
@@ -58,6 +59,10 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
 import javax.inject.Inject
 
 
@@ -66,6 +71,54 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     private val accountManager: AccountManager,
     private val moshi: Moshi,
 ) : VodovozServiceRepository {
+    override fun updateUserAvatar(avatarFile: File): Flow<Result<String>> {
+        return executeRequest(
+            request = {
+                val requestBody = avatarFile.asRequestBody(avatarFile.extension.toMediaTypeOrNull())
+                val filePart = MultipartBody.Part.createFormData("userpic", avatarFile.name, requestBody)
+                vodovozService.updateUserAvatar(accountManager.fetchAccountId() ?: -1, filePart)
+            },
+            mapper = {
+                it.message ?: ""
+            },
+            onFail = {
+                val info = it.stringBody() ?: ""
+                throw Exception(info)
+            }
+        )
+    }
+
+    override fun updateUserData(fields: List<FieldModel>): Flow<Result<String>> {
+        return executeRequest(
+            request = {
+                vodovozService.updateUserData(
+                    accountManager.fetchAccountId() ?: -1,
+                    fields.filter { it.value.isNotEmpty() }.associate { it.id to it.value.trim() })
+            },
+            mapper = {
+                it.message ?: ""
+            }
+        )
+    }
+
+    override fun getUserData(): Flow<Result<UserDataModel>> {
+        return executeRequest(
+            request = {
+                vodovozService.getUserData(accountManager.fetchAccountId() ?: -1)
+            },
+            mapper = {
+                val errorData = it.error?.toDomain()
+                if (errorData != null) {
+                    throw UserNotLoginException(
+                        message = it.message ?: "",
+                        errorData = errorData
+                    )
+                }
+                it.data!!.toDomain()
+            }
+        )
+
+    }
 
     override fun getProfileDetails(): Flow<Result<ProfileDetailsModel>> {
         return executeRequest(
@@ -192,7 +245,8 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         return executeRequest(
             request = {
                 vodovozService.register(
-                    fields.associate { field -> field.id to field.value.trim() }
+                    fields.filter { fieldModel -> fieldModel.value.isNotEmpty() }
+                        .associate { field -> field.id to field.value.trim() }
                 )
             },
             mapper = { registerDTO ->
@@ -443,7 +497,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     override fun sendPreorder(productId: Long, fields: List<FieldModel>): Flow<Result<String>> {
         return executeRequest(
             request = {
-                val userId = accountManager.fetchAccountId() ?: -1L
+                val userId = accountManager.fetchAccountId()
                 val queries =
                     fields.filter { fieldModel -> fieldModel.value.isNotEmpty() }
                         .associate { it.id to it.value }

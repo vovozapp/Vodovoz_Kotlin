@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -23,6 +24,8 @@ fun VodovozTopBar(
     modifier: Modifier = Modifier,
     onBack: () -> Unit,
     title: String,
+    actionPainter: Painter? = null,
+    onActionClick: () -> Unit = {}
 ) {
     Row(
         modifier = modifier
@@ -40,11 +43,20 @@ fun VodovozTopBar(
         )
         Text(
             text = title,
-            modifier = Modifier.padding(horizontal = 32.dp),
+            modifier = Modifier.weight(1f).padding(start = 32.dp, end = 16.dp),
             color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.headlineSmall,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
+
+        actionPainter?.let {
+            ClickableIcon(
+                modifier = Modifier.clip(MaterialTheme.shapes.small),
+                painter = actionPainter,
+                tint = MaterialTheme.colorScheme.onBackground,
+                onClick = onActionClick
+            )
+        }
     }
 }

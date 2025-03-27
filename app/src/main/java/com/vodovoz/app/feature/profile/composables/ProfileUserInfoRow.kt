@@ -32,9 +32,9 @@ import com.vodovoz.app.feature.profile.model.UserInfoBlockUi
 fun ProfileUserInfoRow(
     modifier: Modifier = Modifier,
     userInfoBlock: UserInfoBlockUi,
-    onTextButtonClick: () -> Unit,
+    onClick: () -> Unit,
 ) {
-    Row(modifier = modifier.padding(horizontal = 16.dp)) {
+    Row(modifier = modifier.clickable { onClick() }.padding(horizontal = 16.dp)) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .crossfade(true)
@@ -65,7 +65,7 @@ fun ProfileUserInfoRow(
             Row(
                 modifier = Modifier
                     .clip(MaterialTheme.shapes.small)
-                    .clickable { onTextButtonClick() },
+                    .clickable { onClick() },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(

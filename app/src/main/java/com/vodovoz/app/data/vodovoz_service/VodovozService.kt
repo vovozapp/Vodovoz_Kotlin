@@ -28,8 +28,13 @@ import com.vodovoz.app.data.vodovoz_service.model.filters.FiltersDTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.ProductDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.profile.ProfileDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.unrated_products.UnratedProductsSectionDTO
+import com.vodovoz.app.data.vodovoz_service.model.user_data.UserDataDTO
+import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Multipart
+import retrofit2.http.POST
+import retrofit2.http.Part
 import retrofit2.http.Query
 import retrofit2.http.QueryMap
 
@@ -38,15 +43,28 @@ interface VodovozService {
     /**
      * Profile request
      * */
-    @GET("https://vodovoz.net/newmobile_new/profile/index.php?action=glav")
+    @GET("profile/index.php?action=glav")
     suspend fun getProfileDetails(
-        @Query("userid") userId: Long
+        @Query("userid") userId: Long,
     ): Response<VodovozResponseDTO<ProfileDetailsDTO>>
 
-//    @GET("https://vodovoz.net/newmobile_new/profile/index.php?action=glav")
-//    suspend fun getProfileData(
-//
-//    )
+    @GET("profile/index.php?action=details")
+    suspend fun getUserData(
+        @Query("userid") userId: Long,
+    ): Response<VodovozResponseDTO<UserDataDTO>>
+
+    @GET("profile/index.php?action=edit")
+    suspend fun updateUserData(
+        @Query("userid") userId: Long,
+        @QueryMap queries: Map<String, String>,
+    ): Response<VodovozResponseDTO<String>>
+
+    @Multipart
+    @POST("profile/index.php?action=uploadPhoto")
+    suspend fun updateUserAvatar(
+        @Part("userid") userId: Long,
+        @Part file: MultipartBody.Part,
+    ): Response<VodovozResponseDTO<String>>
 
     /**
      * Filter requests
@@ -108,7 +126,7 @@ interface VodovozService {
         @Query("sect") categoryId: Int? = null,
         @Query("sort") sort: String = "",
         @Query("ascdesc") order: String = "",
-        @Query("kamera") isCamera: String? = null
+        @Query("kamera") isCamera: String? = null,
     ): Response<VodovozResponseDTO<ProductsSectionDTO>>
 
     /**
@@ -152,7 +170,7 @@ interface VodovozService {
 
     @GET("osnova/predzakaz.php?action=otpravka")
     suspend fun sendPreorder(
-        @Query("userid") userId: Long,
+        @Query("userid") userId: Long?,
         @Query("tovar") productId: Long,
         @QueryMap queries: Map<String, String>,
     ): Response<PreOrderResponseDTO>

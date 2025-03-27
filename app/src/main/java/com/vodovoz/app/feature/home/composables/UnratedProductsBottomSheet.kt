@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.home.composables
 
+import android.graphics.BlurMaskFilter
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -8,6 +9,7 @@ import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.exponentialDecay
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
@@ -34,7 +36,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetValue
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -45,13 +46,25 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.graphics.ClipOp
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.DefaultShadowColor
+import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.addOutline
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.clipPath
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
@@ -110,14 +123,15 @@ fun UnratedProductsBottomSheet(
             )
         }
 
+        val shape = RoundedCornerShape(
+            topStart = 20.dp,
+            topEnd = 20.dp,
+            bottomEnd = 0.dp,
+            bottomStart = 0.dp
+        )
 
-        Surface(
-            shape = RoundedCornerShape(
-                topStart = 20.dp,
-                topEnd = 20.dp,
-                bottomEnd = 0.dp,
-                bottomStart = 0.dp
-            ),
+
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .offset {
@@ -127,54 +141,140 @@ fun UnratedProductsBottomSheet(
                 .anchoredDraggable(
                     state = state,
                     orientation = Orientation.Vertical,
-                ),
-            color = MaterialTheme.colorScheme.background,
+                )
+                .background(MaterialTheme.colorScheme.background, shape)
+                .multiLayersShadow(elevation = 4.dp, shape = shape),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                VodovozDragHandle()
-                Spacer(modifier = Modifier.height(8.dp))
+            VodovozDragHandle()
+            Spacer(modifier = Modifier.height(8.dp))
 
-                SharedTransitionLayout {
-                    AnimatedContent(
-                        targetState = state.currentValue,
-                        label = "UpdatedProductsTransition"
-                    ) { targetState ->
-                        when (targetState) {
-                            SheetValue.Hidden -> {
+            SharedTransitionLayout {
+                AnimatedContent(
+                    targetState = state.currentValue,
+                    label = "UpdatedProductsTransition"
+                ) { targetState ->
+                    when (targetState) {
+                        SheetValue.Hidden -> {
 
-                            }
-
-                            SheetValue.Expanded -> {
-                                UpdatedProductsExpanded(
-                                    modifier = Modifier.fillMaxHeight(),
-                                    animatedVisibilityScope = this@AnimatedContent,
-                                    title = sectionUnratedProducts.productTitle,
-                                    products = sectionUnratedProducts.products,
-                                    onProductRatingChanged = onProductRatingChanged,
-                                    onNoRateProductClick = {
-                                        //TODO
-                                    }
-                                )
-                            }
-
-                            SheetValue.PartiallyExpanded -> {
-                                UnratedProductsPartially(
-                                    modifier = Modifier.fillMaxHeight(),
-                                    anchorDraggableState = state,
-                                    animatedVisibilityScope = this@AnimatedContent,
-                                    title = sectionUnratedProducts.title,
-                                    countProductsText = sectionUnratedProducts.countProductsText,
-                                    products = sectionUnratedProducts.products
-                                )
-                            }
                         }
 
+                        SheetValue.Expanded -> {
+                            UpdatedProductsExpanded(
+                                modifier = Modifier.fillMaxHeight(),
+                                animatedVisibilityScope = this@AnimatedContent,
+                                title = sectionUnratedProducts.productTitle,
+                                products = sectionUnratedProducts.products,
+                                onProductRatingChanged = onProductRatingChanged,
+                                onNoRateProductClick = {
+                                    //TODO
+                                }
+                            )
+                        }
+
+                        SheetValue.PartiallyExpanded -> {
+                            UnratedProductsPartially(
+                                modifier = Modifier.fillMaxHeight(),
+                                anchorDraggableState = state,
+                                animatedVisibilityScope = this@AnimatedContent,
+                                title = sectionUnratedProducts.title,
+                                countProductsText = sectionUnratedProducts.countProductsText,
+                                products = sectionUnratedProducts.products
+                            )
+                        }
                     }
+
                 }
             }
         }
     }
 }
+
+fun Modifier.multiLayersShadow(
+    elevation: Dp,
+    transparencyMultiplier: Float = 0.1f,
+    color: Color = Color.Black,
+    layers: Int = 10,
+    shape: Shape = RoundedCornerShape(8.dp),
+): Modifier = this.drawWithCache {
+
+    val shadowSize =
+        elevation.toPx() * 1.2f
+    val layerSize = shadowSize / layers
+
+    val outline = shape.createOutline(size, layoutDirection, this)
+    val path = Path().apply { addOutline(outline) }
+
+    onDrawWithContent {
+        repeat(layers) { layer ->
+            val layerAlpha = 1f - (1 / layers.toFloat()) * layer
+            val reducedLayerAlpha = layerAlpha * transparencyMultiplier
+
+            val scaleFactorX = 1f + (layer * layerSize) / size.width
+            val scaleFactorY = 1f + (layer * layerSize) / size.height
+
+            drawIntoCanvas { canvas ->
+                canvas.save()
+
+                val centerX = size.width / 2
+                val centerY = size.height / 2
+                canvas.translate(centerX, centerY)
+
+                canvas.scale(scaleFactorX, scaleFactorY)
+
+                canvas.translate(-centerX, -centerY)
+
+                drawPath(
+                    path = path,
+                    color = color.copy(alpha = reducedLayerAlpha),
+                    style = Stroke(width = layerSize)
+                )
+
+                canvas.restore()
+            }
+        }
+
+        drawContent()
+    }
+}
+
+fun Modifier.shadowWithClippingBlurMask(
+    elevation: Dp,
+    shape: Shape = RoundedCornerShape(8.dp),
+    spotColor: Color = DefaultShadowColor,
+    transparency: Float = 0.25f,
+    elevationToBlurMultiplier: Float = 1.2f,
+): Modifier = this
+    .drawWithCache {
+        val transparentColor = spotColor.copy(alpha = transparency)
+        val outline = shape.createOutline(size, layoutDirection, this)
+        val path = Path().apply { addOutline(outline) }
+
+        val blurRadius = elevation.toPx() * elevationToBlurMultiplier
+        val dxPx = 0f  // No horizontal offset for default Material shadow
+        val dyPx = (elevation * 0.5f).toPx()  // Vertical offset
+
+        val shadowPaint = Paint().apply {
+            asFrameworkPaint().apply {
+                isAntiAlias = false
+                maskFilter = BlurMaskFilter(blurRadius, BlurMaskFilter.Blur.NORMAL)
+                color = transparentColor.toArgb()
+            }
+        }
+
+        onDrawWithContent {
+            drawIntoCanvas { canvas ->
+                canvas.save()
+
+                clipPath(path, ClipOp.Difference) {
+                    canvas.translate(dxPx, dyPx)  // Apply vertical shadow offset
+                    canvas.drawPath(path, shadowPaint)
+                }
+                canvas.restore()
+            }
+            drawContent()
+        }
+    }
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Suppress("NonSkippableComposable")

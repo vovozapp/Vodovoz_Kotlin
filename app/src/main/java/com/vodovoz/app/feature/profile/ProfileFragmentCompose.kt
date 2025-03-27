@@ -21,6 +21,7 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.navigation.navigateToLogin
+import com.vodovoz.app.core.navigation.navigateToUserData
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.placeholders.LoadingPlaceholder
 import com.vodovoz.app.design_system.composables.placeholders.NetworkErrorPlaceholder
@@ -144,6 +145,10 @@ class ProfileFragment : Fragment() {
 
                             ProfileFlowViewModel.ProfileEvents.GoToLogin -> {
                                 findNavController().navigateToLogin()
+                            }
+
+                            ProfileFlowViewModel.ProfileEvents.GoToUserData -> {
+                                findNavController().navigateToUserData()
                             }
                         }
                     }

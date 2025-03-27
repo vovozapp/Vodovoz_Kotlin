@@ -347,10 +347,9 @@ class LoginFragment : BaseFragment() {
             }
 
             //todo - if don't have sms
-
-//            tvRegister.setOnClickListener {
-//                findNavController().navigate(LoginFragmentDirections.actionToRegisterFragment())
-//            }
+            tvRegister.setOnClickListener {
+                findNavController().navigate(LoginFragmentDirections.actionToRegisterFragment())
+            }
 
             tvAuthByEmail.setOnClickListener {
                 findNavController().navigate(LoginFragmentDirections.actionToLoginByEmailFragment())
@@ -440,102 +439,4 @@ class LoginFragment : BaseFragment() {
             }
         }
     }
-}
-
-@AndroidEntryPoint
-class LoginFragmentCompose : Fragment() {
-
-    @Inject
-    lateinit var tabManager: TabManager
-
-    @Inject
-    lateinit var accountManager: AccountManager
-
-    private val biometricManager by lazy { BiometricManager.from(requireContext()) }
-
-    private val executor: Executor by lazy { ContextCompat.getMainExecutor(requireContext()) }
-    private val biometricPrompt: BiometricPrompt by lazy {
-        BiometricPrompt(this, executor,
-            object : BiometricPrompt.AuthenticationCallback() {
-                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-                    super.onAuthenticationError(errorCode, errString)
-                    requireActivity().snack(getString(R.string.biometric_fault))
-                }
-
-                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                    super.onAuthenticationSucceeded(result)
-                    authByUserSettings()
-                }
-
-                override fun onAuthenticationFailed() {
-                    super.onAuthenticationFailed()
-                    requireActivity().snack(getString(R.string.biometric_fault))
-                }
-            })
-    }
-
-    private val promptInfo: BiometricPrompt.PromptInfo by lazy {
-        BiometricPrompt.PromptInfo.Builder()
-            .setTitle("Biometric login for my app")
-            .setSubtitle("Log in using your biometric credential")
-            .setNegativeButtonText("Use account password")
-            .build()
-    }
-
-
-    private val viewModel: LoginFlowViewModel by viewModels()
-    private val profileViewModel: ProfileFlowViewModel by activityViewModels()
-    private val flowViewModel: HomeFlowViewModel by activityViewModels()
-    private val cartFlowViewModel: CartFlowViewModel by activityViewModels()
-    private val favoriteViewModel: FavoriteFlowViewModel by activityViewModels()
-
-    private val biometricResultLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            val resultCode = result.resultCode
-            if (resultCode == Activity.RESULT_OK) {
-                biometricPrompt.authenticate(promptInfo)
-                accountManager.saveUseBio(true)
-            } else {
-                accountManager.saveUseBio(false)
-            }
-        }
-
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return ComposeView(requireContext()).apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.Default)
-            setContent {
-                VodovozTheme {
-
-                }
-            }
-        }
-    }
-
-    internal fun authByUserSettings() {
-        val userSettings = accountManager.fetchUserSettings()
-        if (userSettings.email.isNotEmpty() && userSettings.password.isNotEmpty()) {
-            viewModel.authByEmail(userSettings.email, userSettings.password)
-        }
-    }
-
-    private fun initPersonalData() {
-        // Инициализация кнопки
-//        SpanWithUrlHandler.setTextWithUrl(
-//            text = AgreementController.getText(),
-//            textView = binding.tvPersonalData
-//        ) { url, index ->
-//            findNavController().navigate(
-//                LoginFragmentDirections.actionToWebViewFragment(
-//                    url = url ?: "",
-//                    title = AgreementController.getTitle(index) ?: "",
-//                )
-//            )
-//        }
-    }
-
 }

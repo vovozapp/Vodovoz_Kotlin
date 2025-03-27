@@ -16,7 +16,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.vodovoz.app.feature.home.composables.AuthScrollImagePager
-import com.vodovoz.app.feature.home.composables.HomeDivider
 import com.vodovoz.app.feature.profile.composables.ProfileCardsRow
 import com.vodovoz.app.feature.profile.composables.ProfileMenuColumn
 import com.vodovoz.app.feature.profile.composables.ProfileUserInfoRow
@@ -47,7 +46,7 @@ fun ProfileScreen(
         ) {
             ProfileUserInfoRow(
                 userInfoBlock = viewState.userInfoBlock,
-                onTextButtonClick = { }
+                onClick = { viewModel.navigateToUserData() }
             )
             ProfileCardsRow(
                 modifier = Modifier.padding(top = 16.dp),

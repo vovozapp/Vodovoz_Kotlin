@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -53,20 +54,23 @@ class FavoriteFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel.fetchFavoriteProducts()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.checkFavoritesChanges()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        findNavController().currentBackStackEntry?.savedStateHandle?.remove<CategoryUi>("category")
-            ?.let { category ->
-                viewModel.selectCategory(category)
-            }
-
-        viewModel.fetchFavoriteProducts()
+        findNavController().currentBackStackEntry?.savedStateHandle?.remove<CategoryUi>(
+            "category"
+        )?.let { category -> viewModel.selectCategory(category) }
+            ?: viewModel.checkFavoritesChanges()
 
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.Default)
@@ -82,7 +86,11 @@ class FavoriteFragment : Fragment() {
                         }
 
                         else -> {
-                            FavoriteScreen(viewModel = viewModel, viewState = viewState, lazyGridState = lazyGridState)
+                            FavoriteScreen(
+                                viewModel = viewModel,
+                                viewState = viewState,
+                                lazyGridState = lazyGridState
+                            )
                         }
                     }
 
@@ -90,6 +98,10 @@ class FavoriteFragment : Fragment() {
                     LifecycleEffect {
                         observeEvents(lazyGridState)
                     }
+
+//                    LifecycleEffect {
+//                        viewModel.listenFavorites()
+//                    }
 
                 }
             }

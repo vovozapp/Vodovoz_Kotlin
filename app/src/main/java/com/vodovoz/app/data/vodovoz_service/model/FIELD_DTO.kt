@@ -19,5 +19,7 @@ data class FIELD_DTO(
     @Json(name = "VALUE")
     val VALUE: String?,
     @Json(name = "ZAPRETREDAKTOR")
-    val ZAPRETREDAKTOR: String?
+    val ZAPRETREDAKTOR: String?,
+    @Json(name = "TEXT_V_POLE")
+    val TEXT_V_POLE: String?,
 )

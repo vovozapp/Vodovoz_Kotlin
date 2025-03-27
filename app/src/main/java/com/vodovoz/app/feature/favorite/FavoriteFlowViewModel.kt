@@ -49,6 +49,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -86,16 +87,18 @@ class FavoriteFlowViewModel @Inject constructor(
 
 
     init {
-        listenFavorites()
+        viewModelScope.launch {
+            listenFavorites()
+        }
         listenPagingLoadStates()
     }
 
     private fun listenPagingLoadStates() = viewModelScope.launch {
         pagingProductsListener.collectLoadState { combinedLoadStates ->
-
+            val currentRefreshState = dataState.productsLoadStates.refresh
             val refreshState = when {
                 combinedLoadStates.refresh is LoadState.Loading && dataState.products.isNotEmpty() -> {
-                    dataState.productsLoadStates.refresh
+                    currentRefreshState
                 }
 
                 else -> combinedLoadStates.refresh
@@ -111,7 +114,30 @@ class FavoriteFlowViewModel @Inject constructor(
         }
     }
 
-    private fun listenFavorites() = viewModelScope.launch {
+    fun checkFavoritesChanges() = viewModelScope.launch {
+        val favoritesMap = likeManager.observeLikes().firstOrNull() ?: return@launch
+        val currentFavoritesMap = dataState.products.associate { it.id to it.isFavorite }
+
+        //TODO - do something
+
+        favoritesMap.map { (productId, isFavorite) ->
+            if (isFavorite != currentFavoritesMap.getOrDefault(productId,false)) {
+                fetchFavoriteProducts()
+                return@launch
+            }
+        }
+
+
+        favoritesMap.forEach { (productId, isFavorite) ->
+            if (isFavorite != currentFavoritesMap.getOrDefault(productId,false) || currentFavoritesMap[productId] == false) {
+                fetchFavoriteProducts()
+                return@launch
+            }
+        }
+
+    }
+
+    suspend fun listenFavorites() {
         uiStateListener.map { pagingState -> pagingState.data.products }
             .combine(likeManager.observeLikes()) { products, favorites ->
                 products to favorites
@@ -168,20 +194,20 @@ class FavoriteFlowViewModel @Inject constructor(
 
 
         }.onFailure { fail ->
-            when (fail) {
-                is FavoritesNotFoundException -> {
-                    uiStateListener.updateData { s ->
-                        s.copy(uiState = FavoriteUiState.Empty)
-                    }
-                }
+            val uiState = when (fail) {
+                is FavoritesNotFoundException ->
+                    FavoriteUiState.Empty
 
-                else -> {
-                    uiStateListener.updateData { s ->
-                        s.copy(uiState = FavoriteUiState.Error)
-                    }
-                }
+                else -> FavoriteUiState.Error
+            }
+            uiStateListener.updateData { s ->
+                s.copy(
+                    uiState = uiState,
+                    showRefreshIndicator = false
+                )
             }
         }
+
     }
 
 

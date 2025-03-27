@@ -38,7 +38,7 @@ enum class Gender(
 }
 
 @AndroidEntryPoint
-class UserDataFragment : BaseFragment() {
+class UserDataFragment1 : BaseFragment() {
 
     override fun layout(): Int = R.layout.fragment_user_data_flow
 
@@ -233,6 +233,9 @@ class UserDataFragment : BaseFragment() {
 
                         UserDataFlowViewModel.UserDataEvents.Logout -> {
                             findNavController().popBackStack(R.id.profileFragment, true)
+                        }
+                        else -> {
+
                         }
                     }
                 }

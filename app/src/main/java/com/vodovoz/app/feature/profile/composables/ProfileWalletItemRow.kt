@@ -17,7 +17,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
@@ -72,17 +75,23 @@ private fun WalletItemCard(
         Column(
             modifier = Modifier
                 .align(Alignment.CenterVertically)
-                .padding(end = 6.dp, top = 4.dp, bottom = 4.dp)
+                .padding(end = 4.dp, top = 4.dp, bottom = 4.dp)
         ) {
             Text(
                 text = walletItem.title,
                 color = walletItem.titleColor.takeOrElse { MaterialTheme.colorScheme.onBackground },
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontWeight = FontWeight.Medium
+                )
             )
+
+            val labelSmall = MaterialTheme.typography.labelSmall
             Text(
                 text = walletItem.description,
                 color = walletItem.descriptionColor.takeOrElse { MaterialTheme.colorScheme.surfaceTint },
-                style = MaterialTheme.typography.bodyMedium
+                style = labelSmall.copy(fontSize = (labelSmall.fontSize.value - 1).sp),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
 
