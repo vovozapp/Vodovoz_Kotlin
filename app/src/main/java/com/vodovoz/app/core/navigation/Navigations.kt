@@ -12,10 +12,12 @@ import com.vodovoz.app.feature.home.model.CategoryUi
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 
 fun NavController.navigateToChangePassword() {
-    navigate(R.id.changePasswordFragment, bundleOf(), NavOptions.Builder()
-        .setEnterAnim(R.anim.slide_in_right)
-        .setPopExitAnim(R.anim.slide_out_right)
-        .build())
+    navigate(
+        R.id.changePasswordFragment, bundleOf(), NavOptions.Builder()
+            .setEnterAnim(R.anim.slide_in_right)
+            .setPopExitAnim(R.anim.slide_out_right)
+            .build()
+    )
 }
 
 
@@ -85,7 +87,12 @@ fun NavController.navigateToAnalogs(productId: Long) {
 }
 
 fun NavController.navigateToCertificateActivation() {
-    navigate(R.id.certificateActivationFragment)
+    navigate(
+        R.id.certificateActivationFragment, bundleOf(), NavOptions.Builder()
+            .setEnterAnim(R.anim.slide_in_right)
+            .setPopExitAnim(R.anim.slide_out_right)
+            .build()
+    )
 }
 
 fun NavController.navigateToCategories(category: CategoryUi, categories: List<CategoryUi>) {

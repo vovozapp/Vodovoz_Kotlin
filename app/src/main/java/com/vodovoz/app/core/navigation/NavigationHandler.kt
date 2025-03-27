@@ -10,6 +10,10 @@ data object NavigationHandler {
                 navController.navigateToChangePassword()
             }
 
+            CERTIFICATE_ACTIVATION_ROUTE -> {
+                navController.navigateToCertificateActivation()
+            }
+
             else -> {
 
             }
@@ -18,5 +22,6 @@ data object NavigationHandler {
 
 
     private const val CHANGE_PASSWORD_ROUTE = "parol"
+    private const val CERTIFICATE_ACTIVATION_ROUTE = "kodslova"
 
 }

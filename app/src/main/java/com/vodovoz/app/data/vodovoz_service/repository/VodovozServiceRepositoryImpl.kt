@@ -247,11 +247,10 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     override fun activateCertificate(field: FieldUi): Flow<Result<String>> {
         return executeRequest(
             request = {
-                val userId = accountManager.fetchAccountId() ?: throw UserNotLoginException("")
-                vodovozService.activateCertificate(userId, mapOf(field.id to field.value.trim()))
+                vodovozService.activateCertificate(accountManager.fetchAccountId() ?: -1, mapOf(field.id to field.value.trim()))
             },
             mapper = {
-                it.data ?: ""
+                it.message ?: ""
             },
             onFail = { response ->
                 val errorDTO = moshi.fromJson<VodovozResponseDTO<String>>(
