@@ -16,6 +16,7 @@ import com.vodovoz.app.common.token.FirebaseTokenManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.config.AuthConfig
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.domain.general.model.ValidationException
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.preorder.model.FieldUi
 import com.vodovoz.app.feature.preorder.model.checkFields
@@ -26,12 +27,12 @@ import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.singleResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.singleOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -53,10 +54,7 @@ class RegFlowViewModel @Inject constructor(
         uiStateListener.updateData { s -> s.copy(uiState = UiState.Loading) }
 
         val registerFieldsResult =
-            vodovozServiceRepository.getRegisterFields().singleOrNull() ?: run {
-                uiStateListener.updateData { s -> s.copy(uiState = UiState.Error) }
-                return@launch
-            }
+            vodovozServiceRepository.getRegisterFields().singleResult()
 
         registerFieldsResult.onSuccess { fieldsSection ->
             uiStateListener.updateData { s ->
@@ -66,19 +64,15 @@ class RegFlowViewModel @Inject constructor(
                     title = fieldsSection.title
                 )
             }
-
         }.onFailure {
             uiStateListener.updateData { s -> s.copy(uiState = UiState.Error) }
         }
     }
 
     fun register() = viewModelScope.launch {
-        val isValidFields = dataState.fields.checkFields(true) { updatedFields, isValid ->
-            uiStateListener.updateData { s ->
-                s.copy(fields = updatedFields, buttonLoading = true)
-            }
+        uiStateListener.updateData { s ->
+            s.copy(buttonLoading = true)
         }
-        if (isValidFields) return@launch
 
         val failMessage = resourceProvider.getString(R.string.registration_fail)
 
@@ -89,6 +83,8 @@ class RegFlowViewModel @Inject constructor(
         registerResult.onSuccess { userId ->
             accountManager.updateUserId(userId)
             likeManager.updateLikesAfterLogin(userId)
+            firebaseTokenManager.sendFirebaseToken()
+            eventListener.emit(RegEvents.RegSuccess)
             //Todo - save last login data
 //            accountManager.updateLastLoginSetting(
 //                AccountManager.UserSettings(
@@ -97,10 +93,30 @@ class RegFlowViewModel @Inject constructor(
 //                )
 //            )
 
-            firebaseTokenManager.sendFirebaseToken()
-            eventListener.emit(RegEvents.RegSuccess)
+            uiStateListener.updateData { s ->
+                s.copy(
+                    buttonEnabled = false,
+                    buttonLoading = false,
+                    uiState = UiState.Success
+                )
+            }
+
+            eventListener.emit(RegEvents.GoToProfile)
+
+
         }.onFailure { t ->
-            eventListener.emit(RegEvents.ShowSnackbar(failMessage))
+            val message = when(t){
+                is ValidationException -> t.message ?: failMessage
+                else -> failMessage
+            }
+            eventListener.emit(RegEvents.ShowSnackbar(message))
+            uiStateListener.updateData { s ->
+                s.copy(
+                    buttonEnabled = false,
+                    buttonLoading = false,
+                    uiState = UiState.Success
+                )
+            }
         }
 
 
@@ -198,6 +214,7 @@ class RegFlowViewModel @Inject constructor(
         data class RegError(val message: String) : RegEvents()
         data class ShowSnackbar(val message: String) : RegEvents()
         data object GoBack : RegEvents()
+        data object GoToProfile : RegEvents()
     }
 
     @Immutable

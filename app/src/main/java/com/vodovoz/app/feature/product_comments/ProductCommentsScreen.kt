@@ -112,7 +112,7 @@ fun ProductCommentsScreen(
                 ) { i ->
                     val comment = lazyPagingComments[i]
                     if (comment != null) {
-                        CommentCard(comment = comment)
+                        CommentCard(comment = comment, minLines = 1)
                     }
                 }
             }

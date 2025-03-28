@@ -64,23 +64,7 @@ fun StoriesScreen(
     pagerState: PagerState,
 ) {
     val stories = viewState.stories
-    val systemUiController = rememberSystemUiController()
 
-    val backgroundColor = MaterialTheme.colorScheme.background
-    val onBackgroundColor = MaterialTheme.colorScheme.onBackground
-
-    DisposableEffect(Unit) {
-        systemUiController.setSystemBarsColor(
-            color = onBackgroundColor,
-            isNavigationBarContrastEnforced = false
-        )
-        onDispose {
-            systemUiController.setSystemBarsColor(
-                color = backgroundColor,
-                isNavigationBarContrastEnforced = false
-            )
-        }
-    }
 
     val density = LocalDensity.current
 

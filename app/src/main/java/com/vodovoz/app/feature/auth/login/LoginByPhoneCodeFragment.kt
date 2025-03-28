@@ -187,6 +187,13 @@ class LoginByPhoneCodeFragment : BaseFragment() {
                             is LoginFlowViewModel.LoginEvents.SetupByPhone -> {
                                 setupAuthByPhone(it.time)
                             }
+
+                            LoginFlowViewModel.LoginEvents.GoBack -> {
+
+                            }
+                            else -> {
+
+                            }
                         }
                     }
             }

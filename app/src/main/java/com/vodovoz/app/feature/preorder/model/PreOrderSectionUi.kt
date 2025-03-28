@@ -162,6 +162,10 @@ fun List<FieldUi>.checkFields(
     return isValidFields
 }
 
+@JvmName("mapToFieldUiList")
+fun List<FieldModel>.mapToUi(): List<FieldUi>{
+    return map { it.toUi() }
+}
 
 fun FieldModel.toUi(): FieldUi {
 
@@ -226,6 +230,7 @@ fun FieldUi.toDomain(): FieldModel {
         isRequired = isRequired,
         readOnly = readOnly,
         supportingText = supportingText,
-        label = label
+        label = label,
+        hint = hint
     )
 }

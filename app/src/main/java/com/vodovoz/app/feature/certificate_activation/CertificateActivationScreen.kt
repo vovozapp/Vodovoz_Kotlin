@@ -2,6 +2,7 @@ package com.vodovoz.app.feature.certificate_activation
 
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -21,7 +22,8 @@ fun CertificateActivationScreen(
         topBar = {
             VodovozTopBar(onBack = { viewModel.navigateBack() }, title = viewState.title)
         },
-        contentWindowInsets = WindowInsets(0, 0, 0, 0)
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+        containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
         when (viewState.uiState) {
             CertificateActivationUiState.Details -> {

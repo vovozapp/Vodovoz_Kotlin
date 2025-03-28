@@ -19,10 +19,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.vodovoz.app.feature.home.model.PopularCategoryUi
 import com.vodovoz.app.design_system.model.SectionUi
 
@@ -46,7 +49,7 @@ fun HomePopularCategories(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(sectionPopularCategories.items) { popularCategory ->
-                HomeSectionItem(section = popularCategory, onClick = onPopularCategoryClick)
+                HomeSectionItem(category = popularCategory, onClick = onPopularCategoryClick)
             }
         }
     }
@@ -55,7 +58,7 @@ fun HomePopularCategories(
 @Composable
 fun HomeSectionItem(
     modifier: Modifier = Modifier,
-    section: PopularCategoryUi,
+    category: PopularCategoryUi,
     onClick: (PopularCategoryUi) -> Unit,
 ) {
     Column(
@@ -63,7 +66,7 @@ fun HomeSectionItem(
         modifier = modifier
             .width(75.dp)
             .clip(MaterialTheme.shapes.small)
-            .clickable { onClick(section) }
+            .clickable { onClick(category) }
     ) {
         Box(
             contentAlignment = Alignment.Center,
@@ -76,7 +79,7 @@ fun HomeSectionItem(
                 )
         ) {
             AsyncImage(
-                model = section.image,
+                model = ImageRequest.Builder(LocalContext.current).data(category.image).crossfade(true).build(),
                 contentDescription = null,
                 modifier = Modifier.size(40.dp),
                 contentScale = ContentScale.FillBounds
@@ -90,7 +93,7 @@ fun HomeSectionItem(
             modifier = Modifier
                 .padding(top = 8.dp)
                 .padding(horizontal = 1.dp),
-            text = section.name,
+            text = category.name,
             color = MaterialTheme.colorScheme.onBackground,
             maxLines = 1,
             style = labelSmall.copy(fontSize = fontSize, letterSpacing = 0.1.sp),

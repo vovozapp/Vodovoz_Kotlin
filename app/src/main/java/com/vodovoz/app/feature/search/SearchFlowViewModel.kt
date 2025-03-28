@@ -21,12 +21,12 @@ import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.common.SearchQueryHeaderResponse
 import com.vodovoz.app.data.model.common.SearchQueryResponse
-import com.vodovoz.app.domain.general.model.EmptyResultException
-import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
-import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
 import com.vodovoz.app.design_system.model.ProductUi
 import com.vodovoz.app.design_system.model.SectionUi
 import com.vodovoz.app.design_system.model.toUi
+import com.vodovoz.app.domain.general.model.EmptyResultException
+import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
+import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.mapper.CategoryMapper.mapToUI
 import com.vodovoz.app.mapper.DefaultSearchDataBundleMapper.mapToUI
@@ -87,8 +87,6 @@ class SearchFlowViewModel @Inject constructor(
 
     private val querySharedFlow = MutableSharedFlow<String>(10)
 
-    private val changeQueryState = MutableStateFlow("")
-
     init {
         handleQueries()
         listenSearchHistory()
@@ -112,10 +110,14 @@ class SearchFlowViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun handleQueries() =
         querySharedFlow.onStart {
-            uiStateListener.updateData { s -> s.copy(uiState = UiState.Loading, query = previousSearchQuery) }
+            uiStateListener.updateData { s ->
+                s.copy(
+                    uiState = UiState.Loading,
+                    query = previousSearchQuery
+                )
+            }
             emit(previousSearchQuery)
-        }
-            .debounceWithMax(200L, 5)
+        }.debounceWithMax(200L, 5)
             .mapLatest { query ->
 
                 fun checkAvailableData() {
@@ -654,22 +656,13 @@ class SearchFlowViewModel @Inject constructor(
     }
 
     fun chooseMatchingQuery(query: String) = viewModelScope.launch {
-        if (query == dataState.query) return@launch
-        uiStateListener.updateData { s ->
-            s.copy(query = query)
-        }
-
-        querySharedFlow.emit(query)
-        if (query.isBlank()) {
-            searchByEmptyQuery()
-        } else {
-            searchByQuery(query)
-        }
+        changeQuery(query).join()
+        search()
     }
 
     fun changeQuery(query: String) = viewModelScope.launch {
-        val oldQuery = dataState.query
-        if (query == oldQuery) return@launch
+        val currentQuery = dataState.query
+        if (query == currentQuery) return@launch
 
         uiStateListener.updateData { s ->
             s.copy(query = query)

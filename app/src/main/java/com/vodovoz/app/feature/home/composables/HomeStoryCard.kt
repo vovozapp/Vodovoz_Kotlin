@@ -16,8 +16,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.vodovoz.app.design_system.composables.card.VodovozOutlinedCard
 import com.vodovoz.app.design_system.model.StoryUi
 
@@ -64,7 +67,9 @@ fun HomeStoryCard(
         onClick = onClick
     ) {
         AsyncImage(
-            model = storyImage,
+            model = ImageRequest.Builder(LocalContext.current).data(storyImage)
+                .crossfade(true)
+                .build(),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier

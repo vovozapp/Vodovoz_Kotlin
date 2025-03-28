@@ -13,6 +13,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.account.data.ReloginManager
 import com.vodovoz.app.common.content.BaseFragment
+import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.databinding.FragmentSplashBinding
 import com.vodovoz.app.feature.cart.CartFlowViewModel
 import com.vodovoz.app.feature.catalog.CatalogFlowViewModel
@@ -81,7 +82,7 @@ class SplashFragment : BaseFragment() {
 
                     is ReloginManager.ReloginState.ReloginError -> {
                         //todo - handle relogin
-                        //showError(ErrorState.NetworkError())
+                        showError(ErrorState.NetworkError())
                     }
 
                     else -> {}
@@ -224,7 +225,7 @@ class SplashFragment : BaseFragment() {
 
 
 //        //todo - get actual site state
-//        val active = siteStateManager.fetchSiteStateActive()
+        val active = siteStateManager.fetchSiteStateActive()
 //        debugLog { "site state active $active" }
 //        if (active) {
 //            findNavController().navigate(R.id.mainFragment)

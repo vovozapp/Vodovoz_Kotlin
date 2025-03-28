@@ -1,22 +1,32 @@
 package com.vodovoz.app.feature.auth.login
 
 import android.os.CountDownTimer
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.account.data.LoginManager
+import com.vodovoz.app.common.agreement.AgreementController
 import com.vodovoz.app.common.content.Event
 import com.vodovoz.app.common.content.PagingContractViewModel
 import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
+import com.vodovoz.app.common.content.updateData
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.token.FirebaseTokenManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.design_system.model.ColorfulButtonUi
+import com.vodovoz.app.design_system.model.toUi
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
+import com.vodovoz.app.feature.preorder.model.FieldUi
+import com.vodovoz.app.feature.preorder.model.checkFields
+import com.vodovoz.app.feature.preorder.model.mapToUi
+import com.vodovoz.app.feature.preorder.model.updateFieldAndResetErrors
 import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.ui.model.enum.AuthType
 import com.vodovoz.app.util.FieldValidationsSettings
 import com.vodovoz.app.util.extensions.debugLog
+import com.vodovoz.app.util.extensions.singleResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -41,7 +51,7 @@ class LoginFlowViewModel @Inject constructor(
     private val loginManager: LoginManager,
     private val siteStateManager: SiteStateManager,
     private val likeManager: LikeManager,
-    private val vodovozServiceRepository: VodovozServiceRepository
+    private val vodovozServiceRepository: VodovozServiceRepository,
 ) : PagingContractViewModel<LoginFlowViewModel.LoginState, LoginFlowViewModel.LoginEvents>(
     LoginState()
 ) {
@@ -50,16 +60,15 @@ class LoginFlowViewModel @Inject constructor(
         viewModelScope.launch {
             siteStateManager
                 .observeSiteState()
-                .collect {
-                    if (it != null) {
-                        uiStateListener.value = state.copy(
-                            data = state.data.copy(
-                                requestUrl = it.requestUrl
-                            )
-                        )
+                .collect { siteState ->
+                    if (siteState != null) {
+                        uiStateListener.updateData { s ->
+                            //TODO - change siteState.requestUrl to new state
+                            s.copy(requestUrl = siteState.requestUrl, showRegisterText = siteState.requestUrl == null)
+                        }
                     } else {
                         siteStateManager.requestSiteState()
-                        delay(50L)
+                        delay(2000L)
                     }
                 }
 
@@ -77,10 +86,41 @@ class LoginFlowViewModel @Inject constructor(
                 )
             }
         }
+
+        fetchLoginDetails()
     }
 
     private var codeTimeOutCountDownTimer: CountDownTimer? = null
     private var timerIsCancel = true
+
+    fun fetchLoginDetails() = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(uiState = LoginUiState.Loading)
+        }
+
+        val loginDetailsResult = vodovozServiceRepository.getLoginDetails().singleResult()
+
+        loginDetailsResult.onSuccess { loginDetails ->
+            uiStateListener.updateData { s ->
+                s.copy(
+                    description = loginDetails.description,
+                    title = loginDetails.title,
+                    navigationButton = loginDetails.navigationButton.toUi(),
+                    mainButton = loginDetails.mainButton.toUi(),
+                    fields = loginDetails.fields.mapToUi(),
+                    agreementTextHtml = AgreementController.getText(),
+                    uiState = LoginUiState.Success,
+                    showAgreements = loginDetails.hasAgreement,
+                    mainButtonEnabled = false,
+                    mainButtonLoading = false,
+                )
+            }
+        }.onFailure {
+            uiStateListener.updateData { s ->
+                s.copy(uiState = LoginUiState.Error)
+            }
+        }
+    }
 
     fun signIn() {
         viewModelScope.launch {
@@ -100,7 +140,7 @@ class LoginFlowViewModel @Inject constructor(
 
         vodovozServiceRepository.loginByEmail(email, password).onEach { result ->
             result.onSuccess { message ->
-                debugLog{ message }
+                debugLog { message }
             }.onFailure { throwable ->
                 debugLog { throwable.stackTraceToString() }
             }
@@ -348,6 +388,44 @@ class LoginFlowViewModel @Inject constructor(
             state.copy(data = state.data.copy(showPassword = !state.data.showPassword))
     }
 
+    fun navigateBack() = viewModelScope.launch {
+        eventListener.emit(LoginEvents.GoBack)
+    }
+
+    fun changeField(field: FieldUi, updatedField: FieldUi) = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            val updatedFields = s.fields.updateFieldAndResetErrors(field, updatedField)
+            s.copy(fields = updatedFields, mainButtonEnabled = updatedFields.checkFields() && s.agreementChecked)
+        }
+    }
+
+    fun openAgreementUrl(url: String, index: Int) = viewModelScope.launch {
+        val title = AgreementController.getTitle(index) ?: ""
+        eventListener.emit(LoginEvents.GoToWebView(url, title))
+    }
+
+    fun checkSubscribe(checked: Boolean) = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(
+                subscribeChecked = checked
+            )
+        }
+    }
+
+    fun checkAgreement(checked: Boolean) = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(
+                agreementChecked = checked,
+                mainButtonEnabled = s.fields.checkFields() && checked
+            )
+        }
+
+    }
+
+    fun navigateToLoginByEmail() = viewModelScope.launch {
+        eventListener.emit(LoginEvents.GoToLoginByEmail)
+    }
+
     sealed class LoginEvents : Event {
         data object AuthSuccess : LoginEvents()
         data class AuthError(val message: MessageType) : LoginEvents()
@@ -359,8 +437,11 @@ class LoginFlowViewModel @Inject constructor(
 
         data object AuthByPhone : LoginEvents()
         data object AuthByEmail : LoginEvents()
+        data object GoBack : LoginEvents()
+        data object GoToLoginByEmail : LoginEvents()
 
         data class SetupByPhone(val time: Int, val phone: String) : LoginEvents()
+        data class GoToWebView(val url: String, val title: String) : LoginEvents()
     }
 
     sealed interface MessageType {
@@ -370,11 +451,33 @@ class LoginFlowViewModel @Inject constructor(
         data class Message(val param: String) : MessageType
     }
 
+    @Immutable
     data class LoginState(
         val authType: AuthType = AuthType.PHONE,
         val requestUrl: String? = null,
         val settings: AccountManager.UserSettings? = null,
         val lastAuthPhone: String? = null,
         val showPassword: Boolean = false,
+
+
+        val showRegisterText: Boolean = false,
+        val agreementTextHtml: String = "",
+        val showAgreements: Boolean = false,
+        val agreementChecked: Boolean = true,
+        val subscribeChecked: Boolean = false,
+        val title: String = "",
+        val description: String = "",
+        val fields: List<FieldUi> = emptyList(),
+        val mainButton: ColorfulButtonUi = ColorfulButtonUi.Empty,
+        val mainButtonEnabled: Boolean = false,
+        val mainButtonLoading: Boolean = false,
+        val navigationButton: ColorfulButtonUi = ColorfulButtonUi.Empty,
+        val uiState: LoginUiState = LoginUiState.Loading,
     ) : State
+
+    sealed interface LoginUiState {
+        data object Success : LoginUiState
+        data object Loading : LoginUiState
+        data object Error : LoginUiState
+    }
 }

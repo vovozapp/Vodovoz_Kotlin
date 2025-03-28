@@ -39,6 +39,6 @@ fun PROFILE_POLE_DTO.toDomain(): FieldModel? {
         isRequired = OBYZATELNO == "Y",
         readOnly = ZABLOCKPOLE == "Y",
         supportingText = OPIS ?: "",
-        hint = TEXTOPIS ?: ""
+        hint = TEXTOPIS ?: TEXT_V_POLE ?: ""
     )
 }

@@ -23,5 +23,7 @@ data class PROFILE_POLE_DTO(
     @Json(name = "SPISOK")
     val SPISOK: List<SPISOK?>?,
     @Json(name = "OPIS")
-    val OPIS: String?
+    val OPIS: String?,
+    @Json(name = "TEXT_V_POLE")
+    val TEXT_V_POLE: String?
 )

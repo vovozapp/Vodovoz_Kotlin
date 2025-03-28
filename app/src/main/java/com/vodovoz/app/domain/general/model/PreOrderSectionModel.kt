@@ -14,5 +14,5 @@ data class FieldModel(
     val isRequired: Boolean,
     val readOnly: Boolean,
     val supportingText: String,
-    val hint: String = ""
+    val hint: String
 )

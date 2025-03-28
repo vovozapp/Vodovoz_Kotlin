@@ -13,14 +13,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun LoadingPlaceholder(modifier: Modifier = Modifier) {
+fun LoadingPlaceholder(
+    modifier: Modifier = Modifier,
+    containerColor: Color = MaterialTheme.colorScheme.background,
+    color: Color = MaterialTheme.colorScheme.primary,
+) {
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background), contentAlignment = Alignment.Center
+            .background(containerColor), contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator(
-            color = MaterialTheme.colorScheme.primary,
+            color = color,
             strokeWidth = 4.dp,
             trackColor = Color.Transparent,
             modifier = Modifier.size(36.dp)

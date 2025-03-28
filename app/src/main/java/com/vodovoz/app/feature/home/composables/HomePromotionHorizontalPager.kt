@@ -18,10 +18,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isUnspecified
 import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
@@ -35,6 +38,7 @@ fun AuthScrollImagePager(
     pageWidth: Dp,
 ) {
     val isDraggedState = pagerState.interactionSource.collectIsDraggedAsState()
+    val context = LocalContext.current
 
     HorizontalPager(
         modifier = modifier.fillMaxWidth(),
@@ -51,7 +55,7 @@ fun AuthScrollImagePager(
         val currentImage = images[page]
 
         AsyncImage(
-            model = currentImage,
+            model = ImageRequest.Builder(context).data(currentImage).crossfade(true).build(),
             contentDescription = null,
             modifier = Modifier
                 .height(150.dp)

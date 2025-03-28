@@ -3,7 +3,11 @@ package com.vodovoz.app.feature.auth.reg.composables
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -18,25 +22,34 @@ import com.vodovoz.app.feature.auth.reg.RegFlowViewModel
 
 @Suppress("NonSkippableComposable")
 @Composable
-fun RegisterScreen(viewModel: RegFlowViewModel, viewState: RegFlowViewModel.RegState, snackbarHostState: SnackbarHostState) {
+fun RegisterScreen(
+    viewModel: RegFlowViewModel,
+    viewState: RegFlowViewModel.RegState,
+    snackbarHostState: SnackbarHostState,
+) {
     Scaffold(
         topBar = {
             VodovozTopBar(
+                modifier = Modifier.windowInsetsPadding(WindowInsets.statusBars),
+                title = viewState.title.ifEmpty { stringResource(id = R.string.registration) },
                 onBack = {
                     viewModel.navigateBack()
-                },
-                title = viewState.title.ifEmpty { stringResource(id = R.string.registration) }
+                }
             )
         },
         snackbarHost = {
-            VodovozSnackbarHost(hostState = snackbarHostState)
+            VodovozSnackbarHost(
+                modifier = Modifier.windowInsetsPadding(WindowInsets.navigationBars),
+                hostState = snackbarHostState,
+            )
         },
-        contentWindowInsets = WindowInsets(0,0,0,0)
+        contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) { paddingValues ->
         Box(
             modifier = Modifier
                 .padding(paddingValues)
-                .consumeWindowInsets(paddingValues),
+                .consumeWindowInsets(paddingValues)
+                .windowInsetsPadding(WindowInsets.navigationBars),
         ) {
             when (viewState.uiState) {
                 RegFlowViewModel.UiState.Error -> {

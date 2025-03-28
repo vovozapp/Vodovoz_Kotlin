@@ -29,6 +29,7 @@ import com.vodovoz.app.core.navigation.navigateToPreOrder
 import com.vodovoz.app.core.navigation.navigateToProductComments
 import com.vodovoz.app.core.navigation.navigateToProductDetails
 import com.vodovoz.app.core.navigation.navigateToSearch
+import com.vodovoz.app.core.navigation.navigateToSearchProductList
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.placeholders.EmptyResultPlaceholder
 import com.vodovoz.app.design_system.composables.placeholders.EmptyResultPlaceholderItem
@@ -224,6 +225,10 @@ class ProductDetailsFragment : Fragment() {
 
                 is ProductDetailsFlowViewModel.ProductDetailsEvents.Share -> {
                     kotlin.runCatching { shareText(event.text) }
+                }
+
+                is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToSearchProductList -> {
+                    findNavController().navigateToSearchProductList(event.query)
                 }
             }
         }

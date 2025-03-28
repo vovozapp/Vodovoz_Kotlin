@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
@@ -18,11 +20,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.design_system.VodovozTheme
+import com.vodovoz.app.design_system.composables.placeholders.LoadingPlaceholder
 import com.vodovoz.app.design_system.effects.LifecycleEffect
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
 import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment
@@ -70,15 +74,8 @@ class FullScreenHistoriesSliderFlowFragment : Fragment() {
                         ) { data.stories.size } else rememberPagerState(data.currentStoryIndex) { data.stories.size }
 
                     when (viewState.data.uiState) {
-                        FullScreenHistoriesSliderFlowViewModel.UiState.Error -> {
-
-                        }
-
                         FullScreenHistoriesSliderFlowViewModel.UiState.Loading -> {
-                        }
-
-                        FullScreenHistoriesSliderFlowViewModel.UiState.NetworkError -> {
-
+                            LoadingPlaceholder(containerColor = MaterialTheme.colorScheme.onBackground)
                         }
 
                         FullScreenHistoriesSliderFlowViewModel.UiState.Success -> {
@@ -90,6 +87,23 @@ class FullScreenHistoriesSliderFlowFragment : Fragment() {
                         }
                     }
 
+                    val systemUiController = rememberSystemUiController()
+
+                    val backgroundColor = MaterialTheme.colorScheme.background
+                    val onBackgroundColor = MaterialTheme.colorScheme.onBackground
+
+                    DisposableEffect(Unit) {
+                        systemUiController.setSystemBarsColor(
+                            color = onBackgroundColor,
+                            isNavigationBarContrastEnforced = false
+                        )
+                        onDispose {
+                            systemUiController.setSystemBarsColor(
+                                color = backgroundColor,
+                                isNavigationBarContrastEnforced = false
+                            )
+                        }
+                    }
 
 
 

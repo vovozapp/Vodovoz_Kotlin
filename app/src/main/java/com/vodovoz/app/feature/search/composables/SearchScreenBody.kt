@@ -53,7 +53,7 @@ fun SearchScreenBody(
                 modifier = Modifier.padding(top = 16.dp, bottom = 10.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                maxLines = 3
+                maxLines = 2
             ) {
                 searchHistory.forEach { query ->
                     VodovozClosableChip(text = query, selected = false, onSelect = { onQueryChoose(query) }, onClose = { onQueryClose(query)})

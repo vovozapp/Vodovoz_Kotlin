@@ -11,10 +11,13 @@ import com.vodovoz.app.feature.catalog.model.CatalogCategoryUi
 import com.vodovoz.app.feature.home.model.CategoryUi
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 
+
+
 fun NavController.navigateToChangePassword() {
     navigate(
         R.id.changePasswordFragment, bundleOf(), NavOptions.Builder()
             .setEnterAnim(R.anim.slide_in_right)
+            .setExitAnim(R.anim.fade_out)
             .setPopExitAnim(R.anim.slide_out_right)
             .build()
     )
@@ -24,6 +27,11 @@ fun NavController.navigateToChangePassword() {
 fun NavController.navigateToUserData() {
     navigate(R.id.userDataFragment)
 }
+
+fun NavController.navigateToLoginByEmail() {
+    navigate(R.id.loginByEmailFragment)
+}
+
 
 fun NavController.navigateToLogin() {
     navigate(R.id.loginFragment)
@@ -90,6 +98,7 @@ fun NavController.navigateToCertificateActivation() {
     navigate(
         R.id.certificateActivationFragment, bundleOf(), NavOptions.Builder()
             .setEnterAnim(R.anim.slide_in_right)
+            .setExitAnim(R.anim.fade_out)
             .setPopExitAnim(R.anim.slide_out_right)
             .build()
     )

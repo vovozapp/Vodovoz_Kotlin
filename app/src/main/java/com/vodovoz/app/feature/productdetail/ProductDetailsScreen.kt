@@ -41,6 +41,9 @@ fun ProductDetailsScreen(
             )
         },
         bottomBar = {
+
+
+
             val (price, oldPrice) = productDetails.firstPrice.run { price.roundToInt() to oldPrice.roundToInt() }
 
             AnimatedVisibility(!viewState.hideFloatingButton) {

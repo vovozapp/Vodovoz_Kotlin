@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -26,7 +26,12 @@ import com.vodovoz.app.R
 import com.vodovoz.app.design_system.model.CommentUi
 
 @Composable
-fun CommentCard(modifier: Modifier = Modifier, comment: CommentUi, maxLines: Int = Int.MAX_VALUE) {
+fun CommentCard(
+    modifier: Modifier = Modifier,
+    comment: CommentUi,
+    minLines: Int = 2,
+    maxLines: Int = Int.MAX_VALUE,
+) {
     OutlinedCard(
         modifier = modifier
             .fillMaxWidth(),
@@ -58,15 +63,17 @@ fun CommentCard(modifier: Modifier = Modifier, comment: CommentUi, maxLines: Int
                 }
             }
 
-            Text(
-                modifier = Modifier
-                    .padding(top = 12.dp)
-                    .heightIn(min = 40.dp),
-                text = AnnotatedString.fromHtml(comment.text),
-                color = MaterialTheme.colorScheme.onBackground,
-                style = MaterialTheme.typography.bodySmall,
-                maxLines = maxLines
-            )
+            Spacer(modifier = Modifier.height(12.dp))
+
+            if (comment.text.isNotEmpty()) {
+                Text(
+                    text = AnnotatedString.fromHtml(comment.text),
+                    color = MaterialTheme.colorScheme.onBackground,
+                    style = MaterialTheme.typography.bodySmall,
+                    maxLines = maxLines,
+                    minLines = minLines
+                )
+            }
 
             Row(
                 modifier = Modifier.padding(top = 8.dp),

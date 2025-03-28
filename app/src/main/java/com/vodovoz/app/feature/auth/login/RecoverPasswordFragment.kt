@@ -151,6 +151,13 @@ class RecoverPasswordFragment : BaseFragment() {
                             is LoginFlowViewModel.LoginEvents.SetupByPhone -> {
 
                             }
+
+                            LoginFlowViewModel.LoginEvents.GoBack -> {
+
+                            }
+                            else -> {
+
+                            }
                         }
                     }
             }

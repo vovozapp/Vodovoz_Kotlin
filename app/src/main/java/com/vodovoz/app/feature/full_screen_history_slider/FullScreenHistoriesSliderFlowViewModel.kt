@@ -39,9 +39,7 @@ class FullScreenHistoriesSliderFlowViewModel @Inject constructor(
 
     private fun loadStories() = viewModelScope.launch {
         uiStateListener.updateData { s ->
-            s.copy(
-                uiState = UiState.Loading
-            )
+            s.copy(uiState = UiState.Loading)
         }
 
         vodovozServiceRepository.getStories().onEach { storiesResult ->
@@ -234,8 +232,6 @@ class FullScreenHistoriesSliderFlowViewModel @Inject constructor(
     sealed class UiState {
         data object Loading : UiState()
         data object Success : UiState()
-        data object NetworkError : UiState()
-        data object Error : UiState()
     }
 
     data class HistoriesSliderState(

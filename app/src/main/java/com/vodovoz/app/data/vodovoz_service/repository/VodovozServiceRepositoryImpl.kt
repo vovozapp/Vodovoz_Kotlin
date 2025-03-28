@@ -53,7 +53,9 @@ import com.vodovoz.app.domain.general.model.UnratedProductsSectionModel
 import com.vodovoz.app.domain.general.model.UserDataModel
 import com.vodovoz.app.domain.general.model.UserNotLoginException
 import com.vodovoz.app.domain.general.model.ValidationException
+import com.vodovoz.app.domain.general.model.WebsiteErrorException
 import com.vodovoz.app.domain.general.model.format
+import com.vodovoz.app.domain.general.model.login.LoginDetailsModel
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.preorder.model.FieldUi
 import com.vodovoz.app.util.extensions.singleResult
@@ -67,13 +69,27 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import javax.inject.Inject
+import javax.inject.Singleton
 
 
+@Singleton
 class VodovozServiceRepositoryImpl @Inject constructor(
     private val vodovozService: VodovozService,
     private val accountManager: AccountManager,
     private val moshi: Moshi,
 ) : VodovozServiceRepository {
+
+    override fun getLoginDetails(): Flow<Result<LoginDetailsModel>> {
+        return executeRequest(
+            request = {
+                vodovozService.getLoginDetails()
+            },
+            mapper = {
+                it.checkError { data -> throw RequestException(errorData = data) }
+                it.data!!.toDomain()
+            }
+        )
+    }
 
     override fun updatePassword(password: String): Flow<Result<Unit>> {
         return executeVodovozRequest(
@@ -284,15 +300,22 @@ class VodovozServiceRepositoryImpl @Inject constructor(
             mapper = { registerDTO ->
                 registerDTO.userId!!
             },
-            onFail = {
-                val jsonBody = it.stringBody()
+            onFail = { response ->
+                val jsonBody = response.stringBody()
 
-                val errorDTO = moshi.fromJson<VodovozResponseDTO<String>>(
-                    jsonBody,
-                    Types.newParameterizedType(VodovozResponseDTO::class.java, String::class.java)
-                )
 
-                Result.failure(Throwable(errorDTO.message))
+                throw when(response.code()){
+                    404 -> {
+                        val errorDTO = moshi.fromJson<VodovozResponseDTO<String>>(
+                            jsonBody,
+                            Types.newParameterizedType(VodovozResponseDTO::class.java, String::class.java)
+                        )
+                        ValidationException(message = errorDTO.message ?: "")
+                    }
+                    else -> {
+                        RequestException(response.messageWithCode())
+                    }
+                }
             }
         )
     }

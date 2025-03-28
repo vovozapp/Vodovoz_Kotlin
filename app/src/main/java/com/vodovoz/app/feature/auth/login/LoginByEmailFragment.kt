@@ -153,6 +153,13 @@ class LoginByEmailFragment : BaseFragment() {
                             is LoginFlowViewModel.LoginEvents.SetupByPhone -> {
 
                             }
+
+                            LoginFlowViewModel.LoginEvents.GoBack -> {
+                                findNavController().popBackStack()
+                            }
+                            else -> {
+
+                            }
                         }
                     }
             }

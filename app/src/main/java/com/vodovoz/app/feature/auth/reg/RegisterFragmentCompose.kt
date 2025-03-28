@@ -5,18 +5,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.fragment.findNavController
+import com.vodovoz.app.R
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.effects.LifecycleEffect
 import com.vodovoz.app.feature.auth.reg.composables.RegisterScreen
+import com.vodovoz.app.feature.profile.ProfileFlowViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -24,6 +28,7 @@ import javax.inject.Inject
 class RegisterFragment : Fragment() {
 
     private val viewModel: RegFlowViewModel by viewModels()
+    private val profileViewModel: ProfileFlowViewModel by viewModels()
 
     @Inject
     lateinit var tabManager: TabManager
@@ -46,6 +51,16 @@ class RegisterFragment : Fragment() {
                         viewState = viewState,
                         snackbarHostState = snackbarHostState
                     )
+
+                    DisposableEffect(Unit) {
+                        WindowCompat.setDecorFitsSystemWindows(requireActivity().window, false)
+                        tabManager.changeTabVisibility(false)
+                        onDispose {
+                            WindowCompat.setDecorFitsSystemWindows(requireActivity().window, true)
+                            tabManager.changeTabVisibility(true)
+
+                        }
+                    }
 
                     LifecycleEffect {
                         observeEvents(snackbarHostState)
@@ -72,6 +87,14 @@ class RegisterFragment : Fragment() {
 
                 RegFlowViewModel.RegEvents.GoBack -> {
                     findNavController().popBackStack()
+                }
+
+                RegFlowViewModel.RegEvents.GoToProfile -> {
+                    profileViewModel.fetchProfileDetails()
+                    findNavController().popBackStack(
+                        R.id.profileFragment,
+                        false
+                    )
                 }
             }
         }

@@ -59,7 +59,6 @@ fun VodovozTextField(
 ) {
     val isFocused by interactionSource.collectIsFocusedAsState()
 
-
     BasicTextField(
         value = value,
         modifier = modifier
@@ -109,7 +108,7 @@ fun VodovozTextField(
                     )
                 }
                 Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
-                    this@Row.AnimatedVisibility(value.isEmpty(), exit = fadeOut(snap(50))) {
+                    this@Row.AnimatedVisibility(value.isEmpty(), exit = fadeOut(snap(0))) {
                         Text(
                             text = hint,
                             color = MaterialTheme.colorScheme.surfaceTint,

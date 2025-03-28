@@ -521,7 +521,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
     }
 
     fun navigateToSearch(query: String) = viewModelScope.launch {
-        eventListener.emit(ProductDetailsEvents.GoToSearch(query))
+        eventListener.emit(ProductDetailsEvents.GoToSearchProductList(query))
     }
 
     fun navigateToProductDetails(product: ProductUi) = viewModelScope.launch {
@@ -573,6 +573,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
         data class GoToSearch(val query: String) : ProductDetailsEvents()
         data class GoToProductDetails(val productId: Long) : ProductDetailsEvents()
         data class GoToCategoryProductList(val categoryId: Long) : ProductDetailsEvents()
+        data class GoToSearchProductList(val query: String) : ProductDetailsEvents()
     }
 
 
