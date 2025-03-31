@@ -426,6 +426,10 @@ class LoginFlowViewModel @Inject constructor(
         eventListener.emit(LoginEvents.GoToLoginByEmail)
     }
 
+    fun navigateToRegister() = viewModelScope.launch {
+        eventListener.emit(LoginEvents.GoToRegister)
+    }
+
     sealed class LoginEvents : Event {
         data object AuthSuccess : LoginEvents()
         data class AuthError(val message: MessageType) : LoginEvents()
@@ -439,6 +443,7 @@ class LoginFlowViewModel @Inject constructor(
         data object AuthByEmail : LoginEvents()
         data object GoBack : LoginEvents()
         data object GoToLoginByEmail : LoginEvents()
+        data object GoToRegister : LoginEvents()
 
         data class SetupByPhone(val time: Int, val phone: String) : LoginEvents()
         data class GoToWebView(val url: String, val title: String) : LoginEvents()

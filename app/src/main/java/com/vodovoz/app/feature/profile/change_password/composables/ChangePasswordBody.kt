@@ -29,6 +29,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.design_system.composables.button.VodovozButton
 import com.vodovoz.app.design_system.composables.decoration.PasswordIcon
 import com.vodovoz.app.design_system.composables.text_fields.VodovozTextField
+import com.vodovoz.app.design_system.composables.text_fields.VodovozTextFieldsColumn
 import com.vodovoz.app.design_system.text.PhoneNumberVisualTransformation
 import com.vodovoz.app.feature.preorder.model.FieldUi
 
@@ -39,8 +40,7 @@ fun ChangePasswordBody(
     fields: List<FieldUi>,
     buttonLoading: Boolean,
     buttonEnabled: Boolean,
-    onFieldValueChange: (FieldUi, String) -> Unit,
-    onFieldVisibilityChange: (FieldUi, Boolean) -> Unit,
+    onFieldChange: (FieldUi, FieldUi) -> Unit,
     onUpdatePasswordClick: () -> Unit,
 ) {
     Column(
@@ -54,51 +54,17 @@ fun ChangePasswordBody(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Column(
+
+        VodovozTextFieldsColumn(
             modifier = Modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-
-            fields.forEachIndexed { index, field ->
-                key(field.id) {
-
-                    VodovozTextField(
-                        modifier = Modifier.padding(top = 24.dp),
-                        value = field.value,
-                        onValueChange = { s ->
-                            onFieldValueChange(field, s)
-                        },
-                        hint = field.hint,
-                        label = field.label,
-                        isError = field.isError,
-                        readOnly = field.readOnly,
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = field.keyboardType,
-                            imeAction = if (fields.lastIndex == index) ImeAction.Done else ImeAction.Next
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onDone = { onUpdatePasswordClick() }
-                        ),
-                        supportingText = field.supportingText,
-                        visualTransformation = when (field.keyboardType) {
-                            KeyboardType.Phone -> PhoneNumberVisualTransformation()
-                            KeyboardType.Password -> if (!field.isValueVisible) {
-                                PasswordVisualTransformation('•')
-                            } else VisualTransformation.None
-
-                            else -> VisualTransformation.None
-                        },
-                        trailingIcon = {
-                            PasswordIcon(valueIsVisible = field.isValueVisible) { newValueIsVisible ->
-                                onFieldVisibilityChange(field, newValueIsVisible)
-                            }
-                        }
-                    )
-                }
+            fields = fields,
+            onFieldChange = { field, updatedField ->
+                onFieldChange(field, updatedField)
+            },
+            onDone = {
+                onUpdatePasswordClick()
             }
-
-        }
-
+        )
 
         Spacer(modifier = Modifier.weight(1f))
 

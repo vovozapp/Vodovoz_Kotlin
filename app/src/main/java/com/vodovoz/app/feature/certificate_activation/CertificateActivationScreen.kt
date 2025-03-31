@@ -40,6 +40,9 @@ fun CertificateActivationScreen(
                     },
                     onFieldValueChange = { field, newValue ->
                         viewModel.changeFieldValue(field, newValue)
+                    },
+                    onHyperlinkClick = { url ->
+                        viewModel.openUrl(url)
                     }
                 )
             }

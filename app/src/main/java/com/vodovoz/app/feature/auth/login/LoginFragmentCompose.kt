@@ -28,6 +28,7 @@ import com.vodovoz.app.common.agreement.AgreementController
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.navigation.navigateToLogin
 import com.vodovoz.app.core.navigation.navigateToLoginByEmail
+import com.vodovoz.app.core.navigation.navigateToRegister
 import com.vodovoz.app.core.navigation.navigateToWebView
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.placeholders.LoadingPlaceholder
@@ -135,31 +136,14 @@ class LoginFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         observeEvents()
+        checkShowFingerPrint()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.checkIfLoginAlready()
-
-        initPersonalData()
         viewModel.setupByPhone()
-        checkShowFingerPrint()
-    }
-
-    private fun initPersonalData() {
-
-        AgreementController.getText()
-        AgreementController.getTitle(0)
-        //todo - replace to new realization
-
-//        findNavController().navigate(
-//            LoginFragmentDirections.actionToWebViewFragment(
-//                url = url ?: "",
-//                title = AgreementController.getTitle(index) ?: "",
-//            )
-//        )
-
     }
 
     internal fun authByUserSettings() {
@@ -271,6 +255,10 @@ class LoginFragment : Fragment() {
 
                             LoginFlowViewModel.LoginEvents.GoToLoginByEmail -> {
                                 findNavController().navigateToLoginByEmail()
+                            }
+
+                            LoginFlowViewModel.LoginEvents.GoToRegister -> {
+                                findNavController().navigateToRegister()
                             }
                         }
                     }

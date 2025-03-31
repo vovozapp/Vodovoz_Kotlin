@@ -3,10 +3,10 @@ package com.vodovoz.app.data.vodovoz_service.mappers
 import com.vodovoz.app.data.vodovoz_service.model.login.KNOPKA_AUTH_DTO
 import com.vodovoz.app.data.vodovoz_service.model.login.LoginDetailsDTO
 import com.vodovoz.app.domain.general.model.ColorfulButtonModel
-import com.vodovoz.app.domain.general.model.login.LoginDetailsModel
+import com.vodovoz.app.domain.general.model.login.AuthDetailsModel
 
-fun LoginDetailsDTO.toDomain(): LoginDetailsModel {
-    return LoginDetailsModel(
+fun LoginDetailsDTO.toDomain(): AuthDetailsModel {
+    return AuthDetailsModel(
         title = TITLE ?: "",
         description = OPISANIE ?: "",
         fields = DATA?.mapToDomain()

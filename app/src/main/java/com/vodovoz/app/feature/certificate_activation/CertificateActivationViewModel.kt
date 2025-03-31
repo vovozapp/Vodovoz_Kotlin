@@ -99,5 +99,9 @@ class CertificateActivationViewModel @Inject constructor(
         }
     }
 
+    fun openUrl(url: String) = viewModelScope.launch {
+        _events.emit(CertificateActivationEvent.GoToWebView(url))
+    }
+
 
 }

@@ -65,9 +65,9 @@ class ChangePasswordViewModel @Inject constructor(
         }
     }
 
-    fun changeFieldValue(field: FieldUi, newValue: String) = viewModelScope.launch {
+    fun changeField(field: FieldUi, updatedField: FieldUi) = viewModelScope.launch {
         _state.update { s ->
-            val updatedFields = s.fields.updateFieldValueAndResetErrors(field, newValue)
+            val updatedFields = s.fields.updateFieldAndResetErrors(field, updatedField)
             s.copy(
                 fields = updatedFields,
                 buttonEnabled = updatedFields.checkFields()
@@ -78,7 +78,9 @@ class ChangePasswordViewModel @Inject constructor(
     fun updatePassword() = viewModelScope.launch {
 
         val fields = stateSnapshot.fields.mapToDomain()
-        val passwordField = fields.firstOrNull() ?: return@launch
+        val passwordField = fields.firstOrNull()
+
+        if(passwordField == null || !stateSnapshot.buttonEnabled) return@launch
 
         _state.update { s ->
             s.copy(buttonLoading = true)

@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
@@ -53,7 +52,7 @@ fun RegisterScreen(
         ) {
             when (viewState.uiState) {
                 RegFlowViewModel.UiState.Error -> {
-                    NetworkErrorPlaceholder { viewModel.fetchRegisterFields() }
+                    NetworkErrorPlaceholder { viewModel.fetchRegisterDetails() }
                 }
 
                 RegFlowViewModel.UiState.Loading -> {
@@ -65,13 +64,31 @@ fun RegisterScreen(
                         fields = viewState.fields,
                         buttonEnabled = viewState.buttonEnabled,
                         buttonLoading = viewState.buttonLoading,
-                        onFieldValueChange = { field, newValue ->
-                            viewModel.changeFieldValue(field, newValue)
+                        button = viewState.mainButton,
+                        showAgreements = viewState.showAgreements,
+                        navigationButton = viewState.navigationButton,
+                        agreementChecked = viewState.agreementChecked,
+                        subscribeChecked = viewState.subscribeChecked,
+                        agreementTextHtml = viewState.agreementTextHtml,
+                        onHyperlinkClick = { url, urlIndex ->
+                            viewModel.openAgreementUrl(url, urlIndex)
                         },
-                        onFieldVisibilityChange = { field ->
-                            viewModel.changeFieldVisibility(field)
+                        onSubscribeCheck = { checked ->
+                            viewModel.checkSubscribe(checked)
+                        },
+                        onAgreementCheck = { checked ->
+                            viewModel.checkAgreement(checked)
+                        },
+                        onFieldChange = { field, updatedField ->
+                            viewModel.changeField(field, updatedField)
                         },
                         onRegister = {
+                            viewModel.register()
+                        },
+                        onNavigationButtonClick = {
+                            viewModel.navigateBack()
+                        },
+                        onMainButtonClick = {
                             viewModel.register()
                         }
                     )

@@ -45,15 +45,12 @@ fun ChangePasswordScreen(
             fields = viewState.fields,
             buttonEnabled = viewState.buttonEnabled,
             buttonLoading = viewState.buttonLoading,
-            onFieldValueChange = { field, newValue ->
-                viewModel.changeFieldValue(field, newValue)
+            onFieldChange = { field, updatedField ->
+                viewModel.changeField(field, updatedField)
             },
             onUpdatePasswordClick = {
                 viewModel.updatePassword()
             },
-            onFieldVisibilityChange = { field, newVisibility ->
-                viewModel.changeFieldValueVisibility(field, newVisibility)
-            }
         )
     }
 }

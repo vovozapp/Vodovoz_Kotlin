@@ -12,6 +12,9 @@ import com.vodovoz.app.feature.home.model.CategoryUi
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 
 
+fun NavController.navigateToRegister(){
+    navigate(R.id.registerFragment)
+}
 
 fun NavController.navigateToChangePassword() {
     navigate(

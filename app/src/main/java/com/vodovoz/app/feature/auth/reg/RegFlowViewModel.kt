@@ -4,6 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.R
 import com.vodovoz.app.common.account.data.AccountManager
+import com.vodovoz.app.common.agreement.AgreementController
 import com.vodovoz.app.common.content.Event
 import com.vodovoz.app.common.content.PagingContractViewModel
 import com.vodovoz.app.common.content.State
@@ -16,18 +17,19 @@ import com.vodovoz.app.common.token.FirebaseTokenManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.config.AuthConfig
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.design_system.model.ColorfulButtonUi
+import com.vodovoz.app.design_system.model.toUi
 import com.vodovoz.app.domain.general.model.ValidationException
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.preorder.model.FieldUi
 import com.vodovoz.app.feature.preorder.model.checkFields
+import com.vodovoz.app.feature.preorder.model.mapToUi
 import com.vodovoz.app.feature.preorder.model.toDomain
-import com.vodovoz.app.feature.preorder.model.toUi
-import com.vodovoz.app.feature.preorder.model.updateFieldValueAndResetErrors
+import com.vodovoz.app.feature.preorder.model.updateFieldAndResetErrors
 import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.singleResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
@@ -47,21 +49,27 @@ class RegFlowViewModel @Inject constructor(
 ) : PagingContractViewModel<RegFlowViewModel.RegState, RegFlowViewModel.RegEvents>(RegState()) {
 
     init {
-        fetchRegisterFields()
+        fetchRegisterDetails()
     }
 
-    fun fetchRegisterFields() = viewModelScope.launch {
+    fun fetchRegisterDetails() = viewModelScope.launch {
         uiStateListener.updateData { s -> s.copy(uiState = UiState.Loading) }
 
         val registerFieldsResult =
-            vodovozServiceRepository.getRegisterFields().singleResult()
+            vodovozServiceRepository.getRegisterDetails().singleResult()
 
-        registerFieldsResult.onSuccess { fieldsSection ->
+        registerFieldsResult.onSuccess { registerDetails ->
             uiStateListener.updateData { s ->
                 s.copy(
                     uiState = UiState.Success,
-                    fields = fieldsSection.items.map { fieldModel -> fieldModel.toUi() },
-                    title = fieldsSection.title
+                    fields = registerDetails.fields.mapToUi(),
+                    title = registerDetails.title,
+                    agreementTextHtml = AgreementController.getText(),
+                    showAgreements = registerDetails.hasAgreement,
+                    mainButton = registerDetails.mainButton.toUi(),
+                    navigationButton = registerDetails.navigationButton.toUi(),
+                    buttonEnabled = false,
+                    buttonLoading = false
                 )
             }
         }.onFailure {
@@ -105,7 +113,7 @@ class RegFlowViewModel @Inject constructor(
 
 
         }.onFailure { t ->
-            val message = when(t){
+            val message = when (t) {
                 is ValidationException -> t.message ?: failMessage
                 else -> failMessage
             }
@@ -113,14 +121,13 @@ class RegFlowViewModel @Inject constructor(
             uiStateListener.updateData { s ->
                 s.copy(
                     buttonEnabled = false,
-                    buttonLoading = false,
-                    uiState = UiState.Success
+                    buttonLoading = false
                 )
             }
         }
 
 
-    }.invokeOnCompletion { uiStateListener.updateData { s -> s.copy(buttonLoading = false) } }
+    }
 
     fun register(
         firstName: String,
@@ -177,8 +184,9 @@ class RegFlowViewModel @Inject constructor(
         eventListener.emit(RegEvents.GoBack)
     }
 
-    fun changeFieldValue(field: FieldUi, newValue: String) = viewModelScope.launch {
-        val updatedFields = dataState.fields.updateFieldValueAndResetErrors(field, newValue)
+
+    fun changeField(field: FieldUi, updatedField: FieldUi) = viewModelScope.launch {
+        val updatedFields = dataState.fields.updateFieldAndResetErrors(field, updatedField)
 
         updatedFields.checkFields { fields, isValid ->
             uiStateListener.updateData { s ->
@@ -190,20 +198,24 @@ class RegFlowViewModel @Inject constructor(
         }
     }
 
-    fun changeFieldVisibility(field: FieldUi) = viewModelScope.launch {
-        uiStateListener.updateData { s ->
-            val fields = s.fields
-            val fieldIndex = fields.indexOfFirst { field.id == it.id }
+    fun openAgreementUrl(url: String, urlIndex: Int) = viewModelScope.launch {
+        val title = AgreementController.getTitle(urlIndex) ?: ""
+        eventListener.emit(RegEvents.GoToWebView(url, title))
+    }
 
+    fun checkSubscribe(checked: Boolean) = viewModelScope.launch {
+        uiStateListener.updateData { s ->
             s.copy(
-                fields = fields.toMutableList()
-                    .apply {
-                        set(
-                            index = fieldIndex,
-                            element = field.copy(isValueVisible = !field.isValueVisible)
-                        )
-                    }
-                    .map { fieldUi -> fieldUi.copy(isError = false) }
+                subscribeChecked = checked
+            )
+        }
+    }
+
+    fun checkAgreement(checked: Boolean) = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(
+                agreementChecked = checked,
+                buttonEnabled = s.fields.checkFields() && checked
             )
         }
     }
@@ -213,6 +225,8 @@ class RegFlowViewModel @Inject constructor(
         data object RegSuccess : RegEvents()
         data class RegError(val message: String) : RegEvents()
         data class ShowSnackbar(val message: String) : RegEvents()
+        data class GoToWebView(val url: String, val title: String) : RegEvents()
+
         data object GoBack : RegEvents()
         data object GoToProfile : RegEvents()
     }
@@ -220,11 +234,18 @@ class RegFlowViewModel @Inject constructor(
     @Immutable
     data class RegState(
         val items: List<Item> = emptyList(),
+
+        val agreementTextHtml: String = "",
+        val showAgreements: Boolean = false,
+        val agreementChecked: Boolean = true,
+        val subscribeChecked: Boolean = false,
         val fields: List<FieldUi> = emptyList(),
         val uiState: UiState = UiState.Loading,
         val title: String = "",
         val buttonEnabled: Boolean = false,
         val buttonLoading: Boolean = false,
+        val mainButton: ColorfulButtonUi = ColorfulButtonUi.Empty,
+        val navigationButton: ColorfulButtonUi = ColorfulButtonUi.Empty,
     ) : State
 
     sealed interface UiState {

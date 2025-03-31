@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.fragment.findNavController
+import com.vodovoz.app.core.navigation.navigateToWebView
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.placeholders.NetworkErrorPlaceholder
 import com.vodovoz.app.design_system.effects.LifecycleEffect
@@ -67,6 +68,10 @@ class CertificateActivationFragment : Fragment() {
                             when (event) {
                                 CertificateActivationEvent.GoBack -> {
                                     findNavController().popBackStack()
+                                }
+
+                                is CertificateActivationEvent.GoToWebView -> {
+                                    findNavController().navigateToWebView(event.url, "")
                                 }
                             }
 

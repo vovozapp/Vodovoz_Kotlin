@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -32,6 +33,7 @@ fun CertificateActivationBody(
     field: FieldUi,
     onCertificateActivate: () -> Unit,
     onFieldValueChange: (FieldUi, String) -> Unit,
+    onHyperlinkClick: (String) -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -89,8 +91,12 @@ fun CertificateActivationBody(
             modifier = Modifier.padding(vertical = 16.dp),
             text = AnnotatedString.fromHtml(
                 secondDescriptionHtml,
-                vodovozTextLinkStyle,
-            ),
+                vodovozTextLinkStyle
+            ) { linkAnnotation ->
+                if (linkAnnotation is LinkAnnotation.Url) onHyperlinkClick(
+                    linkAnnotation.url
+                )
+            },
             color = MaterialTheme.colorScheme.surfaceTint,
             style = MaterialTheme.typography.labelSmall
         )

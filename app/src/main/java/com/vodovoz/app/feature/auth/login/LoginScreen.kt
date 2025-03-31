@@ -31,6 +31,7 @@ fun LoginScreen(viewModel: LoginFlowViewModel, viewState: LoginFlowViewModel.Log
             agreementTextHtml = viewState.agreementTextHtml,
             agreementChecked = viewState.agreementChecked,
             subscribeChecked = viewState.subscribeChecked,
+            showRegisterText = viewState.showRegisterText,
             onFieldChange = { field, updatedField ->
                 viewModel.changeField(field, updatedField)
             },
@@ -48,6 +49,9 @@ fun LoginScreen(viewModel: LoginFlowViewModel, viewState: LoginFlowViewModel.Log
             },
             onSubscribeCheck = {
                 viewModel.checkSubscribe(it)
+            },
+            onRegisterTextClick = {
+                viewModel.navigateToRegister()
             }
         )
     }

@@ -46,9 +46,7 @@ fun AdvertisingInfoBottomSheet(
             style = MaterialTheme.typography.headlineSmall
         )
         Row(
-            modifier = Modifier
-                .padding(top = 16.dp)
-                .padding(horizontal = 16.dp),
+            modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(

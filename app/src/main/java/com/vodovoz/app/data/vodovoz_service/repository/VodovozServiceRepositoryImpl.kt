@@ -53,9 +53,8 @@ import com.vodovoz.app.domain.general.model.UnratedProductsSectionModel
 import com.vodovoz.app.domain.general.model.UserDataModel
 import com.vodovoz.app.domain.general.model.UserNotLoginException
 import com.vodovoz.app.domain.general.model.ValidationException
-import com.vodovoz.app.domain.general.model.WebsiteErrorException
 import com.vodovoz.app.domain.general.model.format
-import com.vodovoz.app.domain.general.model.login.LoginDetailsModel
+import com.vodovoz.app.domain.general.model.login.AuthDetailsModel
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.preorder.model.FieldUi
 import com.vodovoz.app.util.extensions.singleResult
@@ -79,7 +78,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     private val moshi: Moshi,
 ) : VodovozServiceRepository {
 
-    override fun getLoginDetails(): Flow<Result<LoginDetailsModel>> {
+    override fun getLoginDetails(): Flow<Result<AuthDetailsModel>> {
         return executeRequest(
             request = {
                 vodovozService.getLoginDetails()
@@ -278,7 +277,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         )
     }
 
-    override fun getRegisterFields(): Flow<Result<SectionModel<FieldModel>>> {
+    override fun getRegisterDetails(): Flow<Result<AuthDetailsModel>> {
         return executeRequest(
             request = {
                 vodovozService.getRegisterFields()

@@ -17,11 +17,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.fragment.findNavController
 import com.vodovoz.app.R
 import com.vodovoz.app.common.tab.TabManager
+import com.vodovoz.app.core.navigation.navigateToWebView
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.effects.LifecycleEffect
 import com.vodovoz.app.feature.auth.reg.composables.RegisterScreen
 import com.vodovoz.app.feature.profile.ProfileFlowViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -63,14 +66,17 @@ class RegisterFragment : Fragment() {
                     }
 
                     LifecycleEffect {
-                        observeEvents(snackbarHostState)
+                        observeEvents(this, snackbarHostState)
                     }
                 }
             }
         }
     }
 
-    private suspend fun observeEvents(snackbarHostState: SnackbarHostState) {
+    private suspend fun observeEvents(
+        coroutineScope: CoroutineScope,
+        snackbarHostState: SnackbarHostState
+    ) {
         viewModel.observeEvent().collect { event ->
             when (event) {
                 is RegFlowViewModel.RegEvents.RegError -> {
@@ -81,8 +87,10 @@ class RegisterFragment : Fragment() {
                 }
 
                 is RegFlowViewModel.RegEvents.ShowSnackbar -> {
-                    snackbarHostState.currentSnackbarData?.dismiss()
-                    snackbarHostState.showSnackbar(event.message)
+                    coroutineScope.launch {
+                        snackbarHostState.currentSnackbarData?.dismiss()
+                        snackbarHostState.showSnackbar(event.message)
+                    }
                 }
 
                 RegFlowViewModel.RegEvents.GoBack -> {
@@ -95,6 +103,10 @@ class RegisterFragment : Fragment() {
                         R.id.profileFragment,
                         false
                     )
+                }
+
+                is RegFlowViewModel.RegEvents.GoToWebView -> {
+                    findNavController().navigateToWebView(event.url, event.title)
                 }
             }
         }

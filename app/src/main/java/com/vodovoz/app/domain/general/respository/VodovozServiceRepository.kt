@@ -30,14 +30,14 @@ import com.vodovoz.app.domain.general.model.StoryModel
 import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
 import com.vodovoz.app.domain.general.model.UnratedProductsSectionModel
 import com.vodovoz.app.domain.general.model.UserDataModel
-import com.vodovoz.app.domain.general.model.login.LoginDetailsModel
+import com.vodovoz.app.domain.general.model.login.AuthDetailsModel
 import com.vodovoz.app.feature.preorder.model.FieldUi
 import kotlinx.coroutines.flow.Flow
 import java.io.File
 
 interface VodovozServiceRepository {
 
-    fun getLoginDetails(): Flow<Result<LoginDetailsModel>>
+    fun getLoginDetails(): Flow<Result<AuthDetailsModel>>
 
     fun updatePassword(password: String): Flow<Result<Unit>>
 
@@ -59,7 +59,7 @@ interface VodovozServiceRepository {
 
     fun activateCertificate(field: FieldUi): Flow<Result<String>>
 
-    fun getRegisterFields(): Flow<Result<SectionModel<FieldModel>>>
+    fun getRegisterDetails(): Flow<Result<AuthDetailsModel>>
 
     fun register(fields: List<FieldModel>): Flow<Result<Long>>
 

@@ -18,7 +18,7 @@ import com.vodovoz.app.data.vodovoz_service.model.PromotionDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.PromotionsDTO
 import com.vodovoz.app.data.vodovoz_service.model.RAZDEL_DTO
 import com.vodovoz.app.data.vodovoz_service.model.RegisterDTO
-import com.vodovoz.app.data.vodovoz_service.model.RegistrationSectionDTO
+import com.vodovoz.app.data.vodovoz_service.model.RegistrationDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.SearchRecommendationsDTO
 import com.vodovoz.app.data.vodovoz_service.model.SiteStateResponseDTO
 import com.vodovoz.app.data.vodovoz_service.model.StoriesDTO
@@ -152,7 +152,7 @@ interface VodovozService {
      * Login requests
      * */
     @GET("reg.php?action=glav")
-    suspend fun getRegisterFields(): Response<VodovozResponseDTO<RegistrationSectionDTO>>
+    suspend fun getRegisterFields(): Response<VodovozResponseDTO<RegistrationDetailsDTO>>
 
     @GET("auth.php")
     suspend fun loginByEmail(
