@@ -31,6 +31,7 @@ fun ProductListCategoriesRow(
         edgePadding = 16.dp,
         spacing = 8.dp
     ) {
+
         onCategoriesListClick?.let {
             Icon(
                 painter = painterResource(id = R.drawable.icon_category),

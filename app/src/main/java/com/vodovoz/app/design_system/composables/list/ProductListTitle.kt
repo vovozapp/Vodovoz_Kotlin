@@ -32,12 +32,15 @@ fun ProductListTitle(
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 16.dp)
     ) {
-        Column(modifier = Modifier
-            .weight(1f)
-            .align(Alignment.CenterVertically)) {
-            if(title.isNotBlank()) {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .align(Alignment.CenterVertically)
+        ) {
+            if (title.isNotBlank()) {
                 Text(
                     text = title,
                     color = MaterialTheme.colorScheme.onBackground,
@@ -46,7 +49,7 @@ fun ProductListTitle(
                     overflow = TextOverflow.Ellipsis
                 )
             }
-            if(productsQuantity.isNotBlank()) {
+            if (productsQuantity.isNotBlank()) {
                 Text(
                     text = productsQuantity,
                     color = MaterialTheme.colorScheme.surfaceTint,

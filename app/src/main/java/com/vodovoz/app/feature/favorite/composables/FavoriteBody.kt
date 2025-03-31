@@ -1,13 +1,16 @@
 package com.vodovoz.app.feature.favorite.composables
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -40,88 +43,71 @@ fun FavoriteBody(
     isGridView: Boolean,
     lazyGridState: LazyGridState,
     onCategoriesListClick: () -> Unit,
-    onLayoutViewSwitch: () -> Unit,
+    onSwitchLayoutClick: () -> Unit,
     onSortingClick: () -> Unit,
     onCategoryClick: (CategoryUi) -> Unit,
     onProductLike: (ProductUi) -> Unit,
     onProductClick: (ProductUi) -> Unit,
 ) {
-    Column(modifier = modifier) {
+    val shimmer = rememberShimmer(shimmerBounds = ShimmerBounds.View)
 
-        ProductListCategoriesRow(
-            modifier = Modifier.padding(top = 8.dp),
-            categories = categories,
-            currentCategory = currentCategory,
-            onCategoryClick = { categoryUi -> onCategoryClick(categoryUi) },
-            onCategoriesListClick = { onCategoriesListClick() }
-        )
+    LazyVerticalGrid(
+        state = lazyGridState,
+        columns = GridCells.Fixed(2),
+        modifier = modifier.fillMaxSize(),
+        contentPadding = PaddingValues(bottom = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        item(span = { GridItemSpan(maxLineSpan) }) {
+            ProductListCategoriesRow(
+                modifier = Modifier.padding(vertical = 8.dp),
+                categories = categories,
+                currentCategory = currentCategory,
+                onCategoryClick = { category ->
+                    onCategoryClick(category)
+                },
+                onCategoriesListClick = {
+                    onCategoriesListClick()
+                }
+            )
+        }
 
-
-
-        ProductListOptionsRow(
-            modifier = Modifier.padding(top = 24.dp),
-            sortName = currentSort.name,
-            isGridView = isGridView,
-            onSwitchClick = {
-                onLayoutViewSwitch()
-            },
-            onSortingClick = {
-                onSortingClick()
-            }
-        )
-
-        val shimmer = rememberShimmer(shimmerBounds = ShimmerBounds.View)
-
-        LazyVerticalGrid(
-            state = lazyGridState,
-            columns = GridCells.Fixed(2),
-            modifier = modifier
-                .fillMaxSize()
-                .nestedScroll(object : NestedScrollConnection {
-
-                    override fun onPostScroll(
-                        consumed: Offset,
-                        available: Offset,
-                        source: NestedScrollSource,
-                    ): Offset {
-                        debugLog { "onPostScroll offset: $consumed" }
-                        return super.onPostScroll(consumed, available, source)
-                    }
-                }),
-            contentPadding = PaddingValues(vertical = 8.dp, horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            if (isGridView) {
-                gridProducts(
-                    products,
-                    productsLoadStates,
-                    shimmer,
-                    onProductSee,
-                    onProductClick,
-                    onProductLike
-                )
-            } else {
-                linearProducts(
-                    products,
-                    productsLoadStates,
-                    shimmer,
-                    onProductSee,
-                    onProductClick,
-                    onProductLike
-                )
-            }
+        stickyHeader {
+            ProductListOptionsRow(
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(top = 8.dp),
+                sortName = currentSort.name,
+                isGridView = isGridView,
+                onSortingClick = {
+                    onSortingClick()
+                },
+                onSwitchClick = {
+                    onSwitchLayoutClick()
+                },
+            )
         }
 
 
-//        ProductLazyPagingList(
-//            lazyPagingProducts = lazyPagingProducts,
-//            isGridView = isGridView,
-//            onProductClick = { productUi ->
-//                onProductClick(productUi)
-//            },
-//            onProductLike = { productUi ->
-//                onProductLike(productUi)
-//            }
-//        )
+        if (isGridView) {
+            gridProducts(
+                products,
+                productsLoadStates,
+                shimmer,
+                onProductSee,
+                onProductClick,
+                onProductLike
+            )
+        } else {
+            linearProducts(
+                products,
+                productsLoadStates,
+                shimmer,
+                onProductSee,
+                onProductClick,
+                onProductLike
+            )
+        }
     }
 }

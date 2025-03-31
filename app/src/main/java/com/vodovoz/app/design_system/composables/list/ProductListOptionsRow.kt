@@ -28,6 +28,7 @@ fun ProductListOptionsRow(
 ) {
     Row(
         modifier = modifier
+            .clickable(indication = null, interactionSource = null, onClick = {})
             .padding(horizontal = 16.dp)
             .padding(bottom = 8.dp),
         verticalAlignment = Alignment.CenterVertically

@@ -1,6 +1,7 @@
 package com.vodovoz.app.feature.profile.userdata
 
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
@@ -36,7 +37,7 @@ fun UserDataScreen(
         contentWindowInsets = WindowInsets(0,0,0,0)
     ) { paddingValues ->
         UserDataBody(
-            modifier = Modifier.padding(paddingValues),
+            modifier = Modifier.padding(paddingValues).consumeWindowInsets(paddingValues),
             fields = viewState.fields,
             photoTitle = viewState.photoTitle,
             photo = viewState.photo,

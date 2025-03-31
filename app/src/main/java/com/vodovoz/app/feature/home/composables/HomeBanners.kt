@@ -6,6 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.vodovoz.app.design_system.composables.decoration.AdvertisingChip
+import com.vodovoz.app.design_system.model.AboutAdvertisingUi
 import com.vodovoz.app.design_system.model.BannerUi
 
 @Suppress("NonSkippableComposable")
@@ -14,6 +16,7 @@ fun HomeBanners(
     modifier: Modifier = Modifier,
     banners: List<BannerUi>,
     onBannerClick: (BannerUi) -> Unit,
+    onAdvertisingClick: (AboutAdvertisingUi) -> Unit,
 ) {
     val pagerState = rememberPagerState(0) { banners.size }
     val pictures = banners.map { banner -> banner.detailPicture }
@@ -25,6 +28,12 @@ fun HomeBanners(
             onBannerClick(banners[page])
         },
         pagerState = pagerState,
-        pageWidth = Dp.Unspecified
+        pageWidth = Dp.Unspecified,
+        chip = { page ->
+            val advertising = banners[page].advertising
+            advertising?.let {
+                AdvertisingChip { onAdvertisingClick(advertising) }
+            }
+        }
     )
 }

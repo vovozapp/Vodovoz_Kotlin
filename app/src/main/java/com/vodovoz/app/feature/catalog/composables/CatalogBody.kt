@@ -29,6 +29,8 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.vodovoz.app.design_system.composables.decoration.AdvertisingChip
+import com.vodovoz.app.design_system.model.AboutAdvertisingUi
 import com.vodovoz.app.design_system.model.BannerUi
 import com.vodovoz.app.feature.catalog.model.CatalogCategoryUi
 import com.vodovoz.app.feature.home.composables.AuthScrollImagePager
@@ -42,6 +44,7 @@ fun CatalogBody(
     banners: List<BannerUi>,
     onBannerClick: (BannerUi) -> Unit,
     onCategoryClick: (CatalogCategoryUi) -> Unit,
+    onAboutAdvertisingClick: (AboutAdvertisingUi) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -62,7 +65,13 @@ fun CatalogBody(
                     onBannerClick(banners[page])
                 },
                 pagerState = pagerState,
-                pageWidth = Dp.Unspecified
+                pageWidth = Dp.Unspecified,
+                chip = { page ->
+                    val advertising = banners[page].advertising
+                    advertising?.let {
+                        AdvertisingChip { onAboutAdvertisingClick(advertising) }
+                    }
+                }
             )
         }
 

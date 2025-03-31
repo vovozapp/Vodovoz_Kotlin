@@ -7,12 +7,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.vodovoz.app.design_system.model.AboutAdvertisingUi
 import com.vodovoz.app.design_system.model.BannerUi
 import com.vodovoz.app.design_system.model.CategoryWithProductsUi
 import com.vodovoz.app.design_system.model.ProductUi
@@ -50,6 +48,7 @@ fun HomeBody(
     onProductCardClick: (ProductUi) -> Unit,
     onProductLike: (ProductUi) -> Unit,
     onPromotionClick: (PromotionUi) -> Unit,
+    onAboutAdvertisingClick: (AboutAdvertisingUi) -> Unit,
 ) {
 
     LazyColumn(
@@ -61,7 +60,8 @@ fun HomeBody(
                     banners = banners,
                     onBannerClick = {
 
-                    }
+                    },
+                    onAdvertisingClick = onAboutAdvertisingClick
                 )
             }
         }
@@ -87,12 +87,13 @@ fun HomeBody(
             }
         }
 
-
         item {
             HomeDivider(
                 modifier = Modifier.padding(top = 4.dp)
             )
+        }
 
+        item {
             HomePopularCategories(
                 modifier = Modifier.padding(top = 4.dp),
                 onPopularCategoryClick = onPopularCategoryClick,
@@ -101,78 +102,73 @@ fun HomeBody(
         }
 
         item {
-            HomeTopProducts(
-                modifier = Modifier.padding(top = 32.dp),
-                lazyListState = topProductsLazyListState,
-                onShowAllClick = onShowAllClick,
-                currentCategoryWithProducts = currentCategoryWithProducts,
-                sectionCategoriesWithProducts = sectionTop,
-                onCategorySelect = onCategorySelect,
-                onProductClick = onProductCardClick,
-                onProductLike = onProductLike
-            )
-
-        }
-
-        item {
-            HomeHurryUpBuyProducts(
-                modifier = Modifier.padding(top = 32.dp),
-                sectionHurryUpBuyProducts = sectionHurryUpBuyProducts,
-                onProductClick = onProductCardClick,
-                onShowAllClick = onShowAllClick,
-                onProductLike = onProductLike
-            )
-        }
-
-        item {
-            HomeNewProducts(
-                modifier = Modifier.padding(top = 32.dp),
-                sectionNewProducts = sectionNewProducts,
-                onProductClick = onProductCardClick,
-                onProductLike = onProductLike,
-                onShowAllClick = onShowAllClick
-            )
-
-        }
-
-        item {
-            HomePromotions(
-                modifier = Modifier.padding(top = 32.dp),
-                onShowAllClick = onShowAllClick,
-                onPromotionClick = onPromotionClick,
-                sectionPromotions = sectionPromotions
-            )
-
-        }
-
-        item {
-            HomeBottomProducts(
-                modifier = Modifier.padding(top = 32.dp),
-                sectionBottomProducts = sectionBottomProducts,
-                onProductClick = onProductCardClick,
-                onProductLike = onProductLike,
-                onShowAllClick = onShowAllClick
-            )
-
-        }
-
-
-        item {
-            if (sectionViewedProducts.items.isNotEmpty()) {
-                HomeViewedProducts(
+            Column {
+                HomeTopProducts(
                     modifier = Modifier.padding(top = 32.dp),
-                    sectionViewedProducts = sectionViewedProducts,
+                    lazyListState = topProductsLazyListState,
+                    onShowAllClick = onShowAllClick,
+                    currentCategoryWithProducts = currentCategoryWithProducts,
+                    sectionCategoriesWithProducts = sectionTop,
+                    onCategorySelect = onCategorySelect,
+                    onProductClick = onProductCardClick,
+                    onProductLike = onProductLike
+                )
+
+                HomeHurryUpBuyProducts(
+                    modifier = Modifier.padding(top = 32.dp),
+                    sectionHurryUpBuyProducts = sectionHurryUpBuyProducts,
+                    onProductClick = onProductCardClick,
+                    onShowAllClick = onShowAllClick,
+                    onProductLike = onProductLike
+                )
+            }
+        }
+
+        item {
+            Column {
+                HomeNewProducts(
+                    modifier = Modifier.padding(top = 32.dp),
+                    sectionNewProducts = sectionNewProducts,
                     onProductClick = onProductCardClick,
                     onProductLike = onProductLike,
                     onShowAllClick = onShowAllClick
                 )
+
+                HomePromotions(
+                    modifier = Modifier.padding(top = 32.dp),
+                    onShowAllClick = onShowAllClick,
+                    onPromotionClick = onPromotionClick,
+                    sectionPromotions = sectionPromotions,
+                    onAboutAdvertisingClick = onAboutAdvertisingClick
+                )
+
+            }
+        }
+
+        item {
+            Column {
+                HomeBottomProducts(
+                    modifier = Modifier.padding(top = 32.dp),
+                    sectionBottomProducts = sectionBottomProducts,
+                    onProductClick = onProductCardClick,
+                    onProductLike = onProductLike,
+                    onShowAllClick = onShowAllClick
+                )
+
+                if (sectionViewedProducts.items.isNotEmpty()) {
+                    HomeViewedProducts(
+                        modifier = Modifier.padding(top = 32.dp),
+                        sectionViewedProducts = sectionViewedProducts,
+                        onProductClick = onProductCardClick,
+                        onProductLike = onProductLike,
+                        onShowAllClick = onShowAllClick
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
             }
 
         }
 
-
-        item {
-            Spacer(modifier = Modifier.height(24.dp))
-        }
     }
 }

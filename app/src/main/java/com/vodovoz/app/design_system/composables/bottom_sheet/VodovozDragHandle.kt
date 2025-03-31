@@ -20,6 +20,6 @@ fun VodovozDragHandle(modifier: Modifier = Modifier) {
             .height(4.dp)
             .width(36.dp)
             .clip(RoundedCornerShape(4.dp))
-            .background(MaterialTheme.colorScheme.surface)
+            .background(MaterialTheme.colorScheme.outlineVariant)
     )
 }

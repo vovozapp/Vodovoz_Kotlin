@@ -92,7 +92,7 @@ fun UnratedProductsBottomSheet(
     val density = LocalDensity.current
 
     val partiallyExpandedHeight = with(density) {
-        170.dp.toPx()
+        100.dp.toPx()
     }
 
 

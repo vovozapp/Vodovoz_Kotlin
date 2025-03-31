@@ -10,6 +10,7 @@ import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.content.updateData
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.design_system.model.AboutAdvertisingUi
 import com.vodovoz.app.design_system.model.BannerUi
 import com.vodovoz.app.domain.general.model.DataAllAction
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
@@ -128,6 +129,20 @@ class CatalogFlowViewModel @Inject constructor(
         }
     }
 
+    fun showAdvertisingBottomSheet(aboutAdvertisingUi: AboutAdvertisingUi) = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(
+                currentAdvertising = aboutAdvertisingUi,
+                showAdvertisingBS = true
+            )
+        }
+    }
+
+    fun closeAdvertisingBottomSheet() {
+        uiStateListener.updateData { s ->
+            s.copy(showAdvertisingBS = false)
+        }
+    }
     sealed class CatalogEvents : Event {
         data class GoToSubCategories(val catalogCategory: CatalogCategoryUi) : CatalogEvents()
         data class GoToProductList(val catalogCategory: CatalogCategoryUi) : CatalogEvents()
@@ -144,6 +159,8 @@ class CatalogFlowViewModel @Inject constructor(
         val categories: List<CatalogCategoryUi> = emptyList(),
         val banners: List<BannerUi> = emptyList(),
         val uiState: UiState = UiState.Loading,
+        val showAdvertisingBS: Boolean = false,
+        val currentAdvertising: AboutAdvertisingUi = AboutAdvertisingUi.Empty,
     ) : State
 
     sealed interface UiState {

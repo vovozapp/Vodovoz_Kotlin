@@ -78,7 +78,7 @@ fun FavoriteScreen(
                         onCategoriesListClick = {
                             viewModel.navigateToCategories()
                         },
-                        onLayoutViewSwitch = {
+                        onSwitchLayoutClick = {
                             viewModel.switchLayout()
                         },
                         onSortingClick = {

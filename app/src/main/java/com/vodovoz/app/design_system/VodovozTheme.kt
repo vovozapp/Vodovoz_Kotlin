@@ -30,7 +30,8 @@ private val lightColors = lightColorScheme(
     surfaceTint = deepGrey,
     error = red,
     tertiary = yellow,
-    outline = greyBlue
+    outline = greyBlue,
+    outlineVariant = greyVariant
 )
 
 private val extendedLightColors = ExtendedColors(

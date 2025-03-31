@@ -15,6 +15,7 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.design_system.model.AboutAdvertisingUi
 import com.vodovoz.app.design_system.model.BannerUi
 import com.vodovoz.app.design_system.model.CategoryWithProductsUi
 import com.vodovoz.app.design_system.model.ProductUi
@@ -34,13 +35,11 @@ import com.vodovoz.app.feature.home.model.UnratedProductUi
 import com.vodovoz.app.feature.home.model.UnratedProductsSectionUi
 import com.vodovoz.app.feature.home.model.toUi
 import com.vodovoz.app.feature.home.viewholders.homebanners.HomeBanners
-import com.vodovoz.app.feature.home.viewholders.homebottominfo.HomeBottomInfo
 import com.vodovoz.app.feature.home.viewholders.homepopulars.HomePopulars
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproductstabs.HomeProductsTabs
 import com.vodovoz.app.feature.home.viewholders.homesections.HomeSections
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
-import com.vodovoz.app.feature.home.viewholders.hometriplenav.HomeTripleNav
 import com.vodovoz.app.mapper.BannerMapper.mapToUI
 import com.vodovoz.app.mapper.CategoryDetailMapper.mapToUI
 import com.vodovoz.app.mapper.CategoryMapper.mapToUI
@@ -209,9 +208,9 @@ class HomeFlowViewModel @Inject constructor(
             s.copy(
                 sectionViewedProducts = sectionViewedProducts ?: s.sectionViewedProducts,
                 specialPromotion = specialPromotion ?: s.specialPromotion,
-                showSpecialPromotion = specialPromotion != null,
+                showSpecialPromotionBS = specialPromotion != null,
                 sectionUnratedProducts = sectionUnratedProducts?.toUi() ?: s.sectionUnratedProducts,
-                showUnratedProducts = sectionUnratedProducts != null
+                showUnratedProductsBS = sectionUnratedProducts != null
             )
         }
 
@@ -1070,7 +1069,7 @@ class HomeFlowViewModel @Inject constructor(
     fun closeSpecialPromotionBottomSheet() = viewModelScope.launch {
         uiStateListener.updateData { s ->
             s.copy(
-                showSpecialPromotion = false
+                showSpecialPromotionBS = false
             )
         }
     }
@@ -1103,13 +1102,13 @@ class HomeFlowViewModel @Inject constructor(
     fun closeUnratedProductsBottomSheet() = viewModelScope.launch {
         uiStateListener.updateData { s ->
             s.copy(
-                showUnratedProducts = false
+                showUnratedProductsBS = false
             )
         }
         delay(2000L)
         uiStateListener.updateData { s ->
             s.copy(
-                showUnratedProducts = true
+                showUnratedProductsBS = true
             )
         }
     }
@@ -1129,6 +1128,21 @@ class HomeFlowViewModel @Inject constructor(
 
     fun navigateToPopularCategory(popularCategory: PopularCategoryUi) = viewModelScope.launch {
         eventListener.emit(HomeEvents.GoToCategoryProductList(popularCategory.id))
+    }
+
+    fun showAdvertisingBottomSheet(aboutAdvertisingUi: AboutAdvertisingUi) = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(
+                currentAdvertising = aboutAdvertisingUi,
+                showAdvertisingBS = true
+            )
+        }
+    }
+
+    fun closeAdvertisingBottomSheet() {
+        uiStateListener.updateData { s ->
+            s.copy(showAdvertisingBS = false)
+        }
     }
 
     data class PositionItem(
@@ -1184,10 +1198,12 @@ class HomeFlowViewModel @Inject constructor(
         val sectionViewedProducts: SectionUi<ProductUi> = SectionUi.empty(),
         val sectionUnratedProducts: UnratedProductsSectionUi = UnratedProductsSectionUi.Empty,
         val specialPromotion: SpecialPromotionUi = SpecialPromotionUi.Empty,
+        val currentAdvertising: AboutAdvertisingUi = AboutAdvertisingUi.Empty,
 
         val uiState: HomeUiState = HomeUiState.Success,
-        val showSpecialPromotion: Boolean = false,
-        val showUnratedProducts: Boolean = false,
+        val showSpecialPromotionBS: Boolean = false,
+        val showUnratedProductsBS: Boolean = false,
+        val showAdvertisingBS: Boolean = false,
         val showRefreshIndicator: Boolean = false,
     ) : State {
         companion object {

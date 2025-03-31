@@ -15,6 +15,7 @@ val lightGrey = Color(0xFFF3F3F3)
 val grey = Color(0xFFEAEAEA)
 val deepGrey = Color(0xFF8689A2)
 val black = Color(0xFF222222)
+val greyVariant = Color(0xFFEFEFF4)
 
 val green = Color(0xFF32CB5D)
 val red = Color(0xFFF91155)

@@ -9,18 +9,22 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.vodovoz.app.design_system.composables.decoration.AdvertisingChip
+import com.vodovoz.app.feature.all.promotions.composables.AdvertisingInfoBottomSheet
 import com.vodovoz.app.feature.home.composables.AuthScrollImagePager
 import com.vodovoz.app.feature.profile.composables.ProfileCardsRow
 import com.vodovoz.app.feature.profile.composables.ProfileMenuColumn
 import com.vodovoz.app.feature.profile.composables.ProfileUserInfoRow
 import com.vodovoz.app.feature.profile.composables.ProfileWalletItemsRow
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Suppress("NonSkippableComposable")
 @Composable
 fun ProfileScreen(
@@ -60,7 +64,9 @@ fun ProfileScreen(
             ProfileWalletItemsRow(
                 modifier = Modifier.padding(top = 16.dp),
                 walletItems = viewState.walletItems,
-                onCardClick = { }
+                onCardClick = {
+
+                }
             )
 
             val bannerImages = viewState.banners.map { bannerUi -> bannerUi.detailPicture }
@@ -75,7 +81,13 @@ fun ProfileScreen(
 
                 },
                 pageWidth = Dp.Unspecified,
-                pagerState = pagerState
+                pagerState = pagerState,
+                chip = { page ->
+                    val advertising = viewState.banners[page].advertising
+                    advertising?.let {
+                        AdvertisingChip { viewModel.showAdvertisingBottomSheet(advertising) }
+                    }
+                }
             )
         }
 
@@ -105,5 +117,11 @@ fun ProfileScreen(
                 viewModel.activateMenuItem(menuItem)
             }
         )
+    }
+
+    if (viewState.showAdvertisingBS) {
+        AdvertisingInfoBottomSheet(advertising = viewState.currentAdvertising) {
+            viewModel.closeAdvertisingBottomSheet()
+        }
     }
 }

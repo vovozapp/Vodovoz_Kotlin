@@ -16,10 +16,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.PullToRefreshState
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.vodovoz.app.feature.all.promotions.composables.AdvertisingInfoBottomSheet
 import com.vodovoz.app.feature.home.composables.HomeBody
 import com.vodovoz.app.feature.home.composables.HomeLoadingPlaceholder
 import com.vodovoz.app.feature.home.composables.HomeTopBar
@@ -125,6 +125,9 @@ fun HomeScreen(
                         },
                         onShowAllClick = { action ->
                             viewModel.handleButtonAction(action)
+                        },
+                        onAboutAdvertisingClick = { aboutAdvertisingUi ->
+                            viewModel.showAdvertisingBottomSheet(aboutAdvertisingUi)
                         }
                     )
                 }
@@ -134,7 +137,15 @@ fun HomeScreen(
 
     }
 
-    if (viewState.showSpecialPromotion) {
+    if (viewState.showAdvertisingBS) {
+        AdvertisingInfoBottomSheet(
+            advertising = viewState.currentAdvertising,
+            onDismissRequest = { viewModel.closeAdvertisingBottomSheet() }
+        )
+    }
+
+
+    if (viewState.showSpecialPromotionBS) {
         SpecialPromotionBottomSheet(
             specialPromotionUi = viewState.specialPromotion,
             onDismissRequest = { viewModel.closeSpecialPromotionBottomSheet() },
@@ -143,7 +154,7 @@ fun HomeScreen(
     }
 
     AnimatedVisibility(
-        visible = viewState.showUnratedProducts,
+        visible = viewState.showUnratedProductsBS,
         enter = slideInVertically(
             tween(
                 durationMillis = 300,
@@ -155,6 +166,7 @@ fun HomeScreen(
         UnratedProductsBottomSheet(
             sectionUnratedProducts = viewState.sectionUnratedProducts,
             onProductRatingChanged = { product, rating ->
+
             },
             onProductRatingChange = { product, rating ->
                 viewModel.changeUnratedProductRating(product, rating)

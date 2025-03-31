@@ -18,6 +18,7 @@ import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.design_system.model.AboutAdvertisingUi
 import com.vodovoz.app.design_system.model.BannerUi
 import com.vodovoz.app.design_system.model.ColorfulButtonUi
 import com.vodovoz.app.design_system.model.mapToUi
@@ -599,6 +600,24 @@ class ProfileFlowViewModel @Inject constructor(
         eventListener.emit(ProfileEvents.GoByMenuItemId(menuItem.id))
     }
 
+    fun showAdvertisingBottomSheet(advertising: AboutAdvertisingUi) = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(
+                currentAdvertising = advertising,
+                showAdvertisingBS = true
+            )
+        }
+    }
+
+    fun closeAdvertisingBottomSheet() = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(
+                showAdvertisingBS = false
+            )
+        }
+    }
+
+
     @Immutable
     data class ProfileState(
         val positionItems: List<PositionItem>,
@@ -613,6 +632,8 @@ class ProfileFlowViewModel @Inject constructor(
         val walletItems: List<ProfileWalletItemUi> = emptyList(),
         val smallMenu: List<ProfileMenuItemUi> = emptyList(),
         val normalMenu: List<ProfileMenuItemUi> = emptyList(),
+        val showAdvertisingBS: Boolean = false,
+        val currentAdvertising: AboutAdvertisingUi = AboutAdvertisingUi.Empty,
     ) : State {
         companion object {
             fun idle(): ProfileState {

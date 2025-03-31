@@ -44,7 +44,6 @@ class CatalogFragment : Fragment() {
 
     private val viewModel: CatalogFlowViewModel by activityViewModels()
 
-
     @Inject
     lateinit var tabManager: TabManager
 

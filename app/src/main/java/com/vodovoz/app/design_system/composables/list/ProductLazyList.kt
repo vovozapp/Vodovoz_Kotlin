@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridScope
@@ -97,7 +98,6 @@ fun ProductLazyPagingList(
     val shimmer = rememberShimmer(shimmerBounds = ShimmerBounds.View)
 
     LazyVerticalGrid(
-
         state = lazyGridState,
         columns = GridCells.Fixed(2),
         modifier = modifier.fillMaxSize(),
@@ -135,15 +135,16 @@ fun LazyGridScope.linearProducts(
     onProductLike: (ProductUi) -> Unit,
 ) {
 
-    when(loadState.refresh){
+    when (loadState.refresh) {
         is LoadState.Error -> {
-            item(span = { GridItemSpan(2) }){
+            item(span = { GridItemSpan(2) }) {
                 EmptyResultPlaceholder(
                     title = stringResource(id = R.string.empty_products_title),
                     description = stringResource(id = R.string.empty_products_description)
                 )
             }
         }
+
         LoadState.Loading -> {
             items(6, span = { GridItemSpan(2) }) { i ->
                 Column {
@@ -159,6 +160,7 @@ fun LazyGridScope.linearProducts(
                 }
             }
         }
+
         is LoadState.NotLoading -> {
             items(
                 items = products,
@@ -170,7 +172,7 @@ fun LazyGridScope.linearProducts(
                     onProductSee(currentIndex)
                 }
 
-                Column {
+                Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                     LinearProductCard(
                         product = product,
                         onClick = onProductClick,
@@ -191,7 +193,7 @@ fun LazyGridScope.linearProducts(
 
     item(span = { GridItemSpan(2) }) {
         if (loadState.append is LoadState.Loading) {
-            Column {
+            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                 Spacer(modifier = Modifier.height(16.dp))
                 SkeletonBox(
                     shimmerState = shimmerState,
@@ -244,12 +246,17 @@ fun LazyGridScope.gridProducts(
 
         is LoadState.NotLoading -> {
             items(products.size, span = { GridItemSpan(1) }) { index ->
-
                 LaunchedEffect(index) {
                     onProductSee(index)
                 }
+                val isStartPadding = index % 2 == 0
 
-                Column {
+                Column(
+                    modifier = Modifier.padding(
+                        start = if (isStartPadding) 16.dp else 0.dp,
+                        end = if (!isStartPadding) 16.dp else 0.dp
+                    )
+                ) {
                     GridProductCard(
                         product = products[index],
                         onClick = onProductClick,
@@ -265,9 +272,17 @@ fun LazyGridScope.gridProducts(
         }
     }
 
-    items((products.size % 2) + 2, span = { GridItemSpan(1) }) {
+    items((products.size % 2) + 2, span = { GridItemSpan(1) }) { index ->
         if (loadState.append is LoadState.Loading) {
-            Column {
+
+            val isStartPadding = index % 2 == 0
+
+            Column(
+                modifier = Modifier.padding(
+                    start = if (isStartPadding) 16.dp else 0.dp,
+                    end = if (!isStartPadding) 16.dp else 0.dp
+                )
+            ) {
                 SkeletonBox(
                     shimmerState = shimmerState,
                     modifier = Modifier
@@ -324,61 +339,4 @@ fun LazyGridScope.gridProducts(
     }
 }
 
-fun LazyGridScope.linearProducts(
-    lazyPagingProducts: LazyPagingItems<ProductUi>,
-    shimmerState: Shimmer,
-    onProductClick: (ProductUi) -> Unit,
-    onProductLike: (ProductUi) -> Unit,
-) {
-    val loadState = lazyPagingProducts.loadState
-
-    if (loadState.refresh is LoadState.Loading || loadState.refresh is LoadState.Error) {
-        items(8) { i ->
-            Column {
-                SkeletonBox(
-                    shimmerState = rememberShimmer(shimmerBounds = ShimmerBounds.View),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(150.dp)
-                )
-
-                if (i != lazyPagingProducts.itemCount - 1) {
-                    Spacer(modifier = Modifier.height(16.dp))
-                }
-            }
-        }
-    }
-
-    items(
-        count = lazyPagingProducts.itemCount,
-        key = lazyPagingProducts.itemKey { it.id },
-        span = { GridItemSpan(2) },
-        contentType = lazyPagingProducts.itemContentType { "Products" },
-    ) { i ->
-        Column {
-            LinearProductCard(
-                product = lazyPagingProducts[i] ?: return@items,
-                onClick = onProductClick,
-                onLike = onProductLike,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            if (i != lazyPagingProducts.itemCount - 1) {
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-        }
-
-    }
-
-    if (loadState.append is LoadState.Loading) {
-        item(span = { GridItemSpan(2) }) {
-            SkeletonBox(
-                shimmerState = shimmerState,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(80.dp)
-            )
-        }
-    }
-}
 

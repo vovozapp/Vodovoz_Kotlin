@@ -49,7 +49,7 @@ class AllPromotionsFragment : Fragment() {
 
                     when (viewState.data.uiState) {
                         AllPromotionsFlowViewModel.UiState.Error -> {
-                            NetworkErrorPlaceholder {  }
+                            NetworkErrorPlaceholder { viewModel.firstLoadSorted() }
                         }
 
                         else -> {

@@ -1,12 +1,13 @@
 package com.vodovoz.app.feature.home.composables
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.PagerState
@@ -34,8 +35,9 @@ fun AuthScrollImagePager(
     modifier: Modifier = Modifier,
     pagerState: PagerState,
     images: List<String>,
-    onImageClick: (page: Int) -> Unit,
     pageWidth: Dp,
+    onImageClick: (page: Int) -> Unit,
+    chip: @Composable (page: Int) -> Unit = {},
 ) {
     val isDraggedState = pagerState.interactionSource.collectIsDraggedAsState()
     val context = LocalContext.current
@@ -54,19 +56,25 @@ fun AuthScrollImagePager(
 
         val currentImage = images[page]
 
-        AsyncImage(
-            model = ImageRequest.Builder(context).data(currentImage).crossfade(true).build(),
-            contentDescription = null,
-            modifier = Modifier
-                .height(150.dp)
-                .width(pageWidth)
-                .clip(MaterialTheme.shapes.large)
-                .clickable {
-                    onImageClick(page)
-                },
-            contentScale = ContentScale.Crop,
-            alignment = Alignment.TopStart
-        )
+        Box {
+            AsyncImage(
+                model = ImageRequest.Builder(context).data(currentImage).crossfade(true).build(),
+                contentDescription = null,
+                modifier = Modifier
+                    .height(150.dp)
+                    .fillMaxWidth()
+                    .clip(MaterialTheme.shapes.large)
+                    .background(MaterialTheme.colorScheme.surface)
+                    .clickable {
+                        onImageClick(page)
+                    },
+                contentScale = ContentScale.Crop,
+                alignment = Alignment.TopStart
+            )
+            Box(modifier = Modifier.align(Alignment.TopEnd)) {
+                chip(page)
+            }
+        }
     }
 
     LaunchedEffect(isDraggedState) {
