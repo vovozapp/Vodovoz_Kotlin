@@ -30,7 +30,6 @@ class AllBrandsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         viewModel.firstLoadSorted()
     }
 

@@ -50,6 +50,8 @@ fun CertificateActivationBody(
             style = MaterialTheme.typography.bodySmall
         )
 
+
+
         VodovozTextField(
             modifier = Modifier.padding(top = 24.dp),
             value = field.value,

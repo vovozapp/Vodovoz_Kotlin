@@ -113,9 +113,8 @@ fun ProductsNoFilterBody(
         val refreshLoadState = productsLoadStates.refresh
         if (refreshLoadState is LoadState.Error && refreshLoadState.error is EmptyResultException) {
             item(span = { GridItemSpan(2) }) {
-                //todo - do map domain state
-                val errorData =
-                    (refreshLoadState.error as? EmptyResultException)?.errorData ?: return@item
+                //todo - do map domain state if need :)
+                val errorData = (refreshLoadState.error as? EmptyResultException)?.errorData ?: return@item
 
                 EmptyResultPlaceholder(
                     title = errorData.headerHtml,

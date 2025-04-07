@@ -27,9 +27,11 @@ fun ProductListCategoriesRow(
     onCategoryClick: (CategoryUi) -> Unit,
     onCategoriesListClick: (() -> Unit)? = null,
 ) {
+    val countOtherTabs = (onCategoriesListClick?.let { 1 } ?: 0) + if (showEmptyCategory) 1 else 0
+
     VodovozScrollableTabRow(
         modifier = modifier,
-        selectedTabIndex = (categories.indexOfOrNull(currentCategory) ?: 0) + (onCategoriesListClick?.let { 1 } ?: 0),
+        selectedTabIndex = (categories.indexOfOrNull(currentCategory) ?: 0) + countOtherTabs,
         edgePadding = 16.dp,
         spacing = 8.dp
     ) {
@@ -47,7 +49,7 @@ fun ProductListCategoriesRow(
             )
         }
 
-        if(showEmptyCategory){
+        if (showEmptyCategory) {
             VodovozChip(
                 text = stringResource(id = R.string.all),
                 selected = currentCategory == CategoryUi.Empty,

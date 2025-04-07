@@ -42,7 +42,7 @@ class AllBrandsFlowViewModel @Inject constructor(
 
     private var dataSource = savedState.get<LongArray>("brandIdList")
 
-    private fun fetchAllBrands() = viewModelScope.launch {
+    private fun fetchBrands() = viewModelScope.launch {
 
         val brandsFlow =
             vodovozServiceRepository.getBrandsPaged(dataState.searchQuery).map { pagingData ->
@@ -60,6 +60,7 @@ class AllBrandsFlowViewModel @Inject constructor(
                     )
                 }
             }.onFailure {
+                //todo - fix this logic
                 navigateBack()
             }
 
@@ -73,14 +74,14 @@ class AllBrandsFlowViewModel @Inject constructor(
         if (!state.isFirstLoad) {
             uiStateListener.value =
                 state.copy(isFirstLoad = true, loadingPage = true)
-            fetchAllBrands()
+            fetchBrands()
         }
     }
 
     fun refreshSorted() {
         uiStateListener.value =
             state.copy(loadingPage = true, page = 1, loadMore = false, bottomItem = null)
-        fetchAllBrands()
+        fetchBrands()
     }
 
     fun filterByQuery(query: String) {
@@ -118,7 +119,7 @@ class AllBrandsFlowViewModel @Inject constructor(
         drop(1).onEach { newSearchQuery ->
             uiStateListener.updateData { s -> s.copy(searchQuery = newSearchQuery) }
         }.debounce(200).onEach { _ ->
-            fetchAllBrands()
+            fetchBrands()
         }.launchIn(viewModelScope)
     }
 
