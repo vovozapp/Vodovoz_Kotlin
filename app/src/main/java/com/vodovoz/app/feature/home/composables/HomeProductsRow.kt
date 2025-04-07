@@ -24,6 +24,8 @@ fun HomeProductsRow(
     onShowAllClick: (ButtonAction) -> Unit,
     onProductClick: (ProductUi) -> Unit,
     onProductLike: (ProductUi) -> Unit,
+    onIncrementToCart: (ProductUi) -> Unit  ,
+    onDecrementToCart: (ProductUi) -> Unit
 ) {
     if (sectionProducts.items.isNotEmpty()) {
         Column(modifier = modifier) {
@@ -45,7 +47,9 @@ fun HomeProductsRow(
                         modifier = Modifier.width(160.dp),
                         product = item,
                         onClick = onProductClick,
-                        onLike = onProductLike
+                        onLike = onProductLike,
+                        onIncrementToCart = onIncrementToCart,
+                        onDecrementToCart = onDecrementToCart
                     )
                 }
             }

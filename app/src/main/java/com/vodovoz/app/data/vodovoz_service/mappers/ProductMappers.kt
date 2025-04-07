@@ -74,7 +74,7 @@ fun TOVAR_DATA_DTO.toDomain(): ProductModel? {
         pricePerUnit = PROPERTY_TSENA_ZA_EDINITSU_TOVARA_VALUE,
         unitOfMeasurement = EDINICAIZMERENIYA,
         coefficient = KOFFICIENT?.toFloat() ?: 1f,
-        quantity = CATALOG_QUANTITY ?: return null,
+        quantity = CATALOG_QUANTITY ?: 0,
         firstPrice = EXTENDED_PRICE?.firstOrNull()?.toDomain() ?: return null,
         prices = EXTENDED_PRICE.mapNotNull { it?.toDomain() } ?: return null,
         labels = NALICHIE_MORE?.mapToDomain() ?: emptyList(),

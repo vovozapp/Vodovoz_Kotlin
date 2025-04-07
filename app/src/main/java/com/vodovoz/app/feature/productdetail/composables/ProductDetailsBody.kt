@@ -44,7 +44,6 @@ fun ProductDetailsBody(
     onAddToCart: () -> Unit,
     onProductMinus: () -> Unit,
     onProductPlus: () -> Unit,
-    onCartClick: () -> Unit,
     onAboutProductClick: () -> Unit,
 
     onShowAllCommentsClick: () -> Unit,
@@ -56,6 +55,7 @@ fun ProductDetailsBody(
     onPresentBlockButtonClick: () -> Unit,
     onQueryClick: (String) -> Unit,
 
+    onBrandClick: (BrandCategoryItemUi) -> Unit,
     onCategoryClick: (BrandCategoryItemUi) -> Unit,
     onProductClick: (ProductUi) -> Unit,
     onProductLikeClick: (ProductUi) -> Unit,
@@ -120,7 +120,6 @@ fun ProductDetailsBody(
             ).roundToInt(),
             onProductMinus = onProductMinus,
             onProductPlus = onProductPlus,
-            onNavigateToCart = onCartClick,
             onAddToCart = onAddToCart,
             onFloatingButtonChange = onFloatingButtonChange,
             onPresentButtonClick = onPresentButtonClick,
@@ -147,9 +146,7 @@ fun ProductDetailsBody(
             modifier = Modifier.padding(top = 32.dp),
             category = blockBrandCategory.category,
             brand = blockBrandCategory.brand,
-            onBrandClick = { brand ->
-
-            },
+            onBrandClick = onBrandClick,
             onCategoryClick = onCategoryClick
         )
 

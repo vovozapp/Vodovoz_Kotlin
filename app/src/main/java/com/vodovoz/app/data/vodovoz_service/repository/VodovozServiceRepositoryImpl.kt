@@ -15,7 +15,6 @@ import com.vodovoz.app.data.vodovoz_service.mappers.executeRequest
 import com.vodovoz.app.data.vodovoz_service.mappers.executeVodovozRequest
 import com.vodovoz.app.data.vodovoz_service.mappers.mapToDomain
 import com.vodovoz.app.data.vodovoz_service.mappers.toDomain
-import com.vodovoz.app.data.vodovoz_service.model.ErrorMessageResponseDTO
 import com.vodovoz.app.data.vodovoz_service.model.VodovozErrorResponseDTO
 import com.vodovoz.app.data.vodovoz_service.model.VodovozResponseDTO
 import com.vodovoz.app.domain.general.VodovozPagingSource
@@ -105,7 +104,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
             pagingSourceFactory = {
                 VodovozPagingSource(
                     request = { page, _ ->
-                        if(page > 1 && searchQuery.isNotBlank()){
+                        if (page > 1 && searchQuery.isNotBlank()) {
                             throw EmptyResultException()
                         }
                         vodovozService.getBrands(
@@ -115,7 +114,8 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                     },
                     mapper = { response ->
                         response.checkError()
-                        response.data?.DATA?.mapToDomain() ?: throw IllegalArgumentException("Brands can't be null")
+                        response.data?.DATA?.mapToDomain()
+                            ?: throw IllegalArgumentException("Brands can't be null")
                     }
                 )
             }
@@ -656,16 +656,8 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                 vodovozService.getSearchProducts(query = barCode, isCamera = "Y")
             },
             mapper = {
-                if (it.error != null) {
-                    throw EmptyResultException(errorData = it.error.toDomain())
-                }
+                it.checkError()
                 it.data!!.TOVAR!!.mapToDomain()
-            },
-            onFail = { response ->
-                if (response.code() == 404) {
-                    throw EmptyResultException(htmlText = "", message = response.messageWithCode())
-                }
-                throw RequestException(response.messageWithCode())
             }
         )
     }
@@ -689,23 +681,6 @@ class VodovozServiceRepositoryImpl @Inject constructor(
             mapper = { responseDTO ->
                 responseDTO.checkError()
                 responseDTO.data?.toDomain()!!
-            },
-            onFail = { response ->
-                val jsonBody = (response.errorBody() ?: response.raw().body)?.string() ?: ""
-
-                val throwable = when (response.code()) {
-                    404 -> {
-                        val errorMessageResponseDTO =
-                            moshi.fromJson<ErrorMessageResponseDTO>(jsonBody)
-                        EmptyResultException(
-                            htmlText = errorMessageResponseDTO.message,
-                            message = response.messageWithCode()
-                        )
-                    }
-
-                    else -> RequestException(response.messageWithCode())
-                }
-                Result.failure(throwable)
             }
         )
     }
@@ -854,8 +829,12 @@ class VodovozServiceRepositoryImpl @Inject constructor(
 
     override suspend fun addProductToCart(productId: Long, quantity: Int): Flow<Result<String>> =
         executeRequest(
-            request = { vodovozService.addProductToCart(productId, quantity) },
-            mapper = { response -> response.data ?: "" }
+            request = {
+                vodovozService.addProductToCart(productId, quantity)
+            },
+            mapper = { response ->
+                response.data ?: ""
+            }
         )
 
     override suspend fun addMultipleProductsToCart(productIdsWithQuantity: String): Flow<Result<String>> =
@@ -872,8 +851,12 @@ class VodovozServiceRepositoryImpl @Inject constructor(
 
     override suspend fun updateProductInCart(productId: Long, quantity: Int): Flow<Result<String>> =
         executeRequest(
-            request = { vodovozService.updateProductInCart(productId, quantity) },
-            mapper = { response -> response.data ?: "" }
+            request = {
+                vodovozService.updateProductInCart(productId, quantity)
+            },
+            mapper = { response ->
+                response.data ?: ""
+            }
         )
 
     override suspend fun clearCart(): Flow<Result<String>> = executeRequest(

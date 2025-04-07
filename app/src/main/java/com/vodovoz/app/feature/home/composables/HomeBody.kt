@@ -50,7 +50,9 @@ fun HomeBody(
     onProductLike: (ProductUi) -> Unit,
     onPromotionClick: (PromotionUi) -> Unit,
     onAboutAdvertisingClick: (AboutAdvertisingUi) -> Unit,
-    onBannerClick: (BannerUi) -> Unit
+    onBannerClick: (BannerUi) -> Unit,
+    onIncrementProductToCart: (ProductUi) -> Unit,
+    onDecrementProductToCart: (ProductUi) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -98,7 +100,9 @@ fun HomeBody(
             sectionCategoriesWithProducts = sectionTop,
             onCategorySelect = onCategorySelect,
             onProductClick = onProductCardClick,
-            onProductLike = onProductLike
+            onProductLike = onProductLike,
+            onIncrementToCart = onIncrementProductToCart,
+            onDecrementToCart = onDecrementProductToCart
         )
 
         HomeProductsRow(
@@ -106,7 +110,9 @@ fun HomeBody(
             sectionProducts = sectionHurryUpBuyProducts,
             onProductClick = onProductCardClick,
             onShowAllClick = onShowAllClick,
-            onProductLike = onProductLike
+            onProductLike = onProductLike,
+            onDecrementToCart = onDecrementProductToCart,
+            onIncrementToCart = onIncrementProductToCart
         )
 
         HomeProductsRow(
@@ -114,7 +120,9 @@ fun HomeBody(
             sectionProducts = sectionNewProducts,
             onProductClick = onProductCardClick,
             onProductLike = onProductLike,
-            onShowAllClick = onShowAllClick
+            onShowAllClick = onShowAllClick,
+            onDecrementToCart = onDecrementProductToCart,
+            onIncrementToCart = onIncrementProductToCart
         )
 
         HomePromotions(
@@ -131,7 +139,9 @@ fun HomeBody(
             sectionBottomProducts = sectionBottomProducts,
             onProductClick = onProductCardClick,
             onProductLike = onProductLike,
-            onShowAllClick = onShowAllClick
+            onShowAllClick = onShowAllClick,
+            onDecrementToCart = onDecrementProductToCart,
+            onIncrementToCart = onIncrementProductToCart
         )
 
         HomeProductsRow(
@@ -139,7 +149,9 @@ fun HomeBody(
             sectionProducts = sectionViewedProducts,
             onShowAllClick = onShowAllClick,
             onProductClick = onProductCardClick,
-            onProductLike = onProductLike
+            onProductLike = onProductLike,
+            onDecrementToCart = onDecrementProductToCart,
+            onIncrementToCart = onIncrementProductToCart
         )
 
         Spacer(modifier = Modifier.height(24.dp))

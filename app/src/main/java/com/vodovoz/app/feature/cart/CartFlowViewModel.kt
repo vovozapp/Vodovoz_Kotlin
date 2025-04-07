@@ -48,8 +48,8 @@ class CartFlowViewModel @Inject constructor(
         viewModelScope.launch {
             cartManager
                 .observeUpdateCartList()
-                .collect {
-                    if (it) {
+                .collect { newCart ->
+                    if (newCart) {
                         refresh()
                         cartManager.updateCartListState(false)
                     }
@@ -93,11 +93,13 @@ class CartFlowViewModel @Inject constructor(
                         val availableProducts = mappedData.availableProductUIList.reversed()
                         val calculatedPrices = calculatePrice(availableProducts)
                         if (availableProducts.isEmpty() && !cartManager.isCartEmpty()) {
-                            cartManager.clearCart()
+                            //todo - uncomment
+                            //cartManager.clearCart()
                         } else {
-                            cartManager.syncCart(
-                                availableProducts
-                            )
+                            //todo - uncomment
+//                            cartManager.syncCart(
+//                                availableProducts
+//                            )
                         }
                         state.copy(
                             data = state.data.copy(

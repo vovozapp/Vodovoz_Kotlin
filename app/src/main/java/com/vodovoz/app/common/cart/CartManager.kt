@@ -2,16 +2,19 @@ package com.vodovoz.app.common.cart
 
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.data.MainRepository
-import com.vodovoz.app.domain.general.model.ProductModel
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.util.extensions.debugLog
+import com.vodovoz.app.util.extensions.singleResult
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -20,11 +23,11 @@ import javax.inject.Singleton
 class CartManager @Inject constructor(
     private val repository: MainRepository,
     private val tabManager: TabManager,
+    private val vodovozServiceRepository: VodovozServiceRepository,
 ) {
 
     private val updateCartListListener = MutableStateFlow(false)
-
-    private val mutex = Mutex()
+    private val cartMutex = Mutex()
 
     fun observeUpdateCartList() = updateCartListListener.asStateFlow()
 
@@ -33,9 +36,66 @@ class CartManager @Inject constructor(
     }
 
     private val carts = ConcurrentHashMap<Long, Int>()
-    private val cartsStateListener = MutableSharedFlow<Map<Long, Int>>(replay = 1)
+    private val firstCart = mutableMapOf<Long, Int>()
 
-    fun observeCarts() = cartsStateListener.asSharedFlow().filter { it.isNotEmpty() }
+
+    private val cartsStateListener = MutableSharedFlow<Map<Long, Int>>(replay = 1)
+    private val _blockedProductsState = MutableStateFlow(emptySet<Long>())
+    val blockedProductsState get() = _blockedProductsState.asStateFlow()
+
+
+    fun observeCarts() = cartsStateListener.asSharedFlow().filter { map -> map.isNotEmpty() }
+
+    suspend fun change(productId: Long, count: Int) {
+
+        val cartAfterUpdate = cartMutex.withLock {
+            if (_blockedProductsState.value.contains(productId)) return
+
+            val cartBeforeUpdate = carts.toMap()
+            updateCarts(productId, count)
+            if (firstCart.isEmpty()) {
+                firstCart.putAll(cartBeforeUpdate)
+            }
+            return@withLock carts.toMap()
+        }
+
+
+        delay(300L)
+
+        if (cartAfterUpdate != carts) return
+
+        val (currentFirstCart, cartChanges) = cartMutex.withLock {
+            val currentCart: Map<Long, Int> = carts
+            if (cartAfterUpdate != currentCart) return
+            val firstCartCopy = firstCart.toMap()
+
+            val cartChanges = currentCart.filter { (key, value) ->
+                firstCartCopy[key] != null && firstCartCopy[key] != value
+            }
+
+            _blockedProductsState.update { s ->
+                s + cartChanges.keys
+            }
+            firstCart.clear()
+            firstCartCopy to cartChanges
+        }
+
+        kotlin.runCatching {
+            updateCartOnline(cartChanges, currentFirstCart)
+            updateCartListState(true)
+        }.onFailure {
+            cartMutex.withLock { updateCart(currentFirstCart) }
+        }
+
+        cartMutex.withLock {
+            _blockedProductsState.update { s ->
+                buildSet {
+                    addAll(s)
+                    removeAll(cartChanges.keys)
+                }
+            }
+        }
+    }
 
     suspend fun add(
         id: Long,
@@ -54,7 +114,7 @@ class CartManager @Inject constructor(
             updateCartListState(withUpdate)
         }.onFailure {
             //tabManager.loadingAddToCart(false, plus = true)
-            updateCarts(id, newCount)
+            updateCarts(id, oldCount)
         }
     }
 
@@ -75,18 +135,49 @@ class CartManager @Inject constructor(
         cartsStateListener.emit(carts)
     }
 
+    private suspend fun updateCartOnline(
+        needUpdate: Map<Long, Int>,
+        firstCart: Map<Long, Int>,
+    ) {
+        val cartItem = needUpdate.entries.firstOrNull() ?: return
+        if (needUpdate.size == 1 && firstCart[cartItem.key] != null) {
+            vodovozServiceRepository.addProductToCart(cartItem.key, cartItem.value).singleResult()
+                .getOrThrow()
+            //todo - uncomment
+            //vodovozServiceRepository.updateProductInCart(cartItem.key, cartItem.value)
+            //    .singleResult().getOrThrow()
+        } else if (needUpdate.size == 1) {
+            vodovozServiceRepository.addProductToCart(cartItem.key, cartItem.value)
+                .singleResult().getOrThrow()
+        } else {
+            vodovozServiceRepository.addMultipleProductsToCart(formatCart(needUpdate))
+                .singleResult().getOrThrow()
+        }
+    }
+
     private suspend fun action(id: Long, count: Int, isInCart: Boolean/*, plus: Boolean*/) {
         if (!isInCart) {
             //tabManager.loadingAddToCart(true, plus = plus)
-            repository.addProductToCart(id, count)
+            //repository.addProductToCart(id, count)
+            vodovozServiceRepository.addProductToCart(id, count).singleResult().getOrThrow()
+
         } else {
-            repository.changeProductsQuantityInCart(id, count)
+            vodovozServiceRepository.updateProductInCart(id, count).singleResult().getOrThrow()
+            //repository.changeProductsQuantityInCart(id, count)
             //tabManager.loadingAddToCart(true, plus = true)
+
         }
-        updateCarts(id, count)
     }
 
+    private suspend fun updateCart(cart: Map<Long, Int>) {
+        carts.clear()
+        carts.putAll(cart)
+        cartsStateListener.emit(carts)
+    }
+
+
     private suspend fun updateCarts(id: Long, count: Int) {
+
         carts[id] = count
         cartsStateListener.emit(carts)
     }
@@ -121,46 +212,8 @@ class CartManager @Inject constructor(
         updateCarts(id, count)
     }
 
-}
-
-class CartManagerV2(
-    private val vodovozServiceRepository: VodovozServiceRepository,
-) {
-
-
-    suspend fun addProduct(productId: String, product: ProductModel) {
-
-        // todo - val previousCart = localDB.currentCart()
-        // todo - localDB.addToCart(product)
-        try {
-            //todo - vodovozServiceRepository.addToCart(productId)
-            //todo - val serverCart = vodovozServiceRepository.getCart()
-            //todo - localDB.syncWithServer(serverCart)
-        } catch (e: Exception) {
-            //todo localDB.setCartState(previousCart)
-        }
-    }
-
-    suspend fun addProducts(productIds: String, products: List<ProductModel>) {
-        // todo - val previousCart = localDB.currentCart()
-        // todo - localDB.addToCart(products)
-        // todo - localDB.updateVersion()
-        try {
-            //todo - vodovozServiceRepository.addToCart(productIds)
-            //todo - val serverCart = vodovozServiceRepository.getCart()
-            //todo - localDB.syncWithServer(serverCart)
-        } catch (e: Exception) {
-            //todo localDB.setCartState(previousCart)
-        }
-    }
-
-    suspend fun syncWithServer(previousVersion: Int): Boolean{
-        //todo - if(previousVersion < localDB.cart.version) return false
-        //todo - localDB.updateVersion()
-        //todo - val serverCart = vodovozServiceRepository.getCart()
-        //todo - if(previousVersion < localDB.cart.version) return false
-        //todo - localDB.setCart(serviceCart)
-        return false
+    fun formatCart(cart: Map<Long, Int>): String {
+        return cart.entries.joinToString(";") { "${it.key}-${it.value}" }
     }
 
 }

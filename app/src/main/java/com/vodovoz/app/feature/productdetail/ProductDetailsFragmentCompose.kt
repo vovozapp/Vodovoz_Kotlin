@@ -24,6 +24,7 @@ import com.vodovoz.app.common.media.MediaManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.navigation.navigateToAnalogs
+import com.vodovoz.app.core.navigation.navigateToBrandProductList
 import com.vodovoz.app.core.navigation.navigateToCategoryProductList
 import com.vodovoz.app.core.navigation.navigateToPreOrder
 import com.vodovoz.app.core.navigation.navigateToProductComments
@@ -244,6 +245,10 @@ class ProductDetailsFragment : Fragment() {
 
                 is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToRutubeVideo -> {
                     findNavController().navigateToRutubeVideo(event.video.code)
+                }
+
+                is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToBrandProducts -> {
+                    findNavController().navigateToBrandProductList(event.brandId)
                 }
             }
         }

@@ -48,7 +48,6 @@ fun ProductDetailsButtonsBlock(
     onAddToCart: () -> Unit,
     onProductMinus: () -> Unit,
     onProductPlus: () -> Unit,
-    onNavigateToCart: () -> Unit,
     onFloatingButtonChange: (Boolean) -> Unit,
     onMultiButtonClick: () -> Unit,
     onPresentButtonClick: () -> Unit,
@@ -201,7 +200,6 @@ private fun ProductDetailsButtonsBlockPreview() {
             onAddToCart = { },
             onProductMinus = { },
             onProductPlus = { },
-            onNavigateToCart = { },
             onFloatingButtonChange = {
 
             },

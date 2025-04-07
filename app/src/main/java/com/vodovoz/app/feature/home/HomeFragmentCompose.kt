@@ -58,6 +58,7 @@ import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWitho
 import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -138,6 +139,18 @@ class HomeFragment : Fragment() {
 
                     LifecycleEffect {
                         observeEvents(topProductLazyListState = topProductLazyListState)
+                    }
+
+                    LifecycleEffect {
+                        flowViewModel.listenCart()
+                    }
+
+                    LifecycleEffect {
+                        flowViewModel.listenFavorites(this)
+                    }
+
+                    LifecycleEffect {
+                        flowViewModel.listenLoadingProducts()
                     }
 
                 }

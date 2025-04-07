@@ -1,10 +1,6 @@
 package com.vodovoz.app.feature.productdetail
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
@@ -50,9 +46,9 @@ fun ProductDetailsScreen(
             AnimatedVisibility(visible = !viewState.hideFloatingButton) {
                 ProductBottomFloatingButton(
                     isLoading = viewState.buttonIsLoading,
-                    cartQuantity = viewState.cartQuantity,
+                    cartQuantity = productDetails.cartQuantity,
                     totalPrice = calculateProductPrice(
-                        viewState.cartQuantity,
+                        productDetails.cartQuantity,
                         productDetails.prices
                     ).roundToInt(),
                     oldPrice = oldPrice,
@@ -68,7 +64,7 @@ fun ProductDetailsScreen(
                         viewModel.decrementCart()
                     },
                     onAddToCartClick = {
-                        viewModel.changeCart(productDetails.id, 1, 0)
+                        viewModel.changeProductInCart(productDetails.id, 1, 0)
                     },
                     onAnalogClick = {
                         viewModel.navigateToProductsCollection()
@@ -85,7 +81,7 @@ fun ProductDetailsScreen(
             productDetails = productDetails,
             comments = viewState.comments,
             quantityButtonIsLoading = viewState.buttonIsLoading,
-            productCartQuantity = viewState.cartQuantity,
+            productCartQuantity = productDetails.cartQuantity,
             showAllProperties = viewState.showAllProperties,
             sectionSimilarProducts = viewState.sectionSimilarProducts,
             sectionAccessory = viewState.sectionAccessory,
@@ -104,16 +100,13 @@ fun ProductDetailsScreen(
                 viewModel.navigateByMedia(media)
             },
             onProductPlus = {
-                viewModel.incrementCart()
+                viewModel.incrementCart() // todo - update
             },
             onProductMinus = {
-                viewModel.decrementCart()
+                viewModel.decrementCart() // todo - update
             },
             onAddToCart = {
-                viewModel.changeCart(productDetails.id, 1, 0)
-            },
-            onCartClick = {
-                viewModel.navigateToCart()
+                viewModel.changeProductInCart(productDetails.id, 1, 0) // // todo - update
             },
             onAnalogButtonClick = {
                 viewModel.navigateToProductsCollection()
@@ -145,6 +138,10 @@ fun ProductDetailsScreen(
             onProductLikeClick = { product ->
                 viewModel.changeFavorite(product)
             },
+
+            onBrandClick = { brandItem ->
+                viewModel.navigateToBrandProducts(brandItem)
+            },
             onCategoryClick = { categoryItem ->
                 viewModel.navigateToCategory(categoryItem)
             },
@@ -156,16 +153,16 @@ fun ProductDetailsScreen(
 
     if (viewState.showMultiBottomSheet) {
         MultiProductBottomSheet(
-            cartQuantity = viewState.cartQuantity,
+            cartQuantity = productDetails.cartQuantity,
             firstPrice = productDetails.firstPrice,
             prices = productDetails.prices,
             buttonIsLoading = viewState.buttonIsLoading,
             onDismissRequest = { viewModel.hideMultiBottomSheet() },
             onCartQuantityChange = { newCartQuantity ->
-                viewModel.changeCart(
+                viewModel.changeProductInCart(
                     productDetails.id,
                     newCartQuantity,
-                    viewState.cartQuantity
+                    productDetails.cartQuantity
                 )
             },
             onPlus = {

@@ -27,7 +27,7 @@ fun SectionUi<CategoryWithProductsUi>.withUpdatedFavorites(favorites: Map<Long, 
 
 @JvmName("withUpdatedFavoritesCategoriesWithProducts")
 fun List<CategoryWithProductsUi>.withUpdatedFavorites(favorites: Map<Long, Boolean>): List<CategoryWithProductsUi> {
-    return map{  categoryWithProductsUi ->
+    return map{ categoryWithProductsUi ->
         categoryWithProductsUi.withUpdatedFavorites(favorites)
     }
 }
@@ -40,6 +40,66 @@ fun List<ProductUi>.withUpdatedFavorites(favorites: Map<Long, Boolean>): List<Pr
     return map { product ->
         product.copy(isFavorite = favorites[product.id] ?: product.isFavorite)
     }
+}
+
+@JvmName("withUpdatedCartSectionProduct")
+fun SectionUi<ProductUi>.withUpdatedCart(cart: Map<Long, Int>): SectionUi<ProductUi> {
+    return copy(
+        items = items.withUpdatedCart(cart)
+    )
+}
+
+@JvmName("withUpdatedCartSectionCategory")
+fun SectionUi<CategoryWithProductsUi>.withUpdatedCart(cart: Map<Long, Int>): SectionUi<CategoryWithProductsUi> {
+    return copy(
+        items = items.withUpdatedCart(cart)
+    )
+}
+
+@JvmName("withUpdatedCartCategoriesWithProducts")
+fun List<CategoryWithProductsUi>.withUpdatedCart(cart: Map<Long, Int>): List<CategoryWithProductsUi> {
+    return map { categoryWithProductsUi ->
+        categoryWithProductsUi.withUpdatedCart(cart)
+    }
+}
+
+@JvmName("withUpdatedCartCategoryWithProducts")
+fun CategoryWithProductsUi.withUpdatedCart(cart: Map<Long, Int>): CategoryWithProductsUi {
+    return copy(products = products.withUpdatedCart(cart))
+}
+
+@JvmName("withUpdatedCartProductList")
+fun List<ProductUi>.withUpdatedCart(cart: Map<Long, Int>): List<ProductUi> {
+    return map { product ->
+        product.copy(cartQuantity = cart[product.id] ?: product.cartQuantity)
+    }
+}
+
+@JvmName("withUpdatedLoadingProductList")
+fun List<ProductUi>.withUpdatedLoading(blockedProductsIds: Set<Long>): List<ProductUi> {
+    return map { product ->
+        product.copy(cartLoading = product.id in blockedProductsIds)
+    }
+}
+
+@JvmName("withUpdatedLoadingCategoryWithProducts")
+fun CategoryWithProductsUi.withUpdatedLoading(blockedProductsIds: Set<Long>): CategoryWithProductsUi {
+    return copy(products = products.withUpdatedLoading(blockedProductsIds))
+}
+
+@JvmName("withUpdatedLoadingCategoriesWithProducts")
+fun List<CategoryWithProductsUi>.withUpdatedLoading(blockedProductsIds: Set<Long>): List<CategoryWithProductsUi> {
+    return map { it.withUpdatedLoading(blockedProductsIds) }
+}
+
+@JvmName("withUpdatedLoadingSectionProduct")
+fun SectionUi<ProductUi>.withUpdatedLoading(blockedProductsIds: Set<Long>): SectionUi<ProductUi> {
+    return copy(items = items.withUpdatedLoading(blockedProductsIds))
+}
+
+@JvmName("withUpdatedLoadingSectionCategory")
+fun SectionUi<CategoryWithProductsUi>.withUpdatedLoading(blockedProductsIds: Set<Long>): SectionUi<CategoryWithProductsUi> {
+    return copy(items = items.withUpdatedLoading(blockedProductsIds))
 }
 
 
@@ -91,9 +151,6 @@ data class SectionUi<E>(
     companion object {
 
         fun <T> empty() = SectionUi("", emptyList<T>(), null)
-
-
-
     }
 
 }
@@ -145,7 +202,7 @@ fun ProductModel.toUi(): ProductUi {
         price = firstPrice.price,
         oldPrice = firstPrice.oldPrice,
         name = name,
-        cartQuantity = 0,
+        cartQuantity = cartQuantity,
         cartLoading = false,
         image = picture,
         labels = labels.toUi(),

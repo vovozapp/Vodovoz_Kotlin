@@ -35,6 +35,7 @@ class LikeManager @Inject constructor(
 
     private val likes = ConcurrentHashMap<Long, Boolean>()
     private val likesStateListener = MutableSharedFlow<Map<Long, Boolean>>(1)
+    //todo - just think about this
     private val likesCategories: ConcurrentHashMap<Long, Boolean> = ConcurrentHashMap<Long, Boolean>()
     private val likesVersions = ConcurrentHashMap<Long, Int>()
 

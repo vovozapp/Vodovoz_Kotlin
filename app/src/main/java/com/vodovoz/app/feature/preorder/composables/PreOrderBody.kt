@@ -37,6 +37,7 @@ fun PreOrderBody(
         ) {
 
             VodovozTextFieldsColumn(
+                modifier = Modifier.padding(horizontal = 16.dp),
                 fields = fields,
                 onFieldChange = { field, updatedField ->
                     onFieldValueChange(field, updatedField.value)

@@ -33,6 +33,8 @@ fun HomeTopProducts(
     onCategorySelect: (CategoryWithProductsUi) -> Unit,
     onProductClick: (ProductUi) -> Unit,
     onProductLike: (ProductUi) -> Unit,
+    onIncrementToCart: (ProductUi) -> Unit,
+    onDecrementToCart: (ProductUi) -> Unit
 ) {
 
     val button = sectionCategoriesWithProducts.button
@@ -75,7 +77,9 @@ fun HomeTopProducts(
                     modifier = Modifier.width(160.dp),
                     product = product,
                     onClick = onProductClick,
-                    onLike = onProductLike
+                    onLike = onProductLike,
+                    onIncrementToCart = onIncrementToCart,
+                    onDecrementToCart = onDecrementToCart
                 )
             }
         }

@@ -26,7 +26,9 @@ import com.vodovoz.app.design_system.model.SpecialPromotionUi
 import com.vodovoz.app.design_system.model.StoryUi
 import com.vodovoz.app.design_system.model.mapToUi
 import com.vodovoz.app.design_system.model.toUi
+import com.vodovoz.app.design_system.model.withUpdatedCart
 import com.vodovoz.app.design_system.model.withUpdatedFavorites
+import com.vodovoz.app.design_system.model.withUpdatedLoading
 import com.vodovoz.app.domain.general.model.ButtonAction
 import com.vodovoz.app.domain.general.model.DataAllAction
 import com.vodovoz.app.domain.general.model.VodovozAction
@@ -40,15 +42,9 @@ import com.vodovoz.app.feature.home.model.PopularCategoryUi
 import com.vodovoz.app.feature.home.model.UnratedProductUi
 import com.vodovoz.app.feature.home.model.UnratedProductsSectionUi
 import com.vodovoz.app.feature.home.model.toUi
-import com.vodovoz.app.feature.home.viewholders.homebanners.HomeBanners
-import com.vodovoz.app.feature.home.viewholders.homepopulars.HomePopulars
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproductstabs.HomeProductsTabs
 import com.vodovoz.app.feature.home.viewholders.homesections.HomeSections
-import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
-import com.vodovoz.app.mapper.BannerMapper.mapToUI
-import com.vodovoz.app.mapper.CategoryDetailMapper.mapToUI
-import com.vodovoz.app.mapper.CategoryMapper.mapToUI
 import com.vodovoz.app.mapper.PopupNewsMapper.mapToUI
 import com.vodovoz.app.ui.model.PopupNewsUI
 import com.vodovoz.app.util.extensions.debugLog
@@ -57,9 +53,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
@@ -68,9 +64,9 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -83,56 +79,104 @@ class HomeFlowViewModel @Inject constructor(
     private val vodovozServiceRepository: VodovozServiceRepository,
 ) : PagingContractViewModel<HomeFlowViewModel.HomeState, HomeFlowViewModel.HomeEvents>(HomeState.idle()) {
 
-    init {
-        listenFavorites()
-    }
-
-    private fun listenFavorites() = viewModelScope.launch {
-        val uiStateFlow = uiStateListener.map { pagingState -> pagingState.data.uiState }
-
-        uiStateFlow.combine(likeManager.observeLikes()) { uiState, favorites ->
-            uiState to favorites
-        }.collectLatest { (uiState, favorites) ->
-
-            if (uiState != HomeUiState.Success) return@collectLatest
-
-            val sectionTopDeferred =
-                async(Dispatchers.Default) { dataState.sectionTop.withUpdatedFavorites(favorites) }
-            val sectionBottomDeferred =
-                async(Dispatchers.Default) { dataState.sectionBottom.withUpdatedFavorites(favorites) }
-            val sectionViewedProductsDeferred =
-                async(Dispatchers.Default) {
-                    dataState.sectionViewedProducts.withUpdatedFavorites(favorites)
-                }
-            val sectionNewProductsDeferred =
-                async(Dispatchers.Default) {
-                    dataState.sectionNewProducts.withUpdatedFavorites(favorites)
-                }
-            val sectionHurryUpBuyProducts =
-                dataState.sectionHurryUpBuyProducts.withUpdatedFavorites(favorites)
-
-
-            val currentCategoryWithProducts =
-                dataState.currentCategoryWithProducts.withUpdatedFavorites(favorites)
-
-            val sectionTop = sectionTopDeferred.await()
-            val sectionBottom = sectionBottomDeferred.await()
-            val sectionViewedProducts = sectionViewedProductsDeferred.await()
-            val sectionNewProducts = sectionNewProductsDeferred.await()
-
-
+    suspend fun listenLoadingProducts() =
+        uiStateListener.map { pagingState -> pagingState.data.uiState }.combine(
+            cartManager.blockedProductsState
+        ) { _, productIds ->
+            productIds
+        }.collectLatest { blockedProductsIds ->
             uiStateListener.updateData { s ->
+
+                val currentCategoryWithProducts =
+                    dataState.currentCategoryWithProducts.withUpdatedLoading(blockedProductsIds)
+
                 s.copy(
-                    sectionTop = sectionTop,
-                    sectionBottom = sectionBottom,
-                    sectionViewedProducts = sectionViewedProducts,
-                    sectionNewProducts = sectionNewProducts,
-                    sectionHurryUpBuyProducts = sectionHurryUpBuyProducts,
-                    currentCategoryWithProducts = currentCategoryWithProducts
+                    currentCategoryWithProducts = currentCategoryWithProducts,
+                    sectionTop = s.sectionTop.withUpdatedLoading(blockedProductsIds),
+                    sectionBottom = s.sectionBottom.withUpdatedLoading(blockedProductsIds),
+                    sectionNewProducts = s.sectionNewProducts.withUpdatedLoading(blockedProductsIds),
+                    sectionHurryUpBuyProducts = s.sectionHurryUpBuyProducts.withUpdatedLoading(
+                        blockedProductsIds
+                    ),
+                    sectionViewedProducts = s.sectionViewedProducts.withUpdatedLoading(
+                        blockedProductsIds
+                    )
                 )
             }
-
         }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    suspend fun listenCart() = uiStateListener.map { it.data.uiState }.combine(
+        cartManager.observeCarts()
+    ) { _, cartMap ->
+        cartMap
+    }.mapLatest { cartMap ->
+        uiStateListener.updateData { s ->
+
+            val currentCategoryWithProducts =
+                dataState.currentCategoryWithProducts.withUpdatedCart(cartMap)
+
+            s.copy(
+                currentCategoryWithProducts = currentCategoryWithProducts,
+                sectionTop = s.sectionTop.withUpdatedCart(cartMap),
+                sectionBottom = s.sectionBottom.withUpdatedCart(cartMap),
+                sectionNewProducts = s.sectionNewProducts.withUpdatedCart(cartMap),
+                sectionHurryUpBuyProducts = s.sectionHurryUpBuyProducts.withUpdatedCart(cartMap),
+                sectionViewedProducts = s.sectionViewedProducts.withUpdatedCart(cartMap),
+            )
+        }
+    }.collect()
+
+
+    suspend fun listenFavorites(uiScope: CoroutineScope) = uiScope.launch {
+        uiStateListener.map { pagingState -> pagingState.data.uiState }
+            .combine(likeManager.observeLikes()) { uiState, favorites ->
+                uiState to favorites
+            }.collectLatest { (uiState, favorites) ->
+
+                if (uiState != HomeUiState.Success) return@collectLatest
+
+                val sectionTopDeferred =
+                    async(Dispatchers.Default) { dataState.sectionTop.withUpdatedFavorites(favorites) }
+                val sectionBottomDeferred =
+                    async(Dispatchers.Default) {
+                        dataState.sectionBottom.withUpdatedFavorites(
+                            favorites
+                        )
+                    }
+                val sectionViewedProductsDeferred =
+                    async(Dispatchers.Default) {
+                        dataState.sectionViewedProducts.withUpdatedFavorites(favorites)
+                    }
+                val sectionNewProductsDeferred =
+                    async(Dispatchers.Default) {
+                        dataState.sectionNewProducts.withUpdatedFavorites(favorites)
+                    }
+                val sectionHurryUpBuyProducts =
+                    dataState.sectionHurryUpBuyProducts.withUpdatedFavorites(favorites)
+
+
+                val currentCategoryWithProducts =
+                    dataState.currentCategoryWithProducts.withUpdatedFavorites(favorites)
+
+                val sectionTop = sectionTopDeferred.await()
+                val sectionBottom = sectionBottomDeferred.await()
+                val sectionViewedProducts = sectionViewedProductsDeferred.await()
+                val sectionNewProducts = sectionNewProductsDeferred.await()
+
+
+                uiStateListener.updateData { s ->
+                    s.copy(
+                        sectionTop = sectionTop,
+                        sectionBottom = sectionBottom,
+                        sectionViewedProducts = sectionViewedProducts,
+                        sectionNewProducts = sectionNewProducts,
+                        sectionHurryUpBuyProducts = sectionHurryUpBuyProducts,
+                        currentCategoryWithProducts = currentCategoryWithProducts
+                    )
+                }
+
+            }
     }
 
     private suspend fun fetchPrimaryDetails(): Boolean {
@@ -368,7 +412,8 @@ class HomeFlowViewModel @Inject constructor(
 
     private fun CoroutineScope.firstLoadTasks() = arrayOf<Deferred<List<PositionItem>>>()
 
-    private fun CoroutineScope.secondLoadTasks(userId: Long?) = arrayOf<Deferred<List<PositionItem>>>()
+    private fun CoroutineScope.secondLoadTasks(userId: Long?) =
+        arrayOf<Deferred<List<PositionItem>>>()
 
     private inline fun CoroutineScope.homeRequestAsync(crossinline request: suspend () -> List<PositionItem>): Deferred<List<PositionItem>> {
         return async(Dispatchers.IO) {
@@ -597,7 +642,6 @@ class HomeFlowViewModel @Inject constructor(
 
     fun navigateToPromotionDetails(promotion: PromotionUi) = viewModelScope.launch {
         eventListener.emit(HomeEvents.GoToPromotionDetails(promotionId = promotion.id))
-
     }
 
     fun navigateToProductDetails(product: ProductUi) = viewModelScope.launch {
@@ -637,9 +681,9 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     fun navigateToPopularCategory(popularCategory: PopularCategoryUi) = viewModelScope.launch {
-        if(popularCategory.action == null){
+        if (popularCategory.action == null) {
             eventListener.emit(HomeEvents.GoToCategoryProductList(popularCategory.id))
-        }else{
+        } else {
             eventListener.emit(HomeEvents.ActivateDataAllAction(popularCategory.action))
         }
     }
@@ -672,7 +716,7 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     fun navigateByMenuItem(menuItem: MenuItemUi) = viewModelScope.launch {
-        val event = when(menuItem.type){
+        val event = when (menuItem.type) {
             MenuItemTypeUi.History -> HomeEvents.GoToOrdersHistory
             MenuItemTypeUi.Payment -> HomeEvents.GoToWebView(VodovozWebConfig.ABOUT_PAYMENT_URL, "")
             MenuItemTypeUi.None -> {
@@ -681,6 +725,14 @@ class HomeFlowViewModel @Inject constructor(
             }
         }
         eventListener.emit(event)
+    }
+
+    fun incrementProductToCart(product: ProductUi) = viewModelScope.launch {
+        cartManager.change(product.id, product.cartQuantity + 1)
+    }
+
+    fun decrementProductToCart(product: ProductUi) = viewModelScope.launch {
+        cartManager.change(product.id, product.cartQuantity - 1)
     }
 
     data class PositionItem(
@@ -700,7 +752,7 @@ class HomeFlowViewModel @Inject constructor(
         data object GoToCart : HomeEvents()
         data object ScrollTopProductsToStart : HomeEvents()
         data object ShowSpeechRecognizer : HomeEvents()
-        data object GoToOrdersHistory: HomeEvents()
+        data object GoToOrdersHistory : HomeEvents()
 
         data class GoToStories(val storyId: Long) : HomeEvents()
         data class GoToProductDetails(val productId: Long) : HomeEvents()

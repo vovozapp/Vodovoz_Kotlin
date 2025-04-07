@@ -126,6 +126,12 @@ fun HomeScreen(
                         },
                         onBannerClick = { banner ->
                             viewModel.activateBannerAction(banner)
+                        },
+                        onIncrementProductToCart = { product ->
+                            viewModel.incrementProductToCart(product)
+                        },
+                        onDecrementProductToCart = { product ->
+                            viewModel.decrementProductToCart(product)
                         }
                     )
                 }

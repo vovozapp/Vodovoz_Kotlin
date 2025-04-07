@@ -130,28 +130,28 @@ class ProfileFlowViewModel @Inject constructor(
     }
 
     fun fetchFirstUserData() {
-//        viewModelScope.launch {
-//            val userId = accountManager.fetchAccountId()
-//            if (userId == null) {
-//                uiStateListener.value =
-//                    state.copy(data = state.data.copy(isLogin = false), loadingPage = false)
-//                return@launch
-//            }
-//            flow { emit(repository.fetchUserData(userId)) }
-//                .catch {
-//                    debugLog { "fetch user data error ${it.localizedMessage}" }
-//                    uiStateListener.value =
-//                        state.copy(error = it.toErrorState(), loadingPage = false)
-//                }
-//                .onEach {
-//                    if (it is ResponseEntity.Success) {
-//                        firstLoad()
-//                    } else {
-//                        logout()
-//                    }
-//                }
-//                .collect()
-//        }
+        viewModelScope.launch {
+            val userId = accountManager.fetchAccountId()
+            if (userId == null) {
+                uiStateListener.value =
+                    state.copy(data = state.data.copy(isLogin = false), loadingPage = false)
+                return@launch
+            }
+            flow { emit(repository.fetchUserData(userId)) }
+                .catch {
+                    debugLog { "fetch user data error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
+                .onEach {
+                    if (it is ResponseEntity.Success) {
+                        firstLoad()
+                    } else {
+                        logout()
+                    }
+                }
+                .collect()
+        }
     }
 
     private fun CoroutineScope.firstLoadTasks(userId: Long) = arrayOf(

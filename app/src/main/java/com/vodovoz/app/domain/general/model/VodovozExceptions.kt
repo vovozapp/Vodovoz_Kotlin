@@ -32,7 +32,6 @@ class FavoritesNotFoundException(
 )
 
 class EmptyResultException(
-    val htmlText: String = "",
     message: String = "",
     errorData: ErrorDataModel? = null,
     cause: Throwable? = null,

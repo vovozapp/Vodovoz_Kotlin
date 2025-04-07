@@ -52,6 +52,8 @@ fun GridProductCard(
     onClick: (ProductUi) -> Unit,
     onLike: (ProductUi) -> Unit,
     onAnalogsClick: (ProductUi) -> Unit = {},
+    onIncrementToCart: (ProductUi) -> Unit = {},
+    onDecrementToCart: (ProductUi) -> Unit = {}
 ) {
     val percentLabels =
         product.labels.filter { labelEntity -> labelEntity.name.any { s -> s == '%' } }
@@ -199,15 +201,15 @@ fun GridProductCard(
                 QuantityButtonSmall(
                     isLoading = buttonIsLoading,
                     quantity = product.cartQuantity,
-                    onPlus = { },
-                    onMinus = { }
+                    onPlus = { onIncrementToCart(product) },
+                    onMinus = { onDecrementToCart(product) }
                 )
             }
 
             else -> {
                 VodovozButtonSmall(
                     text = stringResource(id = R.string.to_cart),
-                    onClick = { onClick(product) },
+                    onClick = { onIncrementToCart(product) },
                 )
             }
         }
