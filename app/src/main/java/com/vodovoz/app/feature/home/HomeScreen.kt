@@ -1,10 +1,6 @@
 package com.vodovoz.app.feature.home
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -43,7 +39,7 @@ fun HomeScreen(
                     viewModel.navigateToSearch()
                 },
                 onMicClick = {
-
+                    viewModel.showSpeechRecognizer()
                 },
                 onScanClick = {
                     onNavigateToQrCodeFragment()
@@ -55,7 +51,6 @@ fun HomeScreen(
         },
         contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) { paddingValues ->
-
 
         PullToRefreshBox(
             modifier = Modifier
@@ -102,11 +97,11 @@ fun HomeScreen(
                         onCategorySelect = { categoryWithProductsUi ->
                             viewModel.selectCategory(categoryWithProductsUi)
                         },
-                        onMenuItemClick = {
-
+                        onMenuItemClick = { menuItem ->
+                            viewModel.navigateByMenuItem(menuItem)
                         },
                         onOrderClick = {
-
+                            viewModel.navigateToOrderDetails(it)
                         },
                         onPopularCategoryClick = { popularCategory ->
                             viewModel.navigateToPopularCategory(popularCategory)
@@ -128,6 +123,9 @@ fun HomeScreen(
                         },
                         onAboutAdvertisingClick = { aboutAdvertisingUi ->
                             viewModel.showAdvertisingBottomSheet(aboutAdvertisingUi)
+                        },
+                        onBannerClick = { banner ->
+                            viewModel.activateBannerAction(banner)
                         }
                     )
                 }
@@ -153,22 +151,10 @@ fun HomeScreen(
         )
     }
 
-    AnimatedVisibility(
-        visible = viewState.showUnratedProductsBS,
-        enter = slideInVertically(
-            tween(
-                durationMillis = 300,
-                easing = LinearEasing
-            )
-        ) { it -> it },
-        exit = slideOutVertically(tween(durationMillis = 300, easing = LinearEasing)) { it }
-    ) {
+    AnimatedVisibility(viewState.showUnratedProductsBS) {
         UnratedProductsBottomSheet(
             sectionUnratedProducts = viewState.sectionUnratedProducts,
             onProductRatingChanged = { product, rating ->
-
-            },
-            onProductRatingChange = { product, rating ->
                 viewModel.changeUnratedProductRating(product, rating)
             },
             onDispose = {

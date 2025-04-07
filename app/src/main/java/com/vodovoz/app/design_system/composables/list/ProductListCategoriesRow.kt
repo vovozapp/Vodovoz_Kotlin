@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.composables.chip.VodovozChip
@@ -21,6 +22,7 @@ import com.vodovoz.app.util.extensions.indexOfOrNull
 fun ProductListCategoriesRow(
     modifier: Modifier = Modifier,
     categories: List<CategoryUi>,
+    showEmptyCategory: Boolean,
     currentCategory: CategoryUi,
     onCategoryClick: (CategoryUi) -> Unit,
     onCategoriesListClick: (() -> Unit)? = null,
@@ -42,6 +44,14 @@ fun ProductListCategoriesRow(
                     .size(24.dp)
                     .clip(MaterialTheme.shapes.small)
                     .clickable { onCategoriesListClick() }
+            )
+        }
+
+        if(showEmptyCategory){
+            VodovozChip(
+                text = stringResource(id = R.string.all),
+                selected = currentCategory == CategoryUi.Empty,
+                onSelect = { onCategoryClick(CategoryUi.Empty) }
             )
         }
 

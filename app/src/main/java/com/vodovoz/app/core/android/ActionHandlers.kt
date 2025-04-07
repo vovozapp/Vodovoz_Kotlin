@@ -7,7 +7,10 @@ import android.net.Uri
 import android.webkit.CookieManager
 import androidx.navigation.NavController
 import com.vodovoz.app.R
+import com.vodovoz.app.common.tab.TabManager
+import com.vodovoz.app.core.navigation.navigateToBannerProductList
 import com.vodovoz.app.core.navigation.navigateToBrandProductList
+import com.vodovoz.app.core.navigation.navigateToButtonProductList
 import com.vodovoz.app.core.navigation.navigateToBuyCertificate
 import com.vodovoz.app.core.navigation.navigateToCategoryProductList
 import com.vodovoz.app.core.navigation.navigateToHurryBuyUpProducts
@@ -19,16 +22,14 @@ import com.vodovoz.app.core.navigation.navigateToWaterApp
 import com.vodovoz.app.core.navigation.navigateToWebView
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.core.network.VODOVOZ_URL
+import com.vodovoz.app.core.network.VodovozWebConfig
 import com.vodovoz.app.domain.general.model.ButtonAction
 import com.vodovoz.app.domain.general.model.DataAllAction
 import com.vodovoz.app.domain.general.model.VodovozAction
-import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
-import com.vodovoz.app.feature.catalog.CatalogFragmentDirections
-import com.vodovoz.app.feature.home.HomeFragmentDirections
-import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 
 fun DataAllAction.activate(
     navController: NavController,
+    tabManager: TabManager,
     activators: List<DataAllActionActivator> = emptyList(),
 ) {
     val currentActivator = activators.firstOrNull { it.action == this }
@@ -52,11 +53,12 @@ fun DataAllAction.activate(
         }
 
         DataAllAction.Delivery -> {
-            navController.navigateToWebView(ApiConfig.ABOUT_DELIVERY_URL, "О доставке")
+            navController.navigateToWebView(VodovozWebConfig.ABOUT_PAYMENT_URL, "О доставке")
         }
 
         DataAllAction.Profile -> {
-
+            tabManager.setAuthRedirect(navController.graph.id)
+            tabManager.selectTab(R.id.graph_profile)
         }
 
         DataAllAction.WaterTracker -> {
@@ -76,26 +78,34 @@ fun DataAllAction.activate(
 
 fun ButtonAction.activate(
     navController: NavController,
-    activateIdAction: ((Int) -> Unit)? = null,
+    tabManager: TabManager,
     activators: List<DataAllActionActivator> = emptyList(),
 ) {
     when (this) {
         is ButtonAction.Action -> {
-            value.activate(navController, activators)
+            value.activate(navController, tabManager, activators)
         }
 
-        is ButtonAction.Id -> activateIdAction?.let {
-            activateIdAction(id)
+        is ButtonAction.Id -> {
+            navController.navigateToButtonProductList(id)
         }
     }
 }
 
 fun VodovozAction.activate(
     navController: NavController,
-    activity: Activity? = null,
-    cookie: String = "",
+    activity: Activity,
+    cookie: String,
+    tabManager: TabManager,
     activators: List<VodovozActionActivator> = emptyList(),
 ) {
+    val currentActivator = activators.firstOrNull { it.action == this }
+
+    if (currentActivator != null) {
+        currentActivator.activate()
+        return
+    }
+
     when (this) {
         is VodovozAction.Brand -> {
             navController.navigateToBrandProductList(id)
@@ -110,10 +120,7 @@ fun VodovozAction.activate(
         }
 
         is VodovozAction.Products -> {
-            TODO()
-//            navController.navigate(
-//
-//            )
+            navController.navigateToBannerProductList(bannerId, blockId)
         }
 
         is VodovozAction.Promotion -> {
@@ -121,28 +128,33 @@ fun VodovozAction.activate(
         }
 
         is VodovozAction.Promotions -> {
-            //todo - put args
-            //navController.navigateToPromotions()
+            navController.navigateToPromotions(blockId, bannerId)
         }
 
         is VodovozAction.Url -> {
-            val openLinkIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-            activity?.startActivity(openLinkIntent)
+            runCatching {
+                val openLinkIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                activity.startActivity(openLinkIntent)
+            }
         }
 
         is VodovozAction.UrlWithCookie -> {
             val webCookieManager = CookieManager.getInstance()
             webCookieManager.acceptCookie()
             webCookieManager.setCookie(VODOVOZ_URL, cookie)
-            navController.navigate(R.id.webViewFragment)
+            navController.navigateToWebView(url, "")
         }
 
         is DataAllAction -> {
             val dataAllActivators = activators.mapNotNull { it as? DataAllActionActivator }
-            activate(navController, dataAllActivators)
+            activate(navController, tabManager, dataAllActivators)
         }
 
-        is VodovozAction.Unknown -> {}
+        is VodovozAction.Unknown -> {
+            /**
+             * You can create activator or do something here
+             * */
+        }
     }
 }
 

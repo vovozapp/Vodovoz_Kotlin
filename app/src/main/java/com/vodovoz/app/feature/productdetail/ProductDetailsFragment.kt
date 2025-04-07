@@ -91,7 +91,7 @@ class ProductDetailsFragment1 : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) {
-            viewModel.fetchProductDetail()
+            viewModel.fetchProductDetails()
         }
     }
 
@@ -101,7 +101,7 @@ class ProductDetailsFragment1 : BaseFragment() {
         observeState()
         observeResultLiveData()
         observeFabCartState()
-        bindErrorRefresh { viewModel.fetchProductDetail() }
+        bindErrorRefresh { viewModel.fetchProductDetails() }
         observeEvents()
         observeMediaManager()
         initJivoChatButton()
@@ -352,9 +352,9 @@ class ProductDetailsFragment1 : BaseFragment() {
             }
 
             override fun onRuTubeClick(videoCode: String) {
-//                findNavController().navigate(
-//                    ProductDetailsFragmentDirections.actionToRuTubeVideoFragmentDialog(videoCode)
-//                )
+                findNavController().navigate(
+                    ProductDetailsFragmentDirections.actionToRuTubeVideoFragmentDialog(videoCode)
+                )
             }
 
             override fun onDetailPictureClick(currentItem: Int, detailPictureList: Array<String>) {

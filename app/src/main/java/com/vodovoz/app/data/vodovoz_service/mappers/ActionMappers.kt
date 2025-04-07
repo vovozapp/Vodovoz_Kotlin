@@ -5,16 +5,16 @@ import com.vodovoz.app.domain.general.model.DataAllAction
 import com.vodovoz.app.domain.general.model.VodovozAction
 
 
-fun ACTION_DTO.toAction(): VodovozAction? {
+fun ACTION_DTO.toAction(blockId: Long): VodovozAction? {
     val id = ID ?: return null
     val action = ACTION ?: return null
 
     return when (action.uppercase()) {
         "TOVAR" -> VodovozAction.Product(id.toLongOrNull() ?: return null)
-        "TOVARY" -> VodovozAction.Products(id.toLongOrNull() ?: return null)
+        "TOVARY" -> VodovozAction.Products(blockId, id.toLongOrNull() ?: return null)
         "RAZDEL" -> VodovozAction.Category(id.toLongOrNull() ?: return null)
         "AKCIYA" -> VodovozAction.Promotion(id.toLongOrNull() ?: return null)
-        "AKCII" -> VodovozAction.Promotions(id.toLongOrNull() ?: return null)
+        "AKCII" -> VodovozAction.Promotions(blockId, id.toLongOrNull() ?: return null)
         "BRAND" -> VodovozAction.Brand(id.toLongOrNull() ?: return null)
         "URL" -> VodovozAction.Url(id)
         "URLKYKI" -> VodovozAction.UrlWithCookie(id)

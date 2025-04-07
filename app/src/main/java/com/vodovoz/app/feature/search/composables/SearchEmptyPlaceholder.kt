@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
@@ -20,11 +21,12 @@ import com.vodovoz.app.R
 @Composable
 fun SearchEmptyPlaceholder(
     modifier: Modifier = Modifier,
-    htmlText: String,
+    imagePainter: Painter,
+    description: String,
 ) {
     Column(modifier = modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         Image(
-            painter = painterResource(id = R.drawable.pic_search),
+            painter = imagePainter,
             contentDescription = null,
             modifier = Modifier
                 .padding(top = 62.dp)
@@ -34,7 +36,7 @@ fun SearchEmptyPlaceholder(
             modifier = Modifier
                 .padding(top = 24.dp)
                 .padding(horizontal = 32.dp),
-            text = AnnotatedString.fromHtml(htmlText),
+            text = AnnotatedString.fromHtml(description),
             color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.headlineSmall,
             textAlign = TextAlign.Center

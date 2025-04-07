@@ -20,6 +20,7 @@ import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
+import com.vodovoz.app.core.android.activate
 import com.vodovoz.app.core.navigation.NavigationHandler
 import com.vodovoz.app.core.navigation.navigateToLogin
 import com.vodovoz.app.core.navigation.navigateToRegister
@@ -99,8 +100,8 @@ class ProfileFragment : Fragment() {
                                 description = uiState.description,
                                 image = uiState.imageUrl,
                                 button = uiState.button,
-                                onButtonClick = { btn ->
-                                    viewModel.navigateToLogin(btn)
+                                onButtonClick = {
+                                    viewModel.navigateToLoginOrRegister()
                                 }
                             )
                         }
@@ -155,6 +156,19 @@ class ProfileFragment : Fragment() {
 
                             is ProfileFlowViewModel.ProfileEvents.GoByMenuItemId -> {
                                 NavigationHandler.navigate(events.itemId, findNavController())
+                            }
+
+                            is ProfileFlowViewModel.ProfileEvents.ActivateVodovozAction -> {
+                                events.action.activate(
+                                    findNavController(),
+                                    requireActivity(),
+                                    cookieManager.fetchCookieSessionId() ?: "",
+                                    tabManager
+                                )
+                            }
+
+                            ProfileFlowViewModel.ProfileEvents.GoToRegister -> {
+                                findNavController().navigateToRegister()
                             }
                         }
                     }

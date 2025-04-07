@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.sync.Mutex
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -22,6 +23,8 @@ class CartManager @Inject constructor(
 ) {
 
     private val updateCartListListener = MutableStateFlow(false)
+
+    private val mutex = Mutex()
 
     fun observeUpdateCartList() = updateCartListListener.asStateFlow()
 
@@ -65,8 +68,8 @@ class CartManager @Inject constructor(
     fun isCartEmpty() = carts.isEmpty()
 
     suspend fun syncCart(list: List<ProductUI>) {
-        list.forEach {
-            carts[it.id] = it.cartQuantity
+        list.forEach { product ->
+            carts[product.id] = product.cartQuantity
         }
         tabManager.saveBottomNavCartState()
         cartsStateListener.emit(carts)

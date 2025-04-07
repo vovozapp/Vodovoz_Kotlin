@@ -1,23 +1,30 @@
 package com.vodovoz.app.feature.all.brands
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.map
 import com.vodovoz.app.common.account.data.AccountManager
-import com.vodovoz.app.common.content.ErrorState
-import com.vodovoz.app.common.content.PagingStateViewModel
+import com.vodovoz.app.common.content.Event
+import com.vodovoz.app.common.content.PagingContractViewModel
 import com.vodovoz.app.common.content.State
-import com.vodovoz.app.common.content.toErrorState
+import com.vodovoz.app.common.content.updateData
 import com.vodovoz.app.data.MainRepository
-import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.mapper.BrandMapper.mapToUI
+import com.vodovoz.app.design_system.model.BrandUi
+import com.vodovoz.app.design_system.model.toUi
+import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.ui.model.BrandUI
-import com.vodovoz.app.util.extensions.debugLog
+import com.vodovoz.app.util.extensions.singleResult
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,47 +35,38 @@ class AllBrandsFlowViewModel @Inject constructor(
     private val repository: MainRepository,
 //    private val dataRepository: DataRepository,
     private val accountManager: AccountManager,
-) : PagingStateViewModel<AllBrandsFlowViewModel.AllBrandsState>(AllBrandsState()) {
+    private val vodovozServiceRepository: VodovozServiceRepository,
+) : PagingContractViewModel<AllBrandsFlowViewModel.AllBrandsState, AllBrandsFlowViewModel.AllBrandsEvents>(
+    AllBrandsState()
+) {
 
     private var dataSource = savedState.get<LongArray>("brandIdList")
 
-    private fun fetchAllBrands() {
-        viewModelScope.launch {
+    private fun fetchAllBrands() = viewModelScope.launch {
 
-            val list = dataSource?.toList() ?: emptyList()
+        val brandsFlow =
+            vodovozServiceRepository.getBrandsPaged(dataState.searchQuery).map { pagingData ->
+                pagingData.map { brand -> brand.toUi() }
+            }
 
-            flow { emit(repository.fetchAllBrands(list)) }
-                .onEach { response ->
-                    if (response is ResponseEntity.Success) {
-                        val data = response.data.mapToUI()
 
-                        uiStateListener.value = state.copy(
-                            data = state.data.copy(
-                                items = data,
-                                filteredItems = data
-                            ),
-                            loadingPage = false,
-                            error = null
-                        )
-
-                    } else {
-                        uiStateListener.value =
-                            state.copy(
-                                loadingPage = false,
-                                error = ErrorState.Error(),
-                                page = 1,
-                                loadMore = false
-                            )
-                    }
+        vodovozServiceRepository.getBrands(dataState.searchQuery).singleResult()
+            .onSuccess { brandSectionModel ->
+                uiStateListener.updateData { s ->
+                    s.copy(
+                        uiState = AllBrandsUiState.Success,
+                        title = brandSectionModel.title,
+                        brands = brandsFlow
+                    )
                 }
-                .flowOn(Dispatchers.Default)
-                .catch {
-                    debugLog { "fetch all brands error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
-                .collect()
-        }
+            }.onFailure {
+                navigateBack()
+            }
+
+    }
+
+    fun navigateBack() = viewModelScope.launch {
+        eventListener.emit(AllBrandsEvents.GoBack)
     }
 
     fun firstLoadSorted() {
@@ -86,12 +84,12 @@ class AllBrandsFlowViewModel @Inject constructor(
     }
 
     fun filterByQuery(query: String) {
-        val newList = if (query.isNotBlank() ) {
+        val newList = if (query.isNotBlank()) {
             state.data.items.filter { it.name.contains(query, ignoreCase = true) }
         } else {
             state.data.items
         }
-        if(newList == state.data.filteredItems) return
+        if (newList == state.data.filteredItems) return
         uiStateListener.value = state.copy(
             data = state.data.copy(
                 filteredItems = newList,
@@ -108,9 +106,50 @@ class AllBrandsFlowViewModel @Inject constructor(
 
     fun isLoginAlready() = accountManager.isAlreadyLogin()
 
+    fun changeSearchMode(searchMode: Boolean) = viewModelScope.launch {
+        if (!searchMode) searchQueriesStateFlow.value = ""
+        uiStateListener.updateData { s ->
+            s.copy(isSearchMode = searchMode)
+        }
+    }
+
+    @OptIn(FlowPreview::class)
+    private val searchQueriesStateFlow = MutableStateFlow("").apply {
+        drop(1).onEach { newSearchQuery ->
+            uiStateListener.updateData { s -> s.copy(searchQuery = newSearchQuery) }
+        }.debounce(200).onEach { _ ->
+            fetchAllBrands()
+        }.launchIn(viewModelScope)
+    }
+
+    fun changeSearchQuery(newSearchQuery: String) = viewModelScope.launch {
+        searchQueriesStateFlow.value = newSearchQuery
+    }
+
+    fun navigateToBrandProducts(brandId: Long) = viewModelScope.launch {
+        eventListener.emit(AllBrandsEvents.GoToBrandProducts(brandId))
+    }
+
+    @Immutable
     data class AllBrandsState(
         val items: List<BrandUI> = emptyList(),
         val filteredItems: List<BrandUI> = emptyList(),
         val scrollToTop: Boolean = false,
+
+        val brands: Flow<PagingData<BrandUi>> = emptyFlow(),
+        val title: String = "",
+        val searchQuery: String = "",
+        val uiState: AllBrandsUiState = AllBrandsUiState.Loading,
+        val isSearchMode: Boolean = false,
     ) : State
+
+    sealed class AllBrandsEvents : Event {
+        data class GoToBrandProducts(val brandId: Long) : AllBrandsEvents()
+        data object GoBack : AllBrandsEvents()
+    }
+
+    sealed interface AllBrandsUiState {
+        data object Loading : AllBrandsUiState
+        data object Success : AllBrandsUiState
+    }
 }

@@ -1,6 +1,9 @@
 package com.vodovoz.app.common.resources
 
 import android.content.Context
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import dagger.Binds
 import dagger.Module
@@ -12,6 +15,8 @@ import javax.inject.Singleton
 
 interface ResourcesProvider {
     fun getString(@StringRes resId: Int, vararg args: Any): String
+
+    fun getDrawable(@DrawableRes id: Int): Drawable
 }
 
 @Singleton
@@ -21,6 +26,10 @@ class ResourcesProviderImpl @Inject constructor(
 
     override fun getString(@StringRes resId: Int, vararg args: Any): String {
         return context.getString(resId, *args)
+    }
+
+    override fun getDrawable(@DrawableRes id: Int): Drawable {
+        return context.getDrawable(id) ?: ColorDrawable()
     }
 }
 

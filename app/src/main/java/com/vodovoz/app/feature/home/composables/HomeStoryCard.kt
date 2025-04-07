@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.home.composables
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -75,6 +76,7 @@ fun HomeStoryCard(
             modifier = Modifier
                 .fillMaxSize()
                 .clip(MaterialTheme.shapes.medium)
+
         )
     }
 }

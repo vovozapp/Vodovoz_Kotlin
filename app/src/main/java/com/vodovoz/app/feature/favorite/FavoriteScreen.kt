@@ -59,7 +59,7 @@ fun FavoriteScreen(
 
             when (viewState.uiState) {
                 FavoriteFlowViewModel.FavoriteUiState.Empty -> {
-                    FavoriteEmpty()
+                    FavoriteEmpty(onButtonClick = { viewModel.navigateToCatalog() })
                 }
 
                 FavoriteFlowViewModel.FavoriteUiState.Loading -> {

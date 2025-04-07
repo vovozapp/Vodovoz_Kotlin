@@ -18,6 +18,7 @@ fun POPULAR_CATEGORY_DTO.toDomain(): PopularCategoryModel? {
     return PopularCategoryModel(
         id = this.IDRAZDEL ?: return null,
         name = this.NAMERAZDEL ?: return null,
-        picture = this.PICTURE?.toFullUrl() ?: return null
+        picture = this.PICTURE?.toFullUrl() ?: return null,
+        action = this.UF_SILKAPEREXOD?.toDataAllAction()
     )
 }

@@ -50,6 +50,7 @@
     //New Strings
 
     //Base
+    <string name="russian_phone_code">+7</string>
     <string name="article" translatable="false">Артикул:</string>
     <string name="depose_price" translatable="false">Залоговая стоимость за бутыль</string>
     <string name="product_absent" translatable="false">Товар закончился</string>
@@ -210,7 +211,7 @@
     <string name="all">Все</string>
 
     <string name="anonymous">Аноним</string>
-    <string name="no_comments">По данному товару нет отзывов. Будьте первым.</string>
+    <string name="no_comments">По данному товару нет отзывов.\n Будьте первым.</string>
     <string name="leave_rate">Оставить отзыв</string>
     <string name="you_viewed">Вы смотрели</string>
     <string name="buy_with_this_product">С этим товаром покупают</string>

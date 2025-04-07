@@ -13,8 +13,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.vodovoz.app.design_system.composables.chip.TimeLeftChip
 import com.vodovoz.app.design_system.composables.chip.VodovozColorChip
 import com.vodovoz.app.design_system.composables.decoration.AdvertisingChip
@@ -37,7 +40,7 @@ fun PromotionCard(
             }
     ) {
         AsyncImage(
-            model = promotion.picture,
+            model = ImageRequest.Builder(LocalContext.current).data(promotion.picture).crossfade(true).build(),
             contentDescription = null,
             modifier = Modifier.matchParentSize(),
             contentScale = ContentScale.Crop

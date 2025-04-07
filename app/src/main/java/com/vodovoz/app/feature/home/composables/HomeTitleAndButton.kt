@@ -51,7 +51,7 @@ fun TitleAndButton(
             ) {
 
                 Text(
-                    text = stringResource(id = R.string.all),
+                    text = button.name.ifEmpty { stringResource(id = R.string.all) },
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.bodyMedium
                 )

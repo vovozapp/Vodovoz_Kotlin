@@ -66,6 +66,7 @@ fun FavoriteBody(
                 onCategoryClick = { category ->
                     onCategoryClick(category)
                 },
+                showEmptyCategory = true,
                 onCategoriesListClick = {
                     onCategoriesListClick()
                 }

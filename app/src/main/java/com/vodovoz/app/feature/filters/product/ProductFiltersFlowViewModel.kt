@@ -92,11 +92,7 @@ class ProductFiltersFlowViewModel @Inject constructor(
                     uiState = ProductFiltersUiState.Success
                 )
             }
-        }.onFailure {
-            uiStateListener.updateData { s ->
-                s.copy(uiState = ProductFiltersUiState.Error)
-            }
-        }
+        }.onFailure { navigateBack() }
     }
 
 

@@ -33,6 +33,7 @@ import com.vodovoz.app.design_system.effects.LifecycleEffect
 import com.vodovoz.app.design_system.model.filters.FiltersUi
 import com.vodovoz.app.feature.home.model.CategoryUi
 import com.vodovoz.app.ui.model.CategoryUI
+import com.vodovoz.app.util.extensions.shareText
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
@@ -112,6 +113,10 @@ class PaginatedProductsCatalogWithoutFiltersFragment : Fragment() {
                                         event.categoryId,
                                         event.filters
                                     )
+                                }
+
+                                is ProductsListNoFilterFlowViewModel.ProductListNoFilterEvent.Share -> {
+                                    shareText(event.text)
                                 }
                             }
                         }
@@ -194,9 +199,6 @@ class PaginatedProductsCatalogWithoutFiltersFragment : Fragment() {
         class Brand(val brandId: Long) : DataSource()
 
         @Parcelize
-        class Country(val countryId: Long) : DataSource()
-
-        @Parcelize
         data object HurryBuyUpProducts : DataSource()
 
         @Parcelize
@@ -209,7 +211,7 @@ class PaginatedProductsCatalogWithoutFiltersFragment : Fragment() {
         data class ButtonProducts(val buttonId: Int) : DataSource()
 
         @Parcelize
-        data class Products(val groupId: Int, val blockId: Int) : DataSource()
+        data class Products(val bannerId: Long, val blockId: Long) : DataSource()
 
         @Parcelize
         data class Search(val query: String) : DataSource()

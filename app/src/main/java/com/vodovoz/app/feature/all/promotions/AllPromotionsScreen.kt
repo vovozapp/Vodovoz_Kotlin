@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -27,10 +28,9 @@ import com.vodovoz.app.feature.all.promotions.composables.PromotionsLoadingPlace
 fun AllPromotionsScreen(
     viewModel: AllPromotionsFlowViewModel,
     viewState: AllPromotionsFlowViewModel.AllPromotionsState,
-    navController: NavController,
+    lazyListState: LazyListState
 ) {
     val lazyPagingPromotions = viewState.pagedPromotions.collectAsLazyPagingItems()
-    val lazyListState = rememberLazyListState()
 
     Column(
         modifier = Modifier
@@ -79,25 +79,4 @@ fun AllPromotionsScreen(
         )
     }
 
-    LifecycleEffect {
-        viewModel.observeEvent().collect { event ->
-            when (event) {
-                AllPromotionsFlowViewModel.AllPromotionsEvent.ScrollTop -> {
-                    lazyListState.animateScrollToItem(0)
-                }
-
-                is AllPromotionsFlowViewModel.AllPromotionsEvent.GoToProductDetails -> {
-                    navController.navigate(
-                        AllPromotionsFragmentDirections.actionToPromotionDetailFragment(
-                            event.promotionId
-                        )
-                    )
-                }
-
-                AllPromotionsFlowViewModel.AllPromotionsEvent.GoBack -> {
-                    navController.popBackStack()
-                }
-            }
-        }
-    }
 }

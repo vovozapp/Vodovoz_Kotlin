@@ -7,11 +7,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
@@ -54,6 +56,7 @@ class FullScreenHistoriesSliderFlowFragment : Fragment() {
     }
 
 
+    @OptIn(ExperimentalSharedTransitionApi::class)
     @SuppressLint("UnsafeRepeatOnLifecycleDetector")
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -62,6 +65,7 @@ class FullScreenHistoriesSliderFlowFragment : Fragment() {
     ): View {
         val navController = findNavController()
         return ComposeView(requireContext()).apply {
+
             setViewCompositionStrategy(ViewCompositionStrategy.Default)
             setContent {
                 VodovozTheme {
@@ -73,9 +77,13 @@ class FullScreenHistoriesSliderFlowFragment : Fragment() {
                             data.currentStoryIndex
                         ) { data.stories.size } else rememberPagerState(data.currentStoryIndex) { data.stories.size }
 
+
                     when (viewState.data.uiState) {
                         FullScreenHistoriesSliderFlowViewModel.UiState.Loading -> {
-                            LoadingPlaceholder(containerColor = MaterialTheme.colorScheme.onBackground)
+                            LoadingPlaceholder(
+                                modifier = Modifier,
+                                containerColor = MaterialTheme.colorScheme.onBackground
+                            )
                         }
 
                         FullScreenHistoriesSliderFlowViewModel.UiState.Success -> {
@@ -86,6 +94,7 @@ class FullScreenHistoriesSliderFlowFragment : Fragment() {
                             )
                         }
                     }
+
 
                     val systemUiController = rememberSystemUiController()
 
@@ -194,10 +203,9 @@ class FullScreenHistoriesSliderFlowFragment : Fragment() {
             is ActionEntity.Promotion ->
                 FullScreenHistoriesSliderFlowFragmentDirections.actionToPromotionDetailFragment(this.promotionId)
 
-            is ActionEntity.Promotions -> FullScreenHistoriesSliderFlowFragmentDirections.actionToAllPromotionsFragment(
-                AllPromotionsFragment.DataSource.ByBanner(this.categoryId)
-            )
-
+            is ActionEntity.Promotions -> {
+                FullScreenHistoriesSliderFlowFragmentDirections.actionToPromotionDetailFragment(123)
+            }
             is ActionEntity.AllPromotions -> FullScreenHistoriesSliderFlowFragmentDirections.actionToAllPromotionsFragment(
                 AllPromotionsFragment.DataSource.All
             )

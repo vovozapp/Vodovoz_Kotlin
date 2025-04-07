@@ -25,13 +25,15 @@ class SiteStateManager @Inject constructor(
     private var siteStateListener = MutableStateFlow<SiteStateResponse?>(null)
     fun observeSiteState() = siteStateListener.asStateFlow()
 
+    val siteStateSnapshot get() = siteStateListener.value
+
     private val deepLinkPathListener = MutableStateFlow<String?>(null)
     fun observeDeepLinkPath() = deepLinkPathListener.asStateFlow()
 
     private val pushListener = MutableStateFlow<PushData?>(null)
     fun observePush() = pushListener.asStateFlow()
 
-    suspend fun requestSiteState() {
+    suspend fun requestSiteState(): SiteStateResponse? {
         if (siteStateListener.value == null) {
             runCatching {
                 //New api
@@ -57,6 +59,7 @@ class SiteStateManager @Inject constructor(
                 siteStateListener.value = null
             }
         }
+        return siteStateListener.value
     }
 
     suspend fun fetchSiteStateActive(): Boolean {

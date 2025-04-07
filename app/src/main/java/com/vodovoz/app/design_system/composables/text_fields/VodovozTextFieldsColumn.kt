@@ -1,19 +1,26 @@
 package com.vodovoz.app.design_system.composables.text_fields
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.vodovoz.app.R
 import com.vodovoz.app.design_system.composables.decoration.PasswordIcon
 import com.vodovoz.app.design_system.text.PhoneNumberVisualTransformation
 import com.vodovoz.app.feature.preorder.model.FieldUi
@@ -35,6 +42,17 @@ fun VodovozTextFieldsColumn(
             val isMessage = field.id.contains("message", true)
 
             key(field.id) {
+                val interactionSource = remember {
+                    MutableInteractionSource()
+                }
+                val isFocused by interactionSource.collectIsFocusedAsState()
+
+                if(field.id == "phone"){
+                    LaunchedEffect(isFocused) {
+                        if(isFocused) onFieldChange(field, field)
+                    }
+                }
+
                 VodovozTextField(
                     value = field.value,
                     onValueChange = { newValue ->
@@ -64,12 +82,17 @@ fun VodovozTextFieldsColumn(
                         else -> VisualTransformation.None
                     },
                     trailingIcon = {
-                        if(field.keyboardType == KeyboardType.Password){
+                        if (field.keyboardType == KeyboardType.Password) {
                             PasswordIcon(valueIsVisible = field.isValueVisible) {
-                                onFieldChange(field, field.copy(isValueVisible = !field.isValueVisible))
+                                onFieldChange(
+                                    field,
+                                    field.copy(isValueVisible = !field.isValueVisible)
+                                )
                             }
                         }
-                    }
+                    },
+                    prefix = null,
+                    interactionSource = interactionSource
                 )
             }
         }

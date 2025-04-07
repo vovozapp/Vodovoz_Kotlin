@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -71,7 +72,7 @@ fun HomeTopProducts(
         ) {
             items(currentCategoryWithProducts.products) { product ->
                 GridProductCard(
-                    modifier = Modifier.fillParentMaxWidth(0.49f),
+                    modifier = Modifier.width(160.dp),
                     product = product,
                     onClick = onProductClick,
                     onLike = onProductLike

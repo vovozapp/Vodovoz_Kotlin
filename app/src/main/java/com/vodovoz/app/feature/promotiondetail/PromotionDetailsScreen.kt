@@ -19,7 +19,6 @@ import com.vodovoz.app.feature.promotiondetail.composables.PromotionDetailsLoadi
 fun PromotionDetailsScreen(
     viewModel: PromotionDetailFlowViewModel,
     viewState: PromotionDetailFlowViewModel.PromotionDetailFlowState,
-    navController: NavController,
 ) {
     val lazyPagingProducts = viewState.products.collectAsLazyPagingItems()
 
@@ -37,20 +36,11 @@ fun PromotionDetailsScreen(
                 PromotionDetailsBody(
                     promotionDetails = viewState.promotionDetails,
                     lazyPagingProducts = lazyPagingProducts,
-                    productsTitle = viewState.productsTitle
+                    productsTitle = viewState.productsTitle,
+                    onHyperlinkClick = { url ->
+                        viewModel.navigateToWebView(url)
+                    }
                 )
-            }
-        }
-    }
-
-    val lifecycleOwner = LocalLifecycleOwner.current
-    LaunchedEffect(Unit) {
-        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            viewModel.observeEvent().collect { event ->
-                when (event) {
-                    PromotionDetailFlowViewModel.PromotionDetailEvent.GoBack -> navController.popBackStack()
-                }
-
             }
         }
     }

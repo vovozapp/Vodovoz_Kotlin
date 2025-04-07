@@ -14,8 +14,8 @@ import androidx.compose.ui.unit.dp
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.composables.button.VodovozButton
 import com.vodovoz.app.design_system.composables.floating.BottomFloatingContainer
+import com.vodovoz.app.design_system.composables.top_bar.HybridSearchTopBar
 import com.vodovoz.app.feature.filters.concrete.adapter.composable.FilterValuesBody
-import com.vodovoz.app.feature.filters.concrete.adapter.composable.FilterValuesTopBar
 
 @Suppress("NonSkippableComposable")
 @Composable
@@ -25,7 +25,7 @@ fun FilterValuesScreen(
 ) {
     Scaffold(
         topBar = {
-            FilterValuesTopBar(
+            HybridSearchTopBar(
                 title = viewState.filter.name,
                 searchQuery = viewState.searchQuery,
                 isSearchMode = viewState.isSearchMode,

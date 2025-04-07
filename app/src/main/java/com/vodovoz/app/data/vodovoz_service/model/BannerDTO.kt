@@ -15,5 +15,7 @@ data class BannerDTO(
     @Json(name = "NAME")
     val NAME: String?,
     @Json(name = "OREKLAME")
-    val OREKLAME: OREKLAME_DTO?
+    val OREKLAME: OREKLAME_DTO?,
+    @Json(name = "IBLOCK_ID")
+    val IBLOCK_ID: Long?,
 )

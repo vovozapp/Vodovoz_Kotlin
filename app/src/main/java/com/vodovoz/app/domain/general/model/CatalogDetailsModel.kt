@@ -2,10 +2,10 @@ package com.vodovoz.app.domain.general.model
 
 data class CatalogDetailsModel(
     val banners: List<BannerModel>,
-    val categories: List<CatalogCategoryModel>,
+    val categories: List<ParentCategoryModel>,
 )
 
-data class CatalogCategoryModel(
+data class ParentCategoryModel(
     val id: Long,
     val name: String,
     val picture: String,
@@ -13,5 +13,5 @@ data class CatalogCategoryModel(
     val parentId: Int?,
     val depthLevel: Int,
     val subcategoriesQuantity: Int,
-    val childCategories: List<CatalogCategoryModel>
+    val childCategories: List<ParentCategoryModel>
 )

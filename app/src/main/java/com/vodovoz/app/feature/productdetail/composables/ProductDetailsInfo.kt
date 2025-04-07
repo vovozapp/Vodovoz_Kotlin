@@ -2,7 +2,6 @@ package com.vodovoz.app.feature.productdetail.composables
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -98,6 +97,7 @@ fun ProductDetailsInfo(
                 .animateContentSize(),
             verticalAlignment = Alignment.Bottom
         ) {
+
             Text(
                 modifier = Modifier.weight(1f),
                 text = AnnotatedString.fromHtml(detailInfo.content),
@@ -105,17 +105,18 @@ fun ProductDetailsInfo(
                 style = MaterialTheme.typography.bodySmall,
                 maxLines = if(showDetailText) Int.MAX_VALUE else 4
             )
-            Icon(
-                painter = painterResource(id = R.drawable.ic_arrow_down),
-                contentDescription = null,
-                modifier = Modifier
-                    .padding(start = 16.dp)
-                    .size(24.dp)
-                    .clip(MaterialTheme.shapes.small)
-                    .rotate(animatedRotateFloat)
-                    .clickable { onDetailTextSwitch() },
-                tint = MaterialTheme.colorScheme.surfaceTint
-            )
+
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_arrow_down),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(start = 16.dp)
+                        .size(24.dp)
+                        .clip(MaterialTheme.shapes.small)
+                        .rotate(animatedRotateFloat)
+                        .clickable { onDetailTextSwitch() },
+                    tint = MaterialTheme.colorScheme.surfaceTint
+                )
         }
 
         Text(
@@ -134,18 +135,23 @@ fun ProductDetailsInfo(
                 .animateContentSize(),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            val minCharacteristic = 4
             val commonCharacteristics = (contentBlockCharacteristics.content.firstOrNull()
                 ?: CharacteristicsBlockUi.Empty).characteristics
 
-            commonCharacteristics.take(if (showAllProperties) commonCharacteristics.size else 5)
-                .forEach { characteristic ->
+
+            val showedCharacteristics = commonCharacteristics.take(
+                if (showAllProperties) commonCharacteristics.size else minCharacteristic
+            )
+
+            showedCharacteristics.forEach { characteristic ->
                     CharacteristicItem(
                         modifier = Modifier.fillMaxWidth(),
                         characteristic = characteristic
                     )
                 }
 
-            if (!showAllProperties) {
+            if (!showAllProperties && minCharacteristic < commonCharacteristics.size) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_arrow_down),
                     contentDescription = null,

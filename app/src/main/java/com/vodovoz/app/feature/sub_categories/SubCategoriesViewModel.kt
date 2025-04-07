@@ -2,7 +2,7 @@ package com.vodovoz.app.feature.sub_categories
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.vodovoz.app.feature.catalog.model.CatalogCategoryUi
+import com.vodovoz.app.design_system.model.ParentCategoryUi
 import com.vodovoz.app.feature.sub_categories.model.SubCategoriesEvent
 import com.vodovoz.app.feature.sub_categories.model.SubCategoriesState
 import com.vodovoz.app.ui.mvi.MviViewModel
@@ -14,7 +14,7 @@ class SubCategoriesViewModel(
 ) : MviViewModel<SubCategoriesState, SubCategoriesEvent>(SubCategoriesState()) {
 
     private val catalogCategoryArg =
-        savedStateHandle.get<CatalogCategoryUi>("category") ?: CatalogCategoryUi.Empty
+        savedStateHandle.get<ParentCategoryUi>("category") ?: ParentCategoryUi.Empty
 
     init {
         setInitialCatalogCategory()
@@ -26,7 +26,7 @@ class SubCategoriesViewModel(
         }
     }
 
-    fun chooseCatalogCategory(catalogCategory: CatalogCategoryUi) = viewModelScope.launch {
+    fun chooseCatalogCategory(catalogCategory: ParentCategoryUi) = viewModelScope.launch {
         if (catalogCategory.childCategories.isNotEmpty()) {
             _events.emit(SubCategoriesEvent.GoToSubCategories(catalogCategory))
         }
@@ -47,7 +47,7 @@ class SubCategoriesViewModel(
         _events.emit(SubCategoriesEvent.GoBack)
     }
 
-    fun chooseParentCatalogCategory(catalogCategory: CatalogCategoryUi) = viewModelScope.launch {
+    fun chooseParentCatalogCategory(catalogCategory: ParentCategoryUi) = viewModelScope.launch {
         _events.emit(SubCategoriesEvent.GoToProductList(catalogCategory.id))
     }
 

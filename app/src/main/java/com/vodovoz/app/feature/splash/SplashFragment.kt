@@ -2,6 +2,7 @@ package com.vodovoz.app.feature.splash
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.WindowCompat
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -57,8 +58,14 @@ class SplashFragment : BaseFragment() {
     @Inject
     lateinit var reloginManager: ReloginManager
 
+    override fun onStop() {
+        super.onStop()
+        WindowCompat.setDecorFitsSystemWindows(requireActivity().window, true)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(requireActivity().window, false)
         if (savedInstanceState == null) {
             firstLoad()
         }
@@ -75,7 +82,7 @@ class SplashFragment : BaseFragment() {
             reloginManager.userReloginEnded.collect {
                 when (it) {
                     is ReloginManager.ReloginState.ReloginSuccess -> {
-//                        cartFlowViewModel.firstLoad()
+                        cartFlowViewModel.firstLoad()
                         profileViewModel.fetchFirstUserData()
                         viewModel.sendFirebaseToken()
                     }
@@ -93,6 +100,7 @@ class SplashFragment : BaseFragment() {
         catalogViewModel.firstLoad()
         favoriteViewModel.firstLoad()
         profileViewModel.firstLoad()
+
     }
 
     private fun refreshLoad() {
@@ -105,7 +113,7 @@ class SplashFragment : BaseFragment() {
         homeViewModel.refresh()
         catalogViewModel.refresh()
         cartFlowViewModel.refreshIdle()
-        favoriteViewModel.refreshIdle()
+        favoriteViewModel.refresh()
         profileViewModel.refresh()
         accountManager.fetchAccountId()
     }

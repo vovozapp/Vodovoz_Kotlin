@@ -28,6 +28,8 @@ import com.vodovoz.app.core.navigation.navigateToCategoryProductList
 import com.vodovoz.app.core.navigation.navigateToPreOrder
 import com.vodovoz.app.core.navigation.navigateToProductComments
 import com.vodovoz.app.core.navigation.navigateToProductDetails
+import com.vodovoz.app.core.navigation.navigateToProductImages
+import com.vodovoz.app.core.navigation.navigateToRutubeVideo
 import com.vodovoz.app.core.navigation.navigateToSearch
 import com.vodovoz.app.core.navigation.navigateToSearchProductList
 import com.vodovoz.app.design_system.VodovozTheme
@@ -36,6 +38,7 @@ import com.vodovoz.app.design_system.composables.placeholders.EmptyResultPlaceho
 import com.vodovoz.app.design_system.composables.placeholders.LoadingPlaceholder
 import com.vodovoz.app.design_system.effects.LifecycleEffect
 import com.vodovoz.app.feature.replacement.ReplacementProductsSelectionBS
+import com.vodovoz.app.util.extensions.copyText
 import com.vodovoz.app.util.extensions.shareText
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -229,6 +232,18 @@ class ProductDetailsFragment : Fragment() {
 
                 is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToSearchProductList -> {
                     findNavController().navigateToSearchProductList(event.query)
+                }
+
+                is ProductDetailsFlowViewModel.ProductDetailsEvents.Copy -> {
+                    requireContext().copyText(event.text)
+                }
+
+                is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToProductImages -> {
+                    findNavController().navigateToProductImages(event.image, event.images)
+                }
+
+                is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToRutubeVideo -> {
+                    findNavController().navigateToRutubeVideo(event.video.code)
                 }
             }
         }

@@ -20,6 +20,8 @@ import com.vodovoz.app.data.vodovoz_service.model.VodovozErrorResponseDTO
 import com.vodovoz.app.data.vodovoz_service.model.VodovozResponseDTO
 import com.vodovoz.app.domain.general.VodovozPagingSource
 import com.vodovoz.app.domain.general.model.BannerModel
+import com.vodovoz.app.domain.general.model.BrandModel
+import com.vodovoz.app.domain.general.model.BrandSectionModel
 import com.vodovoz.app.domain.general.model.CatalogDetailsModel
 import com.vodovoz.app.domain.general.model.CertificateActivationDetailsModel
 import com.vodovoz.app.domain.general.model.ChangePasswordDetailsModel
@@ -30,6 +32,7 @@ import com.vodovoz.app.domain.general.model.FieldModel
 import com.vodovoz.app.domain.general.model.FilterValueModel
 import com.vodovoz.app.domain.general.model.FiltersModel
 import com.vodovoz.app.domain.general.model.OrderWithMenuModel
+import com.vodovoz.app.domain.general.model.ParentCategoryModel
 import com.vodovoz.app.domain.general.model.PopularCategoryModel
 import com.vodovoz.app.domain.general.model.PopupWindowInfoModel
 import com.vodovoz.app.domain.general.model.PreOrderSectionModel
@@ -77,6 +80,178 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     private val accountManager: AccountManager,
     private val moshi: Moshi,
 ) : VodovozServiceRepository {
+    override fun getBrands(
+        searchQuery: String,
+    ): Flow<Result<BrandSectionModel>> {
+        return executeRequest(
+            request = {
+                vodovozService.getBrands(
+                    page = if (searchQuery.isBlank()) 1 else null,
+                    search = searchQuery.takeIf { s -> s.isNotEmpty() }
+                )
+            },
+            mapper = { vodovozResponse ->
+                vodovozResponse.checkError()
+                vodovozResponse.data!!.toDomain()
+            }
+        )
+    }
+
+    override fun getBrandsPaged(
+        searchQuery: String,
+    ): Flow<PagingData<BrandModel>> {
+        return Pager(
+            config = PagingConfig(pageSize = 5),
+            pagingSourceFactory = {
+                VodovozPagingSource(
+                    request = { page, _ ->
+                        if(page > 1 && searchQuery.isNotBlank()){
+                            throw EmptyResultException()
+                        }
+                        vodovozService.getBrands(
+                            page = if (searchQuery.isBlank()) page else null,
+                            search = searchQuery.takeIf { s -> s.isNotEmpty() }
+                        )
+                    },
+                    mapper = { response ->
+                        response.checkError()
+                        response.data?.DATA?.mapToDomain() ?: throw IllegalArgumentException("Brands can't be null")
+                    }
+                )
+            }
+        ).flow
+    }
+
+    override fun getBrandProducts(
+        brandId: Long,
+        sort: SortModel,
+        categoryId: Int,
+    ): Flow<Result<ProductsSectionModel>> {
+        return executeRequest(
+            request = {
+                vodovozService.getBrandProducts(
+                    brandId = brandId,
+                    page = 1,
+                    sort = sort.value,
+                    order = sort.order,
+                    categoryId = categoryId.takeIf { categoryId >= 0 }
+                )
+            },
+            mapper = { response ->
+                response.checkError()
+                response.data?.TOVAR?.toDomain()!!
+            }
+        )
+    }
+
+    override fun getBrandProductsPaged(
+        brandId: Long,
+        sort: SortModel,
+        categoryId: Int,
+    ): Flow<PagingData<ProductModel>> {
+        return Pager(
+            config = PagingConfig(pageSize = 5),
+            pagingSourceFactory = {
+                VodovozPagingSource(
+                    request = { page, _ ->
+                        vodovozService.getBrandProducts(
+                            brandId = brandId,
+                            page = page,
+                            sort = sort.value,
+                            order = sort.order,
+                            categoryId = categoryId.takeIf { categoryId >= 0 }
+                        )
+                    },
+                    mapper = { response ->
+                        response.checkError()
+                        response.data?.TOVAR?.TOVAR?.mapToDomain()
+                            ?: throw IllegalArgumentException("Brand products can't be null")
+                    }
+                )
+            }
+        ).flow
+    }
+
+    override fun getBannerPromotions(
+        bannerId: Long,
+        blockId: Long,
+        categoryId: Int,
+    ): Flow<Result<PromotionsSectionModel>> {
+        return executeRequest(
+            request = {
+                vodovozService.getBannerPromotions(
+                    bannerId = bannerId,
+                    blockId = blockId,
+                    categoryId = categoryId.takeIf { categoryId >= 0 }
+                )
+            },
+            mapper = {
+                it.data!!.toDomain()
+            }
+        )
+    }
+
+    override fun getBannerPromotionsPaged(
+        bannerId: Long,
+        blockId: Long,
+        categoryId: Int,
+    ): Flow<PagingData<PromotionModel>> {
+
+        TODO("Not yet implemented")
+    }
+
+    override fun getBannerProducts(
+        bannerId: Long,
+        blockId: Long,
+        sort: SortModel,
+        categoryId: Int,
+    ): Flow<Result<ProductsSectionModel>> {
+        return executeRequest(
+            request = {
+                vodovozService.getBannerProducts(
+                    bannerId = bannerId,
+                    blockId = blockId,
+                    sort = sort.value,
+                    order = sort.order,
+                    categoryId = categoryId.takeIf { categoryId >= 0 }
+                )
+            },
+            mapper = { response ->
+                response.checkError()
+                response.data!!.toDomain()
+            }
+        )
+    }
+
+    override fun getBannerProductsPaged(
+        bannerId: Long,
+        blockId: Long,
+        sort: SortModel,
+        categoryId: Int,
+    ): Flow<PagingData<ProductModel>> {
+        return Pager(
+            config = PagingConfig(pageSize = 5),
+            pagingSourceFactory = {
+                VodovozPagingSource(
+                    request = { page, _ ->
+                        vodovozService.getBannerProducts(
+                            bannerId = bannerId,
+                            blockId = blockId,
+                            order = sort.order,
+                            sort = sort.value,
+                            page = page,
+                            categoryId = categoryId.takeIf { categoryId >= 0 }
+                        )
+                    },
+                    mapper = { response ->
+                        response.checkError()
+                        response.data?.DATA?.mapNotNull { product -> product.toDomain() }
+                            ?: throw IllegalArgumentException("Banner products can't be null")
+                    }
+                )
+            }
+        ).flow
+    }
 
     override fun getLoginDetails(): Flow<Result<AuthDetailsModel>> {
         return executeRequest(
@@ -100,7 +275,8 @@ class VodovozServiceRepositoryImpl @Inject constructor(
             },
             onFail = { response ->
                 val errorBody = moshi.fromJson<VodovozErrorResponseDTO>(response.stringBody())
-                val message = errorBody.message ?: throw RequestException(response.messageWithCode())
+                val message =
+                    errorBody.message ?: throw RequestException(response.messageWithCode())
                 throw ValidationException(message = message)
             }
         )
@@ -262,7 +438,10 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     override fun activateCertificate(field: FieldUi): Flow<Result<String>> {
         return executeRequest(
             request = {
-                vodovozService.activateCertificate(accountManager.fetchAccountId() ?: -1, mapOf(field.id to field.value.trim()))
+                vodovozService.activateCertificate(
+                    accountManager.fetchAccountId() ?: -1,
+                    mapOf(field.id to field.value.trim())
+                )
             },
             mapper = {
                 it.message ?: ""
@@ -303,14 +482,18 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                 val jsonBody = response.stringBody()
 
 
-                throw when(response.code()){
+                throw when (response.code()) {
                     404 -> {
                         val errorDTO = moshi.fromJson<VodovozResponseDTO<String>>(
-                            jsonBody,
-                            Types.newParameterizedType(VodovozResponseDTO::class.java, String::class.java)
+                            json = jsonBody,
+                            type = Types.newParameterizedType(
+                                VodovozResponseDTO::class.java,
+                                String::class.java
+                            )
                         )
                         ValidationException(message = errorDTO.message ?: "")
                     }
+
                     else -> {
                         RequestException(response.messageWithCode())
                     }
@@ -350,6 +533,17 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         )
     }
 
+    override fun getCategoryTree(categoryId: Long): Flow<Result<List<ParentCategoryModel>>> {
+        return executeRequest(
+            request = {
+                vodovozService.getCategoryTree(categoryId)
+            },
+            mapper = {
+                it.data!!.mapToDomain()
+            }
+        )
+    }
+
     override fun getCategoryProducts(
         categoryId: Long,
         filters: FiltersModel,
@@ -367,14 +561,14 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                     priceFrom = filters.priceRange.first.toFloat()
                 )
             },
-            mapper = {
-                it.data!!.toDomain()
-            },
-            onFail = { response ->
-                if (response.code() == 404) {
-                    throw EmptyResultException(htmlText = "", message = response.messageWithCode())
+            mapper = { response ->
+                response.checkError { errorData ->
+                    throw EmptyResultException(
+                        errorData = errorData,
+                        message = errorData.descriptionHtml
+                    )
                 }
-                throw RequestException(response.messageWithCode())
+                response.data!!.toDomain()
             }
         )
     }
@@ -405,6 +599,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                         )
                     },
                     mapper = { response ->
+                        response.checkError()
                         response.data?.DATA?.mapNotNull { product -> product.toDomain() }
                             ?: throw IllegalArgumentException("Paged search products can't be null")
                     }
@@ -434,6 +629,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                         )
                     },
                     mapper = { response ->
+                        response.checkError()
                         response.data?.TOVAR?.mapNotNull { product -> product.toDomain() }
                             ?: throw IllegalArgumentException("Paged search products can't be null")
                     }
@@ -448,14 +644,9 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                 vodovozService.getSearchProducts(query = query)
             },
             mapper = { response ->
+                response.checkError()
                 response.data?.toDomain()!!
             },
-            onFail = { response ->
-                if (response.code() == 404) {
-                    throw EmptyResultException(htmlText = "", message = response.messageWithCode())
-                }
-                throw RequestException(response.messageWithCode())
-            }
         )
     }
 
@@ -496,19 +687,13 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                 vodovozService.getMiniSearchRecommendations(query)
             },
             mapper = { responseDTO ->
+                responseDTO.checkError()
                 responseDTO.data?.toDomain()!!
             },
             onFail = { response ->
                 val jsonBody = (response.errorBody() ?: response.raw().body)?.string() ?: ""
 
                 val throwable = when (response.code()) {
-                    200 -> {
-                        EmptyResultException(
-                            htmlText = "",
-                            message = response.messageWithCode()
-                        )
-                    }
-
                     404 -> {
                         val errorMessageResponseDTO =
                             moshi.fromJson<ErrorMessageResponseDTO>(jsonBody)
@@ -531,7 +716,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                 vodovozService.getSiteState()
             },
             mapper = { response ->
-                response.toDomain()
+                response!!.toDomain()
             }
         )
     }
@@ -830,21 +1015,29 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     }
 
 
-    override fun getPromotionsWithSections(): Flow<Result<PromotionsSectionModel>> =
+    override fun getPromotionsWithSections(categoryId: Int): Flow<Result<PromotionsSectionModel>> =
         executeRequest(
-            request = { vodovozService.getPromotionsWithSections() },
+            request = {
+                vodovozService.getPromotionsWithSections(
+                    categoryId = categoryId.takeIf { categoryId >= 0 }
+                )
+            },
             mapper = { response ->
                 response.data!!.toDomain()
             },
         )
 
-    override fun getPromotionsPaged(limit: Int): Flow<PagingData<PromotionModel>> {
+    override fun getPromotionsPaged(limit: Int, categoryId: Int): Flow<PagingData<PromotionModel>> {
         return Pager(
             config = PagingConfig(pageSize = limit, initialLoadSize = limit),
             pagingSourceFactory = {
                 VodovozPagingSource(
                     request = { page, limit ->
-                        vodovozService.getPromotionsWithSections(page, limit)
+                        vodovozService.getPromotionsWithSections(
+                            page = page,
+                            limit = limit,
+                            categoryId = categoryId.takeIf { categoryId >= 0 }
+                        )
                     },
                     mapper = { promotionsDTOVodovozResponseDTO ->
                         promotionsDTOVodovozResponseDTO.data?.toDomain()?.promotions ?: emptyList()
@@ -868,7 +1061,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     override fun getPopularCategories(): Flow<Result<SectionModel<PopularCategoryModel>>> =
         executeRequest(
             request = {
-                vodovozService.getPopularSections()
+                vodovozService.getPopularCategories()
             },
             mapper = { popularCategoriesDTOVodovozResponseDTO ->
                 popularCategoriesDTOVodovozResponseDTO.data?.toDomain()!!
@@ -899,7 +1092,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         sort: SortModel,
     ): Flow<PagingData<ProductModel>> {
         return Pager(
-            config = PagingConfig(4, 4),
+            config = PagingConfig(5),
             pagingSourceFactory = {
                 VodovozPagingSource(
                     request = { page, _ ->
@@ -979,6 +1172,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
             vodovozService.getAllSuperTop(id.toLong())
         },
         mapper = { superTopResponse ->
+            superTopResponse.checkError()
             superTopResponse.data?.toDomain()
                 ?: throw IllegalArgumentException("AllSuperTop can't be null")
         }
@@ -1003,6 +1197,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                         )
                     },
                     mapper = { response ->
+                        response.checkError()
                         response.data?.DATA?.mapToDomain() ?: emptyList()
                     }
                 )

@@ -13,6 +13,7 @@ import android.view.ViewTreeObserver
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat.Type
 import androidx.fragment.app.Fragment
@@ -134,9 +135,8 @@ fun TextInputEditText.openKeyboard() {
 }
 
 fun Context.copyText(text: String) {
-    val clipboard =
-        this.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-    val clip: ClipData = ClipData.newPlainText("Label", text)
+    val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    val clip: ClipData = ClipData.newPlainText("Copied text", text)
     clipboard.setPrimaryClip(clip)
 }
 

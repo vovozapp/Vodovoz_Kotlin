@@ -30,7 +30,6 @@ import com.vodovoz.app.util.extensions.singleResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.firstOrNull
@@ -58,23 +57,6 @@ class LoginFlowViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            siteStateManager
-                .observeSiteState()
-                .collect { siteState ->
-                    if (siteState != null) {
-                        uiStateListener.updateData { s ->
-                            //TODO - change siteState.requestUrl to new state
-                            s.copy(requestUrl = siteState.requestUrl, showRegisterText = siteState.requestUrl == null)
-                        }
-                    } else {
-                        siteStateManager.requestSiteState()
-                        delay(2000L)
-                    }
-                }
-
-        }
-
-        viewModelScope.launch {
             val settings = accountManager.fetchUserSettings()
             val phone = loginManager.fetchLastAuthPhone()
             viewModelScope.launch {
@@ -94,11 +76,12 @@ class LoginFlowViewModel @Inject constructor(
     private var timerIsCancel = true
 
     fun fetchLoginDetails() = viewModelScope.launch {
-        uiStateListener.updateData { s ->
-            s.copy(uiState = LoginUiState.Loading)
-        }
+        uiStateListener.updateData { s -> s.copy(uiState = LoginUiState.Loading) }
 
         val loginDetailsResult = vodovozServiceRepository.getLoginDetails().singleResult()
+        val siteState = siteStateManager.requestSiteState()
+        val agreementText = AgreementController.getText()
+        val showRegisterText = siteState?.requestUrl == null
 
         loginDetailsResult.onSuccess { loginDetails ->
             uiStateListener.updateData { s ->
@@ -108,18 +91,22 @@ class LoginFlowViewModel @Inject constructor(
                     navigationButton = loginDetails.navigationButton.toUi(),
                     mainButton = loginDetails.mainButton.toUi(),
                     fields = loginDetails.fields.mapToUi(),
-                    agreementTextHtml = AgreementController.getText(),
+                    agreementTextHtml = agreementText,
                     uiState = LoginUiState.Success,
                     showAgreements = loginDetails.hasAgreement,
+                    showRegisterText = showRegisterText,
                     mainButtonEnabled = false,
                     mainButtonLoading = false,
                 )
             }
-        }.onFailure {
+        }
+
+        if (siteState == null || loginDetailsResult.isFailure) {
             uiStateListener.updateData { s ->
                 s.copy(uiState = LoginUiState.Error)
             }
         }
+
     }
 
     fun signIn() {
@@ -383,11 +370,6 @@ class LoginFlowViewModel @Inject constructor(
         }
     }
 
-    fun showPassword() {
-        uiStateListener.value =
-            state.copy(data = state.data.copy(showPassword = !state.data.showPassword))
-    }
-
     fun navigateBack() = viewModelScope.launch {
         eventListener.emit(LoginEvents.GoBack)
     }
@@ -395,7 +377,11 @@ class LoginFlowViewModel @Inject constructor(
     fun changeField(field: FieldUi, updatedField: FieldUi) = viewModelScope.launch {
         uiStateListener.updateData { s ->
             val updatedFields = s.fields.updateFieldAndResetErrors(field, updatedField)
-            s.copy(fields = updatedFields, mainButtonEnabled = updatedFields.checkFields() && s.agreementChecked)
+
+            s.copy(
+                fields = updatedFields,
+                mainButtonEnabled = updatedFields.checkFields() && s.agreementChecked
+            )
         }
     }
 

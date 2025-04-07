@@ -26,28 +26,25 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.vodovoz.app.R
-import com.vodovoz.app.feature.catalog.model.CatalogCategoryUi
+import com.vodovoz.app.design_system.model.ParentCategoryUi
 import com.vodovoz.app.util.TransliterationUtils
 
 @Composable
 fun SubCategoriesBody(
     modifier: Modifier = Modifier,
     searchQuery: String,
-    catalogCategory: CatalogCategoryUi,
-    onCategoryClick: (CatalogCategoryUi) -> Unit,
-    onParentCategoryClick: (CatalogCategoryUi) -> Unit,
+    catalogCategory: ParentCategoryUi,
+    onCategoryClick: (ParentCategoryUi) -> Unit,
+    onParentCategoryClick: (ParentCategoryUi) -> Unit,
 ) {
 
     val childCategories = catalogCategory.childCategories
     val filteredCategories = remember(childCategories, searchQuery) {
-
         val cyrillicSearchQuery = TransliterationUtils.latinToCyrillic(searchQuery)
 
         childCategories.filter { category ->
-            category.name.contains(
-                searchQuery,
-                true
-            ) || category.name.contains(cyrillicSearchQuery, true)
+            category.name.contains(searchQuery, true)
+                    || category.name.contains(cyrillicSearchQuery, true)
         }
     }
 
@@ -95,8 +92,8 @@ fun SubCategoriesBody(
 @Composable
 fun SubCategoryItem(
     modifier: Modifier = Modifier,
-    category: CatalogCategoryUi,
-    onCategoryClick: (CatalogCategoryUi) -> Unit,
+    category: ParentCategoryUi,
+    onCategoryClick: (ParentCategoryUi) -> Unit,
 ) {
     Row(
         modifier = modifier

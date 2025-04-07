@@ -23,7 +23,7 @@ fun AKCIYA_DTO.toDomain(): PromotionDetailsModel? {
         name = NAME ?: return null,
         description = DETAIL_TEXT ?: "",
         endDate = mapToZonedDateTime(DATAOUT ?: return null) ?: return null,
-        advertising = OREKLAME?.toDomain() ?: return null,
+        advertising = OREKLAME?.toDomain(),
         label = HIT?.toDomain()
     )
 }

@@ -86,7 +86,7 @@ fun RegisterScreen(
                             viewModel.register()
                         },
                         onNavigationButtonClick = {
-                            viewModel.navigateBack()
+                            viewModel.navigateToLogin()
                         },
                         onMainButtonClick = {
                             viewModel.register()

@@ -26,7 +26,7 @@ fun STORY_DTO.toDomain(): StoryModel? {
 
 fun VNYTRENNOST_DTO.toDomain(): ActionWithButtonModel? {
     return ActionWithButtonModel(
-        action = ACTION_DTO(ACTION, ID).toAction() ?: return null,
+        action = ACTION_DTO(ACTION, ID).toAction(73) ?: return null,
         colorfulButton = KNOPKA?.toDomain() ?: return null
     )
 }

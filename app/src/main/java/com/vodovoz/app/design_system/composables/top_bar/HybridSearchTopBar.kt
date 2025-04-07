@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.filters.concrete.adapter.composable
+package com.vodovoz.app.design_system.composables.top_bar
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope
@@ -21,16 +21,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.composables.ClickableIcon
-import com.vodovoz.app.design_system.composables.top_bar.BasicSearchField
 
 @Composable
-fun FilterValuesTopBar(
+fun HybridSearchTopBar(
     modifier: Modifier = Modifier,
     title: String,
     searchQuery: String,
@@ -119,8 +119,10 @@ fun FilterValuesTopBar(
 
             ClickableIcon(
                 modifier = Modifier.clip(CircleShape),
-                painter = painterResource(id = if (!isSearchMode) R.drawable.icon_search else R.drawable.icon_close),
-                tint = MaterialTheme.colorScheme.onBackground,
+                painter = painterResource(id = if (!isSearchMode) R.drawable.icon_search else R.drawable.ic_clean),
+                tint = if (!isSearchMode) MaterialTheme.colorScheme.onBackground
+                    else if (searchQuery.isBlank()) Color.Transparent
+                    else MaterialTheme.colorScheme.surfaceTint,
                 onClick = { onSearchModeChange(!isSearchMode) }
             )
         }

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 
@@ -51,12 +52,13 @@ class ConcreteFilterFlowFragment : Fragment() {
             setContent {
                 VodovozTheme {
                     val pagingState by viewModel.observeUiState().collectAsStateWithLifecycle()
-                    val viewState = pagingState.data
+                    val viewState by rememberUpdatedState(pagingState.data)
 
-                    when(viewState.uiState){
+                    when (viewState.uiState) {
                         ConcreteFilterFlowViewModel.ConcreteFilterUiState.Loading -> {
                             LoadingPlaceholder()
                         }
+
                         ConcreteFilterFlowViewModel.ConcreteFilterUiState.Success -> {
                             FilterValuesScreen(viewModel = viewModel, viewState = viewState)
                         }

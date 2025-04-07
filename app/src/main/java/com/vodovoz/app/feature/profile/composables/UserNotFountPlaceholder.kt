@@ -34,7 +34,7 @@ fun UserNotFountPlaceholder(
     description: String,
     image: String,
     button: ColorfulButtonUi,
-    onButtonClick: (ColorfulButtonUi) -> Unit,
+    onButtonClick: () -> Unit,
 ) {
     Column(modifier = modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         Box(modifier = Modifier.height(56.dp).fillMaxWidth(), contentAlignment = Alignment.CenterStart) {
@@ -86,7 +86,7 @@ fun UserNotFountPlaceholder(
         VodovozButton(
             modifier = Modifier.padding(top = 42.dp, start = 16.dp, end = 16.dp),
             text = button.name,
-            onClick = { onButtonClick(button) },
+            onClick = { onButtonClick() },
             colors = ButtonDefaults.buttonColors(
                 containerColor = button.backgroundColor.takeOrElse {
                     MaterialTheme.colorScheme.primary

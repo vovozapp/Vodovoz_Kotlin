@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.fragment.findNavController
 import com.vodovoz.app.R
+import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.android.activate
 import com.vodovoz.app.core.navigation.navigateToCategoryProductList
 import com.vodovoz.app.core.navigation.navigateToSearch
@@ -20,10 +21,14 @@ import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.effects.LifecycleEffect
 import com.vodovoz.app.feature.sub_categories.model.SubCategoriesEvent
 import com.vodovoz.app.util.extensions.debugLog
+import javax.inject.Inject
 
 class SubCategoriesFragment : Fragment() {
 
     val viewModel by viewModels<SubCategoriesViewModel>()
+
+    @Inject
+    lateinit var tabManager: TabManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -62,7 +67,7 @@ class SubCategoriesFragment : Fragment() {
                                 }
 
                                 is SubCategoriesEvent.ActivateDataAllAction -> {
-                                    event.action.activate(findNavController())
+                                    event.action.activate(findNavController(), tabManager)
                                 }
                             }
 

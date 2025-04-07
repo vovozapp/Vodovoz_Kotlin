@@ -12,7 +12,7 @@
 
         <argument
             android:name="category"
-            app:argType="com.vodovoz.app.feature.catalog.model.CatalogCategoryUi" />
+            app:argType="com.vodovoz.app.design_system.model.ParentCategoryUi" />
 
     </fragment>
 

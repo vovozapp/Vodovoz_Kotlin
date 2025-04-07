@@ -2,26 +2,24 @@ package com.vodovoz.app.feature.productlistnofilter
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.painterResource
+import coil3.compose.rememberAsyncImagePainter
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.composables.bottom_sheet.SortOptionsBottomSheet
-import com.vodovoz.app.design_system.composables.list.ProductListTitle
 import com.vodovoz.app.design_system.composables.placeholders.EmptyResultPlaceholder
 import com.vodovoz.app.design_system.composables.placeholders.LoadingPlaceholder
 import com.vodovoz.app.design_system.composables.placeholders.NetworkErrorPlaceholder
 import com.vodovoz.app.design_system.composables.top_bar.VodovozSearchTopBar
+import com.vodovoz.app.feature.productlistnofilter.composables.CategoriesBottomSheet
 import com.vodovoz.app.feature.productlistnofilter.composables.ProductsNoFilterBody
 
 
@@ -78,7 +76,7 @@ fun ProductsNoFiltersScreen(
             }
         ) {
 
-            when (viewState.uiState) {
+            when (val uiState = viewState.uiState) {
                 ProductsListNoFilterFlowViewModel.UiState.Error -> {
                     NetworkErrorPlaceholder { viewModel.refresh() }
                 }
@@ -98,6 +96,9 @@ fun ProductsNoFiltersScreen(
                         products = viewState.products,
                         productsLoadStates = viewState.productsLoadStates,
                         isGridView = viewState.isGridView,
+                        showFilters = viewState.showFilters,
+                        showCategoryList = viewState.showCategoryList,
+                        showEmptyCategory = viewState.showEmptyCategory,
                         onProductSee = { index ->
                             viewModel.notifyPagingProducts(index)
                         },
@@ -111,7 +112,7 @@ fun ProductsNoFiltersScreen(
                             viewModel.selectCategory(category)
                         },
                         onCategoriesListClick = {
-                            viewModel.navigateToCategories()
+                            viewModel.showCategoriesBottomSheet()
                         },
                         onProductClick = { product ->
                             viewModel.navigateToProductDetails(product)
@@ -119,16 +120,23 @@ fun ProductsNoFiltersScreen(
                         onProductLike = { product ->
                             viewModel.changeFavorite(product)
                         },
-                        onFiltersClick = if (viewModel.dataSource is PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Category) {
-                            { viewModel.navigateToProductFilters() }
-                        } else null
+                        onFiltersClick = {
+                            viewModel.navigateToProductFilters()
+                        },
+                        onShareClick = {
+                            viewModel.shareProducts()
+                        }
                     )
+
                 }
 
-                ProductsListNoFilterFlowViewModel.UiState.Empty -> {
+                is ProductsListNoFilterFlowViewModel.UiState.Empty -> {
                     EmptyResultPlaceholder(
-                        title = stringResource(id = R.string.empty_products_title),
-                        description = stringResource(id = R.string.empty_products_description)
+                        title = uiState.title,
+                        description = uiState.description,
+                        imagePainter = if (uiState.image.isNotBlank()) {
+                            rememberAsyncImagePainter(uiState.image)
+                        } else painterResource(id = R.drawable.pic_search)
                     )
                 }
             }
@@ -141,6 +149,22 @@ fun ProductsNoFiltersScreen(
             currentSort = viewState.currentSort,
             sorting = viewState.productsSection.sorting,
             onSortSelect = { sort -> viewModel.selectSort(sort) }
+        )
+    }
+
+    if (viewState.showCategoriesBottomSheet) {
+        CategoriesBottomSheet(
+            categories = viewState.categoryTree,
+            currentCategory = viewState.currentBottomSheetCategory,
+            onDismissRequest = {
+                viewModel.hideCategoriesBottomSheet()
+            },
+            onCategoryClick = { category ->
+                viewModel.selectBottomSheetCategory(category)
+            },
+            onCategoryChoose = {
+                viewModel.chooseBottomSheetCategory()
+            }
         )
     }
 

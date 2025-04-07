@@ -1,7 +1,9 @@
 package com.vodovoz.app.feature.productdetail.fullscreen
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.WindowCompat
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -20,11 +22,13 @@ class FullScreenDetailPicturesSliderFragment : DialogFragment(R.layout.dialog_pr
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.FullScreenDialog)
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
+        dialog?.window?.statusBarColor = Color.WHITE
     }
 
     private fun initView() {

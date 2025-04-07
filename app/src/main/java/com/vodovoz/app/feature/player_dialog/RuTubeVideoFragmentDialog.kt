@@ -1,20 +1,24 @@
 package com.vodovoz.app.feature.player_dialog
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import android.annotation.SuppressLint
+import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
+import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import com.gapps.library.api.VideoService.Companion.build
+import com.gapps.library.api.models.video.VideoPreviewModel
 import com.vodovoz.app.R
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.databinding.DialogFragmentRutubeVideoBinding
+import com.vodovoz.app.feature.player_dialog.model.VodovozChromeClient
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 
@@ -23,9 +27,11 @@ class RuTubeVideoFragmentDialog : DialogFragment() {
 
     private lateinit var binding: DialogFragmentRutubeVideoBinding
     private lateinit var videoCode: String
+    private lateinit var videoInfo: VideoPreviewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setStyle(STYLE_NORMAL, R.style.FullScreenDialog)
         getArgs()
     }
@@ -48,6 +54,12 @@ class RuTubeVideoFragmentDialog : DialogFragment() {
         initVideoService()
     }.root
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        dialog?.window?.statusBarColor = Color.WHITE
+    }
+
+
     private fun initVideoService() {
         val okHttpClient = OkHttpClient.Builder()
             .connectTimeout(15, TimeUnit.SECONDS)
@@ -62,24 +74,40 @@ class RuTubeVideoFragmentDialog : DialogFragment() {
         }
 
         videoService.loadVideoPreview(
-            ApiConfig.RUTUBE_URL + videoCode,
+            url = ApiConfig.RUTUBE_URL + videoCode,
             onSuccess = { model ->
+                videoInfo = model
                 val linkToPlay = model.linkToPlay
                 with(binding.rutubePlayerView) {
-                    layoutParams.apply {
-                        if (model.width != 0) {
-                            val windowWidth = resources.displayMetrics.widthPixels
-                            this.width = windowWidth
-                            this.height = this.width * model.height / model.width
-                        }
-                    }
+                    updateWebViewSize(false)
                     if (linkToPlay != null) {
                         loadUrl(linkToPlay)
                     }
                 }
-            })
+            }
+        )
     }
 
+    private fun updateWebViewSize(landscapeOrientation: Boolean) {
+        val windowWidth = resources.displayMetrics.widthPixels
+        val windowHeight = resources.displayMetrics.heightPixels
+        val rutubePlayerView = binding.rutubePlayerView
+        rutubePlayerView.layoutParams = rutubePlayerView.layoutParams.apply {
+            width = windowWidth
+            height = if (landscapeOrientation) {
+                windowHeight
+            } else {
+                windowWidth * videoInfo.height / videoInfo.width
+            }
+        }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        updateWebViewSize(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
     private fun initView() {
         binding.close.setOnClickListener {
             dismiss()
@@ -91,33 +119,33 @@ class RuTubeVideoFragmentDialog : DialogFragment() {
                 override fun shouldOverrideUrlLoading(
                     view: WebView?,
                     request: WebResourceRequest?,
-                ): Boolean {
-                    return true
-                }
+                ): Boolean = true
             }
 
-            webChromeClient = object : WebChromeClient() {
-                override fun getDefaultVideoPoster(): Bitmap? {
-                    return if (super.getDefaultVideoPoster() == null) {
-                        try {
-                            BitmapFactory.decodeResource(
-                                context.resources,
-                                com.gapps.library.R.drawable.ic_vna_play_icon
-                            )
-                        } catch (e: Exception) {
-                            null
-                        }
-                    } else {
-                        super.getDefaultVideoPoster()
-                    }
-                }
-            }
+            webChromeClient = VodovozChromeClient(
+                getDecorView = { dialog?.window?.decorView },
+                getResources = { requireContext().resources },
+                getActivity = { requireActivity() }
+            )
 
             settings.apply {
                 javaScriptEnabled = true
                 domStorageEnabled = true
+                allowFileAccess = true
+                cacheMode = WebSettings.LOAD_DEFAULT
+                mediaPlaybackRequiresUserGesture = false
             }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        binding.rutubePlayerView.saveState(outState)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        binding.rutubePlayerView.restoreState(savedInstanceState ?: return)
     }
 
 }

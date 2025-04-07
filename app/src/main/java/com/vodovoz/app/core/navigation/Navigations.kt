@@ -4,15 +4,67 @@ import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import com.vodovoz.app.R
+import com.vodovoz.app.design_system.model.ParentCategoryUi
 import com.vodovoz.app.design_system.model.filters.FilterUi
 import com.vodovoz.app.design_system.model.filters.FiltersUi
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
-import com.vodovoz.app.feature.catalog.model.CatalogCategoryUi
 import com.vodovoz.app.feature.home.model.CategoryUi
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 
+fun NavController.navigateToButtonProductList(buttonId: Int) {
+    navigate(
+        R.id.paginatedProductsCatalogWithoutFiltersFragment,
+        bundleOf(
+            "dataSource" to PaginatedProductsCatalogWithoutFiltersFragment.DataSource.ButtonProducts(
+                buttonId
+            )
+        )
+    )
+}
 
-fun NavController.navigateToRegister(){
+fun NavController.navigateToOrdersHistory() {
+    navigate(R.id.allOrdersFragment)
+}
+
+fun NavController.navigateToOrderDetails(orderId: Int) {
+    navigate(R.id.orderDetailsFragment, bundleOf("orderId" to orderId.toLong()))
+}
+
+fun NavController.navigateToProductImages(image: String, images: List<String>) {
+    val array = images.toTypedArray()
+    val currentImageIndex = images.indexOf(image)
+    val bundle = bundleOf("startPosition" to currentImageIndex, "detailPictureList" to array)
+    navigate(
+        R.id.fullScreenDetailPicturesSliderFragment, bundle, NavOptions.Builder()
+            .setEnterAnim(R.anim.fade_in)
+            .setPopExitAnim(R.anim.fade_out)
+            .build()
+    )
+}
+
+fun NavController.navigateToRutubeVideo(videoCode: String) {
+    val bundle = bundleOf("videoId" to videoCode)
+    navigate(
+        R.id.ruTubeVideoFragmentDialog, bundle, NavOptions.Builder()
+            .setEnterAnim(R.anim.fade_in)
+            .setPopExitAnim(R.anim.fade_out)
+            .build()
+    )
+}
+
+
+fun NavController.navigateToStories(storyId: Long) {
+    val bundle = bundleOf("startHistoryId" to storyId)
+    navigate(
+        R.id.fullScreenHistorySliderFragment, bundle, NavOptions.Builder()
+            .setEnterAnim(R.anim.scale_in)
+            .setExitAnim(R.anim.fade_out)
+            .setPopExitAnim(R.anim.slide_out_botton)
+            .build()
+    )
+}
+
+fun NavController.navigateToRegister() {
     navigate(R.id.registerFragment)
 }
 
@@ -118,7 +170,7 @@ fun NavController.navigateToCategories(category: CategoryUi, categories: List<Ca
 }
 
 
-fun NavController.navigateToSubCategories(category: CatalogCategoryUi) {
+fun NavController.navigateToSubCategories(category: ParentCategoryUi) {
     navigate(
         R.id.subCategoriesFragment,
         bundleOf("category" to category),
@@ -165,6 +217,18 @@ fun NavController.navigateToCategoryProductList(categoryId: Long) {
     )
 }
 
+fun NavController.navigateToBannerProductList(bannerId: Long, blockId: Long) {
+    navigate(
+        R.id.paginatedProductsCatalogWithoutFiltersFragment,
+        bundleOf(
+            "dataSource" to PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Products(
+                bannerId, blockId
+            )
+        )
+    )
+
+}
+
 fun NavController.navigateToProductDetails(productId: Long) {
     navigate(
         R.id.productDetailFragment,
@@ -182,7 +246,9 @@ fun NavController.navigateToPromotionDetails(promotionId: Long) {
 fun NavController.navigateToPromotions(blockId: Long, bannerId: Long) {
     navigate(
         R.id.allPromotionsFragment,
-        bundleOf("dataSource" to AllPromotionsFragment.DataSource.ByBanner(blockId))
+        bundleOf(
+            "dataSource" to AllPromotionsFragment.DataSource.ByBanner(bannerId, blockId)
+        )
     )
 }
 

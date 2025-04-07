@@ -54,8 +54,8 @@ class ConcreteFilterFlowViewModel @Inject constructor(
 
                 )
             }
-        }.onFailure { t ->
-            delay(300L)
+        }.onFailure {
+            delay(150L)
             navigateBack()
         }
     }

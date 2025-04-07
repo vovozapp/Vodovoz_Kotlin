@@ -20,11 +20,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.vodovoz.app.design_system.composables.chip.TimeLeftChip
@@ -40,6 +44,7 @@ fun PromotionDetailsBody(
     promotionDetails: PromotionDetailsUi,
     lazyPagingProducts: LazyPagingItems<ProductUi>,
     productsTitle: String,
+    onHyperlinkClick: (String) -> Unit
 ) {
 
     val lazyGridState = rememberLazyGridState()
@@ -55,7 +60,9 @@ fun PromotionDetailsBody(
         item(span = { GridItemSpan(2) }) {
             Column {
                 AsyncImage(
-                    model = promotionDetails.picture,
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(promotionDetails.picture).crossfade(true)
+                        .build(),
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -83,7 +90,7 @@ fun PromotionDetailsBody(
                     text = AnnotatedString.fromHtml(
                         promotionDetails.description,
                         vodovozTextLinkStyle
-                    ),
+                    ) { linkAnnotation -> if(linkAnnotation is LinkAnnotation.Url) onHyperlinkClick(linkAnnotation.url) },
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.bodySmall
                 )

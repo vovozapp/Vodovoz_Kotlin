@@ -24,10 +24,10 @@ fun CatalogScreen(viewModel: CatalogFlowViewModel, viewState: CatalogFlowViewMod
                     viewModel.navigateToSearch()
                 },
                 onMicClick = {
-
+                    viewModel.showSpeechRecognizer()
                 },
                 onScanClick = {
-
+                    viewModel.navigateToScanner()
                 },
                 onSearchClick = {
                     viewModel.navigateToSearch()
@@ -49,8 +49,8 @@ fun CatalogScreen(viewModel: CatalogFlowViewModel, viewState: CatalogFlowViewMod
                         onCategoryClick = { catalogCategory ->
                             viewModel.chooseCategory(catalogCategory)
                         },
-                        onBannerClick = {
-
+                        onBannerClick = { banner ->
+                            viewModel.activateBannerAction(banner)
                         },
                         onAboutAdvertisingClick = {
                             viewModel.showAdvertisingBottomSheet(it)

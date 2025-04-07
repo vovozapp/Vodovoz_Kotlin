@@ -3,6 +3,9 @@ package com.vodovoz.app.data.vodovoz_service
 import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.data.vodovoz_service.model.AnalogsSectionDTO
 import com.vodovoz.app.data.vodovoz_service.model.BannerDTO
+import com.vodovoz.app.data.vodovoz_service.model.BrandProductsSectionDTO
+import com.vodovoz.app.data.vodovoz_service.model.BrandSectionDTO
+import com.vodovoz.app.data.vodovoz_service.model.CATEGORY_NODE_DTO
 import com.vodovoz.app.data.vodovoz_service.model.CertificateActivationDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.FieldsDTO
 import com.vodovoz.app.data.vodovoz_service.model.MiniSearchRecommendationsDTO
@@ -10,7 +13,6 @@ import com.vodovoz.app.data.vodovoz_service.model.OrderMenuDTO
 import com.vodovoz.app.data.vodovoz_service.model.PopularCategoriesDTO
 import com.vodovoz.app.data.vodovoz_service.model.PopupWindowDTO
 import com.vodovoz.app.data.vodovoz_service.model.PreOrderDTO
-import com.vodovoz.app.data.vodovoz_service.model.VodovozErrorResponseDTO
 import com.vodovoz.app.data.vodovoz_service.model.PresentDTO
 import com.vodovoz.app.data.vodovoz_service.model.ProductCommentsDTO
 import com.vodovoz.app.data.vodovoz_service.model.ProductsSectionDTO
@@ -23,6 +25,7 @@ import com.vodovoz.app.data.vodovoz_service.model.SearchRecommendationsDTO
 import com.vodovoz.app.data.vodovoz_service.model.SiteStateResponseDTO
 import com.vodovoz.app.data.vodovoz_service.model.StoriesDTO
 import com.vodovoz.app.data.vodovoz_service.model.SuperTopAndBottomSectionsDTO
+import com.vodovoz.app.data.vodovoz_service.model.VodovozErrorResponseDTO
 import com.vodovoz.app.data.vodovoz_service.model.VodovozResponseDTO
 import com.vodovoz.app.data.vodovoz_service.model.catalog.CatalogDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.filters.FiltersDTO
@@ -41,6 +44,34 @@ import retrofit2.http.Query
 import retrofit2.http.QueryMap
 
 interface VodovozService {
+
+    /**
+     * Brand requests
+     * */
+    @GET("brand.php?action=detail")
+    suspend fun getBrandProducts(
+        @Query("id") brandId: Long,
+        @Query("nav") page: Int = 1,
+        @Query("sort") sort: String = "",
+        @Query("ascdesc") order: String = "",
+        @Query("sect") categoryId: Int? = null,
+    ): Response<VodovozResponseDTO<BrandProductsSectionDTO>>
+
+    @GET("brand.php?action=brand")
+    suspend fun getBrands(
+        @Query("nav") page: Int? = null,
+        @Query("search") search: String? = null
+    ): Response<VodovozResponseDTO<BrandSectionDTO>>
+
+
+    /**
+     * Category requests
+     * */
+    @GET("razdel/category.php?iblock_id=12")
+    suspend fun getCategoryTree(
+        @Query("id") categoryId: Long,
+    ): Response<VodovozResponseDTO<List<CATEGORY_NODE_DTO>>>
+
 
     /**
      * Login requests
@@ -176,7 +207,7 @@ interface VodovozService {
      * Main requests
      * */
     @GET("config/closesait.php?action=saitosnova&android=${BuildConfig.VERSION_NAME}")
-    suspend fun getSiteState(): Response<SiteStateResponseDTO>
+    suspend fun getSiteState(): Response<SiteStateResponseDTO?>
 
     /**
      * PreOrder screen
@@ -260,12 +291,13 @@ interface VodovozService {
 
 
     /**
-     * Promotions screens
+     * Promotion screens
      */
     @GET("glavnaya/akcii.php?action=akcii")
     suspend fun getPromotionsWithSections(
         @Query("nav") page: Int = 1,
         @Query("limit") limit: Int = 10,
+        @Query("sect") categoryId: Int? = null
     ): Response<VodovozResponseDTO<PromotionsDTO>>
 
     @GET("glavnaya/akcii.php?action=detail")
@@ -281,6 +313,24 @@ interface VodovozService {
     @GET("glavnaya/slayders/index.php?action=slayder&android=${BuildConfig.VERSION_NAME}")
     suspend fun getBanners(
     ): Response<VodovozResponseDTO<List<BannerDTO>>>
+
+    @GET("osnova/banners.php")
+    suspend fun getBannerProducts(
+        @Query("id") bannerId: Long,
+        @Query("iblock") blockId: Long,
+        @Query("nav") page: Int = 1,
+        @Query("sort") sort: String = "",
+        @Query("ascdesc") order: String = "",
+        @Query("sect") categoryId: Int? = null
+    ): Response<VodovozResponseDTO<ProductsSectionDTO>>
+
+    @GET("osnova/banners.php")
+    suspend fun getBannerPromotions(
+        @Query("id") bannerId: Long,
+        @Query("iblock") blockId: Long,
+        @Query("nav") page: Int = 1,
+        @Query("sect") categoryId: Int? = null
+    ): Response<VodovozResponseDTO<PromotionsDTO>>
 
     @GET("glavnaya/otzivtovari.php?action=tovarglav")
     suspend fun getUnratedProductsDetails(
@@ -312,7 +362,7 @@ interface VodovozService {
     ): Response<VodovozResponseDTO<OrderMenuDTO>>
 
     @GET("glavnaya/razdel.php?action=popylrazdel")
-    suspend fun getPopularSections(): Response<VodovozResponseDTO<PopularCategoriesDTO>>
+    suspend fun getPopularCategories(): Response<VodovozResponseDTO<PopularCategoriesDTO>>
 
     @GET("glavnaya/akcii.php?action=akcii&limit=10")
     suspend fun getPromotions(): Response<VodovozResponseDTO<PromotionsDTO>>

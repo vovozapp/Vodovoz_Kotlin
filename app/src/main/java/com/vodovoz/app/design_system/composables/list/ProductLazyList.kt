@@ -2,6 +2,7 @@ package com.vodovoz.app.design_system.composables.list
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridScope
-import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
@@ -19,6 +19,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
@@ -26,8 +27,6 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import com.valentinilk.shimmer.Shimmer
-import com.valentinilk.shimmer.ShimmerBounds
-import com.valentinilk.shimmer.rememberShimmer
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.composables.card.GridProductCard
 import com.vodovoz.app.design_system.composables.card.LinearProductCard
@@ -83,49 +82,6 @@ fun ProductLazyList(
     }
 }
 
-@Suppress("NonSkippableComposable")
-@Composable
-fun ProductLazyPagingList(
-    lazyGridState: LazyGridState,
-    products: List<ProductUi>,
-    loadStates: CombinedLoadStates,
-    modifier: Modifier = Modifier,
-    isGridView: Boolean,
-    onProductSee: (Int) -> Unit,
-    onProductClick: (ProductUi) -> Unit,
-    onProductLike: (ProductUi) -> Unit,
-) {
-    val shimmer = rememberShimmer(shimmerBounds = ShimmerBounds.View)
-
-    LazyVerticalGrid(
-        state = lazyGridState,
-        columns = GridCells.Fixed(2),
-        modifier = modifier.fillMaxSize(),
-        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        if (isGridView) {
-            gridProducts(
-                products,
-                loadStates,
-                shimmer,
-                onProductSee,
-                onProductClick,
-                onProductLike
-            )
-        } else {
-            linearProducts(
-                products,
-                loadStates,
-                shimmer,
-                onProductSee,
-                onProductClick,
-                onProductLike
-            )
-        }
-    }
-}
-
 fun LazyGridScope.linearProducts(
     products: List<ProductUi>,
     loadState: CombinedLoadStates,
@@ -136,31 +92,6 @@ fun LazyGridScope.linearProducts(
 ) {
 
     when (loadState.refresh) {
-        is LoadState.Error -> {
-            item(span = { GridItemSpan(2) }) {
-                EmptyResultPlaceholder(
-                    title = stringResource(id = R.string.empty_products_title),
-                    description = stringResource(id = R.string.empty_products_description)
-                )
-            }
-        }
-
-        LoadState.Loading -> {
-            items(6, span = { GridItemSpan(2) }) { i ->
-                Column {
-                    SkeletonBox(
-                        shimmerState = shimmerState,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(150.dp)
-                    )
-                    if (i != products.size - 1) {
-                        Spacer(modifier = Modifier.height(16.dp))
-                    }
-                }
-            }
-        }
-
         is LoadState.NotLoading -> {
             items(
                 items = products,
@@ -187,6 +118,23 @@ fun LazyGridScope.linearProducts(
             }
 
         }
+
+        else -> {
+            items(6, span = { GridItemSpan(2) }) { i ->
+                Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                    SkeletonBox(
+                        shimmerState = shimmerState,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(150.dp)
+                    )
+                    if (i != products.size - 1) {
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
+                }
+            }
+        }
+
     }
 
 
@@ -219,44 +167,13 @@ fun LazyGridScope.gridProducts(
 ) {
 
     when (loadState.refresh) {
-        is LoadState.Error -> {
-            item(span = { GridItemSpan(2) }) {
-                EmptyResultPlaceholder(
-                    title = stringResource(id = R.string.empty_products_title),
-                    description = stringResource(id = R.string.empty_products_description)
-                )
-            }
-        }
-
-        LoadState.Loading -> {
-            items(8) { i ->
-                Column {
-                    SkeletonBox(
-                        shimmerState = shimmerState,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(255.dp)
-                    )
-                    if (i != products.size - 1) {
-                        Spacer(modifier = Modifier.height(8.dp))
-                    }
-                }
-            }
-        }
-
         is LoadState.NotLoading -> {
             items(products.size, span = { GridItemSpan(1) }) { index ->
                 LaunchedEffect(index) {
                     onProductSee(index)
                 }
-                val isStartPadding = index % 2 == 0
 
-                Column(
-                    modifier = Modifier.padding(
-                        start = if (isStartPadding) 16.dp else 0.dp,
-                        end = if (!isStartPadding) 16.dp else 0.dp
-                    )
-                ) {
+                GridHorizontalPadding(isStartPadding = index % 2 == 0) {
                     GridProductCard(
                         product = products[index],
                         onClick = onProductClick,
@@ -270,19 +187,30 @@ fun LazyGridScope.gridProducts(
             }
 
         }
+
+        else -> {
+            items(8) { index ->
+                GridHorizontalPadding(isStartPadding = index % 2 == 0) {
+                    SkeletonBox(
+                        shimmerState = shimmerState,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(255.dp)
+                    )
+                    if (index != products.size - 1) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                }
+            }
+        }
+
+
     }
 
-    items((products.size % 2) + 2, span = { GridItemSpan(1) }) { index ->
+    val countAppend = (products.size % 2) + 2
+    items(countAppend, span = { GridItemSpan(1) }) { index ->
         if (loadState.append is LoadState.Loading) {
-
-            val isStartPadding = index % 2 == 0
-
-            Column(
-                modifier = Modifier.padding(
-                    start = if (isStartPadding) 16.dp else 0.dp,
-                    end = if (!isStartPadding) 16.dp else 0.dp
-                )
-            ) {
+            GridHorizontalPadding(isStartPadding = if (countAppend % 2 == 0) index % 2 == 0 else index % 2 == 1) {
                 SkeletonBox(
                     shimmerState = shimmerState,
                     modifier = Modifier
@@ -294,6 +222,24 @@ fun LazyGridScope.gridProducts(
         }
     }
 
+}
+
+@Composable
+inline fun GridHorizontalPadding(
+    isStartPadding: Boolean,
+    modifier: Modifier = Modifier,
+    isEndPadding: Boolean = !isStartPadding,
+    padding: Dp = 16.dp,
+    content: ColumnScope.() -> Unit,
+) {
+    Column(
+        modifier = modifier.padding(
+            start = if (isStartPadding) padding else 0.dp,
+            end = if (isEndPadding) padding else 0.dp
+        )
+    ) {
+        content()
+    }
 }
 
 

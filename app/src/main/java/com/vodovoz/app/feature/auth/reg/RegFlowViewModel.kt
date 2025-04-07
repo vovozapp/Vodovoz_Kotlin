@@ -26,6 +26,7 @@ import com.vodovoz.app.feature.preorder.model.checkFields
 import com.vodovoz.app.feature.preorder.model.mapToUi
 import com.vodovoz.app.feature.preorder.model.toDomain
 import com.vodovoz.app.feature.preorder.model.updateFieldAndResetErrors
+import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.singleResult
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -46,9 +47,13 @@ class RegFlowViewModel @Inject constructor(
     private val likeManager: LikeManager,
     private val vodovozServiceRepository: VodovozServiceRepository,
     private val resourceProvider: ResourcesProvider,
+    private val siteStateManager: SiteStateManager
 ) : PagingContractViewModel<RegFlowViewModel.RegState, RegFlowViewModel.RegEvents>(RegState()) {
 
     init {
+        viewModelScope.launch {
+            siteStateManager.requestSiteState()
+        }
         fetchRegisterDetails()
     }
 
@@ -220,6 +225,14 @@ class RegFlowViewModel @Inject constructor(
         }
     }
 
+    fun navigateToLogin() = viewModelScope.launch {
+        if(siteStateManager.siteStateSnapshot?.requestUrl == null){
+            eventListener.emit(RegEvents.GoToLoginByEmail)
+        }else{
+            eventListener.emit(RegEvents.GoToLogin)
+        }
+    }
+
 
     sealed class RegEvents : Event {
         data object RegSuccess : RegEvents()
@@ -229,6 +242,9 @@ class RegFlowViewModel @Inject constructor(
 
         data object GoBack : RegEvents()
         data object GoToProfile : RegEvents()
+        data object GoToLoginByEmail : RegEvents()
+        data object GoToLogin: RegEvents()
+
     }
 
     @Immutable

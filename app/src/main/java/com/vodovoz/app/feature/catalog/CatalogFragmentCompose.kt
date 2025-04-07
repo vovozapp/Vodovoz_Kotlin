@@ -24,7 +24,9 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.vodovoz.app.R
 import com.vodovoz.app.common.account.data.AccountManager
+import com.vodovoz.app.common.cookie.CookieManager
 import com.vodovoz.app.common.permissions.PermissionsController
+import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.android.activate
 import com.vodovoz.app.core.navigation.navigateToCategoryProductList
@@ -49,6 +51,10 @@ class CatalogFragment : Fragment() {
 
     @Inject
     lateinit var accountManager: AccountManager
+
+    @Inject
+    lateinit var cookieManager: CookieManager
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +90,23 @@ class CatalogFragment : Fragment() {
         }
     }
 
+    private fun startSpeechRecognizer() {
+        permissionsController.methodRequiresRecordAudioPermission {
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.RECORD_AUDIO
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return@methodRequiresRecordAudioPermission
+            }
+            SpeechDialogFragment().show(childFragmentManager, "TAG")
+        }
+    }
+
+
+
+
+
     private fun observeEvents() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -108,7 +131,24 @@ class CatalogFragment : Fragment() {
                             }
 
                             is CatalogFlowViewModel.CatalogEvents.ActivateDataAllAction -> {
-                                event.action.activate(findNavController())
+                                event.action.activate(findNavController(), tabManager)
+                            }
+
+                            CatalogFlowViewModel.CatalogEvents.GoToScanner -> {
+                                navigateToQrCodeFragment()
+                            }
+
+                            CatalogFlowViewModel.CatalogEvents.ShowSpeechRecognizer -> {
+                                startSpeechRecognizer()
+                            }
+
+                            is CatalogFlowViewModel.CatalogEvents.ActivateVodovozAction -> {
+                                event.action.activate(
+                                    navController = findNavController(),
+                                    activity = requireActivity(),
+                                    cookie = cookieManager.fetchCookieSessionId() ?: "",
+                                    tabManager = tabManager
+                                )
                             }
                         }
                     }

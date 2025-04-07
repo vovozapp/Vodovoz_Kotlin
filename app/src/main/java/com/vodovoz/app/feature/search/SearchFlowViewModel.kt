@@ -24,6 +24,7 @@ import com.vodovoz.app.data.model.common.SearchQueryResponse
 import com.vodovoz.app.design_system.model.ProductUi
 import com.vodovoz.app.design_system.model.SectionUi
 import com.vodovoz.app.design_system.model.toUi
+import com.vodovoz.app.design_system.model.withUpdatedFavorites
 import com.vodovoz.app.domain.general.model.EmptyResultException
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
@@ -49,6 +50,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -90,6 +92,22 @@ class SearchFlowViewModel @Inject constructor(
     init {
         handleQueries()
         listenSearchHistory()
+        listenFavorites()
+    }
+
+    private fun listenFavorites() = viewModelScope.launch {
+        uiStateListener.map { pagingState -> pagingState.data.sectionRecommendations.items }
+            .combine(likeManager.observeLikes()) { products, favorites ->
+                products to favorites
+            }.collectLatest { (products, favorites) ->
+                uiStateListener.updateData { s ->
+                    s.copy(
+                        sectionRecommendations = s.sectionRecommendations.copy(
+                            items = products.withUpdatedFavorites(favorites)
+                        )
+                    )
+                }
+            }
     }
 
     private fun listenSearchHistory() = viewModelScope.launch {
@@ -162,7 +180,13 @@ class SearchFlowViewModel @Inject constructor(
         }.onFailure { error ->
 
             val uiState = when (error) {
-                is EmptyResultException -> UiState.Empty(error.htmlText)
+                is EmptyResultException -> with(error.errorData) {
+                    UiState.Empty(
+                        description = this?.descriptionHtml ?: "",
+                        image = this?.imageUrl ?: ""
+                    )
+                }
+
                 else -> UiState.Error
             }
 
@@ -719,7 +743,7 @@ class SearchFlowViewModel @Inject constructor(
     }
 
     fun navigateToScan() = viewModelScope.launch {
-
+        eventListener.emit(SearchEvents.GoToScanner)
     }
 
     fun navigateBack() = viewModelScope.launch {
@@ -728,6 +752,14 @@ class SearchFlowViewModel @Inject constructor(
 
     fun removeSearchQuery(searchQuery: String) = viewModelScope.launch {
         searchManager.removeQueryFromHistory(searchQuery)
+    }
+
+    fun changeFavorite(product: ProductUi) = viewModelScope.launch {
+        likeManager.changeFavorite(product.id, !product.isFavorite)
+    }
+
+    fun navigateToProductDetails(product: ProductUi) = viewModelScope.launch {
+        eventListener.emit(SearchEvents.GoToProductDetails(product.id))
     }
 
     sealed class SearchEvents : Event {
@@ -742,10 +774,13 @@ class SearchFlowViewModel @Inject constructor(
         data class GoToProductList(val searchDataSource: PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Search) :
             SearchEvents()
 
+        data class GoToProductDetails(val id: Long) : SearchEvents()
+
         data object GoToContacts : SearchEvents()
 
         data object GoToPromotions : SearchEvents()
         data object GoBack : SearchEvents()
+        data object GoToScanner : SearchEvents()
     }
 
     @Immutable
@@ -773,7 +808,7 @@ class SearchFlowViewModel @Inject constructor(
     sealed interface UiState {
         data object Loading : UiState
         data object Success : UiState
-        data class Empty(val htmlText: String) : UiState
+        data class Empty(val image: String, val description: String) : UiState
         data object Error : UiState
 
     }

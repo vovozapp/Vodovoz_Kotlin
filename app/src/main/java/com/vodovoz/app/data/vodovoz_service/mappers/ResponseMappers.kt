@@ -64,7 +64,7 @@ inline fun <T, R> executeVodovozRequest(
 
 inline fun <T> VodovozResponseDTO<T>.checkError(
     throwError: (ErrorDataModel) -> Nothing = { it ->
-        throw EmptyResultException(errorData = it)
+        throw EmptyResultException(errorData = it, message = message ?: "")
     }
 ) {
     val errorModel = this.error?.toDomain() ?: return

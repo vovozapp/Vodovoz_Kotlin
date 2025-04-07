@@ -14,19 +14,16 @@ import com.vodovoz.app.domain.general.model.PriceModel
 import com.vodovoz.app.domain.general.model.ProductModel
 import com.vodovoz.app.domain.general.model.ProductsSectionModel
 import com.vodovoz.app.domain.general.model.ShareModel
-// https://vodovoz.net/newmobile_new/glavnaya/novinki.php?new=specpredlosh&detail=Y&android=1.5.55&nav=1&sect=-1&sort=&ascdesc=
-
-// https://vodovoz.net/newmobile_new/glavnaya/novinki.php?new=novinki&detail=Y&nav=1&sect=-1&sort=&ascdesc=
 
 fun ProductsSectionDTO.toDomain(): ProductsSectionModel {
     return ProductsSectionModel(
         title = TITLE ?: "",
         sortingTitle = SORTIROVKA?.NAMEGLAV ?: "",
-        productsQuantityText = TOVARVSEGO ?: "",
+        productsQuantityText = TOVARVSEGO ?: COUNT ?: "",
         sorting = SORTIROVKA?.DANNIESORT?.mapNotNull { it?.toDomain() } ?: emptyList(),
         products = DATA?.mapToDomain() ?: emptyList(),
         categories = RAZDEL?.LISTRAZDEL?.mapNotNull { it?.toDomain() } ?: emptyList(),
-        share = PODELITCA?.toDomain()
+        share = PODELITCA?.toDomain() ?: ShareModel.Empty
     )
 }
 
@@ -55,7 +52,8 @@ fun AnalogsSectionDTO.toDomain(): ProductsSectionModel {
         sorting = sorting,
         products = products,
         categories = emptyList(),
-        productsQuantityText = ""
+        productsQuantityText = "",
+        share = ShareModel.Empty
     )
 }
 

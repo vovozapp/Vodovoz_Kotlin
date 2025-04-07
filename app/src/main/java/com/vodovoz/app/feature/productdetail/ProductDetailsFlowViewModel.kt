@@ -18,7 +18,9 @@ import com.vodovoz.app.design_system.model.CommentUi
 import com.vodovoz.app.design_system.model.ProductDetailsButtonsUi
 import com.vodovoz.app.design_system.model.ProductDetailsTabUi
 import com.vodovoz.app.design_system.model.ProductDetailsUi
+import com.vodovoz.app.design_system.model.ProductMediaUi
 import com.vodovoz.app.design_system.model.ProductUi
+import com.vodovoz.app.design_system.model.ProductVideoUi
 import com.vodovoz.app.design_system.model.SectionUi
 import com.vodovoz.app.design_system.model.mapToUi
 import com.vodovoz.app.design_system.model.toUi
@@ -140,51 +142,46 @@ class ProductDetailsFlowViewModel @Inject constructor(
 
     }
 
-    fun fetchProductDetail() {
-        viewModelScope.launch {
-            vodovozServiceRepository.getProductDetails(state.productDetails.id)
-                .onEach { productDetailsScreenResult ->
-                    productDetailsScreenResult.onSuccess { productDetailsScreenModel ->
-                        val moreProducts = productDetailsScreenModel.moreProducts
+    fun fetchProductDetails() = viewModelScope.launch {
+        vodovozServiceRepository.getProductDetails(state.productDetails.id)
+            .onEach { productDetailsScreenResult ->
+                productDetailsScreenResult.onSuccess { productDetailsScreenModel ->
+                    val moreProducts = productDetailsScreenModel.moreProducts
 
-                        uiStateListener.update { s ->
-                            s.copy(
-                                comments = productDetailsScreenModel.comments.mapToUi(),
-                                productDetails = productDetailsScreenModel.productDetails.toUi(),
-                                sectionAccessory = moreProducts.sectionAccessory.toUi { list ->
-                                    val uiList = list.map { productModel -> productModel.toUi() }
-                                    uiList.take(list.size - (list.size % 2))
+                    uiStateListener.update { s ->
+                        s.copy(
+                            comments = productDetailsScreenModel.comments.mapToUi(),
+                            productDetails = productDetailsScreenModel.productDetails.toUi(),
+                            sectionAccessory = moreProducts.sectionAccessory.toUi { list ->
+                                val uiList = list.map { productModel -> productModel.toUi() }
+                                uiList.take(list.size - (list.size % 2))
 
-                                },
-                                sectionSimilarProducts = moreProducts.sectionSimilar.toUi { list ->
-                                    val uiList = list.map { productModel -> productModel.toUi() }
-                                    uiList.take(list.size - (list.size % 2))
-                                },
-                                buttons = productDetailsScreenModel.buttons.toUi(),
-                                tabs = productDetailsScreenModel.tabs.map { it.toUi() },
-                                uiState = UiState.Success
-                            )
-                        }
-
-                        val productDetails = state.productDetails
-
-                        aboutProductManager.updateInfo(
-                            tabs = state.tabs,
-                            characteristicBlockList = productDetails.characteristics,
-                            documents = productDetails.documents,
-                            fullDescription = productDetails.detailInfo
+                            },
+                            sectionSimilarProducts = moreProducts.sectionSimilar.toUi { list ->
+                                val uiList = list.map { productModel -> productModel.toUi() }
+                                uiList.take(list.size - (list.size % 2))
+                            },
+                            buttons = productDetailsScreenModel.buttons.toUi(),
+                            tabs = productDetailsScreenModel.tabs.map { it.toUi() },
+                            uiState = UiState.Success
                         )
-
-                    }.onFailure {
-                        uiStateListener.update { s ->
-                            s.copy(
-                                uiState = UiState.ProductNotFound
-                            )
-                        }
                     }
 
-                }.collect()
-        }
+                    val productDetails = state.productDetails
+
+                    aboutProductManager.updateInfo(
+                        tabs = state.tabs,
+                        characteristicBlockList = productDetails.characteristics,
+                        documents = productDetails.documents,
+                        fullDescription = productDetails.detailInfo
+                    )
+
+                }.onFailure {
+                    uiStateListener.update { s ->
+                        s.copy(uiState = UiState.ProductNotFound)
+                    }
+                }
+            }.collect()
     }
 
     private fun fetchPresentInfo() {
@@ -501,7 +498,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
                 uiState = UiState.Loading
             )
         }
-        fetchProductDetail()
+        fetchProductDetails()
     }
 
     fun showAllComments() = viewModelScope.launch {
@@ -550,6 +547,33 @@ class ProductDetailsFlowViewModel @Inject constructor(
         eventListener.emit(ProductDetailsEvents.Share(uiStateListener.value.productDetails.shareUrlText))
     }
 
+    fun copyArticleNumber() = viewModelScope.launch {
+        eventListener.emit(ProductDetailsEvents.Copy(uiStateListener.value.productDetails.articleNumber))
+    }
+
+    fun navigateToProductImages(image: String) = viewModelScope.launch {
+    }
+
+    fun navigateByMedia(media: ProductMediaUi) = viewModelScope.launch {
+        val productDetails = uiStateListener.value.productDetails
+        when (media) {
+            is ProductMediaUi.Picture -> {
+                eventListener.emit(
+                    ProductDetailsEvents.GoToProductImages(
+                        image = media.url,
+                        images = productDetails.mediaList.mapNotNull {
+                            (it as? ProductMediaUi.Picture)?.url
+                        }
+                    )
+                )
+            }
+
+            is ProductMediaUi.Video -> {
+                eventListener.emit(ProductDetailsEvents.GoToRutubeVideo(media.video))
+            }
+        }
+    }
+
 
     sealed class ProductDetailsEvents : Event {
         data class GoToPreOrder(val id: Long) : ProductDetailsEvents()
@@ -574,6 +598,13 @@ class ProductDetailsFlowViewModel @Inject constructor(
         data class GoToProductDetails(val productId: Long) : ProductDetailsEvents()
         data class GoToCategoryProductList(val categoryId: Long) : ProductDetailsEvents()
         data class GoToSearchProductList(val query: String) : ProductDetailsEvents()
+        data class Copy(val text: String) : ProductDetailsEvents()
+        data class GoToProductImages(val image: String, val images: List<String>) :
+            ProductDetailsEvents() {
+
+        }
+
+        data class GoToRutubeVideo(val video: ProductVideoUi) : ProductDetailsEvents()
     }
 
 
@@ -608,7 +639,6 @@ class ProductDetailsFlowViewModel @Inject constructor(
 
         val showDetailText: Boolean = false,
         val showAllProperties: Boolean = false,
-        val articleNumber: String = "",
         val cartQuantity: Int = 0,
         val buttonIsLoading: Boolean = false,
         val hideFloatingButton: Boolean = true,

@@ -7,10 +7,14 @@ data class ProductsSectionModel(
     val sorting: List<SortModel>,
     val products: List<ProductModel>,
     val categories: List<CategoryModel>,
-    val share: ShareModel? = null
+    val share: ShareModel
 )
 
 data class ShareModel(
     val url: String,
     val text: String
-)
+){
+    companion object{
+        val Empty = ShareModel("","")
+    }
+}

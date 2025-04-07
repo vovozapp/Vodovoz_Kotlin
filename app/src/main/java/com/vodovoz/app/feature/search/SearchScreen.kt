@@ -7,6 +7,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import coil3.compose.rememberAsyncImagePainter
+import com.vodovoz.app.R
 import com.vodovoz.app.feature.search.composables.SearchEmptyPlaceholder
 import com.vodovoz.app.feature.search.composables.SearchLoadingPlaceholder
 import com.vodovoz.app.feature.search.composables.SearchScreenBody
@@ -45,7 +48,16 @@ fun SearchScreen(viewModel: SearchFlowViewModel, viewState: SearchFlowViewModel.
         ) {
             when (val uiState = viewState.uiState) {
                 is SearchFlowViewModel.UiState.Empty -> {
-                    SearchEmptyPlaceholder(htmlText = uiState.htmlText)
+                    SearchEmptyPlaceholder(
+                        imagePainter = if (uiState.image.isEmpty()) {
+                            painterResource(id = R.drawable.pic_search)
+                        } else {
+                            rememberAsyncImagePainter(
+                                model = uiState.image
+                            )
+                        },
+                        description = uiState.description
+                    )
                 }
 
                 SearchFlowViewModel.UiState.Error -> {
@@ -65,6 +77,12 @@ fun SearchScreen(viewModel: SearchFlowViewModel, viewState: SearchFlowViewModel.
                         },
                         onQueryClose = { searchQuery ->
                             viewModel.removeSearchQuery(searchQuery)
+                        },
+                        onProductLikeClick = { product ->
+                            viewModel.changeFavorite(product)
+                        },
+                        onProductCardClick = { product ->
+                            viewModel.navigateToProductDetails(product)
                         }
                     )
                 }

@@ -17,12 +17,12 @@
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/imgClose"
-        android:layout_width="@dimen/_24sdp"
-        android:layout_height="@dimen/_24sdp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_gravity="end"
         android:layout_margin="@dimen/space_16"
-        android:background="@drawable/bkg_close_popup"
-        android:src="@drawable/ic_close_popup"
+        android:src="@drawable/icon_close"
+        android:backgroundTint="@android:color/transparent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -36,7 +36,7 @@
         android:layout_gravity="center"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="@dimen/_30sdp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="45dp"
         android:layout_weight="1"
         app:dotsColor="#BDBDBD"
         app:dotsCornerRadius="16dp"

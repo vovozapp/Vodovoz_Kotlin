@@ -21,7 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class AllBrandsFragment : BaseFragment() {
+class AllBrandsFragment1 : BaseFragment() {
 
     override fun layout(): Int = R.layout.fragment_all_brands
 

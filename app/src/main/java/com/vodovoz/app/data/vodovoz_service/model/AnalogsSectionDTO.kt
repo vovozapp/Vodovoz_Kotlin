@@ -2,7 +2,7 @@ package com.vodovoz.app.data.vodovoz_service.model
 
 import com.squareup.moshi.Json
 
-class AnalogsSectionDTO(
+data class AnalogsSectionDTO(
     @Json(name = "TITLE")
     val TITLE: String?,
     @Json(name = "SORTIROVKA")
@@ -11,9 +11,9 @@ class AnalogsSectionDTO(
     val TOVAR: List<TOVAR_DATA_DTO>?,
 )
 
-class ProductsSectionDTO(
+data class ProductsSectionDTO(
     @Json(name = "COUNT")
-    val COUNT: Int? = null,
+    val COUNT: String? = null,
     @Json(name = "TOVARVSEGO")
     val TOVARVSEGO: String? = null,
     @Json(name = "STRANIC")
@@ -30,6 +30,13 @@ class ProductsSectionDTO(
     val TOVAR: List<TOVAR_DATA_DTO>? = null,
     @Json(name = "PODELITCA")
     val PODELITCA: PODELITCA_DTO? = null,
+)
+
+data class BrandProductsSectionDTO(
+    @Json(name = "DATA")
+    val DATA: BrandDTO? = null,
+    @Json(name = "TOVAR")
+    val TOVAR: ProductsSectionDTO? = null,
 )
 
 class CategoriesDTO(

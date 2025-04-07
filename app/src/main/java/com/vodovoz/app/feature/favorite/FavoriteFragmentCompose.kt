@@ -148,6 +148,11 @@ class FavoriteFragment : Fragment() {
                     FavoriteFlowViewModel.FavoriteEvents.GoToSearch -> {
                         findNavController().navigateToSearch()
                     }
+
+                    FavoriteFlowViewModel.FavoriteEvents.GoToCatalog -> {
+                        tabManager.selectTab(R.id.graph_catalog)
+                        findNavController().popBackStack(R.id.catalogFragment, false)
+                    }
                 }
             }
 

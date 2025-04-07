@@ -10,10 +10,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.core.os.bundleOf
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.vodovoz.app.R
 import com.vodovoz.app.common.tab.TabManager
@@ -75,7 +77,7 @@ class RegisterFragment : Fragment() {
 
     private suspend fun observeEvents(
         coroutineScope: CoroutineScope,
-        snackbarHostState: SnackbarHostState
+        snackbarHostState: SnackbarHostState,
     ) {
         viewModel.observeEvent().collect { event ->
             when (event) {
@@ -107,6 +109,22 @@ class RegisterFragment : Fragment() {
 
                 is RegFlowViewModel.RegEvents.GoToWebView -> {
                     findNavController().navigateToWebView(event.url, event.title)
+                }
+
+                RegFlowViewModel.RegEvents.GoToLogin -> {
+                    findNavController().navigate(
+                        R.id.loginFragment,
+                        bundleOf(),
+                        NavOptions.Builder().setPopUpTo(R.id.profileFragment, false).build()
+                    )
+                }
+
+                RegFlowViewModel.RegEvents.GoToLoginByEmail -> {
+                    findNavController().navigate(
+                        R.id.loginByEmailFragment,
+                        bundleOf(),
+                        NavOptions.Builder().setPopUpTo(R.id.profileFragment, false).build()
+                    )
                 }
             }
         }

@@ -2,6 +2,7 @@ package com.vodovoz.app.domain.general.use_case
 
 import com.vodovoz.app.domain.general.respository.CartManagerRepository
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
+import com.vodovoz.app.util.extensions.singleResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
@@ -21,7 +22,7 @@ class ClearCartUseCase @Inject constructor(
         val previousItems = cartManagerRepository.getCartItems()
         val cartOperation = cartManagerRepository.clearCart(true)
 
-        val cartOperationResult = vodovozServiceRepository.clearCart().first()
+        val cartOperationResult = vodovozServiceRepository.clearCart().singleResult()
         cartOperationResult.onSuccess {
             syncCartDataUseCase(cartOperation.cartVersion)
             emit(Result.success(true))

@@ -25,3 +25,14 @@ object ApiConfig {
 
 
 }
+
+object VodovozWebConfig {
+
+    const val VODOVOZ_PROTOCOL = "https://"
+    const val VODOVOZ_DOMAIN = "vodovoz.net/"
+
+    const val VODOVOZ_URL = "$VODOVOZ_PROTOCOL$VODOVOZ_DOMAIN"
+
+    var ABOUT_PAYMENT_URL = "${VODOVOZ_URL}newmobile/informatsiya/oplata.php"
+
+}

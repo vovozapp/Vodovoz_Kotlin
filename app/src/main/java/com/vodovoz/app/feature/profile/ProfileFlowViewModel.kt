@@ -24,6 +24,7 @@ import com.vodovoz.app.design_system.model.ColorfulButtonUi
 import com.vodovoz.app.design_system.model.mapToUi
 import com.vodovoz.app.design_system.model.toUi
 import com.vodovoz.app.domain.general.model.UserNotLoginException
+import com.vodovoz.app.domain.general.model.VodovozAction
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
@@ -82,10 +83,10 @@ class ProfileFlowViewModel @Inject constructor(
 ) {
 
     init {
-        fetchProfileDetails()
         viewModelScope.launch {
             siteStateManager.requestSiteState()
         }
+        fetchProfileDetails()
     }
 
     fun fetchProfileDetails() = viewModelScope.launch {
@@ -110,13 +111,12 @@ class ProfileFlowViewModel @Inject constructor(
 
             val uiState = when {
                 t is UserNotLoginException && t.errorData != null -> with(t.errorData) {
-                    val button = button?.toUi() ?: return@with ProfileUiState.Error
                     ProfileUiState.UserNotFound(
                         title,
                         headerHtml,
                         descriptionHtml,
                         imageUrl,
-                        button
+                        button?.toUi() ?: return@with ProfileUiState.Error
                     )
                 }
 
@@ -130,28 +130,28 @@ class ProfileFlowViewModel @Inject constructor(
     }
 
     fun fetchFirstUserData() {
-        viewModelScope.launch {
-            val userId = accountManager.fetchAccountId()
-            if (userId == null) {
-                uiStateListener.value =
-                    state.copy(data = state.data.copy(isLogin = false), loadingPage = false)
-                return@launch
-            }
-            flow { emit(repository.fetchUserData(userId)) }
-                .catch {
-                    debugLog { "fetch user data error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
-                .onEach {
-                    if (it is ResponseEntity.Success) {
-                        firstLoad()
-                    } else {
-                        logout()
-                    }
-                }
-                .collect()
-        }
+//        viewModelScope.launch {
+//            val userId = accountManager.fetchAccountId()
+//            if (userId == null) {
+//                uiStateListener.value =
+//                    state.copy(data = state.data.copy(isLogin = false), loadingPage = false)
+//                return@launch
+//            }
+//            flow { emit(repository.fetchUserData(userId)) }
+//                .catch {
+//                    debugLog { "fetch user data error ${it.localizedMessage}" }
+//                    uiStateListener.value =
+//                        state.copy(error = it.toErrorState(), loadingPage = false)
+//                }
+//                .onEach {
+//                    if (it is ResponseEntity.Success) {
+//                        firstLoad()
+//                    } else {
+//                        logout()
+//                    }
+//                }
+//                .collect()
+//        }
     }
 
     private fun CoroutineScope.firstLoadTasks(userId: Long) = arrayOf(
@@ -339,6 +339,7 @@ class ProfileFlowViewModel @Inject constructor(
     }
 
     fun firstLoad() {
+        fetchProfileDetails()
         if (!state.isFirstLoad) {
             uiStateListener.value = state.copy(loadingPage = true)
 
@@ -588,8 +589,12 @@ class ProfileFlowViewModel @Inject constructor(
         }
     }
 
-    fun navigateToLogin(btn: ColorfulButtonUi) = viewModelScope.launch {
-        eventListener.emit(ProfileEvents.GoToLogin)
+    fun navigateToLoginOrRegister() = viewModelScope.launch {
+        if (siteStateManager.siteStateSnapshot?.requestUrl == null) {
+            eventListener.emit(ProfileEvents.GoToRegister)
+        } else{
+            eventListener.emit(ProfileEvents.GoToLogin)
+        }
     }
 
     fun navigateToUserData() = viewModelScope.launch {
@@ -615,6 +620,10 @@ class ProfileFlowViewModel @Inject constructor(
                 showAdvertisingBS = false
             )
         }
+    }
+
+    fun activateBannerAction(banner: BannerUi) = viewModelScope.launch {
+        eventListener.emit(ProfileEvents.ActivateVodovozAction(banner.action))
     }
 
 
@@ -676,7 +685,10 @@ class ProfileFlowViewModel @Inject constructor(
         data object GoToCart : ProfileEvents()
         data object GoToLogin : ProfileEvents()
         data object GoToUserData : ProfileEvents()
+        data object GoToRegister : ProfileEvents()
+
         data class GoByMenuItemId(val itemId: String) : ProfileEvents()
+        data class ActivateVodovozAction(val action: VodovozAction) : ProfileEvents()
     }
 
     data class PositionItem(

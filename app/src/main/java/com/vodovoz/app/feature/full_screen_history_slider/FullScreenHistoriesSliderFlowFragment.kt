@@ -167,7 +167,7 @@ class FullScreenHistoriesSliderFlowFragment1 : BaseFragment(),
                 FullScreenHistoriesSliderFlowFragmentDirections.actionToPromotionDetailFragment(this.promotionId)
 
             is ActionEntity.Promotions -> FullScreenHistoriesSliderFlowFragmentDirections.actionToAllPromotionsFragment(
-                AllPromotionsFragment.DataSource.ByBanner(this.categoryId)
+                AllPromotionsFragment.DataSource.ByBanner(-1, -1) // todo - put actual banner id
             )
 
             is ActionEntity.AllPromotions -> FullScreenHistoriesSliderFlowFragmentDirections.actionToAllPromotionsFragment(

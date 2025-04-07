@@ -52,7 +52,7 @@ data class PromotionDetailsModel(
     val name: String,
     val description: String,
     val endDate: ZonedDateTime,
-    val advertising: AboutAdvertisingModel,
+    val advertising: AboutAdvertisingModel?,
     val label: LabelModel?,
 )
 

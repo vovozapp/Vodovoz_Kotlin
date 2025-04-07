@@ -49,7 +49,7 @@ fun AuthScrollImagePager(
         pageSpacing = 8.dp,
         pageSize = if (pageWidth.isUnspecified) PageSize.Fill else PageSize.Fixed(pageWidth),
         verticalAlignment = Alignment.CenterVertically,
-        beyondViewportPageCount = images.size,
+        beyondViewportPageCount = 1,
         snapPosition = SnapPosition.Start,
 
         ) { page ->

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--deferred-->
-<RelativeLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -9,14 +9,15 @@
         android:id="@+id/close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_close"
-        android:layout_margin="8dp"
-        android:layout_alignParentEnd="true"/>
+        android:src="@drawable/icon_close"
+        android:layout_margin="16dp"
+        android:layout_gravity="top|end"/>
 
     <WebView
         android:id="@+id/rutubePlayerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="40dp"/>
 
-</RelativeLayout>
+</FrameLayout>

@@ -1,6 +1,10 @@
 package com.vodovoz.app.feature.productdetail
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
@@ -11,8 +15,8 @@ import androidx.compose.ui.Modifier
 import com.vodovoz.app.design_system.composables.button.ProductBottomFloatingButton
 import com.vodovoz.app.feature.productdetail.composables.MultiProductBottomSheet
 import com.vodovoz.app.feature.productdetail.composables.PresentBottomSheet
-import com.vodovoz.app.feature.productdetail.composables.ProductDetailsTopBar
 import com.vodovoz.app.feature.productdetail.composables.ProductDetailsBody
+import com.vodovoz.app.feature.productdetail.composables.ProductDetailsTopBar
 import com.vodovoz.app.util.calculateProductPrice
 import kotlin.math.roundToInt
 
@@ -41,12 +45,9 @@ fun ProductDetailsScreen(
             )
         },
         bottomBar = {
-
-
-
             val (price, oldPrice) = productDetails.firstPrice.run { price.roundToInt() to oldPrice.roundToInt() }
 
-            AnimatedVisibility(!viewState.hideFloatingButton) {
+            AnimatedVisibility(visible = !viewState.hideFloatingButton) {
                 ProductBottomFloatingButton(
                     isLoading = viewState.buttonIsLoading,
                     cartQuantity = viewState.cartQuantity,
@@ -66,9 +67,6 @@ fun ProductDetailsScreen(
                     onProductMinus = {
                         viewModel.decrementCart()
                     },
-                    onCartClick = {
-                        viewModel.navigateToCart()
-                    },
                     onAddToCartClick = {
                         viewModel.changeCart(productDetails.id, 1, 0)
                     },
@@ -81,7 +79,9 @@ fun ProductDetailsScreen(
         contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) { paddingValues ->
         ProductDetailsBody(
-            modifier = Modifier.padding(paddingValues).consumeWindowInsets(paddingValues),
+            modifier = Modifier
+                .padding(paddingValues)
+                .consumeWindowInsets(paddingValues),
             productDetails = productDetails,
             comments = viewState.comments,
             quantityButtonIsLoading = viewState.buttonIsLoading,
@@ -100,8 +100,8 @@ fun ProductDetailsScreen(
             onDetailPreviewTextShowOrHide = {
                 viewModel.showOrHideDetailText()
             },
-            onProductImageClick = {
-                //TODO - make viewmodel func
+            onProductMediaClick = { media ->
+                viewModel.navigateByMedia(media)
             },
             onProductPlus = {
                 viewModel.incrementCart()
@@ -147,6 +147,9 @@ fun ProductDetailsScreen(
             },
             onCategoryClick = { categoryItem ->
                 viewModel.navigateToCategory(categoryItem)
+            },
+            onCopyArticleNumberClick = {
+                viewModel.copyArticleNumber()
             }
         )
     }

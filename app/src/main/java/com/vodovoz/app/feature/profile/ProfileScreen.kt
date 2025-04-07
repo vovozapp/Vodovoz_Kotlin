@@ -77,8 +77,9 @@ fun ProfileScreen(
                     .padding(top = 17.dp, bottom = 16.dp)
                     .height(68.dp),
                 images = bannerImages,
-                onImageClick = {
-
+                onImageClick = { page ->
+                    val banner = viewState.banners[page]
+                    viewModel.activateBannerAction(banner)
                 },
                 pageWidth = Dp.Unspecified,
                 pagerState = pagerState,

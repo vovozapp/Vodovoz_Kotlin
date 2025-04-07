@@ -30,12 +30,13 @@ class LikeManager @Inject constructor(
 
 
     private val mutex = Mutex()
-    private val likesVersions = ConcurrentHashMap<Long, Int>()
 
     private fun getLikeVersion(productId: Long) = likesVersions.getOrDefault(productId, 0)
 
     private val likes = ConcurrentHashMap<Long, Boolean>()
     private val likesStateListener = MutableSharedFlow<Map<Long, Boolean>>(1)
+    private val likesCategories: ConcurrentHashMap<Long, Boolean> = ConcurrentHashMap<Long, Boolean>()
+    private val likesVersions = ConcurrentHashMap<Long, Int>()
 
     private val viewPool: RecyclerView.RecycledViewPool = RecyclerView.RecycledViewPool().apply {
         setMaxRecycledViews(ProductUI.PRODUCT_VIEW_TYPE, 5)
@@ -46,7 +47,9 @@ class LikeManager @Inject constructor(
     fun observeLikes() = likesStateListener.asSharedFlow()
 
 
+
     suspend fun changeFavorite(productId: Long, newValue: Boolean) {
+
         val (likeVersion, userId) = mutex.withLock {
             val updatedVersion = updateFavoritesOptimistically(productId, newValue)
             if (updatedVersion < getLikeVersion(productId)) return
@@ -70,6 +73,11 @@ class LikeManager @Inject constructor(
         }
     }
 
+
+    /**
+     * @Deprecated Используйте [LikeManager.changeFavorite] вместо этого метода.
+     */
+    @Deprecated("")
     suspend fun like(productId: Long, isFavorite: Boolean) {
         val (likeVersion, userId) = mutex.withLock {
             val version = updateFavoritesOptimistically(productId, !isFavorite)

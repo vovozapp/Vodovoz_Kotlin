@@ -32,7 +32,9 @@ fun SearchScreenBody(
     searchHistory: List<String>,
     sectionRecommendations: SectionUi<ProductUi>,
     onQueryChoose: (String) -> Unit,
-    onQueryClose: (String) -> Unit
+    onQueryClose: (String) -> Unit,
+    onProductLikeClick: (ProductUi) -> Unit,
+    onProductCardClick: (ProductUi) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -110,12 +112,8 @@ fun SearchScreenBody(
                     GridProductCard(
                         modifier = Modifier.weight(1f),
                         product = product,
-                        onClick = {
-
-                        },
-                        onLike = {
-
-                        },
+                        onClick = onProductCardClick,
+                        onLike = onProductLikeClick,
                         onAnalogsClick = {
 
                         }

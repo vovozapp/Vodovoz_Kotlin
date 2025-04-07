@@ -41,25 +41,27 @@ fun AllPromotionsBody(
         modifier = modifier
             .fillMaxSize()
     ) {
-        VodovozScrollableTabRow(
-            modifier = Modifier
-                .padding(top = 8.dp)
-                .fillMaxWidth(),
-            selectedTabIndex = categories.indexOfOrNull(currentCategory) ?: 0,
-            edgePadding = 16.dp,
-            spacing = 8.dp
-        ) {
-            categories.forEach { section ->
-                VodovozChip(
-                    text = section.name,
-                    selected = currentCategory == section,
-                    onSelect = {
-                        onSectionSelect(section)
-                    }
-                )
+
+        if (categories.isNotEmpty()) {
+            VodovozScrollableTabRow(
+                modifier = Modifier
+                    .padding(vertical = 8.dp)
+                    .fillMaxWidth(),
+                selectedTabIndex = categories.indexOfOrNull(currentCategory) ?: 0,
+                edgePadding = 16.dp,
+                spacing = 8.dp
+            ) {
+                categories.forEach { section ->
+                    VodovozChip(
+                        text = section.name,
+                        selected = currentCategory == section,
+                        onSelect = {
+                            onSectionSelect(section)
+                        }
+                    )
+                }
             }
         }
-
 
 
         val refreshState = lazyPagingPromotions.loadState.refresh
@@ -67,8 +69,7 @@ fun AllPromotionsBody(
         val shimmerState = rememberShimmer(shimmerBounds = ShimmerBounds.View)
 
         LazyColumn(
-            modifier = Modifier.padding(top = 16.dp),
-            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 16.dp),
+            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 8.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             state = lazyListState
         ) {
@@ -99,7 +100,7 @@ fun AllPromotionsBody(
                 }
             }
 
-            if(appendState is LoadState.Loading){
+            if (appendState is LoadState.Loading) {
                 item {
                     SkeletonBox(
                         shimmerState = shimmerState,

@@ -943,11 +943,7 @@ class HomeFragment1 : BaseFragment() {
 
             //POSITION_13
             override fun onCountryClick(id: Long) {
-                findNavController().navigate(
-                    HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                        PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Country(id)
-                    )
-                )
+
             }
 
             //POSITION_2
@@ -1056,7 +1052,7 @@ class HomeFragment1 : BaseFragment() {
                 HomeFragmentDirections.actionToPromotionDetailFragment(this.promotionId)
 
             is ActionEntity.Promotions -> HomeFragmentDirections.actionToAllPromotionsFragment(
-                AllPromotionsFragment.DataSource.ByBanner(this.categoryId)
+                AllPromotionsFragment.DataSource.ByBanner(-1, -1) //todo - put a actual realization
             )
 
             is ActionEntity.AllPromotions -> HomeFragmentDirections.actionToAllPromotionsFragment(

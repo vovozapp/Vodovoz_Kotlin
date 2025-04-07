@@ -8,12 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.app.ActivityCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.fragment.findNavController
 import com.vodovoz.app.R
@@ -22,8 +24,10 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
+import com.vodovoz.app.core.navigation.navigateToWebView
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.placeholders.NetworkErrorPlaceholder
+import com.vodovoz.app.design_system.effects.LifecycleEffect
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
@@ -64,21 +68,34 @@ class PromotionDetailsFragment : Fragment() {
             setContent {
                 VodovozTheme {
                     val pagingState by viewModel.observeUiState().collectAsStateWithLifecycle()
-                    val viewState = pagingState.data
+                    val viewState by rememberUpdatedState(pagingState.data)
 
 
-                    when(viewState.uiState){
+                    when (viewState.uiState) {
                         PromotionDetailFlowViewModel.UiState.Error -> {
                             NetworkErrorPlaceholder(
                                 onTryAgainClick = { viewModel.firstLoadSorted() }
                             )
                         }
+
                         else -> {
                             PromotionDetailsScreen(
                                 viewModel = viewModel,
                                 viewState = viewState,
-                                navController = navController
                             )
+                        }
+                    }
+
+                    LifecycleEffect {
+                        viewModel.observeEvent().collect { event ->
+                            when (event) {
+                                PromotionDetailFlowViewModel.PromotionDetailEvent.GoBack -> {
+                                    navController.popBackStack()
+                                }
+                                is PromotionDetailFlowViewModel.PromotionDetailEvent.GoToWebView -> {
+                                    navController.navigateToWebView(event.url, "")
+                                }
+                            }
                         }
                     }
                 }
@@ -113,7 +130,11 @@ class PromotionDetailsFragment : Fragment() {
                 )
             }
 
-            override fun onNotifyWhenBeAvailable(id: Long, name: String, detailPicture: String) {
+            override fun onNotifyWhenBeAvailable(
+                id: Long,
+                name: String,
+                detailPicture: String,
+            ) {
                 findNavController().navigate(
                     PromotionDetailsFragmentDirections.actionToPreOrderBS(
                         id,
@@ -123,7 +144,11 @@ class PromotionDetailsFragment : Fragment() {
                 )
             }
 
-            override fun onChangeProductQuantity(id: Long, cartQuantity: Int, oldQuantity: Int) {
+            override fun onChangeProductQuantity(
+                id: Long,
+                cartQuantity: Int,
+                oldQuantity: Int,
+            ) {
                 viewModel.changeCart(id, cartQuantity, oldQuantity)
             }
 
@@ -161,7 +186,11 @@ class PromotionDetailsFragment : Fragment() {
 
     @Inject
     lateinit var permissionsControllerFactory: PermissionsController.Factory
-    private val permissionsController by lazy { permissionsControllerFactory.create(requireActivity()) }
+    private val permissionsController by lazy {
+        permissionsControllerFactory.create(
+            requireActivity()
+        )
+    }
 
     private fun navigateToQrCodeFragment() {
         permissionsController.methodRequiresCameraPermission {

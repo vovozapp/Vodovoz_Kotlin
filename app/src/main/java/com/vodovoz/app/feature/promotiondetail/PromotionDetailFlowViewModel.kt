@@ -165,6 +165,10 @@ class PromotionDetailFlowViewModel @Inject constructor(
         }
     }
 
+    fun navigateToWebView(url: String) = viewModelScope.launch {
+        eventListener.emit(PromotionDetailEvent.GoToWebView(url))
+    }
+
     data class PromotionDetailFlowState(
         val items: PromotionDetailUI? = null,
         val errorItem: PromotionDetailResponseJsonParser.PromotionDetailErrorUI? = null,
@@ -181,6 +185,7 @@ class PromotionDetailFlowViewModel @Inject constructor(
     }
 
     sealed class PromotionDetailEvent : Event {
+        data class GoToWebView(val url: String) : PromotionDetailEvent()
 
         data object GoBack : PromotionDetailEvent()
 

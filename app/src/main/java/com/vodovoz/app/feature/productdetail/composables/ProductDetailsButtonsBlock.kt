@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.VodovozTheme
-import com.vodovoz.app.design_system.composables.button.ProductQuantityWithCartButton
+import com.vodovoz.app.design_system.composables.button.ProductQuantityButton
 import com.vodovoz.app.design_system.composables.button.VodovozButton
 import com.vodovoz.app.design_system.composables.button.VodovozButtonSmall
 import com.vodovoz.app.design_system.composables.card.VodovozOutlinedCard
@@ -57,7 +57,9 @@ fun ProductDetailsButtonsBlock(
     onAnalogButtonClick: () -> Unit,
 ) {
     Column(
-        modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp)
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
     ) {
 
         Spacer(Modifier.height(24.dp))
@@ -96,15 +98,14 @@ fun ProductDetailsButtonsBlock(
         val analogButton = buttons.analogButton
 
         when {
-            cartQuantity > 0 || quantityButtonIsLoading && isAvailable -> {
-                ProductQuantityWithCartButton(
-                    modifier = Modifier,
-                    onProductMinus = onProductMinus,
-                    onProductPlus = onProductPlus,
-                    onCartClick = onNavigateToCart,
-                    countProducts = cartQuantity,
-                    currentPrice = totalPrice,
-                    isLoading = quantityButtonIsLoading
+            (cartQuantity > 0 || quantityButtonIsLoading) && isAvailable -> {
+                ProductQuantityButton(
+                    modifier = Modifier.isElementVisible(onFloatingButtonChange),
+                    isLoading = quantityButtonIsLoading,
+                    onPlus = onProductPlus,
+                    onMinus = onProductMinus,
+                    quantity = cartQuantity,
+                    totalPrice = totalPrice
                 )
             }
 
@@ -126,7 +127,7 @@ fun ProductDetailsButtonsBlock(
                     ),
                     modifier = Modifier.isElementVisible(onFloatingButtonChange),
 
-                )
+                    )
             }
         }
 

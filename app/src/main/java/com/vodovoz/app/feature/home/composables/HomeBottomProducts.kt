@@ -1,8 +1,13 @@
 package com.vodovoz.app.feature.home.composables
 
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -27,13 +32,19 @@ fun HomeBottomProducts(
             onShowAllClick = { onShowAllClick(it) }
         )
 
-        val categoryWithProducts = sectionBottomProducts.items.firstOrNull()
-        val products = categoryWithProducts?.products ?: emptyList()
+        val categoryWithProducts = sectionBottomProducts.items.firstOrNull() ?: return@Column
+        val products = categoryWithProducts.products
 
-        HomeRow(modifier = Modifier.padding(top = 16.dp)) { itemWidth ->
+        Row(
+            modifier = Modifier
+                .horizontalScroll(rememberScrollState())
+                .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             products.forEach { product ->
                 GridProductCard(
-                    modifier = Modifier.width(itemWidth),
+                    modifier = Modifier.width(160.dp),
                     product = product,
                     onClick = onProductClick,
                     onLike = onProductLike

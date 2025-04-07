@@ -17,7 +17,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.app.ActivityCompat
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
@@ -34,13 +33,18 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.media.MediaManager
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.product.rating.RatingProductManager
+import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.android.activate
 import com.vodovoz.app.core.android.createDataAllActivator
 import com.vodovoz.app.core.navigation.navigateToCategoryProductList
+import com.vodovoz.app.core.navigation.navigateToOrderDetails
+import com.vodovoz.app.core.navigation.navigateToOrdersHistory
 import com.vodovoz.app.core.navigation.navigateToProductDetails
 import com.vodovoz.app.core.navigation.navigateToPromotionDetails
 import com.vodovoz.app.core.navigation.navigateToSearch
+import com.vodovoz.app.core.navigation.navigateToStories
+import com.vodovoz.app.core.navigation.navigateToWebView
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.design_system.VodovozTheme
@@ -208,7 +212,7 @@ class HomeFragment : Fragment() {
                 HomeFragmentDirections.actionToPromotionDetailFragment(this.promotionId)
 
             is ActionEntity.Promotions -> HomeFragmentDirections.actionToAllPromotionsFragment(
-                AllPromotionsFragment.DataSource.ByBanner(this.categoryId)
+                AllPromotionsFragment.DataSource.ByBanner(-1,-1) //todo - put actual realization
             )
 
             is ActionEntity.AllPromotions -> HomeFragmentDirections.actionToAllPromotionsFragment(
@@ -262,6 +266,18 @@ class HomeFragment : Fragment() {
         navDirect?.let { navController.navigate(navDirect) }
     }
 
+    private fun startSpeechRecognizer() {
+        permissionsController.methodRequiresRecordAudioPermission {
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.RECORD_AUDIO
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return@methodRequiresRecordAudioPermission
+            }
+            SpeechDialogFragment().show(childFragmentManager, "TAG")
+        }
+    }
 
     private suspend fun observeEvents(topProductLazyListState: LazyListState) {
         flowViewModel.observeEvent().collect { event ->
@@ -270,7 +286,6 @@ class HomeFragment : Fragment() {
                     if (findNavController().currentBackStackEntry?.destination?.id == R.id.preOrderBS) {
                         findNavController().popBackStack()
                     }
-
 
                     findNavController().navigate(
                         HomeFragmentDirections.actionToPreOrderBS(
@@ -298,11 +313,7 @@ class HomeFragment : Fragment() {
                 }
 
                 is HomeFlowViewModel.HomeEvents.GoToStories -> {
-                    val bundle = bundleOf("startHistoryId" to event.storyId)
-                    findNavController().navigate(
-                        R.id.fullScreenHistorySliderFragment,
-                        bundle
-                    )
+                    findNavController().navigateToStories(event.storyId)
                 }
 
                 is HomeFlowViewModel.HomeEvents.GoToProductDetails -> {
@@ -316,24 +327,12 @@ class HomeFragment : Fragment() {
                 is HomeFlowViewModel.HomeEvents.ActivateButtonAction -> {
                     event.action.activate(
                         navController = findNavController(),
+                        tabManager = tabManager,
                         activators = listOf(
-                            createDataAllActivator(DataAllAction.Profile) {
-                                tabManager.setAuthRedirect(findNavController().graph.id)
-                                tabManager.selectTab(R.id.graph_profile)
-                            },
                             createDataAllActivator(DataAllAction.Unknown) {
                                 //TODO("Implement snackbar")
                             },
                         ),
-                        activateIdAction = { id ->
-                            findNavController().navigate(
-                                HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.ButtonProducts(
-                                        id
-                                    )
-                                )
-                            )
-                        }
                     )
                 }
 
@@ -347,6 +346,38 @@ class HomeFragment : Fragment() {
 
                 is HomeFlowViewModel.HomeEvents.GoToCategoryProductList -> {
                     findNavController().navigateToCategoryProductList(event.categoryId)
+                }
+
+                HomeFlowViewModel.HomeEvents.ShowSpeechRecognizer -> {
+                    startSpeechRecognizer()
+                }
+
+                is HomeFlowViewModel.HomeEvents.ActivateDataAllAction -> {
+                    event.action.activate(
+                        navController = findNavController(),
+                        tabManager = tabManager
+                    )
+                }
+
+                is HomeFlowViewModel.HomeEvents.ActivateVodovozAction -> {
+                    val cookie = cookieManager.fetchCookieSessionId() ?: ""
+                    event.action.activate(
+                        navController = findNavController(),
+                        activity = requireActivity(),
+                        cookie = cookie,
+                        tabManager = tabManager
+                    )
+                }
+
+                HomeFlowViewModel.HomeEvents.GoToOrdersHistory -> {
+                    findNavController().navigateToOrdersHistory()
+                }
+                is HomeFlowViewModel.HomeEvents.GoToOrderDetails -> {
+                    findNavController().navigateToOrderDetails(event.orderId)
+                }
+
+                is HomeFlowViewModel.HomeEvents.GoToWebView -> {
+                    findNavController().navigateToWebView(event.url, event.title)
                 }
             }
         }

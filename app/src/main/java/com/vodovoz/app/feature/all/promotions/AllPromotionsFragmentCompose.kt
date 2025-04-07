@@ -5,6 +5,7 @@ import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -12,8 +13,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.fragment.findNavController
+import com.vodovoz.app.core.navigation.navigateToPromotionDetails
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.placeholders.NetworkErrorPlaceholder
+import com.vodovoz.app.design_system.effects.LifecycleEffect
 import com.vodovoz.app.feature.all.AllClickListener
 import com.vodovoz.app.feature.home.banneradvinfo.BannerAdvInfoBottomSheetFragment
 import com.vodovoz.app.feature.home.viewholders.homepromotions.model.PromotionAdvEntity
@@ -46,6 +49,7 @@ class AllPromotionsFragment : Fragment() {
             setContent {
                 VodovozTheme {
                     val viewState by viewModel.observeUiState().collectAsStateWithLifecycle()
+                    val lazyListState = rememberLazyListState()
 
                     when (viewState.data.uiState) {
                         AllPromotionsFlowViewModel.UiState.Error -> {
@@ -56,10 +60,29 @@ class AllPromotionsFragment : Fragment() {
                             AllPromotionsScreen(
                                 viewModel = viewModel,
                                 viewState = viewState.data,
-                                navController = navController
+                                lazyListState = lazyListState
                             )
                         }
                     }
+
+                    LifecycleEffect {
+                        viewModel.observeEvent().collect { event ->
+                            when (event) {
+                                AllPromotionsFlowViewModel.AllPromotionsEvent.ScrollTop -> {
+                                    lazyListState.animateScrollToItem(0)
+                                }
+
+                                is AllPromotionsFlowViewModel.AllPromotionsEvent.GoToProductDetails -> {
+                                    navController.navigateToPromotionDetails(event.promotionId)
+                                }
+
+                                AllPromotionsFlowViewModel.AllPromotionsEvent.GoBack -> {
+                                    navController.popBackStack()
+                                }
+                            }
+                        }
+                    }
+
 
                 }
             }
@@ -68,7 +91,7 @@ class AllPromotionsFragment : Fragment() {
 
     sealed class DataSource : Parcelable {
         @Parcelize
-        class ByBanner(val categoryId: Long) : DataSource()
+        class ByBanner(val bannerId: Long, val blockId: Long) : DataSource()
 
         @Parcelize
         data object All : DataSource()

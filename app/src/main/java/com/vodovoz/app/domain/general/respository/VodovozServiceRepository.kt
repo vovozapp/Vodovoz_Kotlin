@@ -1,7 +1,10 @@
 package com.vodovoz.app.domain.general.respository
 
 import androidx.paging.PagingData
+import com.vodovoz.app.data.vodovoz_service.model.ProductsSectionDTO
 import com.vodovoz.app.domain.general.model.BannerModel
+import com.vodovoz.app.domain.general.model.BrandModel
+import com.vodovoz.app.domain.general.model.BrandSectionModel
 import com.vodovoz.app.domain.general.model.CatalogDetailsModel
 import com.vodovoz.app.domain.general.model.CertificateActivationDetailsModel
 import com.vodovoz.app.domain.general.model.ChangePasswordDetailsModel
@@ -10,6 +13,7 @@ import com.vodovoz.app.domain.general.model.FieldModel
 import com.vodovoz.app.domain.general.model.FilterValueModel
 import com.vodovoz.app.domain.general.model.FiltersModel
 import com.vodovoz.app.domain.general.model.OrderWithMenuModel
+import com.vodovoz.app.domain.general.model.ParentCategoryModel
 import com.vodovoz.app.domain.general.model.PopularCategoryModel
 import com.vodovoz.app.domain.general.model.PopupWindowInfoModel
 import com.vodovoz.app.domain.general.model.PreOrderSectionModel
@@ -36,6 +40,55 @@ import kotlinx.coroutines.flow.Flow
 import java.io.File
 
 interface VodovozServiceRepository {
+
+    fun getBrands(
+        searchQuery: String = ""
+    ): Flow<Result<BrandSectionModel>>
+
+
+    fun getBrandsPaged(
+        searchQuery: String = ""
+    ): Flow<PagingData<BrandModel>>
+
+    fun getBrandProducts(
+        brandId: Long,
+        sort: SortModel,
+        categoryId: Int = -1,
+    ): Flow<Result<ProductsSectionModel>>
+
+    fun getBrandProductsPaged(
+        brandId: Long,
+        sort: SortModel,
+        categoryId: Int = -1,
+    ): Flow<PagingData<ProductModel>>
+
+    fun getBannerPromotions(
+        bannerId: Long,
+        blockId: Long,
+        categoryId: Int = -1,
+    ): Flow<Result<PromotionsSectionModel>>
+
+    fun getBannerPromotionsPaged(
+        bannerId: Long,
+        blockId: Long,
+        categoryId: Int = -1,
+    ): Flow<PagingData<PromotionModel>>
+
+
+    fun getBannerProducts(
+        bannerId: Long,
+        blockId: Long,
+        sort: SortModel,
+        categoryId: Int = -1,
+    ): Flow<Result<ProductsSectionModel>>
+
+    fun getBannerProductsPaged(
+        bannerId: Long,
+        blockId: Long,
+        sort: SortModel,
+        categoryId: Int = -1,
+    ): Flow<PagingData<ProductModel>>
+
 
     fun getLoginDetails(): Flow<Result<AuthDetailsModel>>
 
@@ -69,6 +122,10 @@ interface VodovozServiceRepository {
     ): Flow<Result<String>>
 
     fun getCatalogDetails(): Flow<Result<CatalogDetailsModel>>
+
+    fun getCategoryTree(
+        categoryId: Long,
+    ): Flow<Result<List<ParentCategoryModel>>>
 
     fun getCategoryProducts(
         categoryId: Long,
@@ -179,10 +236,13 @@ interface VodovozServiceRepository {
         limit: Int = 5,
     ): Flow<PagingData<ProductModel>>
 
-    fun getPromotionsWithSections(): Flow<Result<PromotionsSectionModel>>
+    fun getPromotionsWithSections(
+        categoryId: Int = -1,
+    ): Flow<Result<PromotionsSectionModel>>
 
     fun getPromotionsPaged(
         limit: Int = 10,
+        categoryId: Int = -1,
     ): Flow<PagingData<PromotionModel>>
 
     fun getOrderMenu(

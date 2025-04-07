@@ -16,6 +16,7 @@ import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.vodovoz.app.design_system.ExtendedTheme
 import com.vodovoz.app.design_system.composables.button.VodovozButton
 import com.vodovoz.app.design_system.composables.text_fields.VodovozTextField
 import com.vodovoz.app.design_system.model.ColorfulButtonUi
@@ -80,8 +81,8 @@ fun CertificateActivationBody(
             colors = ButtonDefaults.buttonColors(
                 containerColor = buttonBackgroundColor,
                 contentColor = buttonTextColor,
-                disabledContentColor = buttonTextColor.copy(alpha = 0.9f),
-                disabledContainerColor = buttonBackgroundColor.copy(alpha = 0.6f)
+                disabledContentColor = MaterialTheme.colorScheme.background,
+                disabledContainerColor = ExtendedTheme.colorScheme.primaryVariant
             ),
             enabled = buttonEnabled,
             isLoading = buttonIsLoading

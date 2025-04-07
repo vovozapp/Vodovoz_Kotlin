@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ButtonDefaults
@@ -36,7 +37,6 @@ fun ProductBottomFloatingButton(
     isAvailable: Boolean,
     onProductPlus: () -> Unit,
     onProductMinus: () -> Unit,
-    onCartClick: () -> Unit,
     onAddToCartClick: () -> Unit,
     onAnalogClick: () -> Unit,
 ) {
@@ -66,14 +66,13 @@ fun ProductBottomFloatingButton(
 
         when {
             cartQuantity > 0 || isLoading && isAvailable -> {
-                ProductQuantityWithCartButton(
+                ProductQuantityButton(
                     modifier = Modifier.padding(horizontal = 16.dp),
-                    onProductMinus = onProductMinus,
-                    onProductPlus = onProductPlus,
-                    onCartClick = onCartClick,
-                    countProducts = cartQuantity,
-                    currentPrice = totalPrice,
-                    isLoading = isLoading
+                    isLoading = isLoading,
+                    onPlus = onProductPlus,
+                    onMinus = onProductMinus,
+                    quantity = cartQuantity,
+                    totalPrice = totalPrice
                 )
             }
 
@@ -122,7 +121,6 @@ private fun FloatingProductButtonPreview() {
                 giftText = "500",
                 onProductPlus = {},
                 onProductMinus = {},
-                onCartClick = {},
                 onAddToCartClick = {},
                 isAvailable = false,
                 analogButton = ColorfulButtonUi("Analog", Color.Black, Color.White),

@@ -8,6 +8,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -42,6 +43,7 @@ fun ProductDetailsComments(
         } else {
             Text(
                 modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
                     .padding(top = 24.dp)
                     .padding(horizontal = 32.dp),
                 text = stringResource(R.string.no_comments),

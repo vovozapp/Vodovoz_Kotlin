@@ -23,10 +23,12 @@ import com.vodovoz.app.data.vodovoz_service.model.product_details.KNOPKA_KUPIT_D
 import com.vodovoz.app.data.vodovoz_service.model.product_details.PRICE_DTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.PRODUCT_DETAIL_HARAKTERISTIKI_DTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.ProductDetailsDTO
+import com.vodovoz.app.data.vodovoz_service.model.product_details.RUTUBEVIDEO_DTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.TAGS_DTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.TOVAR_DETAIL_DTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.TOVAR_DETAIL_TEXT_DTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.ZALOG_DTO
+import com.vodovoz.app.design_system.model.ProductVideoUi
 import com.vodovoz.app.domain.general.model.BlockPromoDataModel
 import com.vodovoz.app.domain.general.model.BrandCategoryBlockModel
 import com.vodovoz.app.domain.general.model.BrandCategoryItemDataModel
@@ -48,6 +50,7 @@ import com.vodovoz.app.domain.general.model.ProductDetailsModel
 import com.vodovoz.app.domain.general.model.ProductDetailsMoreProducts
 import com.vodovoz.app.domain.general.model.ProductDetailsScreenModel
 import com.vodovoz.app.domain.general.model.ProductDetailsTabModel
+import com.vodovoz.app.domain.general.model.ProductVideoModel
 import com.vodovoz.app.domain.general.model.PromoProductModel
 import com.vodovoz.app.domain.general.model.SectionModel
 import com.vodovoz.app.domain.general.model.WebsiteErrorException
@@ -106,8 +109,8 @@ private fun TOVAR_DETAIL_DTO.toDomain(
         deposit = ZALOG?.toDomain(),
         shareUrl = DETAIL_PAGE_URL?.toFullUrl() ?: "",
         shareUrlText = shareUrlText,
-        youtubeUrl = RUTUBE_VIDEO?.firstOrNull()?.IMAGE,
-        rutubeUrl = RUTUBE_VIDEO?.firstOrNull()?.IMAGE,
+        rutubeVideo = RUTUBE_VIDEO?.firstOrNull()?.toDomain(),
+        youtubeVideo = YOUTUBE_VIDEO?.firstOrNull()?.toDomain(),
         coefficient = KOFFICIENT ?: 1f,
         pricePerUnit = DOPTSENA_ZA_EDINICY,
         articleNumber = HARAKTERISTIKI.toArticleNumber() ?: "",
@@ -115,6 +118,13 @@ private fun TOVAR_DETAIL_DTO.toDomain(
             ?: throw IllegalArgumentException("First extended price cannot be null"),
         prices = EXTENDEDPRICE.mapNotNull { extendedPriceDto -> extendedPriceDto.toDomain() },
         commentsCount = commentsCount
+    )
+}
+
+fun RUTUBEVIDEO_DTO.toDomain(): ProductVideoModel? {
+    return ProductVideoModel(
+        previewImage = IMAGE ?: return null,
+        code = VIDEO ?: return null
     )
 }
 

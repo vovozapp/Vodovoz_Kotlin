@@ -53,8 +53,8 @@ data class ProductDetailsModel(
     val shareUrl: String,
     val shareUrlText: String,
 
-    val youtubeUrl: String?,
-    val rutubeUrl: String?,
+    val youtubeVideo: ProductVideoModel?,
+    val rutubeVideo: ProductVideoModel?,
 
     val coefficient: Float,
     val pricePerUnit: String?,
@@ -64,6 +64,11 @@ data class ProductDetailsModel(
     val prices: List<PriceModel>,
 
     val commentsCount: Int
+)
+
+data class ProductVideoModel(
+    val previewImage: String,
+    val code: String
 )
 
 data class DocumentModel(

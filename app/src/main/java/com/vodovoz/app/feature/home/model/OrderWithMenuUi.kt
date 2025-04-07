@@ -38,7 +38,7 @@ fun MenuItemModel.toUi(): MenuItemUi {
         image = this.picture,
         title = title,
         description = description,
-        type = type,
+        type = type.toUi(),
         borderColor = Color.fromHexOrNull(borderColorHex)
     )
 }
@@ -59,6 +59,14 @@ data class MenuItemUi(
     val image: String,
     val title: String,
     val description: String,
-    val type: MenuItemTypeModel,
+    val type: MenuItemTypeUi,
     val borderColor: Color?,
 )
+
+enum class MenuItemTypeUi(val id: String) {
+    History("history"), Payment("oplata"), None("")
+}
+
+fun MenuItemTypeModel.toUi(): MenuItemTypeUi{
+    return MenuItemTypeUi.entries.firstOrNull { it.id == id } ?: MenuItemTypeUi.None
+}

@@ -32,7 +32,7 @@ import coil3.request.crossfade
 import com.vodovoz.app.design_system.composables.decoration.AdvertisingChip
 import com.vodovoz.app.design_system.model.AboutAdvertisingUi
 import com.vodovoz.app.design_system.model.BannerUi
-import com.vodovoz.app.feature.catalog.model.CatalogCategoryUi
+import com.vodovoz.app.design_system.model.ParentCategoryUi
 import com.vodovoz.app.feature.home.composables.AuthScrollImagePager
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -40,10 +40,10 @@ import com.vodovoz.app.feature.home.composables.AuthScrollImagePager
 @Composable
 fun CatalogBody(
     modifier: Modifier = Modifier,
-    categories: List<CatalogCategoryUi>,
+    categories: List<ParentCategoryUi>,
     banners: List<BannerUi>,
     onBannerClick: (BannerUi) -> Unit,
-    onCategoryClick: (CatalogCategoryUi) -> Unit,
+    onCategoryClick: (ParentCategoryUi) -> Unit,
     onAboutAdvertisingClick: (AboutAdvertisingUi) -> Unit
 ) {
     Column(
@@ -111,8 +111,6 @@ private fun CatalogCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
-
-
     Box(
         modifier = modifier
             .height(140.dp)

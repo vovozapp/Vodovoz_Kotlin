@@ -54,6 +54,8 @@ class FullScreenHistoriesSliderFlowViewModel @Inject constructor(
                         }
                     )
 
+                delay(150)
+
                 uiStateListener.updateData { s ->
                     s.copy(
                         stories = stories.mapToUi(),

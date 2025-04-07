@@ -182,10 +182,11 @@ fun BasicSearchField(
     }
 
     LaunchedEffect(value) {
-        if (abs(textField.text.length - value.length) >= 2) {
-            textField = textField.copy(text = value, selection = TextRange(value.length))
-            return@LaunchedEffect
-        } else textField = textField.copy(text = value)
+        if(value == textField.text) return@LaunchedEffect
+
+        textField = if (abs(textField.text.length - value.length) >= 2) {
+            textField.copy(text = value, selection = TextRange(value.length))
+        } else textField.copy(text = value)
     }
 
     BasicTextField(

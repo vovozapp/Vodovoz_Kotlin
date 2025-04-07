@@ -26,7 +26,6 @@ fun UserDataFieldsColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = modifier
     ) {
-
         fields.forEachIndexed { index, field ->
             key(field.id) {
                 VodovozTextField(

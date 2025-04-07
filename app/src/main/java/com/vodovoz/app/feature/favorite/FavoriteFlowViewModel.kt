@@ -118,34 +118,35 @@ class FavoriteFlowViewModel @Inject constructor(
         val favoritesMap = likeManager.observeLikes().firstOrNull() ?: return@launch
         val currentFavoritesMap = dataState.products.associate { it.id to it.isFavorite }
 
-        //TODO - do something
 
-        favoritesMap.map { (productId, isFavorite) ->
-            if (isFavorite != currentFavoritesMap.getOrDefault(productId,false)) {
+        //TODO - check new categories
+        val newFavorites = favoritesMap.keys - currentFavoritesMap.keys
+        if (newFavorites.isNotEmpty()) {
+            selectCategory(dataState.currentCategory)
+            return@launch
+        }
+
+
+        val commonProducts = favoritesMap.keys.intersect(currentFavoritesMap.keys)
+
+        commonProducts.forEach { productId ->
+            val isFavoriteInCache = favoritesMap[productId] ?: false
+            val isFavoriteInCurrent = currentFavoritesMap[productId] ?: false
+
+            if (isFavoriteInCache != isFavoriteInCurrent) {
                 fetchFavoriteProducts()
                 return@launch
             }
         }
-
-
-        favoritesMap.forEach { (productId, isFavorite) ->
-            if (isFavorite != currentFavoritesMap.getOrDefault(productId,false) || currentFavoritesMap[productId] == false) {
-                fetchFavoriteProducts()
-                return@launch
-            }
-        }
-
     }
 
-    suspend fun listenFavorites() {
+    private suspend fun listenFavorites() {
         uiStateListener.map { pagingState -> pagingState.data.products }
             .combine(likeManager.observeLikes()) { products, favorites ->
                 products to favorites
             }.collectLatest { (products, favorites) ->
                 uiStateListener.updateData { s ->
-                    s.copy(
-                        products = products.withUpdatedFavorites(favorites)
-                    )
+                    s.copy(products = products.withUpdatedFavorites(favorites))
                 }
             }
     }
@@ -581,6 +582,10 @@ class FavoriteFlowViewModel @Inject constructor(
         eventListener.emit(FavoriteEvents.GoToSearch)
     }
 
+    fun navigateToCatalog() = viewModelScope.launch {
+        eventListener.emit(FavoriteEvents.GoToCatalog)
+    }
+
     sealed class FavoriteEvents : Event {
         data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) :
             FavoriteEvents()
@@ -588,6 +593,7 @@ class FavoriteFlowViewModel @Inject constructor(
         data object GoToProfile : FavoriteEvents()
         data object ScrollToTop : FavoriteEvents()
         data object GoToSearch : FavoriteEvents()
+        data object GoToCatalog : FavoriteEvents()
 
         data class GoToCategories(
             val categories: List<CategoryUi>,

@@ -7,10 +7,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -44,8 +46,8 @@ fun VodovozChip(
         modifier = modifier
             .vodovozSurface(
                 border = if (selected) null else BorderStroke(
-                    1.dp,
-                    MaterialTheme.colorScheme.surfaceVariant
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.surfaceVariant
                 ),
                 shape = MaterialTheme.shapes.small,
                 backgroundColor = containerColor,
@@ -151,14 +153,18 @@ fun VodovozColorChipSmall(modifier: Modifier = Modifier, color: Color, text: Str
     Box(
         modifier = modifier
             .widthIn(30.dp)
+            .height(16.dp)
             .clip(MaterialTheme.shapes.small)
             .background(color),
         contentAlignment = Alignment.Center
     ) {
+
+        val textStyle = ExtendedTheme.typography.labelExtraSmall
+
         Text(
             text = text,
             modifier = Modifier.padding(horizontal = 5.dp),
-            style = ExtendedTheme.typography.labelExtraSmall,
+            style = textStyle.copy(lineHeight = textStyle.fontSize),
             color = MaterialTheme.colorScheme.background
         )
     }

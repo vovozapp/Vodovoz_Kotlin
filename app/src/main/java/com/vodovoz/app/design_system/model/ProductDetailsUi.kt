@@ -22,6 +22,7 @@ import com.vodovoz.app.domain.general.model.PriceModel
 import com.vodovoz.app.domain.general.model.ProductDetailsButtonsModel
 import com.vodovoz.app.domain.general.model.ProductDetailsModel
 import com.vodovoz.app.domain.general.model.ProductDetailsTabModel
+import com.vodovoz.app.domain.general.model.ProductVideoModel
 import com.vodovoz.app.domain.general.model.PromoProductModel
 import com.vodovoz.app.util.fromHexOrUnspecified
 import kotlinx.parcelize.Parcelize
@@ -78,7 +79,7 @@ data class ProductDetailsUi(
     val documents: ContentBlockUi<List<DocumentUi>>,
 
     val detailPicture: String,
-    val pictures: List<String>,
+    val mediaList: List<ProductMediaUi>,
     val sectionQueries: SectionUi<String>,
     val isFavorite: Boolean,
     val isAvailable: Boolean,
@@ -90,9 +91,6 @@ data class ProductDetailsUi(
 
     val shareUrl: String,
     val shareUrlText: String,
-
-    val youtubeUrl: String?,
-    val rutubeUrl: String?,
 
     val coefficient: Float,
     val pricePerUnit: String?,
@@ -118,7 +116,7 @@ data class ProductDetailsUi(
             documents = ContentBlockUi("", emptyList(), ""),
 
             detailPicture = "",
-            pictures = emptyList(),
+            mediaList = emptyList(),
             sectionQueries = SectionUi.empty(),
             isFavorite = false,
             isAvailable = false,
@@ -130,9 +128,6 @@ data class ProductDetailsUi(
             shareUrl = "",
             shareUrlText = "",
 
-            youtubeUrl = null,
-            rutubeUrl = null,
-
             coefficient = 0f,
             pricePerUnit = null,
             articleNumber = "",
@@ -143,6 +138,31 @@ data class ProductDetailsUi(
         )
 
     }
+}
+
+@Immutable
+sealed interface ProductMediaUi {
+    @Immutable
+    data class Picture(val url: String) : ProductMediaUi
+    @Immutable
+    data class Video(val video: ProductVideoUi) : ProductMediaUi
+}
+
+data class ProductVideoUi(
+    val previewImage: String,
+    val code: String,
+) {
+    companion object {
+        val Empty = ProductVideoUi("", "")
+    }
+}
+
+fun ProductVideoModel.toUi(): ProductVideoUi {
+    return ProductVideoUi(previewImage, code)
+}
+
+fun ProductVideoUi.toProductMedia(): ProductMediaUi.Video {
+    return ProductMediaUi.Video(this)
 }
 
 fun ProductDetailsModel.toUi(): ProductDetailsUi {
@@ -158,7 +178,10 @@ fun ProductDetailsModel.toUi(): ProductDetailsUi {
         documents = documents.toUi { value -> value.mapToUi() },
 
         detailPicture = detailPicture,
-        pictures = pictures,
+        mediaList = pictures.map { ProductMediaUi.Picture(it) } + listOf(
+            rutubeVideo,
+            youtubeVideo
+        ).mapNotNull { videoModel -> videoModel?.toUi()?.toProductMedia() },
         sectionQueries = sectionTags.toUi { tag -> tag },
         isFavorite = isFavorite,
         isAvailable = isAvailable,
@@ -169,9 +192,6 @@ fun ProductDetailsModel.toUi(): ProductDetailsUi {
 
         shareUrl = shareUrl,
         shareUrlText = shareUrlText,
-
-        youtubeUrl = youtubeUrl,
-        rutubeUrl = rutubeUrl,
 
         coefficient = coefficient,
         pricePerUnit = pricePerUnit,

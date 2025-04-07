@@ -16,6 +16,7 @@ import com.vodovoz.app.design_system.model.BrandCategoryItemUi
 import com.vodovoz.app.design_system.model.CommentUi
 import com.vodovoz.app.design_system.model.ProductDetailsButtonsUi
 import com.vodovoz.app.design_system.model.ProductDetailsUi
+import com.vodovoz.app.design_system.model.ProductMediaUi
 import com.vodovoz.app.design_system.model.ProductUi
 import com.vodovoz.app.design_system.model.SectionUi
 import com.vodovoz.app.util.calculateProductPrice
@@ -37,7 +38,7 @@ fun ProductDetailsBody(
     showAllProperties: Boolean,
     quantityButtonIsLoading: Boolean,
     onFloatingButtonChange: (Boolean) -> Unit,
-    onProductImageClick: (String) -> Unit,
+    onProductMediaClick: (ProductMediaUi) -> Unit,
     onDetailPreviewTextShowOrHide: () -> Unit,
     onAllPropertiesShow: () -> Unit,
     onAddToCart: () -> Unit,
@@ -58,6 +59,7 @@ fun ProductDetailsBody(
     onCategoryClick: (BrandCategoryItemUi) -> Unit,
     onProductClick: (ProductUi) -> Unit,
     onProductLikeClick: (ProductUi) -> Unit,
+    onCopyArticleNumberClick: () -> Unit
 ) {
     val scrollState = rememberScrollState()
 
@@ -66,11 +68,11 @@ fun ProductDetailsBody(
             .fillMaxSize()
             .verticalScroll(scrollState)
     ) {
-        ProductDetailsImagePager(
-            productImages = productDetails.pictures,
-            onImageClick = { image ->
-                onProductImageClick(image)
-            }
+        ProductDetailsMediaPager(
+            productMediaList = productDetails.mediaList,
+            onMediaClick = { media ->
+                onProductMediaClick(media)
+            },
         )
 
         ProductDetailsLabels(
@@ -93,9 +95,7 @@ fun ProductDetailsBody(
             numberOfReviews = productDetails.commentsCount,
             articleNumber = productDetails.articleNumber,
             onReviewsClick = onShowAllCommentsClick,
-            onCopyClick = {
-
-            },
+            onCopyClick = onCopyArticleNumberClick,
             onZeroReviewsClick = {
 
             }

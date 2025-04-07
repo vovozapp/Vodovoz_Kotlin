@@ -14,7 +14,7 @@ fun BannerDTO.toDomain(): BannerModel? {
         id = ID ?: return null,
         name = NAME ?: "",
         detailPicture = DETAIL_PICTURE?.toFullUrl() ?: return null,
-        action = HARAKTERISTIK?.toAction() ?: return null,
+        action = HARAKTERISTIK?.toAction(IBLOCK_ID ?: 73L) ?: return null,
         advertising = OREKLAME?.toDomain()
     )
 }

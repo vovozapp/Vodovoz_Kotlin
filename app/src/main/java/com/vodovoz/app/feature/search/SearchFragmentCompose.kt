@@ -1,5 +1,7 @@
 package com.vodovoz.app.feature.search
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +10,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.core.app.ActivityCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -20,8 +23,10 @@ import androidx.navigation.fragment.navArgs
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
+import com.vodovoz.app.core.navigation.navigateToProductDetails
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.placeholders.NetworkErrorPlaceholder
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
@@ -45,6 +50,10 @@ class SearchFragment : Fragment() {
 
     @Inject
     lateinit var tabManager: TabManager
+
+    @Inject
+    lateinit var permissionsControllerFactory: PermissionsController.Factory
+    private val permissionsController by lazy { permissionsControllerFactory.create(requireActivity()) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,6 +92,22 @@ class SearchFragment : Fragment() {
         viewModel.clearScrollState()
         initBackButton()
     }
+
+    private fun navigateToQrCodeFragment() {
+        permissionsController.methodRequiresCameraPermission {
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return@methodRequiresCameraPermission
+            }
+
+            findNavController().navigate(R.id.qrCodeFragment)
+
+        }
+    }
+
 
     private fun observeEvents() {
         lifecycleScope.launch {
@@ -144,6 +169,14 @@ class SearchFragment : Fragment() {
                                     R.id.paginatedProductsCatalogWithoutFiltersFragment,
                                     bundleOf("dataSource" to event.searchDataSource)
                                 )
+                            }
+
+                            SearchFlowViewModel.SearchEvents.GoToScanner -> {
+                                navigateToQrCodeFragment()
+                            }
+
+                            is SearchFlowViewModel.SearchEvents.GoToProductDetails -> {
+                                findNavController().navigateToProductDetails(event.id)
                             }
                         }
                     }

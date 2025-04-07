@@ -9,5 +9,5 @@ data class RUTUBEVIDEO_DTO(
     @Json(name = "IMAGE")
     val IMAGE: String?,
     @Json(name = "VIDEO")
-    val VIDEO: Any?
+    val VIDEO: String?
 )

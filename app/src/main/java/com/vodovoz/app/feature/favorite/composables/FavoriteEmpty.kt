@@ -21,7 +21,7 @@ import com.vodovoz.app.design_system.composables.button.VodovozButton
 import com.vodovoz.app.design_system.composables.button.VodovozButtonDefaults
 
 @Composable
-fun FavoriteEmpty(modifier: Modifier = Modifier) {
+fun FavoriteEmpty(modifier: Modifier = Modifier, onButtonClick: () -> Unit) {
     Column(modifier = modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(modifier = Modifier.weight(1f))
 
@@ -55,9 +55,7 @@ fun FavoriteEmpty(modifier: Modifier = Modifier) {
                 .padding(horizontal = 16.dp)
                 .padding(top = 32.dp),
             text = stringResource(id = R.string.catalog_button_text),
-            onClick = {
-
-            },
+            onClick = onButtonClick,
             colors = VodovozButtonDefaults.secondaryColors()
         )
 

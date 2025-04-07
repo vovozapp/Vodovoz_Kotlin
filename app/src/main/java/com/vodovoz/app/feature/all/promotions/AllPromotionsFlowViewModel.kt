@@ -3,7 +3,6 @@ package com.vodovoz.app.feature.all.promotions
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
-import androidx.paging.filter
 import androidx.paging.map
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.content.ErrorState
@@ -26,6 +25,7 @@ import com.vodovoz.app.mapper.AllPromotionBundleMapper.mapToUI
 import com.vodovoz.app.ui.model.PromotionFilterUI
 import com.vodovoz.app.ui.model.custom.AllPromotionBundleUI
 import com.vodovoz.app.util.extensions.debugLog
+import com.vodovoz.app.util.extensions.singleResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -36,7 +36,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.singleOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -50,18 +49,26 @@ class AllPromotionsFlowViewModel @Inject constructor(
     AllPromotionsState()
 ) {
 
-    private var dataSource = savedState.get<AllPromotionsFragment.DataSource>("dataSource")
+    private val dataSource = savedState.get<AllPromotionsFragment.DataSource>("dataSource")
         ?: AllPromotionsFragment.DataSource.All
 
 
     private fun fetchPromotions() = viewModelScope.launch {
-        uiStateListener.updateData { s ->
-            s.copy(uiState = UiState.Loading)
-        }
+        uiStateListener.updateData { s -> s.copy(uiState = UiState.Loading) }
 
         val sectionPromotions = with(dataState) {
-            if (categories.isEmpty() && title.isEmpty()) {
-                vodovozServiceRepository.getPromotionsWithSections().singleOrNull()?.getOrNull()
+            if (categories.isEmpty()) {
+                when (dataSource) {
+                    AllPromotionsFragment.DataSource.All -> vodovozServiceRepository.getPromotionsWithSections()
+                        .singleResult().getOrNull()
+
+                    is AllPromotionsFragment.DataSource.ByBanner -> vodovozServiceRepository.getBannerPromotions(
+                        dataSource.bannerId,
+                        dataSource.blockId,
+                        dataState.currentCategory.id
+                    ).singleResult().getOrNull()
+                }
+
             } else PromotionsSectionModel(title, categories.mapToDomain(), emptyList(), null)
         }
 
@@ -71,14 +78,12 @@ class AllPromotionsFlowViewModel @Inject constructor(
                 val currentCategory =
                     if (s.currentCategory == PromotionCategoryUi.Empty) (categories.firstOrNull()
                         ?: PromotionCategoryUi.Empty) else s.currentCategory
-                val pagedPromotionsFlow = vodovozServiceRepository.getPromotionsPaged()
-                    .map { pagingData ->
-                        pagingData.map { promotionModel ->
-                            promotionModel.toUi()
-                        }.filter {
-                            it.categoryId == currentCategory.id || currentCategory.id == 0
+                val pagedPromotionsFlow =
+                    vodovozServiceRepository.getPromotionsPaged(categoryId = currentCategory.id)
+                        .map { pagingData ->
+                            pagingData.map { promotion -> promotion.toUi() }
                         }
-                    }
+
                 val title = sectionPromotions.title
 
                 s.copy(
@@ -108,7 +113,7 @@ class AllPromotionsFlowViewModel @Inject constructor(
 
                     is AllPromotionsFragment.DataSource.ByBanner -> emit(
                         repository.fetchPromotionsByBanner(
-                            categoryId = dataSource.categoryId
+                            categoryId = -1 //dataSource.categoryId
                         )
                     )
                 }
@@ -230,6 +235,7 @@ class AllPromotionsFlowViewModel @Inject constructor(
             code = ""
         ),
         val scrollToTop: Boolean = false,
+
         val categories: List<PromotionCategoryUi> = emptyList(),
         val currentCategory: PromotionCategoryUi = PromotionCategoryUi.Empty,
         val title: String = "",

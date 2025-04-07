@@ -12,9 +12,10 @@ import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.design_system.model.AboutAdvertisingUi
 import com.vodovoz.app.design_system.model.BannerUi
+import com.vodovoz.app.design_system.model.ParentCategoryUi
 import com.vodovoz.app.domain.general.model.DataAllAction
+import com.vodovoz.app.domain.general.model.VodovozAction
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
-import com.vodovoz.app.feature.catalog.model.CatalogCategoryUi
 import com.vodovoz.app.feature.catalog.model.toUi
 import com.vodovoz.app.mapper.CategoryMapper.mapToUI
 import com.vodovoz.app.ui.model.CatalogBannerUI
@@ -119,7 +120,7 @@ class CatalogFlowViewModel @Inject constructor(
         eventListener.emit(CatalogEvents.GoToSearch)
     }
 
-    fun chooseCategory(catalogCategory: CatalogCategoryUi) = viewModelScope.launch {
+    fun chooseCategory(catalogCategory: ParentCategoryUi) = viewModelScope.launch {
         if (catalogCategory.childCategories.isNotEmpty()) {
             eventListener.emit(CatalogEvents.GoToSubCategories(catalogCategory))
         } else if (catalogCategory.action != null) {
@@ -143,20 +144,36 @@ class CatalogFlowViewModel @Inject constructor(
             s.copy(showAdvertisingBS = false)
         }
     }
+
+    fun navigateToScanner() = viewModelScope.launch {
+        eventListener.emit(CatalogEvents.GoToScanner)
+    }
+
+    fun showSpeechRecognizer() = viewModelScope.launch {
+        eventListener.emit(CatalogEvents.ShowSpeechRecognizer)
+    }
+
+    fun activateBannerAction(banner: BannerUi) = viewModelScope.launch {
+        eventListener.emit(CatalogEvents.ActivateVodovozAction(banner.action))
+    }
+
     sealed class CatalogEvents : Event {
-        data class GoToSubCategories(val catalogCategory: CatalogCategoryUi) : CatalogEvents()
-        data class GoToProductList(val catalogCategory: CatalogCategoryUi) : CatalogEvents()
+        data class GoToSubCategories(val catalogCategory: ParentCategoryUi) : CatalogEvents()
+        data class GoToProductList(val catalogCategory: ParentCategoryUi) : CatalogEvents()
         data class ActivateDataAllAction(val action: DataAllAction) : CatalogEvents()
+        data class ActivateVodovozAction(val action: VodovozAction) : CatalogEvents()
 
         data object GoToProfile : CatalogEvents()
         data object GoToSearch : CatalogEvents()
+        data object GoToScanner : CatalogEvents()
+        data object ShowSpeechRecognizer : CatalogEvents()
     }
 
     data class CatalogState(
         val itemsList: List<CategoryUI> = emptyList(),
         val topCatalogBanner: CatalogBannerUI? = null,
 
-        val categories: List<CatalogCategoryUi> = emptyList(),
+        val categories: List<ParentCategoryUi> = emptyList(),
         val banners: List<BannerUi> = emptyList(),
         val uiState: UiState = UiState.Loading,
         val showAdvertisingBS: Boolean = false,

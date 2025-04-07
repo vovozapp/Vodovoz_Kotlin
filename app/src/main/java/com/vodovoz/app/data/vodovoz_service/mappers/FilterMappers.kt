@@ -7,12 +7,16 @@ import com.vodovoz.app.data.vodovoz_service.model.filters.FiltersDTO
 import com.vodovoz.app.domain.general.model.FilterModel
 import com.vodovoz.app.domain.general.model.FilterValueModel
 import com.vodovoz.app.domain.general.model.FiltersModel
+import kotlin.math.max
+import kotlin.math.min
 
 fun FiltersDTO.toDomain(): FiltersModel {
     val min = CENAFILTER?.MIN ?: 0
-    val max = CENAFILTER?.MAX ?: throw IllegalArgumentException("Max of filter price can't be null")
+    val max = max(
+        min, CENAFILTER?.MAX ?: throw IllegalArgumentException("Max of filter price can't be null")
+    )
     return FiltersModel(
-        priceRange = min..max,
+        priceRange = min(min, max)..max,
         filters = DANNIE?.mapToDomain() ?: throw IllegalArgumentException("Filters can't be null")
     )
 }
@@ -40,7 +44,7 @@ fun List<FilterValueDTO>.mapToDomain(): List<FilterValueModel> {
     }
 }
 
-fun FilterValuesDTO.toDomain(): List<FilterValueModel>{
+fun FilterValuesDTO.toDomain(): List<FilterValueModel> {
     return DATA?.map {
         FilterValueModel(it, it)
     } ?: emptyList()
