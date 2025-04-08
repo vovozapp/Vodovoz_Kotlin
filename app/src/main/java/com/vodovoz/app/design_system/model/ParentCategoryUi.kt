@@ -17,13 +17,19 @@ data class ParentCategoryUi(
     val childCategories: List<ParentCategoryUi>,
 ) : Parcelable {
 
-    companion object{
+    companion object {
         val Empty = ParentCategoryUi(-1, "", "", DataAllAction.Unknown, emptyList())
     }
 
 }
 
-fun ParentCategoryUi.toCategory(): CategoryUi{
+fun ParentCategoryUi.allCategories(): List<ParentCategoryUi> {
+    return listOf(this) + childCategories.flatMap { category ->
+        category.allCategories()
+    }
+}
+
+fun ParentCategoryUi.toCategory(): CategoryUi {
     return CategoryUi(name, id.toInt())
 }
 

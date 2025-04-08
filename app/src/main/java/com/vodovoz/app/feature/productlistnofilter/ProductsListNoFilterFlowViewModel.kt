@@ -21,6 +21,7 @@ import com.vodovoz.app.common.resources.ResourcesProvider
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.design_system.model.ParentCategoryUi
 import com.vodovoz.app.design_system.model.ProductUi
+import com.vodovoz.app.design_system.model.allCategories
 import com.vodovoz.app.design_system.model.filters.FiltersPriceUi
 import com.vodovoz.app.design_system.model.filters.FiltersUi
 import com.vodovoz.app.design_system.model.filters.toDomain
@@ -95,10 +96,13 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
     private fun configureScreen() = viewModelScope.launch {
         if (dataSource is DataSource.Category) {
             uiStateListener.updateData { s ->
+
+                val currentCategory = CategoryUi(id = dataSource.categoryId.toInt(), name = "")
                 s.copy(
-                    currentCategory = CategoryUi(id = dataSource.categoryId.toInt(), name = ""),
+                    currentCategory = currentCategory,
                     showFilters = true,
-                    showCategoryList = true
+                    showCategoryList = true,
+                    currentBottomSheetCategory = currentCategory.toParentCategory()
                 )
             }
         } else {
@@ -308,8 +312,12 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
         fetchProductsSection: suspend () -> Result<ProductsSectionModel>,
         fetchPagedProductsFlow: () -> Flow<PagingData<ProductModel>>,
     ) {
+
+
         val productsSectionResult =
-            fetchProductsSection().map { productsSectionModel -> productsSectionModel.toUi() }
+            fetchProductsSection().map { productsSectionModel ->
+                productsSectionModel.toUi()
+            }
 
 
         productsSectionResult.onSuccess { productsSection ->
@@ -321,13 +329,20 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
                     currentSort = state.currentSort.takeIf { sort ->
                         sort != SortUi.Empty
                     } ?: productsSection.sorting.firstOrNull() ?: SortUi.Empty,
+                    currentBottomSheetCategory = state.currentCategory.toParentCategory()
                 )
+            }
+
+            if (dataSource is DataSource.Category) {
+                fetchCategoriesTree(dataState.currentCategory.id.toLong())
             }
 
             viewModelScope.launch {
                 fetchPagedProductsFlow().map { pagingData ->
                     pagingData.map { productModel -> productModel.toUi() }
-                }.collect { pagingData -> pagingProductsListener.collectPagingData(pagingData) }
+                }.collect { pagingData ->
+                    pagingProductsListener.collectPagingData(pagingData)
+                }
             }
 
         }.onFailure { t ->
@@ -445,22 +460,46 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
         }
     }
 
-    private fun fetchCategoriesTree() =
-        viewModelScope.launch {
-            val categoryTreeResult =
-                vodovozServiceRepository.getCategoryTree(dataState.currentBottomSheetCategory.id)
-                    .singleResult()
+    private fun fetchCategoriesTree(categoryId: Long) = viewModelScope.launch {
+        val categoryTreeResult =
+            vodovozServiceRepository.getCategoryTree(categoryId)
+                .singleResult()
 
-            categoryTreeResult.onSuccess { categoryTree ->
-                uiStateListener.updateData { s ->
-                    s.copy(
-                        categoryTree = categoryTree.map { category ->
-                            category.toUi()
-                        },
-                    )
+        categoryTreeResult.onSuccess { categoryTree ->
+            uiStateListener.updateData { s ->
+
+                val productsSection = s.productsSection
+
+                val uiCategoriesTree = categoryTree.map { category ->
+                    category.toUi()
                 }
+
+                val categories = productsSection.categories.ifEmpty {
+                    buildList {
+                        addAll(uiCategoriesTree.map { category -> category.allCategories() }
+                            .flatten()
+                            .map { category -> category.toCategory() }
+                        )
+                        removeIf { it.id == s.currentCategory.id }
+                    }
+                }
+
+                s.copy(
+                    categoryTree = uiCategoriesTree,
+                    showCategoryList = uiCategoriesTree.any { categoryUi ->
+                        categoryUi.childCategories.isNotEmpty()
+                    },
+                    productsSection = productsSection.copy(categories = categories)
+                )
+            }
+        }.onFailure {
+            uiStateListener.updateData { s ->
+                s.copy(
+                    showCategoryList = false
+                )
             }
         }
+    }
 
     fun selectBottomSheetCategory(category: ParentCategoryUi) = viewModelScope.launch {
         uiStateListener.updateData { s ->
@@ -469,7 +508,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
             )
         }
 
-        fetchCategoriesTree()
+        fetchCategoriesTree(categoryId = category.id)
     }
 
     fun selectCategory(category: CategoryUi) = viewModelScope.launch {
@@ -556,7 +595,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
                 currentBottomSheetCategory = s.currentCategory.toParentCategory()
             )
         }
-        fetchCategoriesTree()
+        fetchCategoriesTree(dataState.currentBottomSheetCategory.id)
     }
 
     fun hideCategoriesBottomSheet() = viewModelScope.launch {

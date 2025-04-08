@@ -1,5 +1,9 @@
 package com.vodovoz.app.feature.productlistnofilter.composables
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -76,7 +80,7 @@ fun ProductsNoFilterBody(
         }
 
         item(span = { GridItemSpan(maxLineSpan) }) {
-            if (categories.isNotEmpty() || showCategoryList) {
+            if(categories.isNotEmpty() || showCategoryList) {
                 ProductListCategoriesRow(
                     modifier = Modifier.padding(bottom = 16.dp),
                     categories = categories,

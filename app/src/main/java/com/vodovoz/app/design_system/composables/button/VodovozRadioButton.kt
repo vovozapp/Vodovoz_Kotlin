@@ -46,10 +46,9 @@ fun VodovozRadioButton(
     enabled: Boolean = true,
     interactionSource: MutableInteractionSource? = null,
 ) {
-    val dotRadius =
-        animateDpAsState(
+    val dotRadius = animateDpAsState(
             targetValue = if (selected) 14.dp / 2 else 0.dp,
-            animationSpec = tween(durationMillis = 120, easing = LinearEasing), label = "dotRadius"
+            animationSpec = tween(durationMillis = 90, easing = LinearEasing), label = "dotRadius"
         )
     val selectableModifier = Modifier.selectable(
         selected = selected,
