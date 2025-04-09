@@ -114,7 +114,7 @@ fun NavController.navigateToProductFilters(categoryId: Long, filters: FiltersUi)
         ),
         NavOptions.Builder()
             .setEnterAnim(R.anim.slide_in_botton)
-            .setExitAnim(R.anim.slide_out_botton)
+            .setExitAnim(R.anim.fade_out)
             .setPopExitAnim(R.anim.slide_out_botton)
             .build()
     )

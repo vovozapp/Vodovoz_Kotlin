@@ -12,8 +12,7 @@ fun LoginDetailsDTO.toDomain(): AuthDetailsModel {
         fields = DATA?.mapToDomain()
             ?: throw IllegalArgumentException("Login fields can't be null"),
         hasAgreement = SOGLASHENIE == "Y",
-        navigationButton = KNOPKA_AUTH?.toDomain() ?: throw IllegalArgumentException("Navigation button can't be null"),
-        mainButton =KNOPKA?.toDomain() ?: throw IllegalArgumentException("Login button can't be null")
+        buttons = KNOPKA?.map { it.toDomain() } ?: throw IllegalArgumentException("Auth button can't be null")
     )
 }
 

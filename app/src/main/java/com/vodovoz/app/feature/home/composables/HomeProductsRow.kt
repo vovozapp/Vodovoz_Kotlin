@@ -24,8 +24,9 @@ fun HomeProductsRow(
     onShowAllClick: (ButtonAction) -> Unit,
     onProductClick: (ProductUi) -> Unit,
     onProductLike: (ProductUi) -> Unit,
-    onIncrementToCart: (ProductUi) -> Unit  ,
-    onDecrementToCart: (ProductUi) -> Unit
+    onIncrementToCart: (ProductUi) -> Unit,
+    onDecrementToCart: (ProductUi) -> Unit,
+    onAnalogsClick: (ProductUi) -> Unit
 ) {
     if (sectionProducts.items.isNotEmpty()) {
         Column(modifier = modifier) {
@@ -49,7 +50,8 @@ fun HomeProductsRow(
                         onClick = onProductClick,
                         onLike = onProductLike,
                         onIncrementToCart = onIncrementToCart,
-                        onDecrementToCart = onDecrementToCart
+                        onDecrementToCart = onDecrementToCart,
+                        onAnalogsClick = onAnalogsClick
                     )
                 }
             }

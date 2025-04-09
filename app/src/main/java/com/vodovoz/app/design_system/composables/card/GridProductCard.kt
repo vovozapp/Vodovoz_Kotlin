@@ -51,9 +51,9 @@ fun GridProductCard(
     product: ProductUi,
     onClick: (ProductUi) -> Unit,
     onLike: (ProductUi) -> Unit,
-    onAnalogsClick: (ProductUi) -> Unit = {},
-    onIncrementToCart: (ProductUi) -> Unit = {},
-    onDecrementToCart: (ProductUi) -> Unit = {}
+    onAnalogsClick: (ProductUi) -> Unit,
+    onIncrementToCart: (ProductUi) -> Unit,
+    onDecrementToCart: (ProductUi) -> Unit,
 ) {
     val percentLabels =
         product.labels.filter { labelEntity -> labelEntity.name.any { s -> s == '%' } }
@@ -240,9 +240,14 @@ private fun GridProductCardPreview() {
             unitOfMeasurement = null
         )
 
-        GridProductCard(product = sampleProduct, onClick = {}, modifier = Modifier, onLike = {}) {
-
-        }
+        GridProductCard(
+            product = sampleProduct,
+            onClick = {},
+            modifier = Modifier,
+            onLike = {},
+            onAnalogsClick = {},
+            onDecrementToCart = {},
+            onIncrementToCart = {})
     }
 }
 

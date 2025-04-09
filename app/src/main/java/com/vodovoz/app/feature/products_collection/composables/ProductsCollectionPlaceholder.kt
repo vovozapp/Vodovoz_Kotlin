@@ -29,6 +29,7 @@ fun ProductsCollectionPlaceholder(modifier: Modifier = Modifier) {
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
+            .padding(horizontal = 16.dp)
     ) {
 
         Row(

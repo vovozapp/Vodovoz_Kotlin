@@ -46,7 +46,7 @@ import com.vodovoz.app.design_system.text.PhoneNumberVisualTransformation
 import com.vodovoz.app.util.formatRussianPhoneNumber
 
 @Composable
-fun VodovozTextField(
+private fun VodovozTextField(
     value: TextFieldValue,
     onValueChange: (TextFieldValue) -> Unit,
     modifier: Modifier = Modifier,
@@ -120,7 +120,10 @@ fun VodovozTextField(
                     )
                 }
                 Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
-                    this@Row.AnimatedVisibility(value.text.isEmpty(), exit = fadeOut(snap(0))) {
+                    this@Row.AnimatedVisibility(
+                        visible = value.text.isEmpty(),
+                        exit = fadeOut(snap(), 1f)
+                    ) {
                         Text(
                             text = hint,
                             color = MaterialTheme.colorScheme.surfaceTint,
@@ -180,9 +183,10 @@ fun VodovozTextField(
     val textFieldValue = textFieldValueState.copy(text = value)
     val haveFocus by interactionSource.collectIsFocusedAsState()
     val russianPhoneCode = stringResource(id = R.string.russian_phone_code)
+    val isPhone = visualTransformation is PhoneNumberVisualTransformation
 
     LaunchedEffect(haveFocus) {
-        if (haveFocus && !textFieldValue.text.startsWith(russianPhoneCode) && visualTransformation is PhoneNumberVisualTransformation) {
+        if (haveFocus && !textFieldValue.text.startsWith(russianPhoneCode) && isPhone) {
             val newText = formatRussianPhoneNumber(value)
             textFieldValueState = textFieldValueState.copy(
                 text = newText,
@@ -207,9 +211,10 @@ fun VodovozTextField(
         modifier = modifier,
         value = textFieldValue,
         onValueChange = { newTextFieldValueState ->
-            val newText = formatRussianPhoneNumber(newTextFieldValueState.text)
+            val newText =
+                if (isPhone) formatRussianPhoneNumber(newTextFieldValueState.text) else newTextFieldValueState.text
             val newSelection =
-                if (newTextFieldValueState.selection.start < russianPhoneCode.length && visualTransformation is PhoneNumberVisualTransformation) {
+                if (newTextFieldValueState.selection.start < russianPhoneCode.length && isPhone) {
                     TextRange(russianPhoneCode.length)
                 } else newTextFieldValueState.selection
 

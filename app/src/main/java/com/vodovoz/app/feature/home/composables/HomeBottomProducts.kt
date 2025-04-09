@@ -27,8 +27,9 @@ fun HomeBottomProducts(
     onProductClick: (ProductUi) -> Unit,
     onProductLike: (ProductUi) -> Unit,
     onShowAllClick: (ButtonAction) -> Unit,
-    onIncrementToCart: (ProductUi) -> Unit  ,
-    onDecrementToCart: (ProductUi) -> Unit
+    onIncrementToCart: (ProductUi) -> Unit,
+    onDecrementToCart: (ProductUi) -> Unit,
+    onProductAnalogsClick: (ProductUi) -> Unit
 ) {
     Column(modifier = modifier) {
         TitleAndButton(
@@ -56,7 +57,8 @@ fun HomeBottomProducts(
                     onClick = onProductClick,
                     onLike = onProductLike,
                     onIncrementToCart = onIncrementToCart,
-                    onDecrementToCart = onDecrementToCart
+                    onDecrementToCart = onDecrementToCart,
+                    onAnalogsClick = onProductAnalogsClick
                 )
             }
         }

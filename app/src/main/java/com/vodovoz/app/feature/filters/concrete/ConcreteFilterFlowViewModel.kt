@@ -42,7 +42,11 @@ class ConcreteFilterFlowViewModel @Inject constructor(
         }
         val filterValuesResult =
             vodovozServiceRepository.getFilterValues(categoryId, filter.id).singleResult()
+
+        //todo
+        delay(250L)
         filterValuesResult.onSuccess { filterValues ->
+
             uiStateListener.updateData { s ->
                 s.copy(
                     filter = filter.copy(
@@ -55,7 +59,6 @@ class ConcreteFilterFlowViewModel @Inject constructor(
                 )
             }
         }.onFailure {
-            delay(150L)
             navigateBack()
         }
     }

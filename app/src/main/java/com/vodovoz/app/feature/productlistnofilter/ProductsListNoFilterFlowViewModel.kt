@@ -27,7 +27,9 @@ import com.vodovoz.app.design_system.model.filters.FiltersUi
 import com.vodovoz.app.design_system.model.filters.toDomain
 import com.vodovoz.app.design_system.model.toCategory
 import com.vodovoz.app.design_system.model.toUi
+import com.vodovoz.app.design_system.model.withUpdatedCart
 import com.vodovoz.app.design_system.model.withUpdatedFavorites
+import com.vodovoz.app.design_system.model.withUpdatedLoading
 import com.vodovoz.app.domain.general.model.EmptyResultException
 import com.vodovoz.app.domain.general.model.FiltersModel
 import com.vodovoz.app.domain.general.model.ProductModel
@@ -52,6 +54,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -386,6 +389,30 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
         }
     }
 
+    suspend fun listProductLoadings() =         uiStateListener.map { state -> state.data.products }
+        .distinctUntilChanged()
+        .combine(cartManager.blockedProductsState) { _, blockedProducts ->
+            blockedProducts
+        }.collectLatest { blockedProducts ->
+            uiStateListener.updateData { s ->
+                s.copy(
+                    products = s.products.withUpdatedLoading(blockedProducts)
+                )
+            }
+        }
+
+    suspend fun listenCart() =
+        uiStateListener.map { state -> state.data.products }
+            .distinctUntilChanged()
+            .combine(cartManager.observeCarts()) { _, cart ->
+                cart
+            }.collectLatest { cart ->
+                uiStateListener.updateData { s ->
+                    s.copy(
+                        products = s.products.withUpdatedCart(cart)
+                    )
+                }
+            }
 
     private fun listenFavorites() = viewModelScope.launch {
         uiStateListener.map { pagingState -> pagingState.data.products }
@@ -611,6 +638,18 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
         selectCategory(currentCategory)
     }
 
+    fun decrementProductToCart(product: ProductUi) = viewModelScope.launch {
+        cartManager.change(product.id, product.cartQuantity - 1)
+    }
+
+    fun incrementProductToCart(product: ProductUi) = viewModelScope.launch {
+        cartManager.change(product.id, product.cartQuantity + 1)
+    }
+
+    fun navigateToProductAnalogs(product: ProductUi) = viewModelScope.launch {
+        eventListener.emit(ProductListNoFilterEvent.GoToProductAnalogs(product.id))
+    }
+
     @Immutable
     data class ProductListNoFilterState(
         val categoryId: Long = -1,
@@ -665,6 +704,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
             ProductListNoFilterEvent()
 
         data class Share(val text: String) : ProductListNoFilterEvent()
+        data class GoToProductAnalogs(val productId: Long) : ProductListNoFilterEvent()
     }
 
     companion object {

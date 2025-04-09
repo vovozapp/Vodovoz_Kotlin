@@ -24,6 +24,7 @@ import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
 import com.vodovoz.app.common.tab.TabManager
+import com.vodovoz.app.core.navigation.navigateToAnalogs
 import com.vodovoz.app.core.navigation.navigateToCategories
 import com.vodovoz.app.core.navigation.navigateToProductDetails
 import com.vodovoz.app.core.navigation.navigateToSearch
@@ -99,9 +100,13 @@ class FavoriteFragment : Fragment() {
                         observeEvents(lazyGridState)
                     }
 
-//                    LifecycleEffect {
-//                        viewModel.listenFavorites()
-//                    }
+                    LifecycleEffect {
+                        viewModel.listenCart()
+                    }
+
+                    LifecycleEffect {
+                        viewModel.listenProductLoadings()
+                    }
 
                 }
             }
@@ -152,6 +157,10 @@ class FavoriteFragment : Fragment() {
                     FavoriteFlowViewModel.FavoriteEvents.GoToCatalog -> {
                         tabManager.selectTab(R.id.graph_catalog)
                         findNavController().popBackStack(R.id.catalogFragment, false)
+                    }
+
+                    is FavoriteFlowViewModel.FavoriteEvents.GoToProductAnalogs -> {
+                        findNavController().navigateToAnalogs(event.productId)
                     }
                 }
             }

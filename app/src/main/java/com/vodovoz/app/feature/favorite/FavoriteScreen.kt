@@ -95,6 +95,15 @@ fun FavoriteScreen(
                         },
                         onProductSee = { index ->
                             viewModel.notifyPagingProducts(index)
+                        },
+                        onProductAnalogsClick = { product ->
+                            viewModel.navigateToProductAnalogs(product)
+                        },
+                        onIncrementProductToCart = { product ->
+                            viewModel.incrementProductToCart(product)
+                        },
+                        onDecrementProductToCart = { product ->
+                            viewModel.decrementProductToCart(product)
                         }
                     )
                 }

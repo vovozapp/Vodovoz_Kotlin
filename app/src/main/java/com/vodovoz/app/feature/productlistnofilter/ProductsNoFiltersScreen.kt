@@ -49,10 +49,10 @@ fun ProductsNoFiltersScreen(
                 viewModel.navigateToSearch(searchQuery)
             },
             onMicClick = {
-
+                //todo - implement realization
             },
             onScanClick = {
-
+                //todo - implement realization
             },
             onNavigationClick = {
                 viewModel.navigateBack()
@@ -125,6 +125,16 @@ fun ProductsNoFiltersScreen(
                         },
                         onShareClick = {
                             viewModel.shareProducts()
+                        },
+                        onDecrementProductToCart = { product ->
+                            viewModel.decrementProductToCart(product)
+                        },
+                        onIncrementProductToCart = { product ->
+                            viewModel.incrementProductToCart(product)
+
+                        },
+                        onProductAnalogsClick = { product ->
+                            viewModel.navigateToProductAnalogs(product)
                         }
                     )
 

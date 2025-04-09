@@ -3,6 +3,7 @@ package com.vodovoz.app.feature.home.composables
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -34,7 +35,8 @@ fun HomeTopProducts(
     onProductClick: (ProductUi) -> Unit,
     onProductLike: (ProductUi) -> Unit,
     onIncrementToCart: (ProductUi) -> Unit,
-    onDecrementToCart: (ProductUi) -> Unit
+    onDecrementToCart: (ProductUi) -> Unit,
+    onProductAnalogsClick: (ProductUi) -> Unit
 ) {
 
     val button = sectionCategoriesWithProducts.button
@@ -64,7 +66,6 @@ fun HomeTopProducts(
             }
         }
 
-
         LazyRow(
             state = lazyListState,
             modifier = Modifier.padding(top = 16.dp),
@@ -79,7 +80,8 @@ fun HomeTopProducts(
                     onClick = onProductClick,
                     onLike = onProductLike,
                     onIncrementToCart = onIncrementToCart,
-                    onDecrementToCart = onDecrementToCart
+                    onDecrementToCart = onDecrementToCart,
+                    onAnalogsClick = onProductAnalogsClick
                 )
             }
         }

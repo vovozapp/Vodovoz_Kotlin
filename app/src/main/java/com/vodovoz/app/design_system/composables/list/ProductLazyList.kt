@@ -43,6 +43,9 @@ fun ProductLazyList(
     modifier: Modifier = Modifier,
     onProductClick: (ProductUi) -> Unit,
     onProductLike: (ProductUi) -> Unit,
+    onIncrementProductToCart: (ProductUi) -> Unit,
+    onDecrementProductToCart: (ProductUi) -> Unit,
+    onProductAnalogsClick: (ProductUi) -> Unit
 ) {
 
     LazyVerticalGrid(
@@ -62,7 +65,10 @@ fun ProductLazyList(
                     product = products[i],
                     onClick = onProductClick,
                     onLike = onProductLike,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    onAnalogsClick = onProductAnalogsClick,
+                    onDecrementToCart = onDecrementProductToCart,
+                    onIncrementToCart = onIncrementProductToCart
                 )
             }
         } else {
@@ -72,10 +78,13 @@ fun ProductLazyList(
                 span = { GridItemSpan(2) }
             ) { i ->
                 LinearProductCard(
+                    modifier = Modifier.fillMaxWidth(),
                     product = products[i],
                     onClick = onProductClick,
                     onLike = onProductLike,
-                    modifier = Modifier.fillMaxWidth()
+                    onAnalogsClick = onProductAnalogsClick,
+                    onDecrementToCart = onDecrementProductToCart,
+                    onIncrementToCart = onIncrementProductToCart
                 )
             }
         }
@@ -89,6 +98,9 @@ fun LazyGridScope.linearProducts(
     onProductSee: (Int) -> Unit,
     onProductClick: (ProductUi) -> Unit,
     onProductLike: (ProductUi) -> Unit,
+    onProductAnalogsClick: (ProductUi) -> Unit,
+    onIncrementProductToCart: (ProductUi) -> Unit,
+    onDecrementProductToCart: (ProductUi) -> Unit
 ) {
 
     when (loadState.refresh) {
@@ -105,10 +117,13 @@ fun LazyGridScope.linearProducts(
 
                 Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                     LinearProductCard(
+                        modifier = Modifier.fillMaxWidth(),
                         product = product,
                         onClick = onProductClick,
                         onLike = onProductLike,
-                        modifier = Modifier.fillMaxWidth()
+                        onIncrementToCart = onIncrementProductToCart,
+                        onDecrementToCart = onDecrementProductToCart,
+                        onAnalogsClick = onProductAnalogsClick
                     )
                     if (currentIndex != products.size - 1) {
                         Spacer(modifier = Modifier.height(16.dp))
@@ -164,6 +179,9 @@ fun LazyGridScope.gridProducts(
     onProductSee: (Int) -> Unit,
     onProductClick: (ProductUi) -> Unit,
     onProductLike: (ProductUi) -> Unit,
+    onProductAnalogsClick: (ProductUi) -> Unit,
+    onIncrementProductToCart: (ProductUi) -> Unit,
+    onDecrementProductToCart: (ProductUi) -> Unit
 ) {
 
     when (loadState.refresh) {
@@ -178,7 +196,10 @@ fun LazyGridScope.gridProducts(
                         product = products[index],
                         onClick = onProductClick,
                         onLike = onProductLike,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        onDecrementToCart = onDecrementProductToCart,
+                        onAnalogsClick = onProductAnalogsClick,
+                        onIncrementToCart = onIncrementProductToCart
                     )
                     if (index != products.size - 1) {
                         Spacer(modifier = Modifier.height(8.dp))
@@ -241,48 +262,4 @@ inline fun GridHorizontalPadding(
         content()
     }
 }
-
-
-fun LazyGridScope.gridProducts(
-    lazyPagingProducts: LazyPagingItems<ProductUi>,
-    shimmerState: Shimmer,
-    onProductClick: (ProductUi) -> Unit,
-    onProductLike: (ProductUi) -> Unit,
-) {
-    val loadState = lazyPagingProducts.loadState
-
-    items(
-        count = lazyPagingProducts.itemCount,
-        key = lazyPagingProducts.itemKey { it.id },
-        span = { GridItemSpan(1) },
-        contentType = lazyPagingProducts.itemContentType { "Products" },
-    ) { i ->
-        Column {
-            GridProductCard(
-                product = lazyPagingProducts[i] ?: return@items,
-                onClick = onProductClick,
-                onLike = onProductLike,
-                modifier = Modifier.fillMaxWidth()
-            )
-            if (i != lazyPagingProducts.itemCount - 1) {
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-        }
-    }
-
-    if (loadState.append is LoadState.Loading) {
-        items((lazyPagingProducts.itemCount % 2) + 2, span = { GridItemSpan(1) }) {
-            Column {
-                SkeletonBox(
-                    shimmerState = shimmerState,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(255.dp)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-        }
-    }
-}
-
 

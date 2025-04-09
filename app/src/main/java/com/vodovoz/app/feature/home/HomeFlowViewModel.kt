@@ -735,6 +735,10 @@ class HomeFlowViewModel @Inject constructor(
         cartManager.change(product.id, product.cartQuantity - 1)
     }
 
+    fun navigateToProductAnalogs(product: ProductUi) = viewModelScope.launch {
+        eventListener.emit(HomeEvents.GoToProductAnalogs(product.id))
+    }
+
     data class PositionItem(
         val position: Int,
         val item: Item,
@@ -763,6 +767,7 @@ class HomeFlowViewModel @Inject constructor(
         data class ActivateVodovozAction(val action: VodovozAction) : HomeEvents()
         data class GoToOrderDetails(val orderId: Int) : HomeEvents()
         data class GoToWebView(val url: String, val title: String) : HomeEvents()
+        data class GoToProductAnalogs(val productId: Long) : HomeEvents()
     }
 
     @Immutable

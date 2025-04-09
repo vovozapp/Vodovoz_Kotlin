@@ -25,6 +25,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.unit.dp
+import androidx.paging.CombinedLoadStates
 import androidx.paging.compose.LazyPagingItems
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
@@ -38,13 +39,21 @@ import com.vodovoz.app.design_system.model.ProductUi
 import com.vodovoz.app.design_system.model.PromotionDetailsUi
 import com.vodovoz.app.design_system.vodovozTextLinkStyle
 
+@Suppress("NonSkippableComposable")
 @Composable
 fun PromotionDetailsBody(
     modifier: Modifier = Modifier,
     promotionDetails: PromotionDetailsUi,
-    lazyPagingProducts: LazyPagingItems<ProductUi>,
+    products: List<ProductUi>,
+    productsLoadStates: CombinedLoadStates,
     productsTitle: String,
-    onHyperlinkClick: (String) -> Unit
+    onHyperlinkClick: (String) -> Unit,
+    onProductAnalogsClick: (ProductUi) -> Unit,
+    onIncrementProductToCart: (ProductUi) -> Unit,
+    onDecrementProductToCart: (ProductUi) -> Unit,
+    onProductClick: (ProductUi) -> Unit,
+    onProductLike: (ProductUi) -> Unit,
+    onProductSee: (Int) -> Unit,
 ) {
 
     val lazyGridState = rememberLazyGridState()
@@ -55,10 +64,10 @@ fun PromotionDetailsBody(
         columns = GridCells.Fixed(2),
         state = lazyGridState,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 16.dp)
+        contentPadding = PaddingValues(bottom = 16.dp)
     ) {
         item(span = { GridItemSpan(2) }) {
-            Column {
+            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(promotionDetails.picture).crossfade(true)
@@ -109,14 +118,15 @@ fun PromotionDetailsBody(
 
 
         gridProducts(
-            lazyPagingProducts = lazyPagingProducts,
+            products = products,
+            loadState = productsLoadStates,
             shimmerState = shimmerState,
-            onProductLike = {
-
-            },
-            onProductClick = {
-
-            }
+            onProductSee = onProductSee,
+            onProductAnalogsClick = onProductAnalogsClick,
+            onProductLike = onProductLike,
+            onDecrementProductToCart = onDecrementProductToCart,
+            onIncrementProductToCart = onIncrementProductToCart,
+            onProductClick = onProductClick,
         )
 
         item { Spacer(modifier = Modifier.height(16.dp)) }

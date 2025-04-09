@@ -37,6 +37,7 @@ import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.android.activate
 import com.vodovoz.app.core.android.createDataAllActivator
+import com.vodovoz.app.core.navigation.navigateToAnalogs
 import com.vodovoz.app.core.navigation.navigateToCategoryProductList
 import com.vodovoz.app.core.navigation.navigateToOrderDetails
 import com.vodovoz.app.core.navigation.navigateToOrdersHistory
@@ -391,6 +392,10 @@ class HomeFragment : Fragment() {
 
                 is HomeFlowViewModel.HomeEvents.GoToWebView -> {
                     findNavController().navigateToWebView(event.url, event.title)
+                }
+
+                is HomeFlowViewModel.HomeEvents.GoToProductAnalogs -> {
+                    findNavController().navigateToAnalogs(event.productId)
                 }
             }
         }

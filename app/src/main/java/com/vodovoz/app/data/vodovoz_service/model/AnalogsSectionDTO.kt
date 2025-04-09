@@ -1,7 +1,9 @@
 package com.vodovoz.app.data.vodovoz_service.model
 
+import androidx.annotation.Keep
 import com.squareup.moshi.Json
 
+@Keep
 data class AnalogsSectionDTO(
     @Json(name = "TITLE")
     val TITLE: String?,
@@ -11,6 +13,7 @@ data class AnalogsSectionDTO(
     val TOVAR: List<TOVAR_DATA_DTO>?,
 )
 
+@Keep
 data class ProductsSectionDTO(
     @Json(name = "COUNT")
     val COUNT: String? = null,
@@ -32,6 +35,7 @@ data class ProductsSectionDTO(
     val PODELITCA: PODELITCA_DTO? = null,
 )
 
+@Keep
 class CategoriesDTO(
     @Json(name = "LISTRAZDEL")
     val LISTRAZDEL: List<CATEGORY_DTO?>?,
@@ -39,6 +43,7 @@ class CategoriesDTO(
     val TITLERAZDEL: String?,
 )
 
+@Keep
 class PODELITCA_DTO(
     @Json(name = "detail_page_url")
     val detailPageUrl: String? = null,
@@ -46,6 +51,7 @@ class PODELITCA_DTO(
     val detailPageUrlIOS: PAGE_URL_IOS_DTO? = null,
 )
 
+@Keep
 class PAGE_URL_IOS_DTO(
     @Json(name = "NAME")
     val name: String? = null,

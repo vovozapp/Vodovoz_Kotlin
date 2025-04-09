@@ -1,10 +1,12 @@
 package com.vodovoz.app.data.vodovoz_service.model
 
+import androidx.annotation.Keep
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import com.vodovoz.app.domain.general.model.ColorfulButtonModel
 
 @JsonClass(generateAdapter = true)
+@Keep
 data class VodovozResponseDTO<T>(
     @Json(name = "status")
     val status: String?,
@@ -17,6 +19,7 @@ data class VodovozResponseDTO<T>(
 )
 
 @JsonClass(generateAdapter = true)
+@Keep
 data class ErrorDataDTO(
     @Json(name = "TITLE") val title: String?,
     @Json(name = "ZAGALOVOK") val header: String?,
@@ -26,6 +29,7 @@ data class ErrorDataDTO(
 )
 
 @JsonClass(generateAdapter = true)
+@Keep
 data class ErrorDataButtonDTO(
     @Json(name = "TEXT")
     val text: String?,

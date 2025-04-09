@@ -15,7 +15,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.fragment.findNavController
 import com.vodovoz.app.R
@@ -24,6 +23,8 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
+import com.vodovoz.app.core.navigation.navigateToAnalogs
+import com.vodovoz.app.core.navigation.navigateToProductDetails
 import com.vodovoz.app.core.navigation.navigateToWebView
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.placeholders.NetworkErrorPlaceholder
@@ -61,8 +62,6 @@ class PromotionDetailsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        val navController = findNavController()
-
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.Default)
             setContent {
@@ -87,13 +86,34 @@ class PromotionDetailsFragment : Fragment() {
                     }
 
                     LifecycleEffect {
+                        viewModel.listenCart()
+                    }
+
+                    LifecycleEffect {
+                        viewModel.listenProductLoadings()
+                    }
+
+                    LifecycleEffect {
+                        viewModel.listenFavorites()
+                    }
+
+                    LifecycleEffect {
                         viewModel.observeEvent().collect { event ->
                             when (event) {
                                 PromotionDetailFlowViewModel.PromotionDetailEvent.GoBack -> {
-                                    navController.popBackStack()
+                                    findNavController().popBackStack()
                                 }
+
                                 is PromotionDetailFlowViewModel.PromotionDetailEvent.GoToWebView -> {
-                                    navController.navigateToWebView(event.url, "")
+                                    findNavController().navigateToWebView(event.url, "")
+                                }
+
+                                is PromotionDetailFlowViewModel.PromotionDetailEvent.GoToProductAnalogs -> {
+                                    findNavController().navigateToAnalogs(event.productId)
+                                }
+
+                                is PromotionDetailFlowViewModel.PromotionDetailEvent.GoToProductDetails -> {
+                                    findNavController().navigateToProductDetails(event.productId)
                                 }
                             }
                         }

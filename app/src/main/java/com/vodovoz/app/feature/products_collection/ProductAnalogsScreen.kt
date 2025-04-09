@@ -17,8 +17,9 @@ import com.vodovoz.app.feature.products_collection.composables.ProductsCollectio
 import com.vodovoz.app.feature.products_collection.model.ProductsCollectionState
 import com.vodovoz.app.feature.products_collection.model.ProductsCollectionUiState
 
+@Suppress("NonSkippableComposable")
 @Composable
-fun ProductsCollectionScreen(
+fun ProductAnalogsScreen(
     viewModel: ProductsCollectionViewModel,
     viewState: ProductsCollectionState,
 ) {
@@ -30,10 +31,10 @@ fun ProductsCollectionScreen(
             .consumeWindowInsets(WindowInsets.systemBars)
     ) {
         VodovozTopBar(
+            title = productsSection.title,
             onBack = {
                 viewModel.navigateBack()
             },
-            title = productsSection.title
         )
 
         when(viewState.uiState){
@@ -59,8 +60,21 @@ fun ProductsCollectionScreen(
                 ProductLazyList(
                     products = products,
                     isGridView = viewState.isGridView,
-                    onProductClick = {},
-                    onProductLike = {}
+                    onProductClick = { product ->
+                        viewModel.navigateToProductDetails(product)
+                    },
+                    onProductLike = { product ->
+                        viewModel.changeProductFavorite(product)
+                    },
+                    onProductAnalogsClick = { product ->
+                        viewModel.navigateToProductAnalogs(product)
+                    },
+                    onIncrementProductToCart = { product ->
+                        viewModel.incrementProductToCart(product)
+                    },
+                    onDecrementProductToCart = { product ->
+                        viewModel.decrementProductToCart(product)
+                    },
                 )
             }
         }

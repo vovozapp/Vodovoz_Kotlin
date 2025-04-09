@@ -1,9 +1,5 @@
 package com.vodovoz.app.feature.productlistnofilter.composables
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -58,8 +54,11 @@ fun ProductsNoFilterBody(
     onCategoriesListClick: () -> Unit,
     onProductClick: (ProductUi) -> Unit,
     onProductLike: (ProductUi) -> Unit,
-    onFiltersClick: (() -> Unit)?,
+    onFiltersClick: (() -> Unit)? = null,
     onShareClick: () -> Unit,
+    onProductAnalogsClick: (ProductUi) -> Unit,
+    onIncrementProductToCart: (ProductUi) -> Unit,
+    onDecrementProductToCart: (ProductUi) -> Unit,
 ) {
     val shimmer = rememberShimmer(shimmerBounds = ShimmerBounds.View)
 
@@ -80,7 +79,7 @@ fun ProductsNoFilterBody(
         }
 
         item(span = { GridItemSpan(maxLineSpan) }) {
-            if(categories.isNotEmpty() || showCategoryList) {
+            if (categories.isNotEmpty() || showCategoryList) {
                 ProductListCategoriesRow(
                     modifier = Modifier.padding(bottom = 16.dp),
                     categories = categories,
@@ -118,7 +117,8 @@ fun ProductsNoFilterBody(
         if (refreshLoadState is LoadState.Error && refreshLoadState.error is EmptyResultException) {
             item(span = { GridItemSpan(2) }) {
                 //todo - do map domain state if need :)
-                val errorData = (refreshLoadState.error as? EmptyResultException)?.errorData ?: return@item
+                val errorData =
+                    (refreshLoadState.error as? EmptyResultException)?.errorData ?: return@item
 
                 EmptyResultPlaceholder(
                     title = errorData.headerHtml,
@@ -135,7 +135,10 @@ fun ProductsNoFilterBody(
                 shimmer,
                 onProductSee,
                 onProductClick,
-                onProductLike
+                onProductLike,
+                onProductAnalogsClick,
+                onIncrementProductToCart,
+                onDecrementProductToCart
             )
         } else {
             linearProducts(
@@ -144,7 +147,10 @@ fun ProductsNoFilterBody(
                 shimmer,
                 onProductSee,
                 onProductClick,
-                onProductLike
+                onProductLike,
+                onProductAnalogsClick,
+                onIncrementProductToCart,
+                onDecrementProductToCart
             )
         }
     }

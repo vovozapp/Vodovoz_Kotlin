@@ -52,7 +52,8 @@ fun HomeBody(
     onAboutAdvertisingClick: (AboutAdvertisingUi) -> Unit,
     onBannerClick: (BannerUi) -> Unit,
     onIncrementProductToCart: (ProductUi) -> Unit,
-    onDecrementProductToCart: (ProductUi) -> Unit
+    onDecrementProductToCart: (ProductUi) -> Unit,
+    onProductAnalogsClick: (ProductUi) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -102,7 +103,8 @@ fun HomeBody(
             onProductClick = onProductCardClick,
             onProductLike = onProductLike,
             onIncrementToCart = onIncrementProductToCart,
-            onDecrementToCart = onDecrementProductToCart
+            onDecrementToCart = onDecrementProductToCart,
+            onProductAnalogsClick = onProductAnalogsClick
         )
 
         HomeProductsRow(
@@ -112,7 +114,8 @@ fun HomeBody(
             onShowAllClick = onShowAllClick,
             onProductLike = onProductLike,
             onDecrementToCart = onDecrementProductToCart,
-            onIncrementToCart = onIncrementProductToCart
+            onIncrementToCart = onIncrementProductToCart,
+            onAnalogsClick = onProductAnalogsClick
         )
 
         HomeProductsRow(
@@ -122,7 +125,8 @@ fun HomeBody(
             onProductLike = onProductLike,
             onShowAllClick = onShowAllClick,
             onDecrementToCart = onDecrementProductToCart,
-            onIncrementToCart = onIncrementProductToCart
+            onIncrementToCart = onIncrementProductToCart,
+            onAnalogsClick = onProductAnalogsClick
         )
 
         HomePromotions(
@@ -141,7 +145,8 @@ fun HomeBody(
             onProductLike = onProductLike,
             onShowAllClick = onShowAllClick,
             onDecrementToCart = onDecrementProductToCart,
-            onIncrementToCart = onIncrementProductToCart
+            onIncrementToCart = onIncrementProductToCart,
+            onProductAnalogsClick = onProductAnalogsClick
         )
 
         HomeProductsRow(
@@ -151,7 +156,8 @@ fun HomeBody(
             onProductClick = onProductCardClick,
             onProductLike = onProductLike,
             onDecrementToCart = onDecrementProductToCart,
-            onIncrementToCart = onIncrementProductToCart
+            onIncrementToCart = onIncrementProductToCart,
+            onAnalogsClick = onProductAnalogsClick
         )
 
         Spacer(modifier = Modifier.height(24.dp))

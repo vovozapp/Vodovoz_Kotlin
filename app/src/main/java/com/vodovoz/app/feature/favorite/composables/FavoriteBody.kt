@@ -2,7 +2,6 @@ package com.vodovoz.app.feature.favorite.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -13,10 +12,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.paging.CombinedLoadStates
 import com.valentinilk.shimmer.ShimmerBounds
@@ -28,7 +23,6 @@ import com.vodovoz.app.design_system.composables.list.linearProducts
 import com.vodovoz.app.design_system.model.ProductUi
 import com.vodovoz.app.feature.home.model.CategoryUi
 import com.vodovoz.app.feature.product_comments.model.SortUi
-import com.vodovoz.app.util.extensions.debugLog
 
 @Suppress("NonSkippableComposable")
 @Composable
@@ -48,6 +42,9 @@ fun FavoriteBody(
     onCategoryClick: (CategoryUi) -> Unit,
     onProductLike: (ProductUi) -> Unit,
     onProductClick: (ProductUi) -> Unit,
+    onProductAnalogsClick: (ProductUi) -> Unit,
+    onIncrementProductToCart: (ProductUi) -> Unit,
+    onDecrementProductToCart: (ProductUi) -> Unit,
 ) {
     val shimmer = rememberShimmer(shimmerBounds = ShimmerBounds.View)
 
@@ -93,21 +90,27 @@ fun FavoriteBody(
 
         if (isGridView) {
             gridProducts(
-                products,
-                productsLoadStates,
-                shimmer,
-                onProductSee,
-                onProductClick,
-                onProductLike
+                products = products,
+                loadState = productsLoadStates,
+                shimmerState = shimmer,
+                onProductSee = onProductSee,
+                onProductClick = onProductClick,
+                onProductLike = onProductLike,
+                onProductAnalogsClick = onProductAnalogsClick,
+                onIncrementProductToCart = onIncrementProductToCart,
+                onDecrementProductToCart = onDecrementProductToCart
             )
         } else {
             linearProducts(
-                products,
-                productsLoadStates,
-                shimmer,
-                onProductSee,
-                onProductClick,
-                onProductLike
+                products = products,
+                loadState = productsLoadStates,
+                shimmerState = shimmer,
+                onProductSee = onProductSee,
+                onProductClick = onProductClick,
+                onProductLike = onProductLike,
+                onProductAnalogsClick = onProductAnalogsClick,
+                onIncrementProductToCart = onIncrementProductToCart,
+                onDecrementProductToCart = onDecrementProductToCart
             )
         }
     }

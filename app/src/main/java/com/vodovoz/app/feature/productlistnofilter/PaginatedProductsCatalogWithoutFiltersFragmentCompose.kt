@@ -24,6 +24,7 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
+import com.vodovoz.app.core.navigation.navigateToAnalogs
 import com.vodovoz.app.core.navigation.navigateToCategories
 import com.vodovoz.app.core.navigation.navigateToProductDetails
 import com.vodovoz.app.core.navigation.navigateToProductFilters
@@ -83,6 +84,14 @@ class PaginatedProductsCatalogWithoutFiltersFragment : Fragment() {
                     )
 
                     LifecycleEffect {
+                        viewModel.listenCart()
+                    }
+
+                    LifecycleEffect {
+                        viewModel.listProductLoadings()
+                    }
+
+                    LifecycleEffect {
                         viewModel.observeEvent().collect { event ->
                             when (event) {
                                 ProductsListNoFilterFlowViewModel.ProductListNoFilterEvent.GoBack -> {
@@ -117,6 +126,10 @@ class PaginatedProductsCatalogWithoutFiltersFragment : Fragment() {
 
                                 is ProductsListNoFilterFlowViewModel.ProductListNoFilterEvent.Share -> {
                                     shareText(event.text)
+                                }
+
+                                is ProductsListNoFilterFlowViewModel.ProductListNoFilterEvent.GoToProductAnalogs -> {
+                                    findNavController().navigateToAnalogs(event.productId)
                                 }
                             }
                         }

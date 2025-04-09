@@ -38,10 +38,22 @@ data class ColorfulButtonUi(
     val name: String,
     val backgroundColor: Color,
     val textColor: Color,
-    val id: String = ""
+    val id: String = "",
+    val enabled: Boolean = true,
+    val loading: Boolean = false,
 ) {
     companion object {
         val Empty = ColorfulButtonUi("", Color.Unspecified, Color.Unspecified)
+    }
+}
+
+fun List<ColorfulButtonUi>.updateButton(
+    buttonId: String,
+    newButton: (ColorfulButtonUi) -> ColorfulButtonUi,
+): List<ColorfulButtonUi> {
+    return map { button ->
+        if (button.id == buttonId) newButton(button)
+        else button
     }
 }
 
@@ -72,6 +84,12 @@ fun ColorfulButtonModel.toUi(): ColorfulButtonUi {
         name = name,
         backgroundColor = Color.fromHexOrUnspecified(backgroundColor),
         textColor = Color.fromHexOrUnspecified(textColor),
-        id = id
+        id = id,
     )
 }
+
+@JvmName("mapToColorfulButtonUiList")
+fun List<ColorfulButtonModel>.mapToUi(): List<ColorfulButtonUi> {
+    return map { it.toUi() }
+}
+

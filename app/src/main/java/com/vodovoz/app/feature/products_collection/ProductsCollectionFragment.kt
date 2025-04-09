@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.fragment.findNavController
+import com.vodovoz.app.core.navigation.navigateToAnalogs
+import com.vodovoz.app.core.navigation.navigateToProductDetails
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.bottom_sheet.SortOptionsBottomSheet
 import com.vodovoz.app.design_system.effects.LifecycleEffect
@@ -40,7 +42,7 @@ class ProductsCollectionFragment : Fragment() {
                 val viewState by viewModel.state.collectAsStateWithLifecycle()
 
                 VodovozTheme {
-                    ProductsCollectionScreen(viewModel = viewModel, viewState = viewState)
+                    ProductAnalogsScreen(viewModel = viewModel, viewState = viewState)
 
                     if (viewState.showSortOptionsBottomSheet) {
                         SortOptionsBottomSheet(
@@ -52,6 +54,19 @@ class ProductsCollectionFragment : Fragment() {
                             }
                         )
                     }
+
+                    LifecycleEffect {
+                        viewModel.listenCart()
+                    }
+
+                    LifecycleEffect {
+                        viewModel.listenFavorites()
+                    }
+
+                    LifecycleEffect {
+                        viewModel.listenProductLoadings()
+                    }
+
                 }
 
                 LifecycleEffect {
@@ -59,6 +74,14 @@ class ProductsCollectionFragment : Fragment() {
                         when (event) {
                             ProductsCollectionEvent.GoBack -> {
                                 findNavController().popBackStack()
+                            }
+
+                            is ProductsCollectionEvent.GoToProductAnalogs -> {
+                                findNavController().navigateToProductDetails(event.productId)
+                            }
+
+                            is ProductsCollectionEvent.GoToProductDetails -> {
+                                findNavController().navigateToAnalogs(event.productId)
                             }
                         }
                     }

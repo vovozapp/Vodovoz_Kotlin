@@ -21,7 +21,9 @@ import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.design_system.model.ProductUi
 import com.vodovoz.app.design_system.model.toUi
+import com.vodovoz.app.design_system.model.withUpdatedCart
 import com.vodovoz.app.design_system.model.withUpdatedFavorites
+import com.vodovoz.app.design_system.model.withUpdatedLoading
 import com.vodovoz.app.domain.general.model.FavoritesNotFoundException
 import com.vodovoz.app.domain.general.model.ProductsSectionUi
 import com.vodovoz.app.domain.general.model.toUi
@@ -43,12 +45,14 @@ import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.singleResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -140,6 +144,32 @@ class FavoriteFlowViewModel @Inject constructor(
         }
     }
 
+    suspend fun listenCart() =
+        uiStateListener
+            .map { pagingState -> pagingState.data.products }
+            .distinctUntilChanged()
+            .combine(cartManager.observeCarts()) { _, cart ->
+                cart
+            }.collectLatest { cart ->
+                uiStateListener.updateData { s ->
+                    s.copy(
+                        products = s.products.withUpdatedCart(cart)
+                    )
+                }
+            }
+
+    suspend fun listenProductLoadings() =
+        uiStateListener.map { it.data.products }.distinctUntilChanged()
+            .combine(cartManager.blockedProductsState) { _, blockedProducts ->
+                blockedProducts
+            }.collectLatest { blockedProducts ->
+                uiStateListener.updateData { s ->
+                    s.copy(
+                        products = s.products.withUpdatedLoading(blockedProducts)
+                    )
+                }
+            }
+
     private suspend fun listenFavorites() {
         uiStateListener.map { pagingState -> pagingState.data.products }
             .combine(likeManager.observeLikes()) { products, favorites ->
@@ -166,7 +196,9 @@ class FavoriteFlowViewModel @Inject constructor(
 
 
         favoriteProductsResult.onSuccess { productsSectionUi ->
+            delay(150)
             uiStateListener.updateData { s ->
+
 
                 val currentSort = s.currentSort.takeIf { value ->
                     value != SortUi.Empty
@@ -586,6 +618,19 @@ class FavoriteFlowViewModel @Inject constructor(
         eventListener.emit(FavoriteEvents.GoToCatalog)
     }
 
+    fun navigateToProductAnalogs(product: ProductUi) = viewModelScope.launch {
+        eventListener.emit(FavoriteEvents.GoToProductAnalogs(product.id))
+    }
+
+    fun incrementProductToCart(product: ProductUi)= viewModelScope.launch {
+        cartManager.change(product.id, product.cartQuantity + 1)
+    }
+
+    fun decrementProductToCart(product: ProductUi)= viewModelScope.launch {
+        cartManager.change(product.id, product.cartQuantity - 1)
+    }
+
+
     sealed class FavoriteEvents : Event {
         data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) :
             FavoriteEvents()
@@ -601,6 +646,9 @@ class FavoriteFlowViewModel @Inject constructor(
         ) : FavoriteEvents()
 
         data class GoToProductDetails(val productId: Long) : FavoriteEvents()
+        data class GoToProductAnalogs(val productId: Long) : FavoriteEvents() {
+
+        }
     }
 
     @Immutable

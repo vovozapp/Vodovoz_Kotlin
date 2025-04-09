@@ -1,8 +1,10 @@
 package com.vodovoz.app.data.vodovoz_service.model.unrated_products
 
+import androidx.annotation.Keep
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
+@Keep
 data class UnratedProductDTO(
     @SerializedName("NAME")
     @Expose

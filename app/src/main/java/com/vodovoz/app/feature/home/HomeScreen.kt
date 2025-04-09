@@ -132,6 +132,9 @@ fun HomeScreen(
                         },
                         onDecrementProductToCart = { product ->
                             viewModel.decrementProductToCart(product)
+                        },
+                        onProductAnalogsClick = { product ->
+                            viewModel.navigateToProductAnalogs(product)
                         }
                     )
                 }
