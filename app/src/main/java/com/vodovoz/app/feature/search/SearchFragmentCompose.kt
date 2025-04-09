@@ -19,16 +19,17 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
+import com.vodovoz.app.core.navigation.navigateToAnalogs
 import com.vodovoz.app.core.navigation.navigateToProductDetails
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.placeholders.NetworkErrorPlaceholder
+import com.vodovoz.app.design_system.effects.LifecycleEffect
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -61,6 +62,17 @@ class SearchFragment : Fragment() {
         viewModel.firstLoad()
     }
 
+    override fun onStart() {
+        super.onStart()
+        tabManager.changeTabVisibility(true)
+    }
+
+
+    override fun onStop() {
+        super.onStop()
+        tabManager.changeTabVisibility(true)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -82,6 +94,17 @@ class SearchFragment : Fragment() {
                         }
                     }
 
+                    LifecycleEffect {
+                        viewModel.listenCart()
+                    }
+
+                    LifecycleEffect {
+                        viewModel.listenProductLoadings()
+                    }
+
+                    LifecycleEffect {
+                        viewModel.listenSearchHistory()
+                    }
                 }
             }
         }
@@ -121,7 +144,7 @@ class SearchFragment : Fragment() {
                                 }
                                 findNavController().navigate(
                                     SearchFragmentDirections.actionToPreOrderBS(
-                                        event.id,
+                                        event.productId,
                                         event.name,
                                         event.detailPicture
                                     )
@@ -176,7 +199,11 @@ class SearchFragment : Fragment() {
                             }
 
                             is SearchFlowViewModel.SearchEvents.GoToProductDetails -> {
-                                findNavController().navigateToProductDetails(event.id)
+                                findNavController().navigateToProductDetails(event.productId)
+                            }
+
+                            is SearchFlowViewModel.SearchEvents.GoToProductAnalogs -> {
+                                findNavController().navigateToAnalogs(event.productId)
                             }
                         }
                     }

@@ -45,7 +45,6 @@ fun ProductDetailsButtonsBlock(
     cartQuantity: Int,
     buttons: ProductDetailsButtonsUi,
     totalPrice: Int,
-    onAddToCart: () -> Unit,
     onProductMinus: () -> Unit,
     onProductPlus: () -> Unit,
     onFloatingButtonChange: (Boolean) -> Unit,
@@ -111,7 +110,7 @@ fun ProductDetailsButtonsBlock(
             isAvailable -> {
                 VodovozButton(
                     text = stringResource(R.string.to_cart),
-                    onClick = onAddToCart,
+                    onClick = onProductPlus,
                     modifier = Modifier.isElementVisible(onFloatingButtonChange),
                 )
             }
@@ -197,7 +196,6 @@ private fun ProductDetailsButtonsBlockPreview() {
             cartQuantity = 0,
             buttons = productDetailsButtonsUi.copy(multiBuyButton = null),
             totalPrice = 300,
-            onAddToCart = { },
             onProductMinus = { },
             onProductPlus = { },
             onFloatingButtonChange = {

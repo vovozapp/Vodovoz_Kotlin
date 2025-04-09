@@ -167,7 +167,7 @@ class SearchFragment1 : BaseFragment() {
                                 }
                                 findNavController().navigate(
                                     SearchFragmentDirections.actionToPreOrderBS(
-                                        it.id,
+                                        it.productId,
                                         it.name,
                                         it.detailPicture
                                     )

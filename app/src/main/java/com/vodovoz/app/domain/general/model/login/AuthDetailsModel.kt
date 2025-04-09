@@ -8,6 +8,5 @@ data class AuthDetailsModel(
     val description: String,
     val fields: List<FieldModel>,
     val hasAgreement: Boolean,
-    val navigationButton: ColorfulButtonModel,
-    val mainButton: ColorfulButtonModel
+    val buttons: List<ColorfulButtonModel>
 )

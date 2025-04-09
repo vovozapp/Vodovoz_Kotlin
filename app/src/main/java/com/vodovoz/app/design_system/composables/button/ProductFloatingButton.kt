@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ButtonDefaults
@@ -35,9 +34,8 @@ fun ProductBottomFloatingButton(
     giftText: String,
     analogButton: ColorfulButtonUi?,
     isAvailable: Boolean,
-    onProductPlus: () -> Unit,
-    onProductMinus: () -> Unit,
-    onAddToCartClick: () -> Unit,
+    onIncrementProduct: () -> Unit,
+    onDecrementProduct: () -> Unit,
     onAnalogClick: () -> Unit,
 ) {
 
@@ -69,8 +67,8 @@ fun ProductBottomFloatingButton(
                 ProductQuantityButton(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     isLoading = isLoading,
-                    onPlus = onProductPlus,
-                    onMinus = onProductMinus,
+                    onPlus = onIncrementProduct,
+                    onMinus = onDecrementProduct,
                     quantity = cartQuantity,
                     totalPrice = totalPrice
                 )
@@ -83,7 +81,7 @@ fun ProductBottomFloatingButton(
                         price = price,
                         oldPrice = oldPrice
                     ),
-                    onClick = onAddToCartClick
+                    onClick = onIncrementProduct
                 )
             }
 
@@ -119,9 +117,8 @@ private fun FloatingProductButtonPreview() {
                 oldPrice = 300,
                 price = 250,
                 giftText = "500",
-                onProductPlus = {},
-                onProductMinus = {},
-                onAddToCartClick = {},
+                onIncrementProduct = {},
+                onDecrementProduct = {},
                 isAvailable = false,
                 analogButton = ColorfulButtonUi("Analog", Color.Black, Color.White),
                 onAnalogClick = {}

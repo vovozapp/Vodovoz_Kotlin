@@ -4,30 +4,21 @@ import android.app.Activity
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsCompat.CONSUMED
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
-import androidx.core.view.updateLayoutParams
-import androidx.core.view.updatePadding
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
@@ -38,8 +29,6 @@ import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.common.update.AppUpdateController
 import com.vodovoz.app.core.navigation.setupWithNavController
 import com.vodovoz.app.databinding.FragmentMainBinding
-import com.vodovoz.app.feature.preorder.PreOrderFragmentDirections
-import com.vodovoz.app.util.extensions.disableFullScreen
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -108,7 +97,11 @@ class MainFragment : BaseFragment() {
 
         ViewCompat.setOnApplyWindowInsetsListener(
             binding.nvNavigation
-        ) { _, _ ->
+        ) { _, insets ->
+            val imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
+            //todo - make for search
+            //val visible = tabManager.observeTabVisibility().value
+            //binding.nvNavigation.isVisible = !imeVisible
             return@setOnApplyWindowInsetsListener CONSUMED
         }
     }
@@ -129,7 +122,6 @@ class MainFragment : BaseFragment() {
             }
         ))
     }
-
 
 
     override fun onStart() {
@@ -167,11 +159,22 @@ class MainFragment : BaseFragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 tabManager
                     .observeTabVisibility()
-                    .collect {
-                        binding.nvNavigation.isVisible = it
+                    .collect { visible ->
+                        binding.nvNavigation.animateTabVisibility(visible)
+                        //binding.nvNavigation.isVisible = it
                         //binding.nvNavigation.visibility = if(it) View.VISIBLE else View.GONE
                     }
             }
+        }
+    }
+
+    private fun View.animateTabVisibility(visible: Boolean, duration: Long = 200) {
+        if (visible) {
+            alpha = 0f
+            isVisible = true
+            animate().alpha(1f).setDuration(duration).start()
+        } else {
+            isVisible = false
         }
     }
 

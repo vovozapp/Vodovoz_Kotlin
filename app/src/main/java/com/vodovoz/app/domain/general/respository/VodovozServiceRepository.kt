@@ -92,6 +92,8 @@ interface VodovozServiceRepository {
 
     fun getLoginDetails(): Flow<Result<AuthDetailsModel>>
 
+    fun getLoginByEmailDetails(): Flow<Result<AuthDetailsModel>>
+
     fun updatePassword(password: String): Flow<Result<Unit>>
 
     fun getChangePasswordDetails(): Flow<Result<ChangePasswordDetailsModel>>

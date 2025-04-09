@@ -109,7 +109,9 @@ class ProductDetailsFragment : Fragment() {
 
 
                     LifecycleEffect { observeEvents() }
-
+                    LifecycleEffect { viewModel.listenFavorites() }
+                    LifecycleEffect { viewModel.listenCart() }
+                    LifecycleEffect { viewModel.listenLoadingsProduct() }
                 }
             }
         }

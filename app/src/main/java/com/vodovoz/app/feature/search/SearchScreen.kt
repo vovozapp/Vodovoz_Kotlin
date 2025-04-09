@@ -83,6 +83,15 @@ fun SearchScreen(viewModel: SearchFlowViewModel, viewState: SearchFlowViewModel.
                         },
                         onProductCardClick = { product ->
                             viewModel.navigateToProductDetails(product)
+                        },
+                        onProductAnalogsClick = { product ->
+                            viewModel.navigateToProductAnalogs(product)
+                        },
+                        onProductDecrementToCartClick = { product ->
+                            viewModel.decrementProductToCart(product)
+                        },
+                        onProductIncrementToCartClick = { product ->
+                            viewModel.incrementProductToCart(product)
                         }
                     )
                 }

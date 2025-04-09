@@ -24,7 +24,6 @@ import com.vodovoz.app.design_system.model.ProductUi
 import com.vodovoz.app.design_system.model.SectionUi
 
 @Suppress("NonSkippableComposable")
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun SearchScreenBody(
     modifier: Modifier = Modifier,
@@ -34,7 +33,11 @@ fun SearchScreenBody(
     onQueryChoose: (String) -> Unit,
     onQueryClose: (String) -> Unit,
     onProductLikeClick: (ProductUi) -> Unit,
-    onProductCardClick: (ProductUi) -> Unit
+    onProductCardClick: (ProductUi) -> Unit,
+    onProductIncrementToCartClick: (ProductUi) -> Unit,
+    onProductDecrementToCartClick: (ProductUi) -> Unit,
+    onProductAnalogsClick: (ProductUi) -> Unit
+
 ) {
     Column(
         modifier = modifier
@@ -58,7 +61,12 @@ fun SearchScreenBody(
                 maxLines = 2
             ) {
                 searchHistory.forEach { query ->
-                    VodovozClosableChip(text = query, selected = false, onSelect = { onQueryChoose(query) }, onClose = { onQueryClose(query)})
+                    VodovozClosableChip(
+                        text = query,
+                        selected = false,
+                        onSelect = { onQueryChoose(query) },
+                        onClose = { onQueryClose(query)}
+                    )
                 }
             }
         }
@@ -114,9 +122,9 @@ fun SearchScreenBody(
                         product = product,
                         onClick = onProductCardClick,
                         onLike = onProductLikeClick,
-                        onAnalogsClick = {
-
-                        }
+                        onAnalogsClick = onProductAnalogsClick,
+                        onDecrementToCart = onProductDecrementToCartClick,
+                        onIncrementToCart = onProductIncrementToCartClick
                     )
                 }
                 if (products.size % 2 == 1) {

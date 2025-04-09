@@ -6,6 +6,8 @@ import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.singleResult
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,6 +15,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.util.concurrent.ConcurrentHashMap
@@ -26,8 +29,8 @@ class CartManager @Inject constructor(
     private val vodovozServiceRepository: VodovozServiceRepository,
 ) {
 
-    private val updateCartListListener = MutableStateFlow(false)
     private val cartMutex = Mutex()
+    private val coroutineScope = CoroutineScope(Dispatchers.Default)
 
     fun observeUpdateCartList() = updateCartListListener.asStateFlow()
 
@@ -35,56 +38,68 @@ class CartManager @Inject constructor(
         updateCartListListener.value = update
     }
 
+    private val updateCartListListener = MutableStateFlow(false)
     private val carts = ConcurrentHashMap<Long, Int>()
     private val firstCart = mutableMapOf<Long, Int>()
 
 
     private val cartsStateListener = MutableSharedFlow<Map<Long, Int>>(replay = 1)
     private val _blockedProductsState = MutableStateFlow(emptySet<Long>())
-    val blockedProductsState get() = _blockedProductsState.asStateFlow()
+    val blockedProductsState = _blockedProductsState.asStateFlow()
+    private var cartVersion = 0
 
 
     fun observeCarts() = cartsStateListener.asSharedFlow().filter { map -> map.isNotEmpty() }
 
-    suspend fun change(productId: Long, count: Int) {
-
-        val cartAfterUpdate = cartMutex.withLock {
-            if (_blockedProductsState.value.contains(productId)) return
-
+    suspend fun change(productId: Long, count: Int) = coroutineScope.launch {
+        val currentCartVersion = cartMutex.withLock {
+            if (_blockedProductsState.value.contains(productId) || count < 0) return@launch
             val cartBeforeUpdate = carts.toMap()
             updateCarts(productId, count)
             if (firstCart.isEmpty()) {
                 firstCart.putAll(cartBeforeUpdate)
             }
-            return@withLock carts.toMap()
+            return@withLock ++cartVersion
         }
 
 
-        delay(300L)
-
-        if (cartAfterUpdate != carts) return
+        //todo - change delay
+        delay(1000L)
 
         val (currentFirstCart, cartChanges) = cartMutex.withLock {
             val currentCart: Map<Long, Int> = carts
-            if (cartAfterUpdate != currentCart) return
+
+            if (currentCartVersion < cartVersion) return@launch
+
             val firstCartCopy = firstCart.toMap()
+            firstCart.clear()
 
             val cartChanges = currentCart.filter { (key, value) ->
-                firstCartCopy[key] != null && firstCartCopy[key] != value
+                firstCartCopy[key] != value
             }
 
-            _blockedProductsState.update { s ->
-                s + cartChanges.keys
-            }
-            firstCart.clear()
+            if (cartChanges.isEmpty()) return@launch
+
+            _blockedProductsState.update { s -> s + cartChanges.keys }
             firstCartCopy to cartChanges
         }
 
+
         kotlin.runCatching {
+            //todo - remove delay
+            delay(500L)
             updateCartOnline(cartChanges, currentFirstCart)
             updateCartListState(true)
+
         }.onFailure {
-            cartMutex.withLock { updateCart(currentFirstCart) }
+            cartMutex.withLock {
+                val cartWithoutChanges = carts.keys.associateWith { key ->
+                    val newValue = cartChanges[key] ?: return@associateWith carts[key] ?: 0
+                    val oldValue = currentFirstCart[key] ?: 0
+                    carts.getOrDefault(key, 0) - (newValue - oldValue)
+                }
+                updateCart(cartWithoutChanges)
+            }
         }
 
         cartMutex.withLock {
@@ -119,10 +134,11 @@ class CartManager @Inject constructor(
     }
 
     suspend fun clearCart() {
-        carts.clear()
-        cartsStateListener.emit(carts)
-        updateCartListState(true)
-        tabManager.clearBottomNavCartState()
+        //todo - uncomment this
+//        carts.clear()
+//        cartsStateListener.emit(carts)
+//        updateCartListState(true)
+//        tabManager.clearBottomNavCartState()
     }
 
     fun isCartEmpty() = carts.isEmpty()

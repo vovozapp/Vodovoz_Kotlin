@@ -71,7 +71,7 @@ fun CategoryWithProductsUi.withUpdatedCart(cart: Map<Long, Int>): CategoryWithPr
 @JvmName("withUpdatedCartProductList")
 fun List<ProductUi>.withUpdatedCart(cart: Map<Long, Int>): List<ProductUi> {
     return map { product ->
-        product.copy(cartQuantity = cart[product.id] ?: product.cartQuantity)
+        product.copy(cartQuantity = cart[product.id] ?: 0)
     }
 }
 

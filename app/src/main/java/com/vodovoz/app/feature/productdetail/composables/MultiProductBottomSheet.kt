@@ -91,8 +91,8 @@ fun MultiProductBottomSheet(
                 }
             }
 
+            //todo - move to viewModel
             val calculatedPrice = calculateProductPrice(cartQuantity, prices).roundToInt()
-
 
             Text(
                 modifier = Modifier
@@ -114,7 +114,9 @@ fun MultiProductBottomSheet(
                     .padding(top = 4.dp)
                     .align(Alignment.CenterHorizontally),
                 text = stringResource(R.string.saving_price, savingPrice),
-                color = if (savingPrice > 0) MaterialTheme.colorScheme.secondary else if (buttonIsLoading) Color.Transparent else MaterialTheme.colorScheme.surfaceTint,
+                color = if (savingPrice > 0) MaterialTheme.colorScheme.secondary
+                        else if (buttonIsLoading) Color.Transparent
+                        else MaterialTheme.colorScheme.surfaceTint,
                 style = MaterialTheme.typography.labelSmall
             )
 

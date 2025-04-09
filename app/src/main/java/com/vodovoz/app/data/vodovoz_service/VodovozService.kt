@@ -3,7 +3,6 @@ package com.vodovoz.app.data.vodovoz_service
 import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.data.vodovoz_service.model.AnalogsSectionDTO
 import com.vodovoz.app.data.vodovoz_service.model.BannerDTO
-import com.vodovoz.app.data.vodovoz_service.model.BrandProductsSectionDTO
 import com.vodovoz.app.data.vodovoz_service.model.BrandSectionDTO
 import com.vodovoz.app.data.vodovoz_service.model.CATEGORY_NODE_DTO
 import com.vodovoz.app.data.vodovoz_service.model.CertificateActivationDetailsDTO
@@ -55,7 +54,7 @@ interface VodovozService {
         @Query("sort") sort: String = "",
         @Query("ascdesc") order: String = "",
         @Query("sect") categoryId: Int? = null,
-    ): Response<VodovozResponseDTO<BrandProductsSectionDTO>>
+    ): Response<VodovozResponseDTO<ProductsSectionDTO>>
 
     @GET("brand.php?action=brand")
     suspend fun getBrands(
@@ -78,6 +77,8 @@ interface VodovozService {
      * */
     @GET("auth.php?action=glav")
     suspend fun getLoginDetails(): Response<VodovozResponseDTO<LoginDetailsDTO>>
+    @GET("auth.php?action=glav&email=Y")
+    suspend fun getLoginByEmailDetails(): Response<VodovozResponseDTO<LoginDetailsDTO>>
 
     /**
      * Profile requests

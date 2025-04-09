@@ -79,6 +79,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     private val accountManager: AccountManager,
     private val moshi: Moshi,
 ) : VodovozServiceRepository {
+
     override fun getBrands(
         searchQuery: String,
     ): Flow<Result<BrandSectionModel>> {
@@ -139,7 +140,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
             },
             mapper = { response ->
                 response.checkError()
-                response.data?.TOVAR?.toDomain()!!
+                response.data?.toDomain()!!
             }
         )
     }
@@ -164,7 +165,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                     },
                     mapper = { response ->
                         response.checkError()
-                        response.data?.TOVAR?.TOVAR?.mapToDomain()
+                        response.data?.DATA?.mapToDomain()
                             ?: throw IllegalArgumentException("Brand products can't be null")
                     }
                 )
@@ -257,6 +258,18 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         return executeRequest(
             request = {
                 vodovozService.getLoginDetails()
+            },
+            mapper = {
+                it.checkError { data -> throw RequestException(errorData = data) }
+                it.data!!.toDomain()
+            }
+        )
+    }
+
+    override fun getLoginByEmailDetails(): Flow<Result<AuthDetailsModel>> {
+        return executeRequest(
+            request = {
+                vodovozService.getLoginByEmailDetails()
             },
             mapper = {
                 it.checkError { data -> throw RequestException(errorData = data) }

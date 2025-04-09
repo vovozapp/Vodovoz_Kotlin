@@ -32,13 +32,6 @@ data class ProductsSectionDTO(
     val PODELITCA: PODELITCA_DTO? = null,
 )
 
-data class BrandProductsSectionDTO(
-    @Json(name = "DATA")
-    val DATA: BrandDTO? = null,
-    @Json(name = "TOVAR")
-    val TOVAR: ProductsSectionDTO? = null,
-)
-
 class CategoriesDTO(
     @Json(name = "LISTRAZDEL")
     val LISTRAZDEL: List<CATEGORY_DTO?>?,

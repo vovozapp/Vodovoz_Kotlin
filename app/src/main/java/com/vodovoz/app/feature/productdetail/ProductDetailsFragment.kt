@@ -436,7 +436,7 @@ class ProductDetailsFragment1 : BaseFragment() {
             }
 
             override fun onChangeProductQuantity(id: Long, cartQuantity: Int, oldQuantity: Int) {
-                viewModel.changeProductInCart(id, cartQuantity, oldQuantity)
+                //viewModel.changeProductInCart(id, cartQuantity, oldQuantity)
             }
 
             override fun onFavoriteClick(id: Long, isFavorite: Boolean) {

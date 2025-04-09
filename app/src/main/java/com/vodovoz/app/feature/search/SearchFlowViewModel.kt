@@ -24,7 +24,9 @@ import com.vodovoz.app.data.model.common.SearchQueryResponse
 import com.vodovoz.app.design_system.model.ProductUi
 import com.vodovoz.app.design_system.model.SectionUi
 import com.vodovoz.app.design_system.model.toUi
+import com.vodovoz.app.design_system.model.withUpdatedCart
 import com.vodovoz.app.design_system.model.withUpdatedFavorites
+import com.vodovoz.app.design_system.model.withUpdatedLoading
 import com.vodovoz.app.domain.general.model.EmptyResultException
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
@@ -91,9 +93,29 @@ class SearchFlowViewModel @Inject constructor(
 
     init {
         handleQueries()
-        listenSearchHistory()
         listenFavorites()
     }
+
+    suspend fun listenCart() = uiStateListener.combine(cartManager.observeCarts()) { _, cart ->
+        cart
+    }.collectLatest { cart ->
+        uiStateListener.updateData { s ->
+            s.copy(sectionRecommendations = s.sectionRecommendations.withUpdatedCart(cart))
+        }
+    }
+
+    suspend fun listenProductLoadings() =
+        uiStateListener.combine(cartManager.blockedProductsState) { _, blockedProducts ->
+            blockedProducts
+        }.collectLatest { blockedProducts ->
+            uiStateListener.updateData { s ->
+                s.copy(
+                    sectionRecommendations = s.sectionRecommendations.withUpdatedLoading(
+                        blockedProducts
+                    )
+                )
+            }
+        }
 
     private fun listenFavorites() = viewModelScope.launch {
         uiStateListener.map { pagingState -> pagingState.data.sectionRecommendations.items }
@@ -110,20 +132,18 @@ class SearchFlowViewModel @Inject constructor(
             }
     }
 
-    private fun listenSearchHistory() = viewModelScope.launch {
-        searchManager.fetchSearchHistoryFlow()
-            .combine(uiStateListener.map { pagingState -> pagingState.data.query }) { searchHistory, currentQuery ->
-                searchHistory to currentQuery
-            }.collect { (searchHistory, currentQuery) ->
-                uiStateListener.updateData { s ->
-                    s.copy(
-                        searchHistory = searchHistory.filter { query ->
-                            query.contains(currentQuery)
-                        }
-                    )
-                }
+    suspend fun listenSearchHistory() =
+        uiStateListener.combine(searchManager.fetchSearchHistoryFlow()) { _, searchHistory ->
+            searchHistory
+        }.collectLatest { searchHistory->
+            uiStateListener.updateData { s ->
+                s.copy(
+                    searchHistory = searchHistory.filter { query ->
+                        query.contains(s.query)
+                    }
+                )
             }
-    }
+        }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun handleQueries() =
@@ -762,8 +782,21 @@ class SearchFlowViewModel @Inject constructor(
         eventListener.emit(SearchEvents.GoToProductDetails(product.id))
     }
 
+    fun navigateToProductAnalogs(product: ProductUi) = viewModelScope.launch {
+        eventListener.emit(SearchEvents.GoToProductAnalogs(product.id))
+    }
+
+    fun incrementProductToCart(product: ProductUi) = viewModelScope.launch {
+        cartManager.change(product.id, product.cartQuantity + 1)
+    }
+
+    fun decrementProductToCart(product: ProductUi) = viewModelScope.launch {
+        cartManager.change(product.id, product.cartQuantity - 1)
+    }
+
+
     sealed class SearchEvents : Event {
-        data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) :
+        data class GoToPreOrder(val productId: Long, val name: String, val detailPicture: String) :
             SearchEvents()
 
         data object GoToProfile : SearchEvents()
@@ -774,7 +807,8 @@ class SearchFlowViewModel @Inject constructor(
         data class GoToProductList(val searchDataSource: PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Search) :
             SearchEvents()
 
-        data class GoToProductDetails(val id: Long) : SearchEvents()
+        data class GoToProductDetails(val productId: Long) : SearchEvents()
+        data class GoToProductAnalogs(val productId: Long) : SearchEvents()
 
         data object GoToContacts : SearchEvents()
 

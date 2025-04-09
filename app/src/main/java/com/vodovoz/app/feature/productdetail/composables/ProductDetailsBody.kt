@@ -41,9 +41,8 @@ fun ProductDetailsBody(
     onProductMediaClick: (ProductMediaUi) -> Unit,
     onDetailPreviewTextShowOrHide: () -> Unit,
     onAllPropertiesShow: () -> Unit,
-    onAddToCart: () -> Unit,
-    onProductMinus: () -> Unit,
-    onProductPlus: () -> Unit,
+    onDecrementProduct: () -> Unit,
+    onIncrementProduct: () -> Unit,
     onAboutProductClick: () -> Unit,
 
     onShowAllCommentsClick: () -> Unit,
@@ -59,14 +58,13 @@ fun ProductDetailsBody(
     onCategoryClick: (BrandCategoryItemUi) -> Unit,
     onProductClick: (ProductUi) -> Unit,
     onProductLikeClick: (ProductUi) -> Unit,
-    onCopyArticleNumberClick: () -> Unit
+    onCopyArticleNumberClick: () -> Unit,
+    onProductAnalogsClick: (ProductUi) -> Unit,
+    onIncrementProductToCart: (ProductUi) -> Unit,
+    onDecrementProductToCart: (ProductUi) -> Unit
 ) {
-    val scrollState = rememberScrollState()
-
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState)
+        modifier = modifier.fillMaxSize()
     ) {
         ProductDetailsMediaPager(
             productMediaList = productDetails.mediaList,
@@ -114,13 +112,13 @@ fun ProductDetailsBody(
             quantityButtonIsLoading = quantityButtonIsLoading,
             cartQuantity = productCartQuantity,
             buttons = buttons,
+            //todo - move calculate to viewModel
             totalPrice = calculateProductPrice(
                 productCartQuantity,
                 productDetails.prices
             ).roundToInt(),
-            onProductMinus = onProductMinus,
-            onProductPlus = onProductPlus,
-            onAddToCart = onAddToCart,
+            onProductMinus = onDecrementProduct,
+            onProductPlus = onIncrementProduct,
             onFloatingButtonChange = onFloatingButtonChange,
             onPresentButtonClick = onPresentButtonClick,
             onMultiButtonClick = onMultiButtonClick,
@@ -176,7 +174,10 @@ fun ProductDetailsBody(
                 modifier = Modifier.padding(top = 32.dp),
                 sectionAccessory = sectionAccessory,
                 onProductLike = onProductLikeClick,
-                onProductClick = onProductClick
+                onProductClick = onProductClick,
+                onIncrementProductToCart = onIncrementProductToCart,
+                onDecrementProductToCart = onDecrementProductToCart,
+                onProductAnalogsClick = onProductAnalogsClick
             )
         }
 
@@ -186,7 +187,10 @@ fun ProductDetailsBody(
                 modifier = Modifier.padding(top = 32.dp),
                 sectionSimilarProducts = sectionSimilarProducts,
                 onProductLike = onProductLikeClick,
-                onProductClick = onProductClick
+                onProductClick = onProductClick,
+                onIncrementProductToCart = onIncrementProductToCart,
+                onDecrementProductToCart = onDecrementProductToCart,
+                onProductAnalogsClick = onProductAnalogsClick
             )
         }
 

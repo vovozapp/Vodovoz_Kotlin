@@ -26,6 +26,7 @@ import com.vodovoz.app.design_system.model.mapToUi
 import com.vodovoz.app.design_system.model.toUi
 import com.vodovoz.app.design_system.model.withUpdatedCart
 import com.vodovoz.app.design_system.model.withUpdatedFavorites
+import com.vodovoz.app.design_system.model.withUpdatedLoading
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotions
@@ -92,18 +93,29 @@ class ProductDetailsFlowViewModel @Inject constructor(
     private val updateFabListener = MutableSharedFlow<Int>()
     fun observeUpdateFab() = updateFabListener.asSharedFlow()
 
-    init {
-        listenFavorites()
-        listenCart()
+    suspend fun listenLoadingsProduct() = uiStateListener.combine(
+        cartManager.blockedProductsState
+    ){ _, blockedProducts ->
+        blockedProducts
+    }.collectLatest { blockedProducts ->
+        uiStateListener.update { s ->
+            val sectionSimilarProducts = s.sectionSimilarProducts
+            val sectionAccessory = s.sectionAccessory
+            val productDetails = s.productDetails
+
+            s.copy(
+                buttonIsLoading = productDetails.id in blockedProducts,
+                sectionAccessory = sectionAccessory.withUpdatedLoading(blockedProducts),
+                sectionSimilarProducts = sectionSimilarProducts.withUpdatedLoading(blockedProducts),
+            )
+        }
     }
 
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private fun listenCart() = uiStateListener.combine(
+    suspend fun listenCart() = uiStateListener.combine(
         cartManager.observeCarts()
     ) { _, cartMap ->
         cartMap
-    }.mapLatest { cartMap ->
+    }.collectLatest { cartMap ->
         uiStateListener.update { s ->
             val sectionSimilarProducts = s.sectionSimilarProducts
             val sectionAccessory = s.sectionAccessory
@@ -120,14 +132,13 @@ class ProductDetailsFlowViewModel @Inject constructor(
                 sectionSimilarProducts = sectionSimilarProducts.withUpdatedCart(cartMap),
             )
         }
-    }.launchIn(viewModelScope)
+    }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private fun listenFavorites() = uiStateListener.combine(
+    suspend fun listenFavorites() = uiStateListener.combine(
         likeManager.observeLikes()
     ) { _, favorites ->
         favorites
-    }.mapLatest { favoritesMap ->
+    }.collectLatest { favoritesMap ->
         uiStateListener.update { s ->
 
             val sectionSimilarProducts = s.sectionSimilarProducts
@@ -150,7 +161,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
 
             )
         }
-    }.launchIn(viewModelScope)
+    }
 
     fun fetchProductDetails() = viewModelScope.launch {
         vodovozServiceRepository.getProductDetails(state.productDetails.id)
@@ -325,34 +336,21 @@ class ProductDetailsFlowViewModel @Inject constructor(
 
     fun isLoginAlready() = accountManager.isAlreadyLogin()
 
-    fun incrementCart() {
+    fun incrementCart() = viewModelScope.launch {
         val productDetails = state.productDetails
-        changeProductInCart(
-            productDetails.id,
-            productDetails.cartQuantity + 1,
-            productDetails.cartQuantity
-        )
+        cartManager.change(productDetails.id, productDetails.cartQuantity + 1)
     }
 
-    fun decrementCart() {
+    fun decrementCart() = viewModelScope.launch {
         val productDetails = state.productDetails
-        if (productDetails.cartQuantity < 0) return
-        changeProductInCart(
-            productDetails.id,
-            productDetails.cartQuantity - 1,
-            productDetails.cartQuantity
-        )
+        cartManager.change(productDetails.id, productDetails.cartQuantity - 1)
     }
 
-
-    fun changeProductInCart(productId: Long, quantity: Int, oldQuantity: Int) {
-        viewModelScope.launch {
-            cartManager.change(productId, quantity)
-            //todo - uncomment
-            //cartManager.add(id = productId, oldCount = oldQuantity, newCount = quantity)
-            //fetchPresentInfo()
-        }
+    fun changeToCart(cartQuantity: Int) = viewModelScope.launch {
+        val productDetails = state.productDetails
+        cartManager.change(productDetails.id, cartQuantity)
     }
+
 
     fun changeCart(productId: String, giftId: String) {
         viewModelScope.launch {
@@ -577,6 +575,18 @@ class ProductDetailsFlowViewModel @Inject constructor(
 
     fun navigateToBrandProducts(brandItem: BrandCategoryItemUi) = viewModelScope.launch {
         eventListener.emit(ProductDetailsEvents.GoToBrandProducts(brandItem.data.id.toLong()))
+    }
+
+    fun incrementProductToCart(product: ProductUi) = viewModelScope.launch {
+        cartManager.change(product.id, product.cartQuantity + 1)
+    }
+
+    fun decrementProductToCart(product: ProductUi) = viewModelScope.launch {
+        cartManager.change(product.id, product.cartQuantity - 1)
+    }
+
+    fun navigateToProductAnalogs(product: ProductUi) = viewModelScope.launch {
+        eventListener.emit(ProductDetailsEvents.GoToProductAnalogs(product.id))
     }
 
 

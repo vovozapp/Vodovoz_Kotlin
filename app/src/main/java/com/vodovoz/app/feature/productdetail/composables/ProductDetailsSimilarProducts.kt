@@ -23,6 +23,9 @@ fun ProductDetailsSimilarProducts(
     sectionSimilarProducts: SectionUi<ProductUi>,
     onProductLike: (ProductUi) -> Unit,
     onProductClick: (ProductUi) -> Unit,
+    onProductAnalogsClick: (ProductUi) -> Unit = {},
+    onIncrementProductToCart: (ProductUi) -> Unit = {},
+    onDecrementProductToCart: (ProductUi) -> Unit = {}
 ) {
     Column(modifier = modifier.padding(horizontal = 16.dp)) {
         Text(
@@ -45,7 +48,10 @@ fun ProductDetailsSimilarProducts(
                     modifier = Modifier.weight(1f),
                     product = product,
                     onClick = onProductClick,
-                    onLike = onProductLike
+                    onLike = onProductLike,
+                    onIncrementToCart = onIncrementProductToCart,
+                    onDecrementToCart = onDecrementProductToCart,
+                    onAnalogsClick = onProductAnalogsClick
                 )
             }
             if (sectionSimilarProducts.items.size % 2 == 1) {
