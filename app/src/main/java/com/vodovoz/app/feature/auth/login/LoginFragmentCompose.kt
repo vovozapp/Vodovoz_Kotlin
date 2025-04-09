@@ -8,11 +8,13 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -102,6 +104,18 @@ class LoginFragment : Fragment() {
                 accountManager.saveUseBio(false)
             }
         }
+
+    override fun onStart() {
+        super.onStart()
+        WindowCompat.setDecorFitsSystemWindows(requireActivity().window, false)
+        tabManager.changeTabVisibility(false)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        WindowCompat.setDecorFitsSystemWindows(requireActivity().window, true)
+        tabManager.changeTabVisibility(true)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

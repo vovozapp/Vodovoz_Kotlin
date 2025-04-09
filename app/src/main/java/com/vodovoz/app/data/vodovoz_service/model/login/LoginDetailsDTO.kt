@@ -16,7 +16,5 @@ data class LoginDetailsDTO(
     @Json(name = "SOGLASHENIE")
     val SOGLASHENIE: String?,
     @Json(name = "KNOPKA")
-    val KNOPKA: KNOPKA_AUTH_DTO?,
-    @Json(name = "KNOPKA_AUTH")
-    val KNOPKA_AUTH: KNOPKA_AUTH_DTO?
+    val KNOPKA: List<KNOPKA_AUTH_DTO>?,
 )

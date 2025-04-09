@@ -16,6 +16,7 @@ import com.vodovoz.app.common.token.FirebaseTokenManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.design_system.model.ColorfulButtonUi
+import com.vodovoz.app.design_system.model.updateButton
 import com.vodovoz.app.design_system.model.toUi
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.preorder.model.FieldUi
@@ -55,6 +56,11 @@ class LoginFlowViewModel @Inject constructor(
     LoginState()
 ) {
 
+    companion object {
+        private const val AUTH_BUTTON = "sms"
+        private const val NAVIGATION_BUTTON = "auth"
+    }
+
     init {
         viewModelScope.launch {
             val settings = accountManager.fetchUserSettings()
@@ -84,19 +90,21 @@ class LoginFlowViewModel @Inject constructor(
         val showRegisterText = siteState?.requestUrl == null
 
         loginDetailsResult.onSuccess { loginDetails ->
+
+            val buttons = loginDetails.buttons.map { colorfulButtonModel ->
+                colorfulButtonModel.toUi()
+            }.updateButton(AUTH_BUTTON){ it.copy(enabled = false) }
+
             uiStateListener.updateData { s ->
                 s.copy(
                     description = loginDetails.description,
                     title = loginDetails.title,
-                    navigationButton = loginDetails.navigationButton.toUi(),
-                    mainButton = loginDetails.mainButton.toUi(),
+                    buttons = buttons,
                     fields = loginDetails.fields.mapToUi(),
                     agreementTextHtml = agreementText,
                     uiState = LoginUiState.Success,
                     showAgreements = loginDetails.hasAgreement,
                     showRegisterText = showRegisterText,
-                    mainButtonEnabled = false,
-                    mainButtonLoading = false,
                 )
             }
         }
@@ -380,7 +388,9 @@ class LoginFlowViewModel @Inject constructor(
 
             s.copy(
                 fields = updatedFields,
-                mainButtonEnabled = updatedFields.checkFields() && s.agreementChecked
+                buttons = s.buttons.updateButton(AUTH_BUTTON) { button ->
+                    button.copy(enabled = updatedFields.checkFields() && s.agreementChecked)
+                }
             )
         }
     }
@@ -392,9 +402,7 @@ class LoginFlowViewModel @Inject constructor(
 
     fun checkSubscribe(checked: Boolean) = viewModelScope.launch {
         uiStateListener.updateData { s ->
-            s.copy(
-                subscribeChecked = checked
-            )
+            s.copy(subscribeChecked = checked)
         }
     }
 
@@ -402,18 +410,32 @@ class LoginFlowViewModel @Inject constructor(
         uiStateListener.updateData { s ->
             s.copy(
                 agreementChecked = checked,
-                mainButtonEnabled = s.fields.checkFields() && checked
+                buttons = s.buttons.updateButton(AUTH_BUTTON) { button ->
+                    button.copy(enabled = s.fields.checkFields() && checked)
+                }
             )
         }
 
     }
 
-    fun navigateToLoginByEmail() = viewModelScope.launch {
-        eventListener.emit(LoginEvents.GoToLoginByEmail)
-    }
-
     fun navigateToRegister() = viewModelScope.launch {
         eventListener.emit(LoginEvents.GoToRegister)
+    }
+
+    fun activateButton(button: ColorfulButtonUi) = viewModelScope.launch {
+        when (button.id) {
+            NAVIGATION_BUTTON -> {
+                eventListener.emit(LoginEvents.GoToLoginByEmail)
+            }
+
+            AUTH_BUTTON -> {
+                //TODO - add auth when will be request
+            }
+
+            else -> {
+
+            }
+        }
     }
 
     sealed class LoginEvents : Event {
@@ -459,10 +481,7 @@ class LoginFlowViewModel @Inject constructor(
         val title: String = "",
         val description: String = "",
         val fields: List<FieldUi> = emptyList(),
-        val mainButton: ColorfulButtonUi = ColorfulButtonUi.Empty,
-        val mainButtonEnabled: Boolean = false,
-        val mainButtonLoading: Boolean = false,
-        val navigationButton: ColorfulButtonUi = ColorfulButtonUi.Empty,
+        val buttons: List<ColorfulButtonUi> = emptyList(),
         val uiState: LoginUiState = LoginUiState.Loading,
     ) : State
 

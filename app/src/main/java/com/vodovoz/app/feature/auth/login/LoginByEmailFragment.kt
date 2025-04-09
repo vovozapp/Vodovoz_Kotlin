@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class LoginByEmailFragment : BaseFragment() {
+class LoginByEmailFragment1 : BaseFragment() {
 
     override fun layout(): Int = R.layout.fragment_login_by_email_flow
 

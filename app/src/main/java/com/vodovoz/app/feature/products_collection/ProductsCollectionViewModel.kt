@@ -40,7 +40,6 @@ class ProductsCollectionViewModel @Inject constructor(
 ) {
     private val productId = savedStateHandle.get<Long>("productId") ?: -1
 
-
     suspend fun listenProductLoadings() =
         state.map { it.productsSection.products }
             .distinctUntilChanged()

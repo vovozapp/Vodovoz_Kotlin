@@ -37,22 +37,18 @@ fun LoginBody(
     modifier: Modifier = Modifier,
     fields: List<FieldUi>,
     description: String,
-    mainButton: ColorfulButtonUi,
-    mainButtonEnabled: Boolean,
-    mainButtonLoading: Boolean,
-    navigationButton: ColorfulButtonUi,
     showAgreements: Boolean,
     showRegisterText: Boolean,
     agreementChecked: Boolean,
     subscribeChecked: Boolean,
     agreementTextHtml: String,
+    buttons: List<ColorfulButtonUi>,
     onFieldChange: (FieldUi, FieldUi) -> Unit,
-    onMainButtonClick: () -> Unit,
-    onNavigationButtonClick: () -> Unit,
+    onButtonClick: (ColorfulButtonUi) -> Unit,
     onHyperlinkClick: (String, Int) -> Unit,
     onAgreementCheck: (Boolean) -> Unit,
     onSubscribeCheck: (Boolean) -> Unit,
-    onRegisterTextClick: () -> Unit
+    onRegisterTextClick: () -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -62,6 +58,7 @@ fun LoginBody(
             .padding(horizontal = 16.dp)
     ) {
         Text(
+            modifier = Modifier.padding(top = 8.dp),
             text = description,
             color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.bodySmall
@@ -71,7 +68,7 @@ fun LoginBody(
             modifier = Modifier.padding(top = 24.dp),
             fields = fields,
             onFieldChange = onFieldChange,
-            onDone = { onMainButtonClick() }
+            onDone = {  }
         )
 
 
@@ -87,7 +84,6 @@ fun LoginBody(
                     onUrlClick = onHyperlinkClick
                 )
             }
-
             AgreementRow(
                 checked = subscribeChecked,
                 htmlText = stringResource(id = R.string.subscribe_on_mailing_list),
@@ -96,32 +92,22 @@ fun LoginBody(
             )
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Column(modifier = Modifier.padding(vertical = 24.dp),verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            buttons.forEach { button ->
+                VodovozButton(
+                    text = button.name,
+                    onClick = { onButtonClick(button) },
+                    colors = VodovozButtonDefaults.primaryColors().copy(
+                        containerColor = button.backgroundColor.takeOrElse { MaterialTheme.colorScheme.primary },
+                        contentColor = button.textColor.takeOrElse { MaterialTheme.colorScheme.background }
+                    ),
+                    enabled = button.enabled,
+                    isLoading = button.loading,
+                )
+            }
+        }
 
-        VodovozButton(
-            text = mainButton.name,
-            onClick = onMainButtonClick,
-            colors = VodovozButtonDefaults.primaryColors().copy(
-                containerColor = mainButton.backgroundColor.takeOrElse { MaterialTheme.colorScheme.primary },
-                contentColor = mainButton.textColor.takeOrElse { MaterialTheme.colorScheme.background }
-            ),
-            enabled = mainButtonEnabled,
-            isLoading = mainButtonLoading
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        VodovozButton(
-            modifier = Modifier.padding(bottom = 24.dp),
-            text = navigationButton.name,
-            onClick = onNavigationButtonClick,
-            colors = VodovozButtonDefaults.secondaryColors().copy(
-                containerColor = navigationButton.backgroundColor.takeOrElse { MaterialTheme.colorScheme.primaryContainer },
-                contentColor = navigationButton.textColor.takeOrElse { MaterialTheme.colorScheme.primary }
-            )
-        )
-
-        if(showRegisterText){
+        if (showRegisterText) {
             RegisterRow(modifier = Modifier.padding(bottom = 16.dp)) { onRegisterTextClick() }
         }
     }

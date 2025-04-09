@@ -71,8 +71,6 @@ class RegFlowViewModel @Inject constructor(
                     title = registerDetails.title,
                     agreementTextHtml = AgreementController.getText(),
                     showAgreements = registerDetails.hasAgreement,
-                    mainButton = registerDetails.mainButton.toUi(),
-                    navigationButton = registerDetails.navigationButton.toUi(),
                     buttonEnabled = false,
                     buttonLoading = false
                 )
