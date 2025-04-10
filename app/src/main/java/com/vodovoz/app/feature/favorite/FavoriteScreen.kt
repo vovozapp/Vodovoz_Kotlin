@@ -11,10 +11,13 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import coil3.compose.rememberAsyncImagePainter
+import com.vodovoz.app.R
 import com.vodovoz.app.design_system.composables.bottom_sheet.SortOptionsBottomSheet
 import com.vodovoz.app.design_system.composables.placeholders.LoadingPlaceholder
 import com.vodovoz.app.feature.favorite.composables.FavoriteBody
-import com.vodovoz.app.feature.favorite.composables.FavoriteEmpty
+import com.vodovoz.app.feature.favorite.composables.FavoriteEmptyPlaceholder
 import com.vodovoz.app.feature.favorite.composables.FavoriteTopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,9 +60,19 @@ fun FavoriteScreen(
             }
         ) {
 
-            when (viewState.uiState) {
-                FavoriteFlowViewModel.FavoriteUiState.Empty -> {
-                    FavoriteEmpty(onButtonClick = { viewModel.navigateToCatalog() })
+            when (val uiState = viewState.uiState) {
+                is FavoriteFlowViewModel.FavoriteUiState.Empty -> {
+                    FavoriteEmptyPlaceholder(
+                        button = uiState.button,
+                        imagePainter = if (uiState.image.isEmpty()) {
+                            painterResource(id = R.drawable.pic_heart)
+                        } else {
+                            rememberAsyncImagePainter(model = uiState.image)
+                        },
+                        titleHtml = uiState.title,
+                        descriptionHtml = uiState.description,
+                        onButtonClick = { viewModel.navigateToCatalog() }
+                    )
                 }
 
                 FavoriteFlowViewModel.FavoriteUiState.Loading -> {

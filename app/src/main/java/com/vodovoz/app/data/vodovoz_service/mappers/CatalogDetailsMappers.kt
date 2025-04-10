@@ -21,8 +21,8 @@ fun CATALOG_CATEGORY_DTO.toDomain(): ParentCategoryModel? {
         action = UF_SILKAPEREXOD?.toDataAllAction(),
         parentId = IBLOCK_SECTION_ID,
         depthLevel = DEPTH_LEVEL ?: 1,
-        subcategoriesQuantity = SUBSECTIONS ?: 0,
-        childCategories = PODRAZDEL?.mapToDomain() ?: emptyList()
+        childCategories = PODRAZDEL?.mapToDomain() ?: emptyList(),
+        countChildren = SUBSECTIONS ?: 0
     )
 }
 

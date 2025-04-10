@@ -96,8 +96,7 @@ fun ProductDetailsScreen(
             modifier = Modifier
                 .padding(top = paddingValues.calculateTopPadding())
                 .verticalScroll(rememberScrollState())
-                .padding(bottom = paddingValues.calculateBottomPadding())
-                ,
+                .padding(bottom = paddingValues.calculateBottomPadding()),
             productDetails = productDetails,
             comments = viewState.comments,
             quantityButtonIsLoading = viewState.buttonIsLoading,

@@ -97,7 +97,6 @@ fun ProductsNoFiltersScreen(
                         productsLoadStates = viewState.productsLoadStates,
                         isGridView = viewState.isGridView,
                         showFilters = viewState.showFilters,
-                        showCategoryList = viewState.showCategoryList,
                         showEmptyCategory = viewState.showEmptyCategory,
                         onProductSee = { index ->
                             viewModel.notifyPagingProducts(index)

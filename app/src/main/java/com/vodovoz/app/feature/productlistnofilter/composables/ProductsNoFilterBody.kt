@@ -42,7 +42,6 @@ fun ProductsNoFilterBody(
     currentCategory: CategoryUi,
     currentSort: SortUi,
     isGridView: Boolean,
-    showCategoryList: Boolean,
     showFilters: Boolean,
     showEmptyCategory: Boolean,
     products: List<ProductUi>,
@@ -79,7 +78,7 @@ fun ProductsNoFilterBody(
         }
 
         item(span = { GridItemSpan(maxLineSpan) }) {
-            if (categories.isNotEmpty() || showCategoryList) {
+            if (categories.isNotEmpty()) {
                 ProductListCategoriesRow(
                     modifier = Modifier.padding(bottom = 16.dp),
                     categories = categories,
@@ -88,7 +87,7 @@ fun ProductsNoFilterBody(
                     onCategoryClick = { category ->
                         onCategoryClick(category)
                     },
-                    onCategoriesListClick = if (showCategoryList) onCategoriesListClick else null
+                    onCategoriesListClick = onCategoriesListClick
                 )
             }
 

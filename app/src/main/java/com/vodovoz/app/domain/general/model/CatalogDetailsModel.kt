@@ -12,6 +12,6 @@ data class ParentCategoryModel(
     val action: DataAllAction?,
     val parentId: Int?,
     val depthLevel: Int,
-    val subcategoriesQuantity: Int,
+    val countChildren: Int,
     val childCategories: List<ParentCategoryModel>
 )

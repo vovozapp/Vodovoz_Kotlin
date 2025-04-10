@@ -19,6 +19,7 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.design_system.model.ColorfulButtonUi
 import com.vodovoz.app.design_system.model.ProductUi
 import com.vodovoz.app.design_system.model.toUi
 import com.vodovoz.app.design_system.model.withUpdatedCart
@@ -45,7 +46,6 @@ import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.singleResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -196,10 +196,7 @@ class FavoriteFlowViewModel @Inject constructor(
 
 
         favoriteProductsResult.onSuccess { productsSectionUi ->
-            delay(150)
             uiStateListener.updateData { s ->
-
-
                 val currentSort = s.currentSort.takeIf { value ->
                     value != SortUi.Empty
                 } ?: productsSectionUi.sorting.firstOrNull() ?: SortUi.Empty
@@ -228,8 +225,14 @@ class FavoriteFlowViewModel @Inject constructor(
 
         }.onFailure { fail ->
             val uiState = when (fail) {
-                is FavoritesNotFoundException ->
-                    FavoriteUiState.Empty
+                is FavoritesNotFoundException -> fail.errorData?.run {
+                    FavoriteUiState.Empty(
+                        image = imageUrl,
+                        title = title,
+                        description = descriptionHtml,
+                        button = button?.toUi()
+                    )
+                } ?: FavoriteUiState.Error
 
                 else -> FavoriteUiState.Error
             }
@@ -589,6 +592,7 @@ class FavoriteFlowViewModel @Inject constructor(
                 productsLoadStates = s.productsLoadStates.copy(
                     refresh = LoadState.Loading,
                 ),
+
             )
         }
 
@@ -622,11 +626,11 @@ class FavoriteFlowViewModel @Inject constructor(
         eventListener.emit(FavoriteEvents.GoToProductAnalogs(product.id))
     }
 
-    fun incrementProductToCart(product: ProductUi)= viewModelScope.launch {
+    fun incrementProductToCart(product: ProductUi) = viewModelScope.launch {
         cartManager.change(product.id, product.cartQuantity + 1)
     }
 
-    fun decrementProductToCart(product: ProductUi)= viewModelScope.launch {
+    fun decrementProductToCart(product: ProductUi) = viewModelScope.launch {
         cartManager.change(product.id, product.cartQuantity - 1)
     }
 
@@ -683,7 +687,13 @@ class FavoriteFlowViewModel @Inject constructor(
 
         data object Loading : FavoriteUiState
         data object Success : FavoriteUiState
-        data object Empty : FavoriteUiState
+        data class Empty(
+            val image: String,
+            val title: String,
+            val description: String,
+            val button: ColorfulButtonUi?,
+        ) : FavoriteUiState
+
         data object Error : FavoriteUiState
 
     }

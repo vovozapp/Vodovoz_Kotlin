@@ -17,7 +17,7 @@ fun CATEGORY_NODE_DTO.toDomain(): ParentCategoryModel? {
         action = null,
         parentId = null,
         depthLevel = DEPTH_LEVEL ?: 1,
-        subcategoriesQuantity = subCategories.size,
-        childCategories = subCategories
+        childCategories = subCategories,
+        countChildren = SUBSECTIONS ?: 0
     )
 }

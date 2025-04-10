@@ -14,11 +14,12 @@ data class ParentCategoryUi(
     val name: String,
     val picture: String,
     val action: DataAllAction?,
+    val countChildren: Int,
     val childCategories: List<ParentCategoryUi>,
 ) : Parcelable {
 
     companion object {
-        val Empty = ParentCategoryUi(-1, "", "", DataAllAction.Unknown, emptyList())
+        val Empty = ParentCategoryUi(-1, "", "", DataAllAction.Unknown, -1, emptyList())
     }
 
 }
@@ -28,6 +29,11 @@ fun ParentCategoryUi.allCategories(): List<ParentCategoryUi> {
         category.allCategories()
     }
 }
+
+fun List<ParentCategoryUi>.allCategories(): List<ParentCategoryUi> {
+    return map { it.allCategories() }.flatten()
+}
+
 
 fun ParentCategoryUi.toCategory(): CategoryUi {
     return CategoryUi(name, id.toInt())
@@ -39,6 +45,7 @@ fun ParentCategoryModel.toUi(): ParentCategoryUi {
         name = name,
         picture = picture,
         action = action,
+        countChildren = countChildren,
         childCategories = childCategories.map { it.toUi() }
     )
 }

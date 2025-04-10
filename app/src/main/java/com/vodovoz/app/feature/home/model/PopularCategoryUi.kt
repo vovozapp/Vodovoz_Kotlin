@@ -42,12 +42,13 @@ data class CategoryUi(
     }
 }
 
-fun CategoryUi.toParentCategory(): ParentCategoryUi{
+fun CategoryUi.toParentCategory(): ParentCategoryUi {
     return ParentCategoryUi(
         id = id.toLong(),
         name = name,
         picture = "",
         null,
+        -1,
         emptyList()
     )
 }

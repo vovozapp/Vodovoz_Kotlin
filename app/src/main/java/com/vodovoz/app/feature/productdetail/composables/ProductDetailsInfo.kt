@@ -39,6 +39,7 @@ import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.fromHtml
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -90,21 +91,25 @@ fun ProductDetailsInfo(
             targetValue = if (showDetailText) 180f else 0f, label = "arrow down animation"
         )
 
-        Row(
-            modifier = Modifier
-                .padding(top = 16.dp)
-                .fillMaxWidth()
-                .animateContentSize(),
-            verticalAlignment = Alignment.Bottom
-        ) {
 
-            Text(
-                modifier = Modifier.weight(1f),
-                text = AnnotatedString.fromHtml(detailInfo.content),
-                color = MaterialTheme.colorScheme.onBackground,
-                style = MaterialTheme.typography.bodySmall,
-                maxLines = if(showDetailText) Int.MAX_VALUE else 4
-            )
+        val annotatedDetailsInfo =
+            AnnotatedString.fromHtml(detailInfo.content.takeWhile { if (!showDetailText) it != '\n' else true })
+        if (annotatedDetailsInfo.isNotEmpty()) {
+            Row(
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .fillMaxWidth()
+                    .animateContentSize(),
+                verticalAlignment = Alignment.Bottom
+            ) {
+                Text(
+                    modifier = Modifier.weight(1f),
+                    text = annotatedDetailsInfo,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    style = MaterialTheme.typography.bodySmall,
+                    maxLines = if (showDetailText) Int.MAX_VALUE else 4,
+                    overflow = TextOverflow.Ellipsis
+                )
 
                 Icon(
                     painter = painterResource(id = R.drawable.ic_arrow_down),
@@ -117,6 +122,7 @@ fun ProductDetailsInfo(
                         .clickable { onDetailTextSwitch() },
                     tint = MaterialTheme.colorScheme.surfaceTint
                 )
+            }
         }
 
         Text(
@@ -145,11 +151,11 @@ fun ProductDetailsInfo(
             )
 
             showedCharacteristics.forEach { characteristic ->
-                    CharacteristicItem(
-                        modifier = Modifier.fillMaxWidth(),
-                        characteristic = characteristic
-                    )
-                }
+                CharacteristicItem(
+                    modifier = Modifier.fillMaxWidth(),
+                    characteristic = characteristic
+                )
+            }
 
             if (!showAllProperties && minCharacteristic < commonCharacteristics.size) {
                 Icon(

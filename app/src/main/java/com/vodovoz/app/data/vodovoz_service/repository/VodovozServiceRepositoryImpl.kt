@@ -762,16 +762,10 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                 )
             },
             mapper = { responseDTO ->
+                responseDTO.checkError{ errorData -> throw FavoritesNotFoundException(errorData = errorData) }
                 responseDTO.data?.toDomain()
                     ?: throw IllegalArgumentException("Favorite products can't be null")
             },
-            onFail = { response ->
-                val exception = when (response.code()) {
-                    404 -> FavoritesNotFoundException(response.messageWithCode())
-                    else -> RequestException(response.messageWithCode())
-                }
-                Result.failure(exception)
-            }
         )
 
     override fun getFavoriteProductsPaged(

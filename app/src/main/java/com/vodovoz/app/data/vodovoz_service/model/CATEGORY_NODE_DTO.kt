@@ -13,5 +13,7 @@ data class CATEGORY_NODE_DTO(
     @Json(name = "DEPTH_LEVEL")
     val DEPTH_LEVEL: Int?,
     @Json(name = "PODRAZDEL")
-    val PODRAZDEL: List<CATEGORY_NODE_DTO>?
+    val PODRAZDEL: List<CATEGORY_NODE_DTO>?,
+    @Json(name = "SUBSECTIONS")
+    val SUBSECTIONS: Int?
 )
