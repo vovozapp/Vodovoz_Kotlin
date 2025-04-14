@@ -11,7 +11,7 @@ import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat.CONSUMED
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -55,6 +55,8 @@ class MainFragment : BaseFragment() {
         }
     }
 
+    private val viewModel: MainViewModel by viewModels()
+
     private fun popupSnackbarForCompleteUpdate() {
         val snackbar = Snackbar.make(
             requireView(),
@@ -74,7 +76,6 @@ class MainFragment : BaseFragment() {
         snackbar.show()
     }
 
-    private val viewModel: MainViewModel by viewModels()
 
     override fun layout(): Int = R.layout.fragment_main
 
@@ -90,18 +91,14 @@ class MainFragment : BaseFragment() {
         observeTabState()
         observeCartState()
         observeProfileState()
-        // observeCartLoading()
+
         observeTabVisibility()
 
         checkForUpdate()
 
         ViewCompat.setOnApplyWindowInsetsListener(
             binding.nvNavigation
-        ) { _, insets ->
-            val imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
-            //todo - make for search
-            //val visible = tabManager.observeTabVisibility().value
-            //binding.nvNavigation.isVisible = !imeVisible
+        ) { _, _ ->
             return@setOnApplyWindowInsetsListener CONSUMED
         }
     }
@@ -126,43 +123,24 @@ class MainFragment : BaseFragment() {
 
     override fun onStart() {
         super.onStart()
-        if (!viewModel.isBottomBarInited) {
+        WindowCompat.setDecorFitsSystemWindows(requireActivity().window, true)
+        if (!viewModel.isBottomBarInitialized) {
             setupBottomNavigationBar()
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        viewModel.isBottomBarInited = false
+        viewModel.isBottomBarInitialized = false
     }
-
-//    private fun observeCartLoading() {
-//        lifecycleScope.launchWhenStarted {
-//            tabManager
-//                .observeAddToCartLoading()
-//                .collect { state ->
-//                    if (state == null || state.count == 0) {
-//                        binding.circleAmount.isVisible = false
-//                        binding.nvNavigation.menu.getItem(2).title = "Корзина"
-//                    } else {
-//                        binding.circleAmount.text = state.count.toString()
-//                        binding.circleAmount.isVisible = true
-//                        binding.nvNavigation.menu.getItem(2).title = "..."
-//                    }
-//                }
-//        }
-//    }
-
 
     private fun observeTabVisibility() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 tabManager
                     .observeTabVisibility()
-                    .collect { visible ->
-                        binding.nvNavigation.animateTabVisibility(visible)
-                        //binding.nvNavigation.isVisible = it
-                        //binding.nvNavigation.visibility = if(it) View.VISIBLE else View.GONE
+                    .collect { isVisible ->
+                        binding.nvNavigation.isVisible = isVisible
                     }
             }
         }
@@ -247,7 +225,7 @@ class MainFragment : BaseFragment() {
      * Called on first creation and when restoring state.
      */
     private fun setupBottomNavigationBar() = lifecycleScope.launch {
-        viewModel.isBottomBarInited = true
+        viewModel.isBottomBarInitialized = true
 
         val navGraphIds = listOfNotNull(
             R.navigation.nav_graph_home,

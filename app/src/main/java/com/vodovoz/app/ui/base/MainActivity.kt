@@ -3,20 +3,14 @@ package com.vodovoz.app.ui.base
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsCompat.CONSUMED
-import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.firebase.messaging.RemoteMessage
-import com.vodovoz.app.R
 import com.vodovoz.app.common.account.data.ReloginManager
 import com.vodovoz.app.common.permissions.PermissionsManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
@@ -26,6 +20,7 @@ import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.snack
 import com.yandex.mapkit.MapKitFactory
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import pub.devrel.easypermissions.EasyPermissions
@@ -49,30 +44,28 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks,
     @Inject
     lateinit var permissionsManager: PermissionsManager
 
-    private val viewModel: SplashFileViewModel by viewModels()
+    private val viewModel: MainActivityViewModel by viewModels()
+    private val splashFileViewModel: SplashFileViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        splashFileViewModel.downloadSplashFile()
         installSplashScreen().apply {
-            setKeepOnScreenCondition { viewModel.isLoading.value }
+            setKeepOnScreenCondition { splashFileViewModel.fileLoading.value }
         }
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-
-
         MapKitFactory.initialize(this)
+        observeRatingSnackbar()
+
         binding = ActivityMainBinding.inflate(layoutInflater).apply { setContentView(root) }
 
-        reloginManager.reloginUser()
-
-        lifecycleScope.launch {
-            siteStateManager.requestSiteState()
-        }
-
-        observeRatingSnackbar()
+        viewModel.checkAppState()
 
         handleIntent(intent)
         handlePushIntent(intent)
+
     }
+
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
@@ -102,7 +95,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks,
     }
 
     private fun handleIntent(intent: Intent) {
-        // val appLinkAction = intent.action
+        //todo - check in old app
+        //val appLinkAction = intent.action
         val appLinkData: Uri? = intent.data
         val path = appLinkData?.lastPathSegment
 
@@ -117,8 +111,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks,
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 ratingProductManager
                     .observeRatingSnackbar()
-                    .collect {
-                        this@MainActivity.snack(it)
+                    .collect { message ->
+                        snack(message)
                     }
             }
         }

@@ -330,8 +330,8 @@ fun Activity.enableFullScreen() {
     val insetsController = WindowCompat.getInsetsController(window, window.decorView)
     insetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_DEFAULT
 
-    //insetsController.hide(WindowInsetsCompat.Type.statusBars())
-    //insetsController.hide(WindowInsetsCompat.Type.navigationBars())
+    insetsController.hide(WindowInsetsCompat.Type.statusBars())
+    insetsController.hide(WindowInsetsCompat.Type.navigationBars())
 }
 
 fun Activity.disableFullScreen() {

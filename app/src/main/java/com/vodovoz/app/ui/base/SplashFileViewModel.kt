@@ -4,12 +4,11 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.util.SplashFileConfig
-import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,29 +17,20 @@ class SplashFileViewModel @Inject constructor(
     private val appContext: Application,
 ) : ViewModel() {
 
-    private val _isLoading = MutableStateFlow(true)
-    val isLoading = _isLoading.asStateFlow()
+    private val _fileIsLoading = MutableStateFlow(true)
+    val fileLoading = _fileIsLoading.asStateFlow()
 
-    init {
-        debugLog { "init" }
-        downloadSplashFile()
-    }
-
-    private fun downloadSplashFile() {
-        var delayInMillis = 0L
-        if (SplashFileConfig.getSplashFile(appContext).exists()) {
-            _isLoading.value = false
-            delayInMillis = 5_000L
-        }
+    fun downloadSplashFile() {
         viewModelScope.launch(Dispatchers.IO) {
-            delay(delayInMillis)
             kotlin.runCatching {
-                debugLog { "start download splash file" }
                 SplashFileConfig.downloadSplashFile(appContext)
             }.onFailure {
-                debugLog { it.message.toString() }
+                _fileIsLoading.update { false }
             }
-            _isLoading.value = false
         }
+    }
+
+    fun finishFileLoading() = viewModelScope.launch {
+        _fileIsLoading.update { false }
     }
 }

@@ -2,7 +2,6 @@ package com.vodovoz.app.feature.questionnaires
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -31,7 +30,6 @@ import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import javax.inject.Inject
@@ -121,11 +119,10 @@ class QuestionnairesFlowFragment : BaseFragment() {
                                 dialog.dismiss()
                                 lifecycleScope.launch {
                                     siteStateManager.requestSiteState()
-                                    siteStateManager.observeSiteState().collect{ state ->
+                                    siteStateManager.siteStateFlow.collect{ state ->
                                         if (state != null) {
-                                            val newLink = "${state.testSiteLink}/"
+                                            val newLink = "${state.secondUrl}/"
                                             loadHomeFragmentWithNewServerURL(newLink)
-                                            Log.d("sgsderg", newLink)
                                         }
                                     }
                                 }

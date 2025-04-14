@@ -85,9 +85,10 @@ class LoginFlowViewModel @Inject constructor(
         uiStateListener.updateData { s -> s.copy(uiState = LoginUiState.Loading) }
 
         val loginDetailsResult = vodovozServiceRepository.getLoginDetails().singleResult()
+
         val siteState = siteStateManager.requestSiteState()
         val agreementText = AgreementController.getText()
-        val showRegisterText = siteState?.requestUrl == null
+        val showRegisterText = siteState?.isSmsEnabled != true
 
         loginDetailsResult.onSuccess { loginDetails ->
 
@@ -103,7 +104,7 @@ class LoginFlowViewModel @Inject constructor(
                     fields = loginDetails.fields.mapToUi(),
                     agreementTextHtml = agreementText,
                     uiState = LoginUiState.Success,
-                    showAgreements = loginDetails.hasAgreement,
+                    showAgreements = loginDetails.haveAgreement,
                     showRegisterText = showRegisterText,
                 )
             }

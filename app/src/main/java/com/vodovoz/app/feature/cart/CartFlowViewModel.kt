@@ -94,12 +94,12 @@ class CartFlowViewModel @Inject constructor(
                         val calculatedPrices = calculatePrice(availableProducts)
                         if (availableProducts.isEmpty() && !cartManager.isCartEmpty()) {
                             //todo - uncomment
-                            //cartManager.clearCart()
+                            cartManager.clearCart()
                         } else {
                             //todo - uncomment
-//                            cartManager.syncCart(
-//                                availableProducts
-//                            )
+                            cartManager.syncCart(
+                                availableProducts
+                            )
                         }
                         state.copy(
                             data = state.data.copy(

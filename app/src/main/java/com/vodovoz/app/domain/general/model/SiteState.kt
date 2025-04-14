@@ -1,14 +1,15 @@
 package com.vodovoz.app.domain.general.model
 
-data class SiteStateModel(
+data class SiteState(
     val isActive: Boolean,
-    val url: String,
+    val secondUrl: String,
     val smsUrl: String,
     val isSmsEnabled: Boolean,
     val showComments: Boolean,
     val jivoChat: JivoChatModel,
     val tracking: TrackingConfig,
-    val agreement: AgreementModel
+    val agreement: AgreementModel,
+    val data: SiteStateDataModel? = null
 )
 
 data class JivoChatModel(
@@ -17,7 +18,7 @@ data class JivoChatModel(
 )
 
 data class AgreementModel(
-    val htmlText: String,
+    val html: String,
     val titles: List<String>,
 )
 

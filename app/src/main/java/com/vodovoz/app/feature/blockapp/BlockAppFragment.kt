@@ -27,11 +27,13 @@ import com.vodovoz.app.util.extensions.startTelegram
 import com.vodovoz.app.util.extensions.startViber
 import com.vodovoz.app.util.extensions.startWhatsUpWithUri
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 @AndroidEntryPoint
 class BlockAppFragment : BaseFragment() {
@@ -57,115 +59,113 @@ class BlockAppFragment : BaseFragment() {
     private fun observeSiteState() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                siteStateManager
-                    .observeSiteState()
-                    .collect { state ->
-                        if (state != null) {
+                siteStateManager.siteStateFlow.collectLatest { siteState ->
+                    if (siteState != null) {
 
-                            if (siteStateManager.fetchSiteStateActive()) {
-                                findNavController().navigate(R.id.splashFragment)
-                            }
+                        if (siteState.isActive) {
+                            findNavController().navigate(R.id.splashFragment)
+                        }
 
-                            val time = state.data?.time
-                            if (time.isNullOrEmpty()) {
-                                binding.linearTimeData.isVisible = false
-                            } else {
-                                binding.linearTimeData.isVisible = true
-                                countDownStart(state.data.time)
-                            }
-
-
-                            Glide.with(requireContext())
-                                .load(state.data?.logo?.parseImagePath())
-                                .placeholder(R.drawable.placeholderimageproduits)
-                                .error(R.drawable.placeholderimageproduits)
-                                .into(binding.imageBlockApp)
-
-
-                            initToolbar(showNavBtn = false, titleText = state.data?.title ?: "")
-
-                            binding.txtBlockApp.text = if (state.data?.desc == null) {
-                                binding.txtBlockApp.isVisible = false
-                                ""
-                            } else {
-                                binding.txtBlockApp.isVisible = true
-                                state.data.desc.fromHtml()
-                            }
-
-                            Glide.with(requireContext())
-                                .load(state.data?.whatsUp?.image?.parseImagePath())
-                                .placeholder(R.drawable.placeholderimageproduits)
-                                .error(R.drawable.placeholderimageproduits)
-                                .into(binding.whatsUp)
-
-                            Glide.with(requireContext())
-                                .load(state.data?.viber?.image?.parseImagePath())
-                                .placeholder(R.drawable.placeholderimageproduits)
-                                .error(R.drawable.placeholderimageproduits)
-                                .into(binding.viber)
-
-                            Glide.with(requireContext())
-                                .load(state.data?.telegram?.image?.parseImagePath())
-                                .placeholder(R.drawable.placeholderimageproduits)
-                                .error(R.drawable.placeholderimageproduits)
-                                .into(binding.telegram)
-
-                            Glide.with(requireContext())
-                                .load(state.data?.chat?.image?.parseImagePath())
-                                .placeholder(R.drawable.placeholderimageproduits)
-                                .error(R.drawable.placeholderimageproduits)
-                                .into(binding.chat)
-
-                            Glide.with(requireContext())
-                                .load(state.data?.phone?.image?.parseImagePath())
-                                .placeholder(R.drawable.placeholderimageproduits)
-                                .error(R.drawable.placeholderimageproduits)
-                                .into(binding.imageCall)
-
-                            binding.whatsUp.setOnClickListener {
-                                val url = state.data?.whatsUp?.url ?: return@setOnClickListener
-                                requireActivity().startWhatsUpWithUri(url)
-                            }
-
-                            binding.viber.setOnClickListener {
-                                val url = state.data?.viber?.url ?: return@setOnClickListener
-                                requireActivity().startViber(url)
-                            }
-
-                            binding.telegram.setOnClickListener {
-                                val url = state.data?.telegram?.url ?: return@setOnClickListener
-                                requireActivity().startTelegram(url)
-                            }
-
-                            binding.telegram.setOnClickListener {
-                                val url = state.data?.telegram?.url ?: return@setOnClickListener
-                                requireActivity().startTelegram(url)
-                            }
-
-                            binding.chat.setOnClickListener {
-                                val url = state.data?.chat?.url ?: return@setOnClickListener
-                                requireActivity().startJivo(url)
-                            }
-
-                            binding.imageCall.setOnClickListener {
-                                val url = state.data?.phone?.url ?: return@setOnClickListener
-                                val intent =
-                                    Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", url, null))
-                                startActivity(intent)
-                            }
-
+                        val time = siteState.data?.time
+                        if (time.isNullOrEmpty()) {
+                            binding.linearTimeData.isVisible = false
                         } else {
-                            showError(ErrorState.Error())
-                            bindErrorRefresh {
-                                lifecycleScope.launch {
-                                    if (siteStateManager.fetchSiteStateActive()) {
-                                        findNavController().navigate(R.id.splashFragment)
-                                    }
+                            binding.linearTimeData.isVisible = true
+                            countDownStart(siteState.data.time)
+                        }
+
+
+                        Glide.with(requireContext())
+                            .load(siteState.data?.logo?.parseImagePath())
+                            .placeholder(R.drawable.placeholderimageproduits)
+                            .error(R.drawable.placeholderimageproduits)
+                            .into(binding.imageBlockApp)
+
+
+                        initToolbar(showNavBtn = false, titleText = siteState.data?.title ?: "")
+
+                        binding.txtBlockApp.text = if (siteState.data?.desc == null) {
+                            binding.txtBlockApp.isVisible = false
+                            ""
+                        } else {
+                            binding.txtBlockApp.isVisible = true
+                            siteState.data.desc.fromHtml()
+                        }
+
+                        Glide.with(requireContext())
+                            .load(siteState.data?.whatsUp?.image?.parseImagePath())
+                            .placeholder(R.drawable.placeholderimageproduits)
+                            .error(R.drawable.placeholderimageproduits)
+                            .into(binding.whatsUp)
+
+                        Glide.with(requireContext())
+                            .load(siteState.data?.viber?.image?.parseImagePath())
+                            .placeholder(R.drawable.placeholderimageproduits)
+                            .error(R.drawable.placeholderimageproduits)
+                            .into(binding.viber)
+
+                        Glide.with(requireContext())
+                            .load(siteState.data?.telegram?.image?.parseImagePath())
+                            .placeholder(R.drawable.placeholderimageproduits)
+                            .error(R.drawable.placeholderimageproduits)
+                            .into(binding.telegram)
+
+                        Glide.with(requireContext())
+                            .load(siteState.data?.chat?.image?.parseImagePath())
+                            .placeholder(R.drawable.placeholderimageproduits)
+                            .error(R.drawable.placeholderimageproduits)
+                            .into(binding.chat)
+
+                        Glide.with(requireContext())
+                            .load(siteState.data?.phone?.image?.parseImagePath())
+                            .placeholder(R.drawable.placeholderimageproduits)
+                            .error(R.drawable.placeholderimageproduits)
+                            .into(binding.imageCall)
+
+                        binding.whatsUp.setOnClickListener {
+                            val url = siteState.data?.whatsUp?.url ?: return@setOnClickListener
+                            requireActivity().startWhatsUpWithUri(url)
+                        }
+
+                        binding.viber.setOnClickListener {
+                            val url = siteState.data?.viber?.url ?: return@setOnClickListener
+                            requireActivity().startViber(url)
+                        }
+
+                        binding.telegram.setOnClickListener {
+                            val url = siteState.data?.telegram?.url ?: return@setOnClickListener
+                            requireActivity().startTelegram(url)
+                        }
+
+                        binding.telegram.setOnClickListener {
+                            val url = siteState.data?.telegram?.url ?: return@setOnClickListener
+                            requireActivity().startTelegram(url)
+                        }
+
+                        binding.chat.setOnClickListener {
+                            val url = siteState.data?.chat?.url ?: return@setOnClickListener
+                            requireActivity().startJivo(url)
+                        }
+
+                        binding.imageCall.setOnClickListener {
+                            val url = siteState.data?.phone?.url ?: return@setOnClickListener
+                            val intent =
+                                Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", url, null))
+                            startActivity(intent)
+                        }
+
+                    } else {
+                        showError(ErrorState.Error())
+                        bindErrorRefresh {
+                            lifecycleScope.launch {
+                                if (siteStateManager.siteActive()) {
+                                    findNavController().navigate(R.id.splashFragment)
                                 }
                             }
                         }
-
                     }
+                    
+                }
             }
         }
     }
@@ -178,6 +178,7 @@ class BlockAppFragment : BaseFragment() {
             override fun run() {
                 handler.postDelayed(this, 1000)
                 try {
+
                     val dateFormat = SimpleDateFormat(
                         "dd.MM.yyyy HH:mm:ss",
                         Locale.getDefault()
@@ -187,18 +188,18 @@ class BlockAppFragment : BaseFragment() {
                     val currentDate = Date()
                     if (!currentDate.after(futureDate)) {
                         binding.linearTimeData.visibility = View.VISIBLE
-                        var diff = (futureDate.time - currentDate.time)
-                        val days = diff / (24 * 60 * 60 * 1000)
-                        diff -= days * (24 * 60 * 60 * 1000)
-                        val hours = diff / (60 * 60 * 1000)
-                        diff -= hours * (60 * 60 * 1000)
-                        val minutes = diff / (60 * 1000)
-                        diff -= minutes * (60 * 1000)
-                        val seconds = diff / 1000
-                        binding.txtDays.text = String.format("%02d", days)
-                        binding.txtHours.text = String.format("%02d", hours)
-                        binding.txtMinute.text = String.format("%02d", minutes)
-                        binding.txtSecond.text = String.format("%02d", seconds)
+                        val diffMillis = (futureDate.time - currentDate.time).milliseconds
+
+                        val days = diffMillis.inWholeDays
+                        val hours = diffMillis.inWholeHours
+                        val minutes = diffMillis.inWholeMinutes
+                        val seconds = diffMillis.inWholeSeconds
+
+                        val locale = Locale.getDefault()
+                        binding.txtDays.text = String.format(locale, "%02d", days)
+                        binding.txtHours.text = String.format(locale, "%02d", hours)
+                        binding.txtMinute.text = String.format(locale, "%02d", minutes)
+                        binding.txtSecond.text = String.format(locale, "%02d", seconds)
                     } else {
                         lifecycleScope.launch {
                             repeatOnLifecycle(Lifecycle.State.STARTED) {

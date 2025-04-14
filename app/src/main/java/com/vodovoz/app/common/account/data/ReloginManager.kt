@@ -3,7 +3,9 @@ package com.vodovoz.app.common.account.data
 import com.vodovoz.app.common.cookie.CookieManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.UserReloginEntity
+import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.util.extensions.debugLog
+import com.vodovoz.app.util.extensions.singleResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,11 +21,26 @@ class ReloginManager @Inject constructor(
     private val repository: MainRepository,
     private val accountManager: AccountManager,
     private val cookieManager: CookieManager,
-    //private val vodovozService
+    private val vodovozServiceRepository: VodovozServiceRepository,
 ) {
 
     private val _userReloginEnded = MutableStateFlow<ReloginState>(ReloginState.ReloginInitial)
     val userReloginEnded = _userReloginEnded.asStateFlow()
+
+    suspend fun reloginUserV2() {
+
+        val reloginResult = vodovozServiceRepository.relogin().singleResult()
+
+        reloginResult.onSuccess { isAuthorized ->
+            if(isAuthorized){
+
+            }else {
+
+            }
+        }.onFailure {
+
+        }
+    }
 
     fun reloginUser() {
         val userId = accountManager.fetchAccountId()
@@ -38,12 +55,13 @@ class ReloginManager @Inject constructor(
                     if (reloginResponse.isSuccessful) {
                         val userRelogin = reloginResponse.body() ?: UserReloginEntity(false)
                         debugLog { userRelogin.toString() }
-
-                        //TODO - review old version
                         if (userRelogin.isAuthorized) {
-                            val newCookie = reloginResponse.headers()["Set-Cookie"] ?: ""
-                            if (newCookie.isNotEmpty()) {
-                                cookieManager.updateCookieSessionId(newCookie)
+
+                            val cookies = reloginResponse.headers().values("Set-Cookie")
+                            val sessionId = cookies.firstOrNull { s -> s.startsWith("PHPSESSID=") }
+
+                            if (!sessionId.isNullOrEmpty()) {
+                                cookieManager.updateCookieSessionId(sessionId)
                             }
                         } else {
                             accountManager.removeUserId()

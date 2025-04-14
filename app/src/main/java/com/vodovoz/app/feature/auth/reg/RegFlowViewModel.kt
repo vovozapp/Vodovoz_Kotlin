@@ -69,6 +69,7 @@ class RegFlowViewModel @Inject constructor(
                     uiState = UiState.Success,
                     fields = registerDetails.fields.mapToUi(),
                     title = registerDetails.title,
+                    showAgreement = registerDetails.haveAgreement,
                     agreementTextHtml = AgreementController.getText(),
                     showAgreements = registerDetails.hasAgreement,
                     buttonEnabled = false,

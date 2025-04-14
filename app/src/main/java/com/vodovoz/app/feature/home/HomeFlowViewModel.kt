@@ -803,7 +803,7 @@ class HomeFlowViewModel @Inject constructor(
 
         val uiState: HomeUiState = HomeUiState.Success,
         val showSpecialPromotionBS: Boolean = false,
-        val showUnratedProductsBS: Boolean = false,
+        val showUnratedProductsBS: Boolean = true,
         val showAdvertisingBS: Boolean = false,
         val showRefreshIndicator: Boolean = false,
     ) : State {

@@ -28,7 +28,8 @@ import com.vodovoz.app.data.vodovoz_service.model.VodovozErrorResponseDTO
 import com.vodovoz.app.data.vodovoz_service.model.VodovozResponseDTO
 import com.vodovoz.app.data.vodovoz_service.model.catalog.CatalogDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.filters.FiltersDTO
-import com.vodovoz.app.data.vodovoz_service.model.login.LoginDetailsDTO
+import com.vodovoz.app.data.vodovoz_service.model.auth.LoginDetailsDTO
+import com.vodovoz.app.data.vodovoz_service.model.auth.UserAuthInfoDTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.ProductDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.profile.ProfileDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.unrated_products.UnratedProductsSectionDTO
@@ -43,6 +44,7 @@ import retrofit2.http.Query
 import retrofit2.http.QueryMap
 
 interface VodovozService {
+
 
     /**
      * Brand requests
@@ -71,14 +73,6 @@ interface VodovozService {
         @Query("id") categoryId: Long,
     ): Response<VodovozResponseDTO<List<CATEGORY_NODE_DTO>>>
 
-
-    /**
-     * Login requests
-     * */
-    @GET("auth.php?action=glav")
-    suspend fun getLoginDetails(): Response<VodovozResponseDTO<LoginDetailsDTO>>
-    @GET("auth.php?action=glav&email=Y")
-    suspend fun getLoginByEmailDetails(): Response<VodovozResponseDTO<LoginDetailsDTO>>
 
     /**
      * Profile requests
@@ -183,26 +177,30 @@ interface VodovozService {
     /**
      * Login requests
      * */
+    @GET("auth.php?action=glav")
+    suspend fun getLoginDetails(): Response<VodovozResponseDTO<LoginDetailsDTO>>
+
+    @GET("auth.php?action=glav&email=Y")
+    suspend fun getLoginByEmailDetails(): Response<VodovozResponseDTO<LoginDetailsDTO>>
+
     @GET("reg.php?action=glav")
     suspend fun getRegisterFields(): Response<VodovozResponseDTO<RegistrationDetailsDTO>>
 
-    @GET("auth.php")
+    @GET("auth.php?action=otpravka")
     suspend fun loginByEmail(
-        @Query("email") email: String,
-        @Query("pass") password: String,
-    ): Response<VodovozResponseDTO<String>>
+        @QueryMap queries: Map<String, String>,
+    ): Response<VodovozResponseDTO<UserAuthInfoDTO>>
 
     @GET("reg.php?action=otpravka")
     suspend fun register(
         @QueryMap queries: Map<String, String>,
     ): Response<RegisterDTO>
 
-    //TODO - change return type
-    @GET("config/openuserid.php?&android=${BuildConfig.VERSION_NAME}")
+    @GET("config/openuserid.php?sandroid=${BuildConfig.VERSION_NAME}")
     suspend fun relogin(
         @Query("userid") userId: Long,
         @Query("token") token: String,
-    ): Response<Unit>
+    ): Response<VodovozResponseDTO<Boolean>>
 
     /**
      * Main requests

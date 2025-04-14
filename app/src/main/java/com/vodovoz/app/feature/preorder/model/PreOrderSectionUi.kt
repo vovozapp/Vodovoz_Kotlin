@@ -2,6 +2,7 @@ package com.vodovoz.app.feature.preorder.model
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.text.input.KeyboardType
+import com.vodovoz.app.R
 import com.vodovoz.app.design_system.model.ColorfulButtonUi
 import com.vodovoz.app.design_system.model.toUi
 import com.vodovoz.app.domain.general.model.FieldModel
@@ -42,7 +43,6 @@ enum class FieldValidationResult {
 }
 
 
-
 @Immutable
 data class FieldUi(
     val id: String,
@@ -71,15 +71,31 @@ data class FieldUi(
 }
 
 
-
 fun interface FieldValidator {
     fun isValid(field: FieldUi): FieldValidationResult
 }
 
+val EmptyTextValidator = FieldValidator { field ->
+    return@FieldValidator when {
+        field.value.isNotBlank() -> FieldValidationResult.VALID
+        field.isRequired -> FieldValidationResult.INVALID
+        else -> FieldValidationResult.NOT_APPLICABLE
+    }
+}
 
 val NoRequiredValidator = FieldValidator { field ->
     return@FieldValidator when {
-        !field.isRequired && field.value.isNotBlank() -> FieldValidationResult.VALID
+        field.isRequired && field.value.isBlank() -> FieldValidationResult.VALID
+        else -> FieldValidationResult.NOT_APPLICABLE
+    }
+}
+
+val PhoneNumberValidator = FieldValidator { field ->
+    return@FieldValidator when (field.keyboardType) {
+        KeyboardType.Phone -> {
+            FieldValidationResult.from(field.value.isValidRussianPhoneNumber())
+        }
+
         else -> FieldValidationResult.NOT_APPLICABLE
     }
 }
@@ -122,23 +138,54 @@ val NameValidator = FieldValidator { field ->
 fun List<FieldUi>.updateFieldValueAndResetErrors(field: FieldUi, newValue: String): List<FieldUi> {
     val fieldIndex = indexOfFirst { field.id == it.id }
     return toMutableList()
-        .apply { set(fieldIndex, this[fieldIndex].copy(value = newValue)) }
-        .map { it.copy(isError = false) }
+        .apply { set(fieldIndex, get(fieldIndex).copy(value = newValue)) }
+        .map { it.copy(isError = false, supportingText = "") }
+
 }
 
 fun List<FieldUi>.updateFieldAndResetErrors(field: FieldUi, newField: FieldUi): List<FieldUi> {
     val fieldIndex = indexOfFirst { field.id == it.id }
     return toMutableList()
         .apply { set(fieldIndex, newField) }
-        .map { it.copy(isError = false) }
+        .map { it.copy(isError = false, supportingText = "") }
+}
+
+fun List<FieldUi>.updateField(field: FieldUi, newField: FieldUi): List<FieldUi> {
+    val fieldIndex = indexOfFirst { field.id == it.id }
+    return toMutableList().apply { set(fieldIndex, newField) }
 }
 
 
+fun FieldUi.getErrorText(getStringResource: (Int) -> String): String {
+    return when {
+        id == "email" || keyboardType == KeyboardType.Email -> {
+            getStringResource(R.string.supporting_text_email)
+        }
 
+        id == "name" -> {
+            getStringResource(R.string.supporting_text_name)
+        }
+
+        id == "lastname" -> {
+            getStringResource(R.string.supporting_text_lastname)
+        }
+
+        keyboardType == KeyboardType.Password -> {
+            getStringResource(R.string.supporting_text_password)
+        }
+
+        else -> ""
+    }
+}
 
 fun List<FieldUi>.checkFields(
     putErrors: Boolean = false,
-    validators: List<FieldValidator> = listOf(NoRequiredValidator, NameValidator, KeyboardTypeValidator),
+    validators: List<FieldValidator> = listOf(
+        NoRequiredValidator,
+        NameValidator,
+        KeyboardTypeValidator
+    ),
+    getSupportingText: (FieldUi) -> String = { "" },
     onResult: (List<FieldUi>, isValid: Boolean) -> Unit = { p1, p2 -> },
 ): Boolean {
     var isValidFields = true
@@ -152,7 +199,10 @@ fun List<FieldUi>.checkFields(
 
         if (!isValid) {
             isValidFields = false
-            if (putErrors) return@map field.copy(isError = true)
+            if (putErrors) return@map field.copy(
+                isError = true,
+                supportingText = getSupportingText(field)
+            )
         }
         field
     }
@@ -163,7 +213,7 @@ fun List<FieldUi>.checkFields(
 }
 
 @JvmName("mapToFieldUiList")
-fun List<FieldModel>.mapToUi(): List<FieldUi>{
+fun List<FieldModel>.mapToUi(): List<FieldUi> {
     return map { it.toUi() }
 }
 
@@ -173,18 +223,23 @@ fun FieldModel.toUi(): FieldUi {
         "email" -> {
             KeyboardType.Email
         }
+
         "phone" -> {
             KeyboardType.Phone
         }
+
         "pass" -> {
             KeyboardType.Password
         }
+
         "parol" -> {
             KeyboardType.Password
         }
+
         "data", "date" -> {
             KeyboardType.Decimal
         }
+
         else -> {
             when (valueType.lowercase()) {
                 "text" -> KeyboardType.Text
@@ -211,7 +266,7 @@ fun FieldModel.toUi(): FieldUi {
     )
 }
 
-fun List<FieldUi>.mapToDomain(): List<FieldModel>{
+fun List<FieldUi>.mapToDomain(): List<FieldModel> {
     return map { it.toDomain() }
 }
 

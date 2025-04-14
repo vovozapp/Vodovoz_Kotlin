@@ -4,12 +4,14 @@ import com.vodovoz.app.common.agreement.AgreementController
 import com.vodovoz.app.common.jivochat.JivoChatController
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.parser.common.safeString
+import com.vodovoz.app.domain.general.model.SiteState
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.sitestate.model.SiteStateResponse
 import com.vodovoz.app.util.extensions.debugLog
+import com.vodovoz.app.util.extensions.singleResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.single
+import kotlinx.coroutines.flow.update
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -19,13 +21,12 @@ class SiteStateManager @Inject constructor(
     private val repository: MainRepository,
     private val vodovozServiceRepository: VodovozServiceRepository,
 ) {
-
     var showRateBottom: Boolean? = null
 
-    private var siteStateListener = MutableStateFlow<SiteStateResponse?>(null)
-    fun observeSiteState() = siteStateListener.asStateFlow()
+    private val _siteStateFlow = MutableStateFlow<SiteState?>(null)
+    val siteStateFlow = _siteStateFlow.asStateFlow()
 
-    val siteStateSnapshot get() = siteStateListener.value
+    val siteStateSnapshot get() = siteStateFlow.value
 
     private val deepLinkPathListener = MutableStateFlow<String?>(null)
     fun observeDeepLinkPath() = deepLinkPathListener.asStateFlow()
@@ -33,44 +34,36 @@ class SiteStateManager @Inject constructor(
     private val pushListener = MutableStateFlow<PushData?>(null)
     fun observePush() = pushListener.asStateFlow()
 
-    suspend fun requestSiteState(): SiteStateResponse? {
-        if (siteStateListener.value == null) {
-            runCatching {
-                //New api
-//                val siteState = vodovozServiceRepository.getSiteState().single().getOrThrow()
-//                val siteAgreement = siteState.agreement
-//                val jivoChat = siteState.jivoChat
+    suspend fun requestSiteState(): SiteState? {
+        if (siteStateSnapshot != null) return siteStateSnapshot
 
-                //TODO - change to new api if all correctly
-                val siteState = repository.fetchSiteState()
-                siteStateListener.value = siteState
-                val siteAgreement = siteState.agreement
-                val jivoChat = siteState.jivoChat
+        val siteStateResult = vodovozServiceRepository.getSiteState().singleResult()
 
-                AgreementController.setAgreement(
-                    text = siteAgreement?.text,
-                    titles = siteAgreement?.titles,
-                )
-                JivoChatController.setParams(
-                    active = jivoChat?.active ?: false,
-                    link = jivoChat?.url ?: "",
-                )
-            }.onFailure {
-                siteStateListener.value = null
-            }
+        siteStateResult.onSuccess { siteState ->
+            val siteAgreement = siteState.agreement
+            val jivoChat = siteState.jivoChat
+
+            _siteStateFlow.update { siteState }
+
+            AgreementController.setAgreement(
+                text = siteAgreement.html,
+                titles = siteAgreement.titles,
+            )
+            JivoChatController.setParams(
+                active = jivoChat.isActive,
+                link = jivoChat.url,
+            )
+        }.onFailure {
+            _siteStateFlow.update { null }
         }
-        return siteStateListener.value
+
+        return siteStateSnapshot
     }
 
-    suspend fun fetchSiteStateActive(): Boolean {
-        return when (siteStateListener.value?.active) {
-            "N" -> true
-            else -> {
-                requestSiteState()
-                false
-            }
-        }
-    }
+
+    fun siteActive(): Boolean = siteStateSnapshot?.isActive == true
+
+    fun smsEnabled(): Boolean = siteStateSnapshot?.isSmsEnabled == true
 
     fun saveDeepLinkPath(path: String?) {
         if (path != null) {

@@ -33,6 +33,9 @@ object VodovozWebConfig {
 
     const val VODOVOZ_URL = "$VODOVOZ_PROTOCOL$VODOVOZ_DOMAIN"
 
-    var ABOUT_PAYMENT_URL = "${VODOVOZ_URL}newmobile/informatsiya/oplata.php"
+    const val ABOUT_PAYMENT_URL = "${VODOVOZ_URL}newmobile/informatsiya/oplata.php"
+    const val ABOUT_DELIVERY_URL = "${VODOVOZ_URL}newmobile/informatsiya/dosytavka.php"
+    const val ABOUT_SHOP_URL = "${VODOVOZ_URL}newmobile/informatsiya/omagazine.php"
+
 
 }

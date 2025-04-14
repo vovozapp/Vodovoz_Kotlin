@@ -38,6 +38,32 @@ inline fun <T, R> executeRequest(
     }.flowOn(Dispatchers.IO)
 }
 
+inline fun <T, R> executeRequest(
+    crossinline request: suspend () -> Response<T>,
+    crossinline mapper: (T) -> R,
+    crossinline onResponse: (Response<T>) -> Unit = {},
+    noinline onFail: ((Response<T>) -> Result<R>)? = null,
+): Flow<Result<R>> {
+    return flow {
+        val response = request()
+        val body = response.body()
+
+        onResponse(response)
+        if (response.isSuccessful && body != null) {
+            val result = mapper(body)
+            emit(Result.success(result))
+        } else if (onFail != null) {
+            emit(onFail(response))
+        } else {
+            val exception = RequestException(response.messageWithCode())
+            emit(Result.failure(exception))
+        }
+    }.catchResult().take(1).onEach { result ->
+        result.onFailure { throwable -> debugLog { throwable.stackTraceToString() } }
+    }.flowOn(Dispatchers.IO)
+}
+
+
 inline fun <T, R> executeVodovozRequest(
     crossinline request: suspend () -> Response<VodovozResponseDTO<T>>,
     crossinline mapper: (VodovozResponseDTO<T>?) -> R,

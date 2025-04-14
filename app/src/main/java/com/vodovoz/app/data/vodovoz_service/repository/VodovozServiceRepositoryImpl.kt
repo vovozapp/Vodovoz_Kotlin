@@ -6,6 +6,8 @@ import androidx.paging.PagingData
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.vodovoz.app.common.account.data.AccountManager
+import com.vodovoz.app.common.cookie.CookieManager
+import com.vodovoz.app.common.tracking.TrackingManager
 import com.vodovoz.app.core.network.messageWithCode
 import com.vodovoz.app.core.network.serialization.fromJson
 import com.vodovoz.app.core.network.stringBody
@@ -47,7 +49,7 @@ import com.vodovoz.app.domain.general.model.PromotionsSectionModel
 import com.vodovoz.app.domain.general.model.RequestException
 import com.vodovoz.app.domain.general.model.SearchRecommendationsModel
 import com.vodovoz.app.domain.general.model.SectionModel
-import com.vodovoz.app.domain.general.model.SiteStateModel
+import com.vodovoz.app.domain.general.model.SiteState
 import com.vodovoz.app.domain.general.model.SortModel
 import com.vodovoz.app.domain.general.model.StoryModel
 import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
@@ -57,6 +59,8 @@ import com.vodovoz.app.domain.general.model.UserNotLoginException
 import com.vodovoz.app.domain.general.model.ValidationException
 import com.vodovoz.app.domain.general.model.format
 import com.vodovoz.app.domain.general.model.login.AuthDetailsModel
+import com.vodovoz.app.domain.general.model.login.UserAuthInfoModel
+import com.vodovoz.app.domain.general.model.toQueries
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.preorder.model.FieldUi
 import com.vodovoz.app.util.extensions.singleResult
@@ -78,6 +82,8 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     private val vodovozService: VodovozService,
     private val accountManager: AccountManager,
     private val moshi: Moshi,
+    private val cookieManager: CookieManager,
+    private val trackingManager: TrackingManager
 ) : VodovozServiceRepository {
 
     override fun getBrands(
@@ -344,15 +350,14 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                 vodovozService.getUserData(accountManager.fetchAccountId() ?: -1)
             },
             mapper = {
-                val errorData = it.error?.toDomain()
-                if (errorData != null) {
+                it.checkError { errorData ->
                     throw UserNotLoginException(
                         message = it.message ?: "",
                         errorData = errorData
                     )
                 }
                 it.data!!.toDomain()
-            }
+            },
         )
 
     }
@@ -480,13 +485,29 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         )
     }
 
+    override fun relogin(): Flow<Result<Boolean>> {
+        return executeRequest(
+            request = {
+                val id = accountManager.fetchAccountId()
+                val token = accountManager.fetchUserToken()
+                if(id == null || token == null){ throw UserNotLoginException() }
+                vodovozService.relogin(id, token)
+            },
+            mapper = {
+                it.data!!
+            },
+            onResponse = { response ->
+                val cookies = response.headers().values("Set-Cookie")
+                val sessionId = cookies.firstOrNull { s -> s.startsWith("PHPSESSID=") }
+                cookieManager.updateCookieSessionId(sessionId)
+            }
+        )
+    }
+
     override fun register(fields: List<FieldModel>): Flow<Result<Long>> {
         return executeRequest(
             request = {
-                vodovozService.register(
-                    fields.filter { fieldModel -> fieldModel.value.isNotEmpty() }
-                        .associate { field -> field.id to field.value.trim() }
-                )
+                vodovozService.register(fields.toQueries())
             },
             mapper = { registerDTO ->
                 registerDTO.userId!!
@@ -515,13 +536,14 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         )
     }
 
-    override fun loginByEmail(email: String, password: String): Flow<Result<String>> {
+    override fun loginByEmail(fields: List<FieldModel>): Flow<Result<UserAuthInfoModel>> {
         return executeRequest(
             request = {
-                vodovozService.loginByEmail(email, password)
+                vodovozService.loginByEmail(fields.toQueries())
             },
             mapper = { response ->
-                response.message ?: ""
+                response.checkError { errorData -> throw RequestException(errorData = errorData) }
+                response.data!!.toDomain()
             },
             onFail = { response ->
                 val jsonBody = response.stringBody()
@@ -698,13 +720,16 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         )
     }
 
-    override fun getSiteState(): Flow<Result<SiteStateModel>> {
+    override fun getSiteState(): Flow<Result<SiteState>> {
         return executeRequest(
             request = {
                 vodovozService.getSiteState()
             },
             mapper = { response ->
-                response!!.toDomain()
+                val siteState = response!!.toDomain()
+                trackingManager.setEnableTracking(siteState.tracking.trackingIsEnabled)
+                trackingManager.setSessionIdTime(siteState.tracking.time)
+                siteState
             }
         )
     }
@@ -762,7 +787,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                 )
             },
             mapper = { responseDTO ->
-                responseDTO.checkError{ errorData -> throw FavoritesNotFoundException(errorData = errorData) }
+                responseDTO.checkError { errorData -> throw FavoritesNotFoundException(errorData = errorData) }
                 responseDTO.data?.toDomain()
                     ?: throw IllegalArgumentException("Favorite products can't be null")
             },
@@ -800,7 +825,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     override suspend fun addFavoriteProducts(productsIds: String): Flow<Result<ProductsSectionModel>> {
         return executeRequest(
             request = {
-                val userId = accountManager.fetchAccountId() ?: throw UserNotLoginException("")
+                val userId = accountManager.fetchAccountId() ?: throw UserNotLoginException()
                 vodovozService.getFavoriteProducts(userId = userId, productsIds = productsIds)
             },
             mapper = { it ->

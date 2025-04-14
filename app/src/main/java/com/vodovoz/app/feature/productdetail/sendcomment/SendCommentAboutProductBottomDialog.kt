@@ -28,6 +28,7 @@ import com.vodovoz.app.util.FieldValidationsSettings
 import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -170,10 +171,9 @@ class SendCommentAboutProductBottomDialog : BaseBottomSheetFragment() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 siteStateManager
-                    .observeSiteState()
-                    .collect {
-                        val showComment = it?.showComments ?: false
-                        Log.d("fgerg", showComment.toString())
+                    .siteStateFlow
+                    .collectLatest { siteState ->
+                        val showComment = siteState?.showComments ?: false
                         binding.images.root.isVisible = showComment
                     }
             }
