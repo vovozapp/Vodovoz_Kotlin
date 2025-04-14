@@ -412,6 +412,7 @@ class HomeFragment1 : BaseFragment() {
                             }
 
                             "BRANDY" -> {
+                                //findNavController()
                                 findNavController().navigate(HomeFragmentDirections.actionToAllBrandsFragment())
                                 siteStateManager.clearPushListener()
                             }

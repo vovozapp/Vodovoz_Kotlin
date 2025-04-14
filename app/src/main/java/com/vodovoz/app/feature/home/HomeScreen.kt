@@ -55,8 +55,7 @@ fun HomeScreen(
         PullToRefreshBox(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
-                .consumeWindowInsets(paddingValues),
+                .padding(paddingValues),
             isRefreshing = viewState.showRefreshIndicator,
             onRefresh = {
                 viewModel.refresh()
@@ -141,7 +140,6 @@ fun HomeScreen(
             }
 
         }
-
     }
 
     if (viewState.showAdvertisingBS) {
@@ -171,5 +169,8 @@ fun HomeScreen(
             }
         )
     }
+
+
+
 
 }

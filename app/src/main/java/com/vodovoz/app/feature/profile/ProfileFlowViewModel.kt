@@ -32,6 +32,8 @@ import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.feature.profile.ProfileFlowViewModel.ProfileState.Companion.fetchStaticItems
 import com.vodovoz.app.feature.profile.cats.mapToUi
 import com.vodovoz.app.feature.profile.model.ProfileCardUi
+import com.vodovoz.app.feature.profile.model.ProfileChatItemUi
+import com.vodovoz.app.feature.profile.model.ProfileChatsPopupWindowUi
 import com.vodovoz.app.feature.profile.model.ProfileMenuItemUi
 import com.vodovoz.app.feature.profile.model.ProfileWalletItemUi
 import com.vodovoz.app.feature.profile.model.UserInfoBlockUi
@@ -87,6 +89,7 @@ class ProfileFlowViewModel @Inject constructor(
             siteStateManager.requestSiteState()
         }
         fetchProfileDetails()
+
     }
 
     fun fetchProfileDetails() = viewModelScope.launch {
@@ -112,11 +115,11 @@ class ProfileFlowViewModel @Inject constructor(
             val uiState = when {
                 t is UserNotLoginException && t.errorData != null -> with(t.errorData) {
                     ProfileUiState.UserNotFound(
-                        title,
-                        headerHtml,
-                        descriptionHtml,
-                        imageUrl,
-                        button?.toUi() ?: return@with ProfileUiState.Error
+                        title = title,
+                        header = headerHtml,
+                        description = descriptionHtml,
+                        imageUrl = imageUrl,
+                        button = button?.toUi() ?: return@with ProfileUiState.Error
                     )
                 }
 
@@ -590,9 +593,9 @@ class ProfileFlowViewModel @Inject constructor(
     }
 
     fun navigateToLoginOrRegister() = viewModelScope.launch {
-        if (siteStateManager.siteStateSnapshot?.requestUrl == null) {
+        if (!siteStateManager.smsEnabled()) {
             eventListener.emit(ProfileEvents.GoToRegister)
-        } else{
+        } else {
             eventListener.emit(ProfileEvents.GoToLogin)
         }
     }
@@ -602,7 +605,18 @@ class ProfileFlowViewModel @Inject constructor(
     }
 
     fun activateMenuItem(menuItem: ProfileMenuItemUi) = viewModelScope.launch {
-        eventListener.emit(ProfileEvents.GoByMenuItemId(menuItem.id))
+        val popupWindow = menuItem.popupWindow
+
+        if (popupWindow != null) {
+            uiStateListener.updateData { s ->
+                s.copy(
+                    showSupportingBS = true,
+                    currentSupportingBSData = popupWindow
+                )
+            }
+        } else {
+            eventListener.emit(ProfileEvents.GoByMenuItemId(menuItem.id))
+        }
     }
 
     fun showAdvertisingBottomSheet(advertising: AboutAdvertisingUi) = viewModelScope.launch {
@@ -626,6 +640,23 @@ class ProfileFlowViewModel @Inject constructor(
         eventListener.emit(ProfileEvents.ActivateVodovozAction(banner.action))
     }
 
+    fun closeSupportingBottomSheet() = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(
+                showSupportingBS = false
+            )
+        }
+    }
+
+    fun copyUserId(text: String) = viewModelScope.launch {
+        val userId = text.trim().filter { c -> c.isDigit() }
+        eventListener.emit(ProfileEvents.Copy(userId))
+    }
+
+    fun navigateByChatItem(chatItem: ProfileChatItemUi) = viewModelScope.launch {
+        eventListener.emit(ProfileEvents.GoByChatItemId(chatItem.id, chatItem.navigationData))
+    }
+
 
     @Immutable
     data class ProfileState(
@@ -642,6 +673,8 @@ class ProfileFlowViewModel @Inject constructor(
         val smallMenu: List<ProfileMenuItemUi> = emptyList(),
         val normalMenu: List<ProfileMenuItemUi> = emptyList(),
         val showAdvertisingBS: Boolean = false,
+        val showSupportingBS: Boolean = false,
+        val currentSupportingBSData: ProfileChatsPopupWindowUi = ProfileChatsPopupWindowUi.Empty,
         val currentAdvertising: AboutAdvertisingUi = AboutAdvertisingUi.Empty,
     ) : State {
         companion object {
@@ -689,6 +722,8 @@ class ProfileFlowViewModel @Inject constructor(
 
         data class GoByMenuItemId(val itemId: String) : ProfileEvents()
         data class ActivateVodovozAction(val action: VodovozAction) : ProfileEvents()
+        data class Copy(val value: String) : ProfileEvents()
+        data class GoByChatItemId(val chatId: String, val data: String) : ProfileEvents()
     }
 
     data class PositionItem(

@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.os.bundleOf
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavOptions
@@ -23,6 +24,9 @@ import com.vodovoz.app.core.navigation.navigateToWebView
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.effects.LifecycleEffect
 import com.vodovoz.app.feature.auth.reg.composables.RegisterScreen
+import com.vodovoz.app.feature.cart.CartFlowViewModel
+import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
+import com.vodovoz.app.feature.home.HomeFlowViewModel
 import com.vodovoz.app.feature.profile.ProfileFlowViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -33,10 +37,25 @@ import javax.inject.Inject
 class RegisterFragment : Fragment() {
 
     private val viewModel: RegFlowViewModel by viewModels()
-    private val profileViewModel: ProfileFlowViewModel by viewModels()
+    private val profileViewModel: ProfileFlowViewModel by activityViewModels()
+    private val homeViewModel: HomeFlowViewModel by activityViewModels()
+    private val cartFlowViewModel: CartFlowViewModel by activityViewModels()
+    private val favoriteViewModel: FavoriteFlowViewModel by activityViewModels()
 
     @Inject
     lateinit var tabManager: TabManager
+
+    override fun onStart() {
+        super.onStart()
+        WindowCompat.setDecorFitsSystemWindows(requireActivity().window, false)
+        tabManager.changeTabVisibility(false)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        WindowCompat.setDecorFitsSystemWindows(requireActivity().window, true)
+        tabManager.changeTabVisibility(true)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,16 +75,6 @@ class RegisterFragment : Fragment() {
                         viewState = viewState,
                         snackbarHostState = snackbarHostState
                     )
-
-                    DisposableEffect(Unit) {
-                        WindowCompat.setDecorFitsSystemWindows(requireActivity().window, false)
-                        tabManager.changeTabVisibility(false)
-                        onDispose {
-                            WindowCompat.setDecorFitsSystemWindows(requireActivity().window, true)
-                            tabManager.changeTabVisibility(true)
-
-                        }
-                    }
 
                     LifecycleEffect {
                         observeEvents(this, snackbarHostState)
@@ -125,6 +134,23 @@ class RegisterFragment : Fragment() {
                         bundleOf(),
                         NavOptions.Builder().setPopUpTo(R.id.profileFragment, false).build()
                     )
+                }
+
+                RegFlowViewModel.RegEvents.RefreshAll -> {
+                    profileViewModel.refresh()
+                    homeViewModel.refresh()
+                    cartFlowViewModel.refreshIdle()
+                    favoriteViewModel.refreshIdle()
+
+                    val redirect = tabManager.fetchAuthRedirect()
+                    if (redirect == TabManager.DEFAULT_AUTH_REDIRECT) {
+                        findNavController().popBackStack(
+                            R.id.profileFragment, false
+                        )
+                    } else {
+                        tabManager.selectTab(redirect)
+                        tabManager.setDefaultAuthRedirect()
+                    }
                 }
             }
         }

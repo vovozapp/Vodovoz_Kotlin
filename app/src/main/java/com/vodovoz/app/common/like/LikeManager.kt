@@ -33,11 +33,11 @@ class LikeManager @Inject constructor(
 
     private fun getLikeVersion(productId: Long) = likesVersions.getOrDefault(productId, 0)
 
-    private val likes = ConcurrentHashMap<Long, Boolean>()
     private val likesStateListener = MutableSharedFlow<Map<Long, Boolean>>(1)
-    //todo - just think about this
-    private val likesCategories: ConcurrentHashMap<Long, Boolean> = ConcurrentHashMap<Long, Boolean>()
+
+    private val likes = ConcurrentHashMap<Long, Boolean>()
     private val likesVersions = ConcurrentHashMap<Long, Int>()
+    private var selectedCategoryId: Long? = null
 
     private val viewPool: RecyclerView.RecycledViewPool = RecyclerView.RecycledViewPool().apply {
         setMaxRecycledViews(ProductUI.PRODUCT_VIEW_TYPE, 5)
@@ -47,11 +47,52 @@ class LikeManager @Inject constructor(
 
     fun observeLikes() = likesStateListener.asSharedFlow()
 
+    //todo - review method
+    suspend fun changeCategory(categoryId: Long? = null, newFavorites: Map<Long, Boolean>) = mutex.withLock {
+        selectedCategoryId = categoryId
+        likes.clear()
+        likes.putAll(newFavorites)
+    }
+
+    //todo - finish this method
+    suspend fun changeFavorite(productId: Long, newValue: Boolean, categoryId: Long? = null) {
+
+        val (likeVersion, userId) = mutex.withLock {
+            if(selectedCategoryId == null && categoryId != selectedCategoryId){
+                //implement re
+            }
+            if(selectedCategoryId != null) {
+                updateFavoritesLocal(productId, newValue)
+            }
+            val updatedVersion = updateFavoritesOptimistically(productId, newValue)
+            if (updatedVersion < getLikeVersion(productId)) return
+
+            val userId = accountManager.fetchAccountId()
+            updatedVersion to userId
+        }
+
+        kotlin.runCatching {
+            if (userId != null) {
+                updateFavoritesOnline(productId, newValue)
+            } else {
+                updateFavoritesLocal(productId, newValue)
+            }
+        }.onFailure {
+            mutex.withLock {
+                if (likeVersion == getLikeVersion(productId)) {
+                    updateFavoritesOptimistically(productId, newValue)
+                }
+            }
+        }
+    }
 
 
     suspend fun changeFavorite(productId: Long, newValue: Boolean) {
 
         val (likeVersion, userId) = mutex.withLock {
+            if(selectedCategoryId != null) {
+                updateFavoritesLocal(productId, newValue)
+            }
             val updatedVersion = updateFavoritesOptimistically(productId, newValue)
             if (updatedVersion < getLikeVersion(productId)) return
 
@@ -187,7 +228,7 @@ class LikeManager @Inject constructor(
         runCatching {
             vodovozServiceRepository.addFavoriteProducts(localLikesListString).singleResult()
             //TODO - delete old repository
-            repository.like(productIdListStr = localLikesListString, userId = userId)
+            //repository.like(productIdListStr = localLikesListString, userId = userId)
             dataStoreRepository.remove(FAV_IDS)
         }
     }

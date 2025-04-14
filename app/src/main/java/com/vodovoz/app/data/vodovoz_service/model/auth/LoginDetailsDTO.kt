@@ -1,4 +1,4 @@
-package com.vodovoz.app.data.vodovoz_service.model.login
+package com.vodovoz.app.data.vodovoz_service.model.auth
 
 
 import com.squareup.moshi.Json

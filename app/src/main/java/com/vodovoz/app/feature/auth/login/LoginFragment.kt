@@ -60,9 +60,7 @@ class LoginFragment1 : BaseFragment() {
     override fun layout(): Int = R.layout.fragment_login_flow
 
     private val binding: FragmentLoginFlowBinding by viewBinding {
-        FragmentLoginFlowBinding.bind(
-            contentView
-        )
+        FragmentLoginFlowBinding.bind(contentView)
     }
 
     @Inject
@@ -339,7 +337,7 @@ class LoginFragment1 : BaseFragment() {
             btnSignIn.setOnClickListener {
                 when (FieldValidationsSettings.PHONE_REGEX.matches(binding.etPhone.text.toString())) {
                     true -> {
-                        findNavController().navigate(LoginFragmentDirections.actionToLoginByPhoneCodeFragment(binding.etPhone.text.toString()))
+                        //findNavController().navigate(LoginFragmentDirections.actionToLoginByPhoneCodeFragment(binding.etPhone.text.toString()))
                     }
 
                     false -> {
@@ -355,7 +353,7 @@ class LoginFragment1 : BaseFragment() {
             }
 
             tvAuthByEmail.setOnClickListener {
-                findNavController().navigate(LoginFragmentDirections.actionToLoginByEmailFragment())
+                //findNavController().navigate(LoginFragmentDirections.actionToLoginByEmailFragment())
             }
         }
     }

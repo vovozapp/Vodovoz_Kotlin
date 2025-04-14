@@ -1,7 +1,6 @@
 package com.vodovoz.app.domain.general.respository
 
 import androidx.paging.PagingData
-import com.vodovoz.app.data.vodovoz_service.model.ProductsSectionDTO
 import com.vodovoz.app.domain.general.model.BannerModel
 import com.vodovoz.app.domain.general.model.BrandModel
 import com.vodovoz.app.domain.general.model.BrandSectionModel
@@ -28,13 +27,14 @@ import com.vodovoz.app.domain.general.model.PromotionModel
 import com.vodovoz.app.domain.general.model.PromotionsSectionModel
 import com.vodovoz.app.domain.general.model.SearchRecommendationsModel
 import com.vodovoz.app.domain.general.model.SectionModel
-import com.vodovoz.app.domain.general.model.SiteStateModel
+import com.vodovoz.app.domain.general.model.SiteState
 import com.vodovoz.app.domain.general.model.SortModel
 import com.vodovoz.app.domain.general.model.StoryModel
 import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
 import com.vodovoz.app.domain.general.model.UnratedProductsSectionModel
 import com.vodovoz.app.domain.general.model.UserDataModel
 import com.vodovoz.app.domain.general.model.login.AuthDetailsModel
+import com.vodovoz.app.domain.general.model.login.UserAuthInfoModel
 import com.vodovoz.app.feature.preorder.model.FieldUi
 import kotlinx.coroutines.flow.Flow
 import java.io.File
@@ -116,12 +116,13 @@ interface VodovozServiceRepository {
 
     fun getRegisterDetails(): Flow<Result<AuthDetailsModel>>
 
+    fun relogin(): Flow<Result<Boolean>>
+
     fun register(fields: List<FieldModel>): Flow<Result<Long>>
 
     fun loginByEmail(
-        email: String,
-        password: String,
-    ): Flow<Result<String>>
+        fields: List<FieldModel>
+    ): Flow<Result<UserAuthInfoModel>>
 
     fun getCatalogDetails(): Flow<Result<CatalogDetailsModel>>
 
@@ -154,7 +155,7 @@ interface VodovozServiceRepository {
 
     fun getMiniSearchRecommendations(query: String): Flow<Result<SearchRecommendationsModel>>
 
-    fun getSiteState(): Flow<Result<SiteStateModel>>
+    fun getSiteState(): Flow<Result<SiteState>>
 
     fun getPreorderFields(productId: Long): Flow<Result<PreOrderSectionModel>>
 

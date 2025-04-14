@@ -47,7 +47,8 @@ fun ProfileUserInfoRow(
                 .padding(vertical = 3.dp)
                 .size(50.dp)
                 .clip(CircleShape),
-            contentScale = ContentScale.FillBounds
+            contentScale = ContentScale.FillBounds,
+            error = painterResource(id = R.drawable.pic_avatar)
         )
         Spacer(modifier = Modifier.width(16.dp))
         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Center) {

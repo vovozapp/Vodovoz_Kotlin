@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.ComposeView
@@ -23,8 +22,6 @@ import com.vodovoz.app.feature.profile.ProfileFlowViewModel
 import com.vodovoz.app.feature.profile.change_password.composables.PasswordChangedPlaceholder
 import com.vodovoz.app.feature.profile.change_password.model.ChangePasswordEvent
 import com.vodovoz.app.feature.profile.change_password.model.ChangePasswordUiState
-import com.vodovoz.app.util.extensions.disableFullScreen
-import com.vodovoz.app.util.extensions.enableFullScreen
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -38,11 +35,22 @@ class ChangePasswordFragment : Fragment() {
     @Inject
     lateinit var tabManager: TabManager
 
+    override fun onStart() {
+        super.onStart()
+        tabManager.changeTabVisibility(false)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        tabManager.changeTabVisibility(true)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.Default)
 
@@ -73,7 +81,6 @@ class ChangePasswordFragment : Fragment() {
                             )
                         }
                     }
-
                     LifecycleEffect(arg2 = snackbarHostState) {
                         viewModel.events.collect { event ->
                             when (event) {
@@ -92,19 +99,6 @@ class ChangePasswordFragment : Fragment() {
                             }
                         }
                     }
-
-
-
-                    DisposableEffect(Unit) {
-                        tabManager.changeTabVisibility(false)
-                        requireActivity().enableFullScreen()
-                        onDispose {
-                            requireActivity().disableFullScreen()
-                            tabManager.changeTabVisibility(true)
-                        }
-                    }
-
-
                 }
             }
         }

@@ -257,7 +257,7 @@
     <string name="you_were_looking">Вы искали</string>
 
     <string name="registration">Регистрация</string>
-    <string name="registration_fail">Не удалось зарегистрироваться, попробуйте позже</string>
+    <string name="error_registration">Не удалось зарегистрироваться, попробуйте позже!</string>
     <string name="register_button_text">Зарегистрироваться</string>
     <string name="its_clear">Понятно</string>
     <string name="do_not_rate_this_product">Не оценивать этот товар</string>
@@ -286,6 +286,12 @@
     <string name="error_password_validation">Пароль не соответствует требованиям. Проверьте введенные данные.</string>
     <string name="error_password_unknown">Не удалось изменить пароль. Попробуйте еще раз позже.</string>
     <string name="success_password_change">Пароль успешно\n изменен!</string>
+    <string name="error_login">Не удалось войти. Неизвестная ошибка, попробуйте еще раз.</string>
     <string name="fine">Хорошо</string>
+
+    <string name="supporting_text_email">Введите корректный email.</string>
+    <string name="supporting_text_name">Имя должно содержать от 3 до 30 символов и не быть пустым.</string>
+    <string name="supporting_text_lastname">Фамилия должна содержать от 3 до 30 символов и не быть пустой.</string>
+    <string name="supporting_text_password">Пароль должен содержать более 6 символов.</string>
 
 </resources>

@@ -18,11 +18,15 @@ import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.config.AuthConfig
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.design_system.model.ColorfulButtonUi
-import com.vodovoz.app.design_system.model.toUi
+import com.vodovoz.app.design_system.model.mapToUi
+import com.vodovoz.app.design_system.model.updateButton
 import com.vodovoz.app.domain.general.model.ValidationException
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
+import com.vodovoz.app.feature.preorder.model.EmptyTextValidator
 import com.vodovoz.app.feature.preorder.model.FieldUi
+import com.vodovoz.app.feature.preorder.model.PhoneNumberValidator
 import com.vodovoz.app.feature.preorder.model.checkFields
+import com.vodovoz.app.feature.preorder.model.getErrorText
 import com.vodovoz.app.feature.preorder.model.mapToUi
 import com.vodovoz.app.feature.preorder.model.toDomain
 import com.vodovoz.app.feature.preorder.model.updateFieldAndResetErrors
@@ -47,13 +51,16 @@ class RegFlowViewModel @Inject constructor(
     private val likeManager: LikeManager,
     private val vodovozServiceRepository: VodovozServiceRepository,
     private val resourceProvider: ResourcesProvider,
-    private val siteStateManager: SiteStateManager
+    private val siteStateManager: SiteStateManager,
 ) : PagingContractViewModel<RegFlowViewModel.RegState, RegFlowViewModel.RegEvents>(RegState()) {
 
+    companion object {
+        const val REGISTER_BUTTON = "otpravka"
+        const val NAVIGATION_BUTTON = "auth"
+    }
+
     init {
-        viewModelScope.launch {
-            siteStateManager.requestSiteState()
-        }
+        viewModelScope.launch { siteStateManager.requestSiteState() }
         fetchRegisterDetails()
     }
 
@@ -71,9 +78,12 @@ class RegFlowViewModel @Inject constructor(
                     title = registerDetails.title,
                     showAgreement = registerDetails.haveAgreement,
                     agreementTextHtml = AgreementController.getText(),
-                    showAgreements = registerDetails.hasAgreement,
-                    buttonEnabled = false,
-                    buttonLoading = false
+                    buttons = registerDetails.buttons.mapToUi()
+                        .updateButton(REGISTER_BUTTON) { btn ->
+                            btn.copy(
+                                enabled = false
+                            )
+                        }
                 )
             }
         }.onFailure {
@@ -82,38 +92,63 @@ class RegFlowViewModel @Inject constructor(
     }
 
     fun register() = viewModelScope.launch {
-        uiStateListener.updateData { s ->
-            s.copy(buttonLoading = true)
+        val isValid = dataState.fields.checkFields(
+            putErrors = true,
+            getSupportingText = { field -> field.getErrorText { id -> resourceProvider.getString(id) } }
+        ) { updatedFields, _ ->
+            uiStateListener.updateData { s ->
+                s.copy(
+                    fields = updatedFields,
+                    buttons = s.buttons.updateButton(REGISTER_BUTTON) { btn ->
+                        btn.copy(enabled = false)
+                    }
+                )
+            }
         }
 
-        val failMessage = resourceProvider.getString(R.string.registration_fail)
+        if (!isValid) return@launch
+
+
+
+        uiStateListener.updateData { s ->
+            s.copy(
+                buttons = s.buttons.updateButton(REGISTER_BUTTON) { btn ->
+                    btn.copy(loading = true)
+                }
+            )
+        }
+
+        val failMessage = resourceProvider.getString(R.string.error_registration)
 
         val registerResult = vodovozServiceRepository.register(
             dataState.fields.map { fieldUi -> fieldUi.toDomain() }
         ).singleResult()
 
         registerResult.onSuccess { userId ->
+
+            val email = dataState.fields.firstOrNull { it.id == "email" }?.value ?: ""
+            val password = dataState.fields.firstOrNull { it.id == "pass" }?.value ?: ""
+
             accountManager.updateUserId(userId)
             likeManager.updateLikesAfterLogin(userId)
             firebaseTokenManager.sendFirebaseToken()
             eventListener.emit(RegEvents.RegSuccess)
-            //Todo - save last login data
-//            accountManager.updateLastLoginSetting(
-//                AccountManager.UserSettings(
-//                    email,
-//                    password
-//                )
-//            )
+            accountManager.updateLastLoginSetting(
+                AccountManager.UserSettings(
+                    email,
+                    password
+                )
+            )
 
             uiStateListener.updateData { s ->
                 s.copy(
-                    buttonEnabled = false,
-                    buttonLoading = false,
-                    uiState = UiState.Success
+                    buttons = s.buttons.updateButton(REGISTER_BUTTON) { btn ->
+                        btn.copy(loading = false, enabled = false)
+                    }
                 )
             }
 
-            eventListener.emit(RegEvents.GoToProfile)
+            eventListener.emit(RegEvents.RefreshAll)
 
 
         }.onFailure { t ->
@@ -121,15 +156,17 @@ class RegFlowViewModel @Inject constructor(
                 is ValidationException -> t.message ?: failMessage
                 else -> failMessage
             }
-            eventListener.emit(RegEvents.ShowSnackbar(message))
+
             uiStateListener.updateData { s ->
                 s.copy(
-                    buttonEnabled = false,
-                    buttonLoading = false
+                    buttons = s.buttons.updateButton(REGISTER_BUTTON) { btn ->
+                        btn.copy(loading = false, enabled = true)
+                    }
                 )
             }
-        }
 
+            eventListener.emit(RegEvents.ShowSnackbar(message))
+        }
 
     }
 
@@ -192,11 +229,16 @@ class RegFlowViewModel @Inject constructor(
     fun changeField(field: FieldUi, updatedField: FieldUi) = viewModelScope.launch {
         val updatedFields = dataState.fields.updateFieldAndResetErrors(field, updatedField)
 
-        updatedFields.checkFields { fields, isValid ->
+
+        updatedFields.checkFields(
+            validators = listOf(PhoneNumberValidator, EmptyTextValidator)
+        ) { fields, isValid ->
             uiStateListener.updateData { s ->
                 s.copy(
                     fields = fields,
-                    buttonEnabled = isValid
+                    buttons = s.buttons.updateButton(REGISTER_BUTTON) { btn ->
+                        btn.copy(enabled = isValid && (s.agreementChecked || !s.showAgreement))
+                    }
                 )
             }
         }
@@ -207,28 +249,34 @@ class RegFlowViewModel @Inject constructor(
         eventListener.emit(RegEvents.GoToWebView(url, title))
     }
 
-    fun checkSubscribe(checked: Boolean) = viewModelScope.launch {
-        uiStateListener.updateData { s ->
-            s.copy(
-                subscribeChecked = checked
-            )
-        }
-    }
-
     fun checkAgreement(checked: Boolean) = viewModelScope.launch {
         uiStateListener.updateData { s ->
             s.copy(
                 agreementChecked = checked,
-                buttonEnabled = s.fields.checkFields() && checked
+                buttons = s.buttons.updateButton(REGISTER_BUTTON) { btn ->
+                    btn.copy(enabled = s.fields.checkFields() && (s.agreementChecked || !s.showAgreement))
+                }
             )
         }
     }
 
-    fun navigateToLogin() = viewModelScope.launch {
-        if(siteStateManager.siteStateSnapshot?.requestUrl == null){
-            eventListener.emit(RegEvents.GoToLoginByEmail)
-        }else{
-            eventListener.emit(RegEvents.GoToLogin)
+    private fun navigateToLoginByEmail() = viewModelScope.launch {
+        eventListener.emit(RegEvents.GoToLoginByEmail)
+    }
+
+    fun activateButton(button: ColorfulButtonUi) = viewModelScope.launch {
+        when (button.id) {
+            REGISTER_BUTTON -> {
+                register()
+            }
+
+            NAVIGATION_BUTTON -> {
+                navigateToLoginByEmail()
+            }
+
+            else -> {
+
+            }
         }
     }
 
@@ -242,7 +290,8 @@ class RegFlowViewModel @Inject constructor(
         data object GoBack : RegEvents()
         data object GoToProfile : RegEvents()
         data object GoToLoginByEmail : RegEvents()
-        data object GoToLogin: RegEvents()
+        data object GoToLogin : RegEvents()
+        data object RefreshAll : RegEvents()
 
     }
 
@@ -251,16 +300,12 @@ class RegFlowViewModel @Inject constructor(
         val items: List<Item> = emptyList(),
 
         val agreementTextHtml: String = "",
-        val showAgreements: Boolean = false,
+        val showAgreement: Boolean = false,
         val agreementChecked: Boolean = true,
-        val subscribeChecked: Boolean = false,
         val fields: List<FieldUi> = emptyList(),
         val uiState: UiState = UiState.Loading,
         val title: String = "",
-        val buttonEnabled: Boolean = false,
-        val buttonLoading: Boolean = false,
-        val mainButton: ColorfulButtonUi = ColorfulButtonUi.Empty,
-        val navigationButton: ColorfulButtonUi = ColorfulButtonUi.Empty,
+        val buttons: List<ColorfulButtonUi> = emptyList(),
     ) : State
 
     sealed interface UiState {

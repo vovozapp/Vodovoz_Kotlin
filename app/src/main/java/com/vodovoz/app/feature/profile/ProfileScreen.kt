@@ -23,6 +23,7 @@ import com.vodovoz.app.feature.profile.composables.ProfileCardsRow
 import com.vodovoz.app.feature.profile.composables.ProfileMenuColumn
 import com.vodovoz.app.feature.profile.composables.ProfileUserInfoRow
 import com.vodovoz.app.feature.profile.composables.ProfileWalletItemsRow
+import com.vodovoz.app.feature.profile.composables.SupportingBottomSheet
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Suppress("NonSkippableComposable")
@@ -99,8 +100,8 @@ fun ProfileScreen(
                 .padding(top = 8.dp)
                 .clip(MaterialTheme.shapes.extraLarge),
             menuItems = viewState.smallMenu,
-            onItemClick = {
-
+            onItemClick = { menuItem ->
+                viewModel.activateMenuItem(menuItem)
             }
         )
 
@@ -124,5 +125,20 @@ fun ProfileScreen(
         AdvertisingInfoBottomSheet(advertising = viewState.currentAdvertising) {
             viewModel.closeAdvertisingBottomSheet()
         }
+    }
+
+    if (viewState.showSupportingBS) {
+        SupportingBottomSheet(
+            data = viewState.currentSupportingBSData,
+            onItemClick = { chatItem ->
+                viewModel.navigateByChatItem(chatItem)
+            },
+            onCopyClick = { text ->
+                viewModel.copyUserId(text)
+            },
+            onDismissRequest = {
+                viewModel.closeSupportingBottomSheet()
+            }
+        )
     }
 }

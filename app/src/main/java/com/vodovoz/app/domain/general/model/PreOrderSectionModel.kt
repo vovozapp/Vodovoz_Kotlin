@@ -14,5 +14,10 @@ data class FieldModel(
     val isRequired: Boolean,
     val readOnly: Boolean,
     val supportingText: String,
-    val hint: String
+    val hint: String,
 )
+
+fun List<FieldModel>.toQueries(): Map<String, String> {
+    return filter { fieldModel -> fieldModel.value.isNotEmpty() }
+        .associate { field -> field.id to field.value.trim() }
+}

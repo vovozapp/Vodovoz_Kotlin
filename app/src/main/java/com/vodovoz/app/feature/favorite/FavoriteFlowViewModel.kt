@@ -78,8 +78,11 @@ class FavoriteFlowViewModel @Inject constructor(
 
     private val pagingProductsListener = PagingDataListener(
         onUpdateItems = { itemSnapshotList ->
+
+            val pagedProducts = itemSnapshotList.mapNotNull { product -> product }
+            //pagedProducts.map { product -> product. }
+
             uiStateListener.updateData { s ->
-                val pagedProducts = itemSnapshotList.mapNotNull { product -> product }
                 s.copy(products = pagedProducts)
             }
         }
@@ -220,7 +223,11 @@ class FavoriteFlowViewModel @Inject constructor(
                 productsIds = likeManager.fetchLikeLocalStr() ?: ""
             ).map { pagingData ->
                 pagingData.map { productModel -> productModel.toUi() }
-            }.collectLatest { pagingData -> pagingProductsListener.collectPagingData(pagingData) }
+            }.collectLatest { pagingData ->
+                pagingProductsListener.collectPagingData(
+                    pagingData
+                )
+            }
 
 
         }.onFailure { fail ->
@@ -593,7 +600,7 @@ class FavoriteFlowViewModel @Inject constructor(
                     refresh = LoadState.Loading,
                 ),
 
-            )
+                )
         }
 
         eventListener.emit(FavoriteEvents.ScrollToTop)

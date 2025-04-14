@@ -12,6 +12,10 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.app.ActivityCompat
 import androidx.core.os.bundleOf
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsCompat.CONSUMED
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -114,6 +118,13 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.clearScrollState()
         initBackButton()
+
+        ViewCompat.setOnApplyWindowInsetsListener(view) { _, insets ->
+            val imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
+            tabManager.changeTabVisibility(!imeVisible)
+            return@setOnApplyWindowInsetsListener CONSUMED
+        }
+
     }
 
     private fun navigateToQrCodeFragment() {

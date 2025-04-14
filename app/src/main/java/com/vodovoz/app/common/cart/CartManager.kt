@@ -157,11 +157,8 @@ class CartManager @Inject constructor(
     ) {
         val cartItem = needUpdate.entries.firstOrNull() ?: return
         if (needUpdate.size == 1 && firstCart[cartItem.key] != null) {
-            vodovozServiceRepository.addProductToCart(cartItem.key, cartItem.value).singleResult()
-                .getOrThrow()
-            //todo - uncomment
-            //vodovozServiceRepository.updateProductInCart(cartItem.key, cartItem.value)
-            //    .singleResult().getOrThrow()
+            vodovozServiceRepository.updateProductInCart(cartItem.key, cartItem.value)
+                .singleResult().getOrThrow()
         } else if (needUpdate.size == 1) {
             vodovozServiceRepository.addProductToCart(cartItem.key, cartItem.value)
                 .singleResult().getOrThrow()

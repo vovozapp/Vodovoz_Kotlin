@@ -21,7 +21,7 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.android.activate
-import com.vodovoz.app.core.navigation.NavigationHandler
+import com.vodovoz.app.core.navigation.ProfileMainNavigator
 import com.vodovoz.app.core.navigation.navigateToLogin
 import com.vodovoz.app.core.navigation.navigateToRegister
 import com.vodovoz.app.core.navigation.navigateToUserData
@@ -32,6 +32,8 @@ import com.vodovoz.app.feature.cart.CartFlowViewModel
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
 import com.vodovoz.app.feature.home.HomeFlowViewModel
 import com.vodovoz.app.feature.profile.composables.UserNotFountPlaceholder
+import com.vodovoz.app.feature.profile.core.ProfileChatsNavigator
+import com.vodovoz.app.util.extensions.copyText
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -121,58 +123,72 @@ class ProfileFragment : Fragment() {
         viewModel.checkLogin()
     }
 
-    private fun observeEvents() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.observeEvent()
-                    .collect { events ->
-                        when (events) {
-                            is ProfileFlowViewModel.ProfileEvents.Logout -> {
+    private fun observeEvents() = lifecycleScope.launch {
+        repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.observeEvent()
+                .collect { events ->
+                    when (events) {
+                        is ProfileFlowViewModel.ProfileEvents.Logout -> {
+                            flowViewModel.refresh()
+                            cartFlowViewModel.refreshIdle()
+                            favoriteViewModel.refreshIdle()
+                        }
 
-                                flowViewModel.refresh()
-                                cartFlowViewModel.refreshIdle()
-                                favoriteViewModel.refreshIdle()
-                            }
+                        is ProfileFlowViewModel.ProfileEvents.GoToCart -> {
+                            MaterialAlertDialogBuilder(requireContext())
+                                .setTitle("Товары добавлены в корзину")
+                                .setMessage("Перейти в корзину?")
+                                .setPositiveButton("Да") { dialog, _ ->
+                                    dialog.dismiss()
+                                    tabManager.selectTab(R.id.graph_cart)
+                                }
+                                .setNegativeButton("Нет") { dialog, _ -> dialog.dismiss() }
+                                .show()
+                        }
 
-                            is ProfileFlowViewModel.ProfileEvents.GoToCart -> {
-                                MaterialAlertDialogBuilder(requireContext())
-                                    .setTitle("Товары добавлены в корзину")
-                                    .setMessage("Перейти в корзину?")
-                                    .setPositiveButton("Да") { dialog, _ ->
-                                        dialog.dismiss()
-                                        tabManager.selectTab(R.id.graph_cart)
-                                    }
-                                    .setNegativeButton("Нет") { dialog, _ -> dialog.dismiss() }
-                                    .show()
-                            }
+                        ProfileFlowViewModel.ProfileEvents.GoToLogin -> {
+                            findNavController().navigateToLogin()
+                        }
 
-                            ProfileFlowViewModel.ProfileEvents.GoToLogin -> {
-                                findNavController().navigateToLogin()
-                            }
+                        ProfileFlowViewModel.ProfileEvents.GoToUserData -> {
+                            findNavController().navigateToUserData()
+                        }
 
-                            ProfileFlowViewModel.ProfileEvents.GoToUserData -> {
-                                findNavController().navigateToUserData()
-                            }
+                        is ProfileFlowViewModel.ProfileEvents.GoByMenuItemId -> {
+                            ProfileMainNavigator.navigate(
+                                id = events.itemId,
+                                navController = findNavController(),
+                                context = requireContext()
+                            )
+                        }
 
-                            is ProfileFlowViewModel.ProfileEvents.GoByMenuItemId -> {
-                                NavigationHandler.navigate(events.itemId, findNavController())
-                            }
+                        is ProfileFlowViewModel.ProfileEvents.ActivateVodovozAction -> {
+                            events.action.activate(
+                                navController = findNavController(),
+                                activity = requireActivity(),
+                                cookie = cookieManager.fetchCookieSessionId() ?: "",
+                                tabManager = tabManager
+                            )
+                        }
 
-                            is ProfileFlowViewModel.ProfileEvents.ActivateVodovozAction -> {
-                                events.action.activate(
-                                    findNavController(),
-                                    requireActivity(),
-                                    cookieManager.fetchCookieSessionId() ?: "",
-                                    tabManager
-                                )
-                            }
+                        ProfileFlowViewModel.ProfileEvents.GoToRegister -> {
+                            findNavController().navigateToRegister()
+                        }
 
-                            ProfileFlowViewModel.ProfileEvents.GoToRegister -> {
-                                findNavController().navigateToRegister()
-                            }
+                        is ProfileFlowViewModel.ProfileEvents.Copy -> {
+                            requireContext().copyText(events.value)
+                        }
+
+                        is ProfileFlowViewModel.ProfileEvents.GoByChatItemId -> {
+                            ProfileChatsNavigator.navigate(
+                                chatId = events.chatId,
+                                data = events.data,
+                                navController = findNavController(),
+                                context = requireContext()
+                            )
                         }
                     }
-            }
+                }
         }
     }
 

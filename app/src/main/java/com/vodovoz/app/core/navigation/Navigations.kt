@@ -1,5 +1,6 @@
 package com.vodovoz.app.core.navigation
 
+import android.os.Bundle
 import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
@@ -10,6 +11,25 @@ import com.vodovoz.app.design_system.model.filters.FiltersUi
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
 import com.vodovoz.app.feature.home.model.CategoryUi
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
+import com.vodovoz.app.feature.profile.ProfileFragmentDirections
+
+
+private val ProfileNavOptions = NavOptions.Builder()
+    .setEnterAnim(R.anim.slide_in_right)
+    .setExitAnim(R.anim.fade_out)
+    .setPopExitAnim(R.anim.slide_out_right)
+    .build()
+
+
+//fun NavController.navigateTo
+
+fun NavController.navigateToAddresses(){
+    navigate(R.id.savedAddressesDialogFragment, Bundle.EMPTY, ProfileNavOptions)
+}
+
+fun NavController.navigateToRecoverPassword() {
+    navigate(R.id.recoverPasswordFragment, Bundle.EMPTY, ProfileNavOptions)
+}
 
 fun NavController.navigateToButtonProductList(buttonId: Int) {
     navigate(
@@ -22,8 +42,28 @@ fun NavController.navigateToButtonProductList(buttonId: Int) {
     )
 }
 
+fun NavController.navigateToAboutApp() {
+    navigate(R.id.aboutAppDialogFragment, Bundle.EMPTY, ProfileNavOptions)
+}
+
+
+fun NavController.navigateToNotificationSettings() {
+    navigate(R.id.notificationSettingsFragment, Bundle.EMPTY, ProfileNavOptions)
+}
+
+
+fun NavController.navigateToQuestionnaires() {
+    navigate(R.id.questionnairesFragment2, Bundle.EMPTY, ProfileNavOptions)
+}
+
+fun NavController.navigateToPastPurchases() {
+    navigate(
+        R.id.pastPurchasesFragment, Bundle.EMPTY, ProfileNavOptions
+    )
+}
+
 fun NavController.navigateToOrdersHistory() {
-    navigate(R.id.allOrdersFragment)
+    navigate(R.id.allOrdersFragment, Bundle.EMPTY, ProfileNavOptions)
 }
 
 fun NavController.navigateToOrderDetails(orderId: Int) {

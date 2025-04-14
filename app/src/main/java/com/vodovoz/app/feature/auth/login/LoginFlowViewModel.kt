@@ -43,6 +43,7 @@ import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
 
+//todo - handle site state
 @HiltViewModel
 class LoginFlowViewModel @Inject constructor(
     private val repository: MainRepository,
@@ -134,14 +135,6 @@ class LoginFlowViewModel @Inject constructor(
 
     fun authByEmail(email: String, password: String) {
 
-        vodovozServiceRepository.loginByEmail(email, password).onEach { result ->
-            result.onSuccess { message ->
-                debugLog { message }
-            }.onFailure { throwable ->
-                debugLog { throwable.stackTraceToString() }
-            }
-        }.launchIn(viewModelScope)
-
         uiStateListener.value = state.copy(
             loadingPage = true, data = state.data.copy(
                 settings = AccountManager.UserSettings(
@@ -164,7 +157,6 @@ class LoginFlowViewModel @Inject constructor(
                             )
                             accountManager.updateUserId(response.data.id)
                             accountManager.updateUserToken(response.data.token)
-
                             likeManager.updateLikesAfterLogin(response.data.id)
 
                             uiStateListener.value =

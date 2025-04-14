@@ -11,10 +11,9 @@ fun RegistrationDetailsDTO.toDomain(): AuthDetailsModel {
         title = TITLE ?: "",
         description = "",
         fields = DATA?.mapToDomain()
-            ?: throw IllegalArgumentException("Login fields can't be null"),
-        hasAgreement = SOGLASHENIE == "Y",
-        //todo - make this
-        buttons = emptyList()
+            ?: throw IllegalArgumentException("Register fields can't be null"),
+        haveAgreement = SOGLASHENIE == "Y",
+        buttons = KNOPKA?.map { it.toDomain() } ?: throw IllegalArgumentException("Register buttons can't be null")
     )
 }
 

@@ -16,7 +16,7 @@ class PagingDataListener<T : Any>(
     onUpdateItems: suspend (ItemSnapshotList<T>) -> Unit,
 ) {
 
-    private val pagingDataPresenter = object : PagingDataPresenter<T>(Dispatchers.Main) {
+    private val pagingDataPresenter = object : PagingDataPresenter<T>(Dispatchers.Default) {
         override suspend fun presentPagingDataEvent(event: PagingDataEvent<T>) {
             onUpdateItems(snapshot())
         }

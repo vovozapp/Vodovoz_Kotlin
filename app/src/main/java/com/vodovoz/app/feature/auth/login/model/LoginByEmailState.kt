@@ -11,5 +11,8 @@ data class LoginByEmailState(
     val description: String = "",
     val fields: List<FieldUi> = emptyList(),
     val buttons: List<ColorfulButtonUi> = emptyList(),
-    val uiState: LoginByEmailUiState = LoginByEmailUiState.Loading
+    val uiState: LoginByEmailUiState = LoginByEmailUiState.Loading,
+    val agreementHtml: String = "",
+    val showAgreement: Boolean = false,
+    val agreementChecked: Boolean = true
 )

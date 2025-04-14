@@ -18,6 +18,7 @@ import com.vodovoz.app.feature.profile.change_password.model.ChangePasswordUiSta
 import com.vodovoz.app.ui.mvi.MviViewModel
 import com.vodovoz.app.util.extensions.singleResult
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -44,6 +45,8 @@ class ChangePasswordViewModel @Inject constructor(
         }
         val changePasswordDetailsResult =
             vodovozServiceRepository.getChangePasswordDetails().singleResult()
+        //todo - mb remove
+        delay(150L)
         changePasswordDetailsResult.onSuccess { model ->
             _state.update { s ->
                 s.copy(

@@ -35,7 +35,11 @@ data class ProfileChatsPopupWindowUi(
     val title: String,
     val description: String,
     val menu: List<ProfileChatItemUi>,
-)
+){
+    companion object{
+        val Empty = ProfileChatsPopupWindowUi("","", emptyList())
+    }
+}
 
 fun ProfileChatsPopupWindowModel.toUi(): ProfileChatsPopupWindowUi {
     return ProfileChatsPopupWindowUi(
@@ -45,7 +49,9 @@ fun ProfileChatsPopupWindowModel.toUi(): ProfileChatsPopupWindowUi {
     )
 }
 
+@Immutable
 data class ProfileChatItemUi(
+    val id: String,
     val name: String,
     val imageUrl: String,
     val navigationData: String,
@@ -59,7 +65,8 @@ fun ProfileChatItemModel.toUi(): ProfileChatItemUi {
     return ProfileChatItemUi(
         name = name,
         imageUrl = imageUrl,
-        navigationData = transitionData
+        navigationData = transitionData,
+        id = id
     )
 }
 

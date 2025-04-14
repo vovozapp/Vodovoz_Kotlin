@@ -62,9 +62,9 @@ abstract class VodovozServiceModule {
             return OkHttpClient.Builder()
                 .addInterceptor(cookieHandlerInterceptor)
                 .addInterceptor(HttpLoggingInterceptor())
-                .connectTimeout(30, TimeUnit.SECONDS)
-                .readTimeout(30, TimeUnit.SECONDS)
-                .writeTimeout(30, TimeUnit.SECONDS)
+                .connectTimeout(25, TimeUnit.SECONDS)
+                .readTimeout(25, TimeUnit.SECONDS)
+                .writeTimeout(25, TimeUnit.SECONDS)
                 .build()
         }
 

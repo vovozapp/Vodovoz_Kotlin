@@ -6,7 +6,13 @@ import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.snap
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.AnchoredDraggableState
@@ -25,6 +31,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -85,6 +92,12 @@ import com.vodovoz.app.feature.home.model.UnratedProductsSectionUi
 import kotlinx.coroutines.flow.drop
 import mx.platacard.pagerindicator.PagerWormIndicator
 
+private val shape = RoundedCornerShape(
+    topStart = 20.dp,
+    topEnd = 20.dp,
+    bottomEnd = 0.dp,
+    bottomStart = 0.dp
+)
 
 @OptIn(
     ExperimentalMaterial3Api::class,
@@ -103,19 +116,15 @@ fun UnratedProductsBottomSheet(
         120.dp.toPx()
     }
 
-    val shape = RoundedCornerShape(
-        topStart = 20.dp,
-        topEnd = 20.dp,
-        bottomEnd = 0.dp,
-        bottomStart = 0.dp
-    )
 
 
-    BoxWithConstraints(modifier = modifier.fillMaxSize()) {
+
+    BoxWithConstraints(
+        modifier = modifier.fillMaxSize()
+    ) {
         val layoutHeight = constraints.maxHeight.toFloat()
 
-
-        val state = remember {
+        val state = remember(layoutHeight) {
             AnchoredDraggableState(
                 initialValue = SheetValue.PartiallyExpanded,
                 anchors = DraggableAnchors {
@@ -125,7 +134,6 @@ fun UnratedProductsBottomSheet(
                 },
             )
         }
-
 
         LaunchedEffect(state) {
             snapshotFlow { state.currentValue }.drop(1).collect { currentValue ->
@@ -147,7 +155,11 @@ fun UnratedProductsBottomSheet(
                     state = state,
                     orientation = Orientation.Vertical,
                 )
-                .dropShadow(shape, MaterialTheme.colorScheme.onBackground.copy(0.3f), blur = 5.dp)
+                .dropShadow(
+                    shape = shape,
+                    color = MaterialTheme.colorScheme.onBackground.copy(0.3f),
+                    blur = 5.dp
+                )
                 .background(MaterialTheme.colorScheme.background, shape),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -155,9 +167,15 @@ fun UnratedProductsBottomSheet(
             Spacer(modifier = Modifier.height(8.dp))
 
             SharedTransitionLayout {
+
                 AnimatedContent(
                     targetState = state.currentValue,
-                    label = "UpdatedProductsTransition"
+                    label = "UpdatedProductsTransition",
+                    transitionSpec = {
+                        (scaleIn(tween(durationMillis = 100, easing = LinearEasing))).togetherWith(
+                            scaleOut(snap())
+                        )
+                    }
                 ) { targetState ->
                     when (targetState) {
                         SheetValue.Hidden -> {
@@ -325,9 +343,9 @@ fun SharedTransitionScope.UpdatedProductsExpanded(
     onNoRateProductClick: (UnratedProductUi) -> Unit,
     onClose: () -> Unit,
 ) {
-    Column(modifier = modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+    val pagerState = rememberPagerState() { products.size }
 
-        val pagerState = rememberPagerState { products.size }
+    Column(modifier = modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
 
 
         Row(modifier = Modifier.padding(horizontal = 16.dp)) {
@@ -378,9 +396,9 @@ fun SharedTransitionScope.UpdatedProductsExpanded(
                 AsyncImage(
                     modifier = Modifier
                         .size(300.dp)
-                        .sharedBounds(
+                        .sharedElement(
                             sharedContentState = rememberSharedContentState(key = "image-key${product.id}"),
-                            animatedVisibilityScope = animatedVisibilityScope
+                            animatedVisibilityScope = animatedVisibilityScope,
                         ),
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(product.detailPicture)
@@ -498,10 +516,10 @@ fun SharedTransitionScope.UnratedProductsPartially(
 
                 AsyncImage(
                     modifier = Modifier
-                        .size(animatedSize)
-                        .sharedBounds(
+                        .requiredSize(animatedSize)
+                        .sharedElement(
                             sharedContentState = rememberSharedContentState(key = "image-key${product.id}"),
-                            animatedVisibilityScope = animatedVisibilityScope
+                            animatedVisibilityScope = animatedVisibilityScope,
                         ),
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(product.detailPicture)

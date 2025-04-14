@@ -112,8 +112,8 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         return ComposeView(requireContext()).apply {
-
             setViewCompositionStrategy(ViewCompositionStrategy.Default)
+
             setContent {
                 VodovozTheme {
                     val viewState by flowViewModel.observeUiState().collectAsStateWithLifecycle()

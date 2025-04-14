@@ -1,6 +1,7 @@
 package com.vodovoz.app.design_system.composables.text_fields
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.snap
 import androidx.compose.animation.fadeOut
@@ -93,7 +94,7 @@ private fun VodovozTextField(
             if (!label.isNullOrEmpty()) {
                 Text(
                     text = label,
-                    color = if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceTint,
+                    color = MaterialTheme.colorScheme.surfaceTint,
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.padding(bottom = 4.dp)
                 )
@@ -120,10 +121,22 @@ private fun VodovozTextField(
                     )
                 }
                 Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
-                    this@Row.AnimatedVisibility(
-                        visible = value.text.isEmpty(),
-                        exit = fadeOut(snap(), 1f)
-                    ) {
+                    //todo - mb do animation
+//                    this@Row.AnimatedVisibility(
+//                        visible = value.text.isEmpty(),
+//                        exit = ExitTransition.None
+//                    ) {
+//                        Text(
+//                            text = hint,
+//                            color = MaterialTheme.colorScheme.surfaceTint,
+//                            style = MaterialTheme.typography.bodyMedium,
+//                            modifier = Modifier.horizontalScroll(rememberScrollState()),
+//                            maxLines = maxLines,
+//                            overflow = TextOverflow.Ellipsis
+//                        )
+//
+//                    }
+                    if(value.text.isEmpty()){
                         Text(
                             text = hint,
                             color = MaterialTheme.colorScheme.surfaceTint,
@@ -132,8 +145,8 @@ private fun VodovozTextField(
                             maxLines = maxLines,
                             overflow = TextOverflow.Ellipsis
                         )
-
                     }
+
 
                     innerTextField()
                 }

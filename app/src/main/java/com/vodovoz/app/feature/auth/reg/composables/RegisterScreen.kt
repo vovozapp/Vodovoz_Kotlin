@@ -62,19 +62,12 @@ fun RegisterScreen(
                 RegFlowViewModel.UiState.Success -> {
                     RegisterBody(
                         fields = viewState.fields,
-                        buttonEnabled = viewState.buttonEnabled,
-                        buttonLoading = viewState.buttonLoading,
-                        button = viewState.mainButton,
-                        showAgreements = viewState.showAgreements,
-                        navigationButton = viewState.navigationButton,
+                        showAgreements = viewState.showAgreement,
                         agreementChecked = viewState.agreementChecked,
-                        subscribeChecked = viewState.subscribeChecked,
                         agreementTextHtml = viewState.agreementTextHtml,
+                        buttons = viewState.buttons,
                         onHyperlinkClick = { url, urlIndex ->
                             viewModel.openAgreementUrl(url, urlIndex)
-                        },
-                        onSubscribeCheck = { checked ->
-                            viewModel.checkSubscribe(checked)
                         },
                         onAgreementCheck = { checked ->
                             viewModel.checkAgreement(checked)
@@ -85,11 +78,8 @@ fun RegisterScreen(
                         onRegister = {
                             viewModel.register()
                         },
-                        onNavigationButtonClick = {
-                            viewModel.navigateToLogin()
-                        },
-                        onMainButtonClick = {
-                            viewModel.register()
+                        onButtonClick = { button ->
+                            viewModel.activateButton(button)
                         }
                     )
                 }
