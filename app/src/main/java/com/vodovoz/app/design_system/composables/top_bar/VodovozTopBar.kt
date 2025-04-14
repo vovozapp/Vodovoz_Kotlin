@@ -25,7 +25,7 @@ fun VodovozTopBar(
     onBack: () -> Unit,
     title: String,
     actionPainter: Painter? = null,
-    onActionClick: () -> Unit = {}
+    onLogoutClick: () -> Unit = {}
 ) {
     Row(
         modifier = modifier
@@ -55,7 +55,7 @@ fun VodovozTopBar(
                 modifier = Modifier.clip(MaterialTheme.shapes.small),
                 painter = actionPainter,
                 tint = MaterialTheme.colorScheme.onBackground,
-                onClick = onActionClick
+                onClick = onLogoutClick
             )
         }
     }

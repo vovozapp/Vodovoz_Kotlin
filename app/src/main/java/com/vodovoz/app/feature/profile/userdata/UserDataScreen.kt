@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.vodovoz.app.R
-import com.vodovoz.app.design_system.composables.snackbar.VodovozSnackbar
 import com.vodovoz.app.design_system.composables.snackbar.VodovozSnackbarHost
 import com.vodovoz.app.design_system.composables.top_bar.VodovozTopBar
 import com.vodovoz.app.feature.profile.userdata.composables.UserDataBody
@@ -26,8 +25,8 @@ fun UserDataScreen(
                 onBack = { viewModel.navigateBack() },
                 title = viewState.title,
                 actionPainter = painterResource(id = R.drawable.ic_logout),
-                onActionClick = {
-
+                onLogoutClick = {
+                    viewModel.logout()
                 }
             )
         },

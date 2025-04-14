@@ -318,6 +318,10 @@ class UserDataFlowViewModel @Inject constructor(
         eventListener.emit(UserDataEvents.OpenImagePicker)
     }
 
+    fun logout() = viewModelScope.launch {
+
+    }
+
 
     sealed class UserDataEvents : Event {
         data class UpdateUserDataEvent(val message: String) : UserDataEvents()

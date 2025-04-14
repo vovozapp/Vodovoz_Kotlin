@@ -37,6 +37,7 @@ import com.vodovoz.app.data.vodovoz_service.model.user_data.UserDataDTO
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Headers
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
@@ -196,6 +197,8 @@ interface VodovozService {
         @QueryMap queries: Map<String, String>,
     ): Response<RegisterDTO>
 
+
+    @Headers("Cookie: ")
     @GET("config/openuserid.php?sandroid=${BuildConfig.VERSION_NAME}")
     suspend fun relogin(
         @Query("userid") userId: Long,

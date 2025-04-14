@@ -12,7 +12,7 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.databinding.FragmentWebViewFlowBinding
 
-class WebViewFragment : BaseFragment() {
+class WebViewFragment1 : BaseFragment() {
 
     override fun layout(): Int = R.layout.fragment_web_view_flow
 

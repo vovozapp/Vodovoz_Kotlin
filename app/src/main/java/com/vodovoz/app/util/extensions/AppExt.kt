@@ -328,8 +328,7 @@ fun String.getColorWithAlpha(): Int {
 fun Activity.enableFullScreen() {
     WindowCompat.setDecorFitsSystemWindows(window, false)
     val insetsController = WindowCompat.getInsetsController(window, window.decorView)
-    insetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_DEFAULT
-
+    insetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
     insetsController.hide(WindowInsetsCompat.Type.statusBars())
     insetsController.hide(WindowInsetsCompat.Type.navigationBars())
 }

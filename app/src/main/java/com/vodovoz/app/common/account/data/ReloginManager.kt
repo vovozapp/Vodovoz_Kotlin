@@ -27,21 +27,6 @@ class ReloginManager @Inject constructor(
     private val _userReloginEnded = MutableStateFlow<ReloginState>(ReloginState.ReloginInitial)
     val userReloginEnded = _userReloginEnded.asStateFlow()
 
-    suspend fun reloginUserV2() {
-
-        val reloginResult = vodovozServiceRepository.relogin().singleResult()
-
-        reloginResult.onSuccess { isAuthorized ->
-            if(isAuthorized){
-
-            }else {
-
-            }
-        }.onFailure {
-
-        }
-    }
-
     fun reloginUser() {
         val userId = accountManager.fetchAccountId()
         val userToken = accountManager.fetchUserToken()

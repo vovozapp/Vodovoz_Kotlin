@@ -83,7 +83,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     private val accountManager: AccountManager,
     private val moshi: Moshi,
     private val cookieManager: CookieManager,
-    private val trackingManager: TrackingManager
+    private val trackingManager: TrackingManager,
 ) : VodovozServiceRepository {
 
     override fun getBrands(
@@ -490,7 +490,9 @@ class VodovozServiceRepositoryImpl @Inject constructor(
             request = {
                 val id = accountManager.fetchAccountId()
                 val token = accountManager.fetchUserToken()
-                if(id == null || token == null){ throw UserNotLoginException() }
+                if (id == null || token == null) {
+                    throw UserNotLoginException()
+                }
                 vodovozService.relogin(id, token)
             },
             mapper = {

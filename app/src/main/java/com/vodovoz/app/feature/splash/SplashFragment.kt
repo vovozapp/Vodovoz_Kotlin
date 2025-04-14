@@ -70,9 +70,6 @@ class SplashFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requireActivity().enableFullScreen()
-        if (savedInstanceState == null) {
-            firstLoad()
-        }
     }
 
     override fun onDestroyView() {
@@ -82,13 +79,17 @@ class SplashFragment : BaseFragment() {
 
     private fun listenAppState() = viewLifecycleOwner.lifecycleScope.launch {
         repeatOnLifecycle(Lifecycle.State.STARTED) {
+
             activityViewModel.appState.combine(viewModel.isLoading) { appState, splashIsLoading ->
                 appState to splashIsLoading
             }.collectLatest { (appState, splashIsLoading) ->
                 val navController = findNavController()
                 when (appState) {
                     AppState.App -> {
-                        if (splashIsLoading) return@collectLatest
+                        if (splashIsLoading) {
+                            firstLoad()
+                            return@collectLatest
+                        }
                         navController.navigate(R.id.mainFragment)
                     }
 

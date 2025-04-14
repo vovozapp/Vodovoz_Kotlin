@@ -15,8 +15,7 @@ object ProfileChatsNavigator {
         when (chatId) {
             "chat" -> {
                 navController.navigateToWebView(
-                    "http://jivo.chat/mk31km1IlP",
-                    context.getString(R.string.jivo_chat)
+                    "http://jivo.chat/mk31km1IlP", ""
                 )
             }
 
