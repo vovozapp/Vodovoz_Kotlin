@@ -14,6 +14,7 @@ import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.design_system.model.BrandCategoryItemUi
+import com.vodovoz.app.design_system.model.BuyButtonUi
 import com.vodovoz.app.design_system.model.CommentUi
 import com.vodovoz.app.design_system.model.ProductDetailsButtonsUi
 import com.vodovoz.app.design_system.model.ProductDetailsTabUi
@@ -30,6 +31,8 @@ import com.vodovoz.app.design_system.model.withUpdatedLoading
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotions
+import com.vodovoz.app.feature.productdetail.model.PresentInfoUi
+import com.vodovoz.app.feature.productdetail.model.toUi
 import com.vodovoz.app.feature.productdetail.present.model.PresentInfoData
 import com.vodovoz.app.feature.productdetail.viewholders.detailblocks.DetailBlocks
 import com.vodovoz.app.feature.productdetail.viewholders.detailbrandproductlist.DetailBrandList
@@ -48,7 +51,9 @@ import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.CommentUI
 import com.vodovoz.app.ui.model.ProductDetailUI
 import com.vodovoz.app.ui.model.ProductUI
+import com.vodovoz.app.util.calculateProductPrice
 import com.vodovoz.app.util.extensions.debugLog
+import com.vodovoz.app.util.extensions.singleResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -62,12 +67,13 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 @HiltViewModel
 class ProductDetailsFlowViewModel @Inject constructor(
@@ -95,7 +101,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
 
     suspend fun listenLoadingsProduct() = uiStateListener.combine(
         cartManager.blockedProductsState
-    ){ _, blockedProducts ->
+    ) { _, blockedProducts ->
         blockedProducts
     }.collectLatest { blockedProducts ->
         uiStateListener.update { s ->
@@ -120,16 +126,22 @@ class ProductDetailsFlowViewModel @Inject constructor(
             val sectionSimilarProducts = s.sectionSimilarProducts
             val sectionAccessory = s.sectionAccessory
             val productDetails = s.productDetails
+            val productCartQuantity = cartMap.getOrDefault(
+                productDetails.id,
+                0
+            )
 
             s.copy(
                 productDetails = productDetails.copy(
-                    cartQuantity = cartMap.getOrDefault(
-                        productDetails.id,
-                        0
-                    )
+                    cartQuantity = productCartQuantity
                 ),
                 sectionAccessory = sectionAccessory.withUpdatedCart(cartMap),
                 sectionSimilarProducts = sectionSimilarProducts.withUpdatedCart(cartMap),
+                totalPrice = calculateProductPrice(
+                    productCartQuantity,
+                    productDetails.prices
+                ).roundToInt()
+
             )
         }
     }
@@ -163,9 +175,25 @@ class ProductDetailsFlowViewModel @Inject constructor(
         }
     }
 
+    suspend fun listenCartUpdates() = cartManager.observeUpdateCartList().onEach { update ->
+        if (update) {
+            val result = vodovozServiceRepository.getPresentInfo().singleResult()
+            result.onSuccess { presentInfo ->
+                uiStateListener.update { s ->
+                    s.copy(
+                        presentInfo = presentInfo.toUi()
+                    )
+                }
+            }
+        }
+    }.collect()
+
     fun fetchProductDetails() = viewModelScope.launch {
         vodovozServiceRepository.getProductDetails(state.productDetails.id)
-            .onEach { productDetailsScreenResult ->
+            .combine(vodovozServiceRepository.getPresentInfo()) { p1, p2 ->
+                p1 to p2
+            }
+            .onEach { (productDetailsScreenResult, presentInfoResult) ->
                 productDetailsScreenResult.onSuccess { productDetailsScreenModel ->
                     val moreProducts = productDetailsScreenModel.moreProducts
 
@@ -184,7 +212,8 @@ class ProductDetailsFlowViewModel @Inject constructor(
                             },
                             buttons = productDetailsScreenModel.buttons.toUi(),
                             tabs = productDetailsScreenModel.tabs.map { it.toUi() },
-                            uiState = UiState.Success
+                            uiState = UiState.Success,
+                            presentInfo = presentInfoResult.getOrNull()?.toUi() ?: s.presentInfo
                         )
                     }
 
@@ -405,16 +434,16 @@ class ProductDetailsFlowViewModel @Inject constructor(
 
     fun onPresentInfoClick() {
         viewModelScope.launch {
-            val goToCart = state.presentInfo?.moveTo == "korzina"
+            val goToCart = state.presentInfoOld?.moveTo == "korzina"
             if (goToCart) {
                 eventListener.emit(ProductDetailsEvents.GoToCart)
             } else {
                 eventListener.emit(
                     ProductDetailsEvents.GoToPresentInfo(
-                        presentText = state.presentInfo?.text ?: "",
-                        progress = state.presentInfo?.progress ?: 0,
-                        showText = state.presentInfo?.showProgressText ?: false,
-                        progressBackground = state.presentInfo?.progressBackground ?: "",
+                        presentText = state.presentInfoOld?.text ?: "",
+                        progress = state.presentInfoOld?.progress ?: 0,
+                        showText = state.presentInfoOld?.showProgressText ?: false,
+                        progressBackground = state.presentInfoOld?.progressBackground ?: "",
                     )
                 )
             }
@@ -589,6 +618,11 @@ class ProductDetailsFlowViewModel @Inject constructor(
         eventListener.emit(ProductDetailsEvents.GoToProductAnalogs(product.id))
     }
 
+    fun addProductWithGift(buyButton: BuyButtonUi) = viewModelScope.launch {
+        //todo - change realization
+        cartManager.addProductWithGift(buyButton.productId, buyButton.moreProductId)
+    }
+
 
     sealed class ProductDetailsEvents : Event {
         data class GoToPreOrder(val id: Long) : ProductDetailsEvents()
@@ -645,7 +679,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
         val detailComments: DetailComments? = null,
         val viewedProductsTitle: DetailsTitle? = null,
         val viewedProducts: CategoryDetailUI? = null,
-        val presentInfo: PresentInfoData? = null,
+        val presentInfoOld: PresentInfoData? = null,
         val error: ErrorState? = null,
         val loadingPage: Boolean = false,
         val categoryUI: CategoryUI = CategoryUI(name = ""),
@@ -665,12 +699,12 @@ class ProductDetailsFlowViewModel @Inject constructor(
         val sectionSimilarProducts: SectionUi<ProductUi> = SectionUi.empty(),
         val sectionAccessory: SectionUi<ProductUi> = SectionUi.empty(),
         val uiState: UiState = UiState.Loading,
-
+        val totalPrice: Int = 0,
         val showMultiBottomSheet: Boolean = false,
         val showPresentBottomSheet: Boolean = false,
         val showPresentBlockBottomSheet: Boolean = false,
-    ) : State {
-    }
+        val presentInfo: PresentInfoUi = PresentInfoUi.Empty,
+    ) : State
 
     sealed class UiState {
         data object Loading : UiState()

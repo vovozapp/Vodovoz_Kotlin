@@ -9,6 +9,7 @@ import com.vodovoz.app.domain.general.model.LabelModel
 import com.vodovoz.app.domain.general.model.ProductModel
 import com.vodovoz.app.domain.general.model.SectionModel
 import com.vodovoz.app.util.fromHexOrNull
+import com.vodovoz.app.util.fromHexOrUnspecified
 import com.yandex.mapkit.search.Advertisement.Product
 
 
@@ -217,6 +218,7 @@ fun ProductModel.toUi(): ProductUi {
 data class LabelWithColorUi(
     val name: String,
     val color: Color,
+    val background: Color = Color.Unspecified
 )
 
 fun List<LabelModel>.toUi(): List<LabelWithColorUi> {
@@ -225,9 +227,10 @@ fun List<LabelModel>.toUi(): List<LabelWithColorUi> {
     }
 }
 
-fun LabelModel.toUi(): LabelWithColorUi? {
+fun LabelModel.toUi(): LabelWithColorUi {
     return LabelWithColorUi(
         name,
-        Color.fromHexOrNull(colorHex) ?: return null
+        Color.fromHexOrUnspecified(colorHex),
+        Color.fromHexOrUnspecified(backgroundHex)
     )
 }

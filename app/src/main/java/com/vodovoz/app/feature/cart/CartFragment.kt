@@ -40,7 +40,7 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class CartFragment : BaseFragment() {
+class CartFragment1 : BaseFragment() {
 
     companion object {
         const val GIFT_ID = "GIFT_ID"
@@ -328,15 +328,15 @@ class CartFragment : BaseFragment() {
                             }
 
                             is CartFlowViewModel.CartEvents.NavigateToGifts -> {
-                                if (findNavController().currentBackStackEntry?.destination?.id == R.id.giftsBottomFragment) {
-                                    findNavController().popBackStack()
-                                }
-
-                                findNavController().navigate(
-                                    CartFragmentDirections.actionToGiftsBottomFragment(
-                                        it.giftProducts
-                                    )
-                                )
+//                                if (findNavController().currentBackStackEntry?.destination?.id == R.id.giftsBottomFragment) {
+//                                    findNavController().popBackStack()
+//                                }
+//
+//                                findNavController().navigate(
+//                                    CartFragmentDirections.actionToGiftsBottomFragment(
+//                                        it.giftProducts
+//                                    )
+//                                )
                             }
 
                             is CartFlowViewModel.CartEvents.NavigateToProfile -> {
@@ -355,6 +355,9 @@ class CartFragment : BaseFragment() {
                                         it.detailPicture
                                     )
                                 )
+                            }
+                            else -> {
+
                             }
                         }
                     }

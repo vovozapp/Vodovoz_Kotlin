@@ -96,7 +96,7 @@ fun ProductDetailsButtonsBlock(
         val analogButton = buttons.analogButton
 
         when {
-            (cartQuantity > 0 || quantityButtonIsLoading) && isAvailable -> {
+            cartQuantity > 0 && isAvailable -> {
                 ProductQuantityButton(
                     modifier = Modifier.isElementVisible(onFloatingButtonChange),
                     isLoading = quantityButtonIsLoading,
@@ -215,8 +215,8 @@ private val productDetailsButtonsUi = ProductDetailsButtonsUi(
     blockButton = ButtonBlockUi(
         button = ColorfulButtonUi(
             name = "Купить + Подарок",
-            textColor = Color.White,
-            backgroundColor = Color(0xFFFF5733) // Оранжево-красный
+            textColorValue = Color.White.value,
+            backgroundColorValue = Color(0xFFFF5733).value // Оранжево-красный
         ),
         data = BlockPromoDataUi(
             title = "Супер акция",
@@ -248,8 +248,8 @@ private val productDetailsButtonsUi = ProductDetailsButtonsUi(
             borderColor = Color(0xFFFFD700), // Золотой
             button = ColorfulButtonUi(
                 name = "Купить дизайн",
-                textColor = Color.Black,
-                backgroundColor = Color(0xFFFFD700)
+                textColorValue = Color.Black.value,
+                backgroundColorValue = Color(0xFFFFD700).value
             )
         ),
         data = BlockPromoDataUi(
@@ -275,17 +275,17 @@ private val productDetailsButtonsUi = ProductDetailsButtonsUi(
     ),
     multiBuyButton = ColorfulButtonUi(
         name = "Опт. покупка",
-        textColor = Color.White,
-        backgroundColor = Color(0xFF008000) // Зеленый
+        textColorValue = Color.White.value,
+        backgroundColorValue = Color(0xFF008000).value
     ),
     analogButton = ColorfulButtonUi(
         name = "Аналоги",
-        textColor = Color.White,
-        backgroundColor = Color(0xFF0000FF) // Синий
+        textColorValue = Color.White.value,
+        backgroundColorValue = Color(0xFF0000FF).value
     ),
     preOrderButton = ColorfulButtonUi(
         name = "Предзаказ",
-        textColor = Color.Black,
-        backgroundColor = Color(0xFFFFA500) // Оранжевый
+        textColorValue = Color.Black.value,
+        backgroundColorValue = Color(0xFFFFA500).value
     )
 )

@@ -13,7 +13,7 @@ open class MviViewModel<STATE, EVENT>(state: STATE): ViewModel() {
 
     protected val stateSnapshot get() = _state.value
 
-    protected val _events = MutableSharedFlow<EVENT>()
+    protected val _events = MutableSharedFlow<EVENT>(0)
     val events = _events.asSharedFlow()
 
 

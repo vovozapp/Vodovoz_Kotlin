@@ -1,5 +1,6 @@
 package com.vodovoz.app.design_system.model
 
+import android.os.Parcelable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 import com.vodovoz.app.domain.general.model.ActionWithButtonModel
@@ -7,6 +8,7 @@ import com.vodovoz.app.domain.general.model.ColorfulButtonModel
 import com.vodovoz.app.domain.general.model.StoryModel
 import com.vodovoz.app.domain.general.model.VodovozAction
 import com.vodovoz.app.util.fromHexOrUnspecified
+import kotlinx.parcelize.Parcelize
 
 @Immutable
 data class StoryUi(
@@ -34,16 +36,22 @@ data class ActionWithButtonUi(
 }
 
 @Immutable
+@Parcelize
 data class ColorfulButtonUi(
     val name: String,
-    val backgroundColor: Color,
-    val textColor: Color,
+    val backgroundColorValue: ULong,
+    val textColorValue: ULong,
     val id: String = "",
     val enabled: Boolean = true,
     val loading: Boolean = false,
-) {
+): Parcelable {
+
+
+    val backgroundColor: Color get() = Color(backgroundColorValue)
+    val textColor: Color get() = Color(textColorValue)
+
     companion object {
-        val Empty = ColorfulButtonUi("", Color.Unspecified, Color.Unspecified)
+        val Empty = ColorfulButtonUi("", Color.Unspecified.value, Color.Unspecified.value)
     }
 }
 
@@ -82,8 +90,8 @@ fun ActionWithButtonModel.toUi(): ActionWithButtonUi {
 fun ColorfulButtonModel.toUi(): ColorfulButtonUi {
     return ColorfulButtonUi(
         name = name,
-        backgroundColor = Color.fromHexOrUnspecified(backgroundColor),
-        textColor = Color.fromHexOrUnspecified(textColor),
+        backgroundColorValue = Color.fromHexOrUnspecified(backgroundColor).value,
+        textColorValue = Color.fromHexOrUnspecified(textColor).value,
         id = id,
     )
 }

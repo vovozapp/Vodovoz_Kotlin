@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
-class AllBottlesFlowFragment : BaseFragment() {
+class AllBottlesFlowFragment1 : BaseFragment() {
 
     override fun layout(): Int = R.layout.fragment_all_bottles
 

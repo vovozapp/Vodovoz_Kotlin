@@ -32,6 +32,7 @@ fun ProductDetailsBody(
     sectionAccessory: SectionUi<ProductUi>,
     sectionSimilarProducts: SectionUi<ProductUi>,
     buttons: ProductDetailsButtonsUi,
+    totalPrice: Int,
 
     productCartQuantity: Int,
     showDetailText: Boolean,
@@ -112,11 +113,7 @@ fun ProductDetailsBody(
             quantityButtonIsLoading = quantityButtonIsLoading,
             cartQuantity = productCartQuantity,
             buttons = buttons,
-            //todo - move calculate to viewModel
-            totalPrice = calculateProductPrice(
-                productCartQuantity,
-                productDetails.prices
-            ).roundToInt(),
+            totalPrice = totalPrice,
             onProductMinus = onDecrementProduct,
             onProductPlus = onIncrementProduct,
             onFloatingButtonChange = onFloatingButtonChange,
@@ -162,10 +159,10 @@ fun ProductDetailsBody(
             modifier = Modifier.padding(top = 32.dp),
             commentsCount = productDetails.commentsCount,
             comments = comments,
+            onShowAllCommentsClick = onShowAllCommentsClick,
             onWriteCommentClick = {
 
             },
-            onShowAllCommentsClick = onShowAllCommentsClick
         )
 
 

@@ -244,18 +244,15 @@ private fun ProductQuantityButtonPreview() {
 
 @Preview
 @Composable
-private fun CartButtonPreview() {
+private fun ProductCounterButtonPreview() {
     VodovozTheme {
-        Box(
-            modifier = Modifier
-                .size(100.dp)
-                .background(MaterialTheme.colorScheme.surfaceVariant),
-            contentAlignment = Alignment.Center
-        ) {
-            CartButton(count = 10) {
-
-            }
-        }
+        ProductQuantityButton(
+            isLoading = false,
+            onPlus = { },
+            onMinus = { },
+            quantity = 2,
+            totalPrice = 300
+        )
     }
 }
 

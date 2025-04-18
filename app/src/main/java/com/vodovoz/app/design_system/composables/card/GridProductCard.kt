@@ -44,7 +44,6 @@ import java.util.Locale
 import kotlin.math.roundToInt
 
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun GridProductCard(
     modifier: Modifier = Modifier,

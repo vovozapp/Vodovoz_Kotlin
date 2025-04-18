@@ -19,6 +19,7 @@ import com.vodovoz.app.data.vodovoz_service.mappers.mapToDomain
 import com.vodovoz.app.data.vodovoz_service.mappers.toDomain
 import com.vodovoz.app.data.vodovoz_service.model.VodovozErrorResponseDTO
 import com.vodovoz.app.data.vodovoz_service.model.VodovozResponseDTO
+import com.vodovoz.app.domain.general.AllBottlesDetailsModel
 import com.vodovoz.app.domain.general.VodovozPagingSource
 import com.vodovoz.app.domain.general.model.BannerModel
 import com.vodovoz.app.domain.general.model.BrandModel
@@ -37,6 +38,7 @@ import com.vodovoz.app.domain.general.model.ParentCategoryModel
 import com.vodovoz.app.domain.general.model.PopularCategoryModel
 import com.vodovoz.app.domain.general.model.PopupWindowInfoModel
 import com.vodovoz.app.domain.general.model.PreOrderSectionModel
+import com.vodovoz.app.domain.general.model.PresentInfoModel
 import com.vodovoz.app.domain.general.model.ProductCommentsInfoModel
 import com.vodovoz.app.domain.general.model.ProductDetailsScreenModel
 import com.vodovoz.app.domain.general.model.ProductModel
@@ -57,6 +59,7 @@ import com.vodovoz.app.domain.general.model.UnratedProductsSectionModel
 import com.vodovoz.app.domain.general.model.UserDataModel
 import com.vodovoz.app.domain.general.model.UserNotLoginException
 import com.vodovoz.app.domain.general.model.ValidationException
+import com.vodovoz.app.domain.general.model.cart.CartDetailsModel
 import com.vodovoz.app.domain.general.model.format
 import com.vodovoz.app.domain.general.model.login.AuthDetailsModel
 import com.vodovoz.app.domain.general.model.login.UserAuthInfoModel
@@ -85,6 +88,17 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     private val cookieManager: CookieManager,
     private val trackingManager: TrackingManager,
 ) : VodovozServiceRepository {
+
+    override fun getAllBottles(): Flow<Result<AllBottlesDetailsModel>> {
+        return executeRequest(
+            request = {
+                vodovozService.getAllBottles()
+            },
+            mapper = {
+                it.data!!.toDomain()
+            }
+        )
+    }
 
     override fun getBrands(
         searchQuery: String,
@@ -860,6 +874,19 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         )
     }
 
+    override suspend fun getCartDetails(coupon: String?): Flow<Result<CartDetailsModel>> {
+        return executeRequest(
+            request = {
+                val userId = accountManager.fetchAccountId()
+                vodovozService.getCartDetails(userId, coupon)
+            },
+            mapper = { vodovozResponse ->
+                vodovozResponse.checkError()
+                vodovozResponse.data!!.toDomain()
+            }
+        )
+    }
+
 
     override suspend fun addProductToCart(productId: Long, quantity: Int): Flow<Result<String>> =
         executeRequest(
@@ -895,7 +922,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
 
     override suspend fun clearCart(): Flow<Result<String>> = executeRequest(
         request = { vodovozService.clearCart() },
-        mapper = { response -> response.data ?: "" }
+        mapper = { "" },
     )
 
     override fun getProductAnalogs(
@@ -958,6 +985,18 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                     ?: throw IllegalArgumentException("ProductDetails cannot be null")
             }
         )
+
+    override fun getPresentInfo(): Flow<Result<PresentInfoModel>> {
+        return executeRequest(
+            request = {
+                val userId = accountManager.fetchAccountId() ?: throw UserNotLoginException()
+                vodovozService.getPresentInfo(userId)
+            },
+            mapper = {
+                it.data!!.toDomain()
+            }
+        )
+    }
 
 
     override fun getPopupWindowInfo(): Flow<Result<PopupWindowInfoModel>> = executeRequest(

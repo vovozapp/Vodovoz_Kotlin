@@ -6,12 +6,10 @@ import androidx.annotation.Keep
 
 @Keep
 data class PresentDTO(
-    @Json(name = "PEREXOD")
-    val PEREXOD: Any?,
     @Json(name = "POLOSKA")
     val POLOSKA: POLOSKA_DTO?,
     @Json(name = "SYMMAZAKAZA")
-    val SYMMAZAKAZA: Any?,
+    val SYMMAZAKAZA: Int?,
     @Json(name = "TEXT")
     val TEXT: String?
 )

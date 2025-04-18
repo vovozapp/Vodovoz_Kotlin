@@ -15,6 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.vodovoz.app.R
@@ -40,7 +42,7 @@ fun ProductBottomFloatingButton(
 ) {
 
     BottomFloatingContainer(modifier = modifier) {
-        if (isAvailable) {
+        if (isAvailable && giftText.isNotBlank()) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(bottom = 11.dp)
@@ -54,7 +56,7 @@ fun ProductBottomFloatingButton(
 
                 Text(
                     modifier = Modifier.padding(start = 8.dp),
-                    text = giftText,
+                    text = AnnotatedString.fromHtml(giftText),
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.labelSmall
                 )
@@ -63,7 +65,7 @@ fun ProductBottomFloatingButton(
 
 
         when {
-            cartQuantity > 0 || isLoading && isAvailable -> {
+            cartQuantity > 0 && isAvailable -> {
                 ProductQuantityButton(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     isLoading = isLoading,
@@ -120,7 +122,7 @@ private fun FloatingProductButtonPreview() {
                 onIncrementProduct = {},
                 onDecrementProduct = {},
                 isAvailable = false,
-                analogButton = ColorfulButtonUi("Analog", Color.Black, Color.White),
+                analogButton = ColorfulButtonUi("Analog", Color.Black.value, Color.White.value),
                 onAnalogClick = {}
             )
         }

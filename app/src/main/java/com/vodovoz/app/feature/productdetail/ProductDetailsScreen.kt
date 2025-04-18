@@ -4,7 +4,6 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -20,8 +19,6 @@ import com.vodovoz.app.feature.productdetail.composables.MultiProductBottomSheet
 import com.vodovoz.app.feature.productdetail.composables.PresentBottomSheet
 import com.vodovoz.app.feature.productdetail.composables.ProductDetailsBody
 import com.vodovoz.app.feature.productdetail.composables.ProductDetailsTopBar
-import com.vodovoz.app.util.calculateProductPrice
-import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Suppress("NonSkippableComposable")
@@ -37,9 +34,6 @@ fun ProductDetailsScreen(
         animationSpec = tween(easing = LinearEasing, durationMillis = 100),
         label = "floatingButtonProgress"
     )
-
-    //todo - move in viewModel
-    //val (price, oldPrice) = productDetails.firstPrice.run { price.roundToInt() to oldPrice.roundToInt() }
 
     Scaffold(
         topBar = {
@@ -63,20 +57,10 @@ fun ProductDetailsScreen(
                 },
                 isLoading = viewState.buttonIsLoading,
                 cartQuantity = productDetails.cartQuantity,
-                //todo - move to viewModel
-                //calculateProductPrice(
-                //     productDetails.cartQuantity,
-                //     productDetails.prices
-                // ).roundToInt()
-                //
-                totalPrice = 123,
-                //todo - put value
-                //oldPrice = oldPrice,
-                //price = price,
-                oldPrice = 123,
-                price = 124,
-                //todo - put left gift
-                giftText = "0",
+                totalPrice = viewState.totalPrice,
+                oldPrice = productDetails.firstPrice.oldPrice.toInt(),
+                price = productDetails.firstPrice.price.toInt(),
+                giftText = viewState.presentInfo.html,
                 isAvailable = productDetails.isAvailable,
                 analogButton = viewState.buttons.analogButton,
                 onIncrementProduct = {
@@ -106,6 +90,7 @@ fun ProductDetailsScreen(
             sectionAccessory = viewState.sectionAccessory,
             showDetailText = viewState.showDetailText,
             buttons = viewState.buttons,
+            totalPrice = viewState.totalPrice,
             onFloatingButtonChange = { show ->
                 viewModel.changeFloatingButton(show)
             },
@@ -182,6 +167,7 @@ fun ProductDetailsScreen(
             firstPrice = productDetails.firstPrice,
             prices = productDetails.prices,
             buttonIsLoading = viewState.buttonIsLoading,
+            totalPrice = viewState.totalPrice,
             onDismissRequest = {
                 viewModel.hideMultiBottomSheet()
             },
@@ -203,7 +189,9 @@ fun ProductDetailsScreen(
             data = presentButton.data,
             button = presentButton.buyButton,
             onDismissRequest = { viewModel.hidePresentBottomSheet() },
-            onBuyButtonClick = { }
+            onBuyButtonClick = {
+                viewModel.addProductWithGift(presentButton.buyButton)
+            }
         )
     }
 
@@ -213,7 +201,9 @@ fun ProductDetailsScreen(
             data = presentBlock.data,
             button = presentBlock.buyButton,
             onDismissRequest = { viewModel.hidePresentBlockBottomSheet() },
-            onBuyButtonClick = { }
+            onBuyButtonClick = {
+                viewModel.addProductWithGift(presentBlock.buyButton)
+            }
         )
     }
 }

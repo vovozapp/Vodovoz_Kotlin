@@ -30,6 +30,7 @@ import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.disableFullScreen
 import com.vodovoz.app.util.extensions.enableFullScreen
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
@@ -124,11 +125,11 @@ class SplashFragment : BaseFragment() {
 
     private fun fetchDataForScreens() = lifecycleScope.launch {
         favoriteViewModel.fetchFavoriteProducts()
-        val homeJob = homeViewModel.fetchHomeDetails()
+        homeViewModel.fetchHomeDetails()
         catalogViewModel.refresh()
         cartFlowViewModel.refreshIdle()
         profileViewModel.refresh()
-        homeJob.join()
+        delay(350)
         viewModel.finishLoading()
     }
 
@@ -207,23 +208,6 @@ class SplashFragment : BaseFragment() {
 
         override fun onAnimationRepeat(animation: Animator) = Unit
     }
-
-
-//    private suspend fun download(link: String, path: String, doAfter: (String) -> Unit) {
-//        withContext(Dispatchers.IO) {
-//            URL(link).openStream()
-//        }.use { input ->
-//            val file = File(requireContext().filesDir, path)
-//            if (!file.exists()) {
-//                file.createNewFile()
-//            }
-//            FileOutputStream(file).use { output ->
-//                input.copyTo(output)
-//                doAfter(path)
-//            }
-//
-//        }
-//    }
 
     private fun handlePushData() {
         debugLog { "splash args $arguments" }

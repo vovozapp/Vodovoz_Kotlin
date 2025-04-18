@@ -241,6 +241,7 @@ data class DocumentUi(
     val src: String,
 ) : Parcelable
 
+@Immutable
 data class PriceUi(
     val price: Float,
     val oldPrice: Float,

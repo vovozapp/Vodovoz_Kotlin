@@ -36,8 +36,7 @@ class VodovozInterceptor @Inject constructor(
             val setCookie = originalResponse.headers.values("Set-Cookie")
             if (setCookie.isNotEmpty()) {
                 cookieManager.updateCookieSessionId(
-                    originalResponse.headers.values("Set-Cookie")
-                        .firstOrNull { it.contains("PHPSESSID") }
+                    setCookie.firstOrNull { it.contains("PHPSESSID") }
                 )
             }
         }

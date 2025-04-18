@@ -17,7 +17,11 @@ data class ColorfulButtonModel(
     val backgroundColor: String,
     val textColor: String,
     val id: String = ""
-)
+){
+    companion object{
+        val Empty = ColorfulButtonModel("","", "", "")
+    }
+}
 
 
 

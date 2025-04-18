@@ -283,7 +283,7 @@ class ProductDetailsFragment1 : BaseFragment() {
                             amountDeployed = binding.floatingAmountController.amountControllerDeployed
                         )
 
-                        bindPresentLine(detailState.presentInfo)
+                        bindPresentLine(detailState.presentInfoOld)
 
                         showError(detailState.error)
                     }

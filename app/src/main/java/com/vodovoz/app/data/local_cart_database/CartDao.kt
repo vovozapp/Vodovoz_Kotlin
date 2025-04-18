@@ -32,11 +32,11 @@ interface CartDao {
 
     @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCart(cart: CartEntity)
+    suspend fun insertCart(cart: CartEntity): Long
 
     @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCartItem(item: CartItemEntity)
+    suspend fun insertCartItem(item: CartItemEntity): Long
 
     @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)

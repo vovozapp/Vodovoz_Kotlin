@@ -8,16 +8,20 @@ import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.singleResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withTimeout
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -49,7 +53,7 @@ class CartManager @Inject constructor(
     private var cartVersion = 0
 
 
-    fun observeCarts() = cartsStateListener.asSharedFlow().filter { map -> map.isNotEmpty() }
+    fun observeCarts() = cartsStateListener.asSharedFlow()
 
     suspend fun change(productId: Long, count: Int) = coroutineScope.launch {
         val currentCartVersion = cartMutex.withLock {
@@ -62,9 +66,7 @@ class CartManager @Inject constructor(
             return@withLock ++cartVersion
         }
 
-
-        //todo - change delay
-        delay(1000L)
+        delay(300L)
 
         val (currentFirstCart, cartChanges) = cartMutex.withLock {
             val currentCart: Map<Long, Int> = carts
@@ -75,7 +77,8 @@ class CartManager @Inject constructor(
             firstCart.clear()
 
             val cartChanges = currentCart.filter { (key, value) ->
-                firstCartCopy[key] != value
+                val oldValue = firstCartCopy[key]
+                value != oldValue
             }
 
             if (cartChanges.isEmpty()) return@launch
@@ -86,11 +89,10 @@ class CartManager @Inject constructor(
 
 
         kotlin.runCatching {
-            //todo - remove delay
-            delay(500L)
-            updateCartOnline(cartChanges, currentFirstCart)
+            withTimeout(5000) {
+                updateCartOnline(cartChanges, currentFirstCart)
+            }
             updateCartListState(true)
-
         }.onFailure {
             cartMutex.withLock {
                 val cartWithoutChanges = carts.keys.associateWith { key ->
@@ -103,12 +105,7 @@ class CartManager @Inject constructor(
         }
 
         cartMutex.withLock {
-            _blockedProductsState.update { s ->
-                buildSet {
-                    addAll(s)
-                    removeAll(cartChanges.keys)
-                }
-            }
+            _blockedProductsState.update { it - cartChanges.keys }
         }
     }
 
@@ -133,15 +130,24 @@ class CartManager @Inject constructor(
         }
     }
 
-    suspend fun clearCart() {
-        //todo - uncomment this
-//        carts.clear()
-//        cartsStateListener.emit(carts)
-//        updateCartListState(true)
-//        tabManager.clearBottomNavCartState()
+    suspend fun clearCart() = cartMutex.withLock {
+        cartVersion++
+        carts.clear()
+        cartsStateListener.emit(carts)
+        updateCartListState(true)
+        tabManager.clearBottomNavCartState()
     }
 
     fun isCartEmpty() = carts.isEmpty()
+
+
+    suspend fun syncCart(newCart: Map<Long, Int>) = cartMutex.withLock {
+        if ((firstCart.isNotEmpty() && carts.isNotEmpty()) || blockedProductsState.value.isNotEmpty()) {
+            return@withLock
+        }
+        updateCart(newCart)
+        tabManager.saveBottomNavCartState()
+    }
 
     suspend fun syncCart(list: List<ProductUI>) {
         list.forEach { product ->
@@ -154,29 +160,29 @@ class CartManager @Inject constructor(
     private suspend fun updateCartOnline(
         needUpdate: Map<Long, Int>,
         firstCart: Map<Long, Int>,
-    ) {
-        val cartItem = needUpdate.entries.firstOrNull() ?: return
-        if (needUpdate.size == 1 && firstCart[cartItem.key] != null) {
-            vodovozServiceRepository.updateProductInCart(cartItem.key, cartItem.value)
-                .singleResult().getOrThrow()
-        } else if (needUpdate.size == 1) {
-            vodovozServiceRepository.addProductToCart(cartItem.key, cartItem.value)
-                .singleResult().getOrThrow()
-        } else {
-            vodovozServiceRepository.addMultipleProductsToCart(formatCart(needUpdate))
-                .singleResult().getOrThrow()
-        }
+    ) = coroutineScope {
+        if (needUpdate.isEmpty()) return@coroutineScope
+
+        needUpdate.map { (productId, quantity) ->
+            async {
+                val exists = (firstCart[productId] ?: 0) > 0
+                val call = if (exists) {
+                    vodovozServiceRepository.updateProductInCart(productId, quantity)
+                } else {
+                    vodovozServiceRepository.addProductToCart(productId, quantity)
+                }
+                call.singleResult().getOrThrow()
+            }
+        }.awaitAll()
     }
 
     private suspend fun action(id: Long, count: Int, isInCart: Boolean/*, plus: Boolean*/) {
         if (!isInCart) {
             //tabManager.loadingAddToCart(true, plus = plus)
-            //repository.addProductToCart(id, count)
-            vodovozServiceRepository.addProductToCart(id, count).singleResult().getOrThrow()
+            repository.addProductToCart(id, count)
 
         } else {
-            vodovozServiceRepository.updateProductInCart(id, count).singleResult().getOrThrow()
-            //repository.changeProductsQuantityInCart(id, count)
+            repository.changeProductsQuantityInCart(id, count)
             //tabManager.loadingAddToCart(true, plus = true)
 
         }
@@ -190,9 +196,17 @@ class CartManager @Inject constructor(
 
 
     private suspend fun updateCarts(id: Long, count: Int) {
-
         carts[id] = count
         cartsStateListener.emit(carts)
+    }
+
+    suspend fun addProductWithGift(
+        productId: String,
+        giftId: String,
+    ) = coroutineScope.launch {
+        vodovozServiceRepository
+            .addMultipleProductsToCart("$productId;$giftId")
+            .singleResult()
     }
 
     //Service Details Products

@@ -55,6 +55,42 @@ fun VodovozButton(
     }
 }
 
+@Composable
+fun VodovozButtonSmall(
+    modifier: Modifier = Modifier,
+    isLoading: Boolean = false,
+    onClick: () -> Unit,
+    enabled: Boolean = true,
+    colors: ButtonColors = VodovozButtonDefaults.primaryColors(),
+    content: @Composable () -> Unit
+) {
+    FilledTonalButton(
+        modifier = modifier
+            .height(38.dp)
+            .fillMaxWidth(),
+        onClick = {
+            if (!isLoading) { onClick() }
+        },
+        colors = colors,
+        shape = MaterialTheme.shapes.large,
+        contentPadding = PaddingValues(horizontal = 16.dp),
+        enabled = enabled,
+        elevation = null
+    ) {
+        if (isLoading && enabled) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(24.dp),
+                strokeWidth = 2.dp,
+                color = MaterialTheme.colorScheme.background,
+                trackColor = Color.Transparent
+            )
+        } else {
+            content()
+        }
+    }
+}
+
+
 
 @Composable
 fun VodovozButton(

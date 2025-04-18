@@ -41,6 +41,7 @@ fun MultiProductBottomSheet(
     cartQuantity: Int,
     firstPrice: PriceUi,
     prices: List<PriceUi>,
+    totalPrice: Int,
     buttonIsLoading: Boolean,
     onDismissRequest: () -> Unit,
     onCartQuantityChange: (Int) -> Unit,
@@ -91,8 +92,6 @@ fun MultiProductBottomSheet(
                 }
             }
 
-            //todo - move to viewModel
-            val calculatedPrice = calculateProductPrice(cartQuantity, prices).roundToInt()
 
             Text(
                 modifier = Modifier
@@ -100,14 +99,13 @@ fun MultiProductBottomSheet(
                     .align(Alignment.CenterHorizontally),
                 text = stringResource(
                     R.string.price,
-                    calculatedPrice
+                    totalPrice
                 ),
                 color = if (!buttonIsLoading) MaterialTheme.colorScheme.onBackground else Color.Transparent,
                 style = MaterialTheme.typography.headlineMedium
             )
 
-            val savingPrice =
-                ((firstPrice.price * cartQuantity) - calculatedPrice).roundToInt()
+            val savingPrice = ((firstPrice.price * cartQuantity) - totalPrice).roundToInt()
                     .coerceAtLeast(0)
             Text(
                 modifier = Modifier

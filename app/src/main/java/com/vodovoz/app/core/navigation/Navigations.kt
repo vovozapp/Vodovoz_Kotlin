@@ -9,9 +9,9 @@ import com.vodovoz.app.design_system.model.ParentCategoryUi
 import com.vodovoz.app.design_system.model.filters.FilterUi
 import com.vodovoz.app.design_system.model.filters.FiltersUi
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
+import com.vodovoz.app.feature.cart.model.CartPresentPopupWindowUi
 import com.vodovoz.app.feature.home.model.CategoryUi
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
-import com.vodovoz.app.feature.profile.ProfileFragmentDirections
 
 
 private val ProfileNavOptions = NavOptions.Builder()
@@ -21,9 +21,32 @@ private val ProfileNavOptions = NavOptions.Builder()
     .build()
 
 
-//fun NavController.navigateTo
 
-fun NavController.navigateToAddresses(){
+fun NavController.navigateToAllBottles(){
+    navigate(
+        R.id.allBottlesFragment,
+        Bundle.EMPTY,
+        NavOptions.Builder()
+            .setEnterAnim(R.anim.slide_in_right)
+            .setExitAnim(R.anim.fade_out)
+            .setPopExitAnim(R.anim.slide_out_right)
+            .build()
+    )
+}
+
+fun NavController.navigateToGifts(popupWindow: CartPresentPopupWindowUi) {
+    navigate(
+        R.id.giftsFragment,
+        bundleOf("popupWindow" to popupWindow),
+        NavOptions.Builder()
+            .setEnterAnim(R.anim.slide_in_right)
+            .setExitAnim(R.anim.fade_out)
+            .setPopExitAnim(R.anim.slide_out_right)
+            .build()
+    )
+}
+
+fun NavController.navigateToAddresses() {
     navigate(R.id.savedAddressesDialogFragment, Bundle.EMPTY, ProfileNavOptions)
 }
 

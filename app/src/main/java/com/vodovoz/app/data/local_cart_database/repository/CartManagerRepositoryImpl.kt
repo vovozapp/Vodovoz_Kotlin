@@ -5,7 +5,7 @@ import com.vodovoz.app.data.local_cart_database.mappers.mapToData
 import com.vodovoz.app.data.local_cart_database.mappers.mapToDomain
 import com.vodovoz.app.data.local_cart_database.model.CartItemEntity
 import com.vodovoz.app.domain.general.model.CartBatchOperation
-import com.vodovoz.app.domain.general.model.CartItemModel
+import com.vodovoz.app.domain.general.model.CartManagerItemModel
 import com.vodovoz.app.domain.general.model.CartOperation
 import com.vodovoz.app.domain.general.respository.CartManagerRepository
 import kotlinx.coroutines.flow.first
@@ -22,7 +22,7 @@ class CartManagerRepositoryImpl @Inject constructor(
     private val mutex = Mutex()
 
 
-    override suspend fun getCartItems(): List<CartItemModel> {
+    override suspend fun getCartItems(): List<CartManagerItemModel> {
         return cartDao.getCarItems().first().mapToDomain()
     }
 
@@ -31,7 +31,7 @@ class CartManagerRepositoryImpl @Inject constructor(
     }
 
     override suspend fun addItems(
-        items: List<CartItemModel>,
+        items: List<CartManagerItemModel>,
         updateVersion: Boolean,
     ): CartBatchOperation = mutex.withLock {
         val newItems = items.mapToData()
@@ -43,7 +43,7 @@ class CartManagerRepositoryImpl @Inject constructor(
     }
 
     override suspend fun replaceItems(
-        items: List<CartItemModel>,
+        items: List<CartManagerItemModel>,
         updateVersion: Boolean,
     ): CartBatchOperation = mutex.withLock {
         val newItems = items.mapToData()

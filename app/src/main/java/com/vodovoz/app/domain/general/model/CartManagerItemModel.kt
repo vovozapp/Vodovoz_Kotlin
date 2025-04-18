@@ -1,11 +1,11 @@
 package com.vodovoz.app.domain.general.model
 
-data class CartItemModel(
+data class CartManagerItemModel(
     val productId: Long,
     val quantity: Int,
 )
 
-fun parseCartString(cartString: String): List<CartItemModel> {
+fun parseCartString(cartString: String): List<CartManagerItemModel> {
     return cartString.split(";")
         .mapNotNull {
             val parts = it.split("-")
@@ -13,13 +13,13 @@ fun parseCartString(cartString: String): List<CartItemModel> {
                 val productId = parts[0].toLongOrNull()
                 val quantity = parts[1].toIntOrNull()
                 if (productId != null && quantity != null) {
-                    CartItemModel(productId, quantity)
+                    CartManagerItemModel(productId, quantity)
                 } else null
             } else null
         }
 }
 
-fun formatCartItems(cartItems: List<CartItemModel>): String {
+fun formatCartItems(cartItems: List<CartManagerItemModel>): String {
     return cartItems.joinToString(";") { "${it.productId}-${it.quantity}" }
 }
 
@@ -36,5 +36,5 @@ data class CartOperation(
 
 data class CartBatchOperation(
     val cartVersion: Long,
-    val items: List<CartItemModel>
+    val items: List<CartManagerItemModel>
 )

@@ -294,4 +294,29 @@
     <string name="supporting_text_lastname">Фамилия должна содержать от 3 до 30 символов и не быть пустой.</string>
     <string name="supporting_text_password">Пароль должен содержать более 6 символов.</string>
 
+    <string name="clear_cart">Очистить корзину</string>
+    <string name="product_end">Товар закончился</string>
+
+    <string name="place_order">Оформить заказ</string>
+
+    <string name="clear_cart_title">Очистка корзины</string>
+    <string name="clear_cart_description">Вы уверены, что хотите очистить корзину?</string>
+    <string name="clear_cart_accept_text">Очистить</string>
+    <string name="clear_cart_cancel_text">Отмена</string>
+
+    <string name="delete_item_title">Удаление товара</string>
+    <string name="delete_item_description">Вы уверены, что хотите удалить выбранный товар из корзины?</string>
+    <string name="delete_item_accept_text">Удалить</string>
+    <string name="delete_item_cancel_text">Отмена</string>
+
+    <string name="order_total">Итого</string>
+    <string name="order_deposit">Залог</string>
+    <string name="order_gift">Подарок</string>
+    <string name="order_discount">Скидка</string>
+    <string name="products_of_sum">Товаров на сумму</string>
+
+    <string name="choose_present">Выберите подарок</string>
+    <string name="zero_with_rub">0 ₽</string>
+    <string name="bottles_brand">Бренд бутылей</string>
+    <string name="add_to_cart">Добавить в корзину</string>
 </resources>

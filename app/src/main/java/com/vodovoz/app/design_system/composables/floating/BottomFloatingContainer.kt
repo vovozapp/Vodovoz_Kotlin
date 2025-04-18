@@ -11,7 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.vodovoz.app.feature.home.composables.dropShadow
 
 @Composable
 fun BottomFloatingContainer(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
@@ -25,7 +27,8 @@ fun BottomFloatingContainer(modifier: Modifier = Modifier, content: @Composable 
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .shadow(10.dp, buttonShape)
+            .dropShadow(buttonShape, Color.Black.copy(0.14f), 14.dp, 3.dp)
+            .dropShadow(buttonShape, Color.Black.copy(0.14f), 10.dp, 4.dp)
             .background(
                 color = MaterialTheme.colorScheme.background,
                 shape = buttonShape

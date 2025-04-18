@@ -15,11 +15,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.vodovoz.app.design_system.VodovozTheme
+import com.vodovoz.app.feature.home.composables.dropShadow
 import kotlinx.coroutines.delay
 
 @Composable
@@ -38,7 +37,7 @@ fun VodovozSnackbar(
         modifier = modifier
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .fillMaxWidth()
-            .shadow(5.dp, MaterialTheme.shapes.large)
+            .dropShadow(shape = MaterialTheme.shapes.large, blur = 10.dp, offsetY = 4.dp)
             .background(MaterialTheme.colorScheme.primaryContainer, MaterialTheme.shapes.large)
             .padding(horizontal = 16.dp, vertical = 8.dp),
         contentAlignment = Alignment.Center

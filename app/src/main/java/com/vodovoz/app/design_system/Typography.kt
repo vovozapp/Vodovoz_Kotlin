@@ -240,6 +240,20 @@ val extendedTypography = ExtendedTypography(
             includeFontPadding = false
         ),
         fontWeight = FontWeight.Medium
+    ),
+    labelSmallVariant = TextStyle(
+        fontSize = 11.sp,
+        lineHeight = 16.sp,
+        fontFamily = robotoFontFamily,
+        letterSpacing = 0.25.sp,
+        lineHeightStyle = LineHeightStyle(
+            LineHeightStyle.Alignment.Center,
+            LineHeightStyle.Trim.None
+        ),
+        platformStyle = PlatformTextStyle(
+            includeFontPadding = false
+        ),
+        fontWeight = FontWeight.Normal
     )
 )
 
@@ -249,6 +263,7 @@ class ExtendedTypography(
     val labelExtraSmall: TextStyle = TextStyle.Default,
     val labelExtraSmallVariant: TextStyle = TextStyle.Default,
     val labelMediumVariant: TextStyle = TextStyle.Default,
+    val labelSmallVariant: TextStyle = TextStyle.Default
 )
 
 val LocalExtendedTypography =

@@ -1,6 +1,7 @@
 package com.vodovoz.app.data.vodovoz_service
 
 import com.vodovoz.app.BuildConfig
+import com.vodovoz.app.data.vodovoz_service.model.AllBottlesDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.AnalogsSectionDTO
 import com.vodovoz.app.data.vodovoz_service.model.BannerDTO
 import com.vodovoz.app.data.vodovoz_service.model.BrandSectionDTO
@@ -26,10 +27,11 @@ import com.vodovoz.app.data.vodovoz_service.model.StoriesDTO
 import com.vodovoz.app.data.vodovoz_service.model.SuperTopAndBottomSectionsDTO
 import com.vodovoz.app.data.vodovoz_service.model.VodovozErrorResponseDTO
 import com.vodovoz.app.data.vodovoz_service.model.VodovozResponseDTO
-import com.vodovoz.app.data.vodovoz_service.model.catalog.CatalogDetailsDTO
-import com.vodovoz.app.data.vodovoz_service.model.filters.FiltersDTO
 import com.vodovoz.app.data.vodovoz_service.model.auth.LoginDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.auth.UserAuthInfoDTO
+import com.vodovoz.app.data.vodovoz_service.model.cart.CartDetailsDTO
+import com.vodovoz.app.data.vodovoz_service.model.catalog.CatalogDetailsDTO
+import com.vodovoz.app.data.vodovoz_service.model.filters.FiltersDTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.ProductDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.profile.ProfileDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.unrated_products.UnratedProductsSectionDTO
@@ -62,7 +64,7 @@ interface VodovozService {
     @GET("brand.php?action=brand")
     suspend fun getBrands(
         @Query("nav") page: Int? = null,
-        @Query("search") search: String? = null
+        @Query("search") search: String? = null,
     ): Response<VodovozResponseDTO<BrandSectionDTO>>
 
 
@@ -230,6 +232,12 @@ interface VodovozService {
     /**
      * Cart requests
      * */
+    @GET("korzina/index.php?action=getbasket")
+    suspend fun getCartDetails(
+        @Query("userid") userId: Long? = null,
+        @Query("coupon") coupon: String? = null
+    ): Response<VodovozResponseDTO<CartDetailsDTO>>
+
     @GET("korzina/function/add/index.php?action=add")
     suspend fun addProductToCart(
         @Query("id") productId: Long,
@@ -252,8 +260,11 @@ interface VodovozService {
         @Query("quantity") quantity: Int,
     ): Response<VodovozResponseDTO<String>>
 
-    @GET("newmobile_new/korzina/function/delkorzina/index.php?action=delkorzina")
-    suspend fun clearCart(): Response<VodovozResponseDTO<String>>
+    @GET("korzina/index.php?action=delbasket")
+    suspend fun clearCart(): Response<Unit>
+
+    @GET("korzina/brand.php?iblock_id=90")
+    suspend fun getAllBottles(): Response<VodovozResponseDTO<AllBottlesDetailsDTO>>
 
 
     /**
@@ -278,7 +289,7 @@ interface VodovozService {
 
     @GET("details/podarki.php?action=podarki")
     suspend fun getPresentInfo(
-        @Query("userid") userId: String,
+        @Query("userid") userId: Long,
     ): Response<VodovozResponseDTO<PresentDTO>>
 
     /**
@@ -299,7 +310,7 @@ interface VodovozService {
     suspend fun getPromotionsWithSections(
         @Query("nav") page: Int = 1,
         @Query("limit") limit: Int = 10,
-        @Query("sect") categoryId: Int? = null
+        @Query("sect") categoryId: Int? = null,
     ): Response<VodovozResponseDTO<PromotionsDTO>>
 
     @GET("glavnaya/akcii.php?action=detail")
@@ -323,7 +334,7 @@ interface VodovozService {
         @Query("nav") page: Int = 1,
         @Query("sort") sort: String = "",
         @Query("ascdesc") order: String = "",
-        @Query("sect") categoryId: Int? = null
+        @Query("sect") categoryId: Int? = null,
     ): Response<VodovozResponseDTO<ProductsSectionDTO>>
 
     @GET("osnova/banners.php")
@@ -331,7 +342,7 @@ interface VodovozService {
         @Query("id") bannerId: Long,
         @Query("iblock") blockId: Long,
         @Query("nav") page: Int = 1,
-        @Query("sect") categoryId: Int? = null
+        @Query("sect") categoryId: Int? = null,
     ): Response<VodovozResponseDTO<PromotionsDTO>>
 
     @GET("glavnaya/otzivtovari.php?action=tovarglav")

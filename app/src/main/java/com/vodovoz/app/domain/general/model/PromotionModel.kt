@@ -59,6 +59,7 @@ data class PromotionDetailsModel(
 data class LabelModel(
     val name: String,
     val colorHex: String,
+    val backgroundHex: String = ""
 )
 
 fun emptyLabelModel() = LabelModel("", "")

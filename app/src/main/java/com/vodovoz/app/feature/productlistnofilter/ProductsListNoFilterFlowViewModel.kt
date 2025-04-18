@@ -401,7 +401,6 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
     }
 
     suspend fun listProductLoadings() = uiStateListener.map { state -> state.data.products }
-        .distinctUntilChanged()
         .combine(cartManager.blockedProductsState) { _, blockedProducts ->
             blockedProducts
         }.collectLatest { blockedProducts ->
@@ -413,17 +412,17 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
         }
 
     suspend fun listenCart() =
-        uiStateListener.map { state -> state.data.products }
-            .distinctUntilChanged()
-            .combine(cartManager.observeCarts()) { _, cart ->
-                cart
-            }.collectLatest { cart ->
-                uiStateListener.updateData { s ->
-                    s.copy(
-                        products = s.products.withUpdatedCart(cart)
-                    )
-                }
+        uiStateListener.map { state ->
+            state.data.products
+        }.combine(cartManager.observeCarts()) { _, cart ->
+            cart
+        }.collectLatest { cart ->
+            uiStateListener.updateData { s ->
+                s.copy(
+                    products = s.products.withUpdatedCart(cart)
+                )
             }
+        }
 
     private fun listenFavorites() = viewModelScope.launch {
         uiStateListener.map { pagingState -> pagingState.data.products }
@@ -519,7 +518,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
                 s.copy(categoryTree = bottomSheetCategories)
             }
         }.onFailure {
-            if(dataState.categoryTree.isEmpty()) {
+            if (dataState.categoryTree.isEmpty()) {
                 uiStateListener.updateData { s ->
                     s.copy(showCategoriesBottomSheet = false)
                 }

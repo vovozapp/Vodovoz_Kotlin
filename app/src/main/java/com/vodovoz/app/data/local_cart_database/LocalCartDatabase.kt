@@ -6,8 +6,8 @@ import com.vodovoz.app.data.local_cart_database.model.CartEntity
 import com.vodovoz.app.data.local_cart_database.model.CartItemEntity
 
 
-@Database(entities = [CartEntity::class, CartItemEntity::class], version = 1)
-abstract class LocalCartDatabase: RoomDatabase() {
+@Database(entities = [CartEntity::class, CartItemEntity::class], exportSchema = false, version = 1)
+abstract class LocalCartDatabase : RoomDatabase() {
 
     abstract fun cartDao(): CartDao
 

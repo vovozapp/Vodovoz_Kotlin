@@ -2,6 +2,7 @@ package com.vodovoz.app.data.vodovoz_service.mappers
 
 import com.vodovoz.app.data.vodovoz_service.di.toFullUrl
 import com.vodovoz.app.data.vodovoz_service.model.COMMENT_DTO
+import com.vodovoz.app.data.vodovoz_service.model.PresentDTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.BLOCK_KNOPKA_DATA_DTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.BLOCK_KNOPKA_VALUE_DTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.BLOCK_RAZDEL_DTO
@@ -28,7 +29,6 @@ import com.vodovoz.app.data.vodovoz_service.model.product_details.TAGS_DTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.TOVAR_DETAIL_DTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.TOVAR_DETAIL_TEXT_DTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.ZALOG_DTO
-import com.vodovoz.app.design_system.model.ProductVideoUi
 import com.vodovoz.app.domain.general.model.BlockPromoDataModel
 import com.vodovoz.app.domain.general.model.BrandCategoryBlockModel
 import com.vodovoz.app.domain.general.model.BrandCategoryItemDataModel
@@ -45,6 +45,7 @@ import com.vodovoz.app.domain.general.model.DepositModel
 import com.vodovoz.app.domain.general.model.DesignBlockModel
 import com.vodovoz.app.domain.general.model.DocumentModel
 import com.vodovoz.app.domain.general.model.OldNewPriceModel
+import com.vodovoz.app.domain.general.model.PresentInfoModel
 import com.vodovoz.app.domain.general.model.ProductDetailsButtonsModel
 import com.vodovoz.app.domain.general.model.ProductDetailsModel
 import com.vodovoz.app.domain.general.model.ProductDetailsMoreProducts
@@ -54,6 +55,10 @@ import com.vodovoz.app.domain.general.model.ProductVideoModel
 import com.vodovoz.app.domain.general.model.PromoProductModel
 import com.vodovoz.app.domain.general.model.SectionModel
 import com.vodovoz.app.domain.general.model.WebsiteErrorException
+
+fun PresentDTO.toDomain(): PresentInfoModel {
+    return PresentInfoModel(html = TEXT ?: "")
+}
 
 private fun BLOCK_RAZDEL_DTO.toDomain(): BrandCategoryBlockModel {
     return BrandCategoryBlockModel(

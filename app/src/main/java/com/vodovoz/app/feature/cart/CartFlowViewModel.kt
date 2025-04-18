@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.cart
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
@@ -8,11 +9,28 @@ import com.vodovoz.app.common.content.Event
 import com.vodovoz.app.common.content.PagingContractViewModel
 import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
+import com.vodovoz.app.common.content.updateData
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.cart.MessageTextBasket
+import com.vodovoz.app.design_system.model.ErrorDataUi
+import com.vodovoz.app.design_system.model.toUi
+import com.vodovoz.app.domain.general.model.EmptyResultException
+import com.vodovoz.app.domain.general.model.cart.CartOrderSummaryUi
+import com.vodovoz.app.domain.general.model.cart.toUi
+import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
+import com.vodovoz.app.feature.cart.model.CartButtonUi
+import com.vodovoz.app.feature.cart.model.CartItemUi
+import com.vodovoz.app.feature.cart.model.CartPresentItemUi
+import com.vodovoz.app.feature.cart.model.CartPresentPopupWindowUi
+import com.vodovoz.app.feature.cart.model.CartPresentUi
+import com.vodovoz.app.feature.cart.model.CartPromoButtonUi
+import com.vodovoz.app.feature.cart.model.mapToUi
+import com.vodovoz.app.feature.cart.model.toUi
+import com.vodovoz.app.feature.cart.model.withUpdatedCart
+import com.vodovoz.app.feature.cart.model.withUpdatedFavorites
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.CartAvailableProducts
 import com.vodovoz.app.feature.cart.viewholders.cartempty.CartEmpty
 import com.vodovoz.app.feature.cart.viewholders.cartnotavailableproducts.CartNotAvailableProducts
@@ -25,12 +43,16 @@ import com.vodovoz.app.ui.model.custom.GiftProductUI
 import com.vodovoz.app.util.CalculatedPrices
 import com.vodovoz.app.util.calculatePrice
 import com.vodovoz.app.util.extensions.debugLog
+import com.vodovoz.app.util.extensions.singleResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -42,40 +64,116 @@ class CartFlowViewModel @Inject constructor(
     private val likeManager: LikeManager,
     private val ratingProductManager: RatingProductManager,
     private val accountManager: AccountManager,
+    private val vodovozServiceRepository: VodovozServiceRepository,
 ) : PagingContractViewModel<CartFlowViewModel.CartState, CartFlowViewModel.CartEvents>(CartState()) {
 
     init {
+        viewModelScope.launch { listenCart() }
         viewModelScope.launch {
-            cartManager
-                .observeUpdateCartList()
-                .collect { newCart ->
-                    if (newCart) {
-                        refresh()
-                        cartManager.updateCartListState(false)
-                    }
+            cartManager.observeUpdateCartList().collectLatest { newCart ->
+                if (newCart) {
+                    refresh()
+                    cartManager.updateCartListState(false)
                 }
+            }
+        }
+    }
+
+    suspend fun listenCart() =
+        uiStateListener.map { it.data.cartItems }.combine(cartManager.observeCarts()) { _, cart ->
+            cart
+        }.collectLatest { cart ->
+            uiStateListener.updateData { s ->
+                s.copy(cartItems = s.cartItems.withUpdatedCart(cart))
+            }
+        }
+
+
+    suspend fun listenFavorites() {
+        uiStateListener.map { it.data.cartItems }
+            .combine(likeManager.observeLikes()) { _, favorites ->
+                favorites
+            }.collectLatest { favorites ->
+                uiStateListener.updateData { s ->
+                    s.copy(cartItems = s.cartItems.withUpdatedFavorites(favorites))
+                }
+            }
+    }
+
+    fun fetchCartDetails() = viewModelScope.launch {
+        if (dataState.uiState is CartUiState.Empty || dataState.uiState == CartUiState.Error) {
+            uiStateListener.updateData { s -> s.copy(uiState = CartUiState.Loading) }
+        }
+
+        val cartDetailsResult = vodovozServiceRepository.getCartDetails(
+            dataState.promoCode
+        ).singleResult()
+
+        cartDetailsResult.onSuccess { cartDetails ->
+            val cartItems = cartDetails.items.mapToUi()
+            uiStateListener.updateData { s ->
+                s.copy(
+                    title = cartDetails.title,
+                    countText = cartDetails.countText,
+                    cartItems = cartDetails.items.mapToUi(),
+                    present = cartDetails.present?.toUi(),
+                    bottlesButton = cartDetails.bottlesButton?.toUi(),
+                    promotionalCodeButton = cartDetails.promotionalCodeButton?.toUi(),
+                    presentButton = cartDetails.presentButton?.toUi(),
+                    uiState = CartUiState.Cart,
+                    orderSummary = cartDetails.orderSummary.toUi()
+                )
+            }
+
+
+            cartManager.syncCart(
+                cartItems.associate { item -> item.productId to item.quantity }
+            )
+
+        }.onFailure { t ->
+            val uiState = when (t) {
+                is EmptyResultException -> {
+                    CartUiState.Empty(errorData = t.errorData?.toUi() ?: ErrorDataUi.Empty)
+                }
+
+                else -> {
+                    CartUiState.Error
+                }
+            }
+            uiStateListener.updateData { s ->
+                s.copy(uiState = uiState)
+            }
         }
     }
 
     fun firstLoad() {
         if (!state.isFirstLoad) {
             uiStateListener.value = state.copy(isFirstLoad = true, loadingPage = true)
+            fetchCartDetails()
             fetchCart()
         }
     }
 
-    fun refresh() {
-        uiStateListener.value = state.copy(loadingPage = true)
-        fetchCart(state.data.coupon)
+    fun refresh() = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(showRefreshIndicator = true)
+        }
+        fetchCartDetails().join()
+        uiStateListener.updateData { s ->
+            s.copy(showRefreshIndicator = false)
+        }
     }
 
     fun refreshIdle() {
         uiStateListener.value = state.copy(loadingPage = true, data = CartState())
+        fetchCartDetails()
         fetchCart(state.data.coupon)
     }
 
     fun fetchCart(coupon: String? = null) {
 
+        //todo - remove return
+        return
         viewModelScope.launch {
             val userId = accountManager.fetchAccountId()
             uiStateListener.value = state.copy(loadingPage = true)
@@ -160,26 +258,45 @@ class CartFlowViewModel @Inject constructor(
         }
     }
 
-    fun clearCart() {
-        viewModelScope.launch {
-            flow { emit(repository.fetchClearCartResponse(action = "delkorzina")) }
-                .onEach { response ->
-                    if (response is ResponseEntity.Success) {
-                        uiStateListener.value = state.copy(data = CartState(), false)
-                        cartManager.clearCart()
-                        fetchCart(state.data.coupon) //todo
-                    } else {
-                        uiStateListener.value = state.copy(loadingPage = false)
-                    }
-                }
-                .flowOn(Dispatchers.Default)
-                .catch {
-                    debugLog { "clear cart error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
-                .collect()
+    fun showClearCartDialog() = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(showClearCartDialog = true)
         }
+    }
+
+    fun clearCart() = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(blockCart = true, showClearCartDialog = false)
+        }
+        val clearCartResult = vodovozServiceRepository.clearCart().singleResult()
+
+        clearCartResult.onSuccess {
+            cartManager.clearCart()
+        }
+
+        uiStateListener.updateData { s ->
+            s.copy(blockCart = false)
+        }
+
+//        viewModelScope.launch {
+//            flow { emit(repository.fetchClearCartResponse(action = "delkorzina")) }
+//                .onEach { response ->
+//                    if (response is ResponseEntity.Success) {
+//                        uiStateListener.value = state.copy(data = CartState(), false)
+//                        cartManager.clearCart()
+//                        fetchCart(state.data.coupon) //todo
+//                    } else {
+//                        uiStateListener.value = state.copy(loadingPage = false)
+//                    }
+//                }
+//                .flowOn(Dispatchers.Default)
+//                .catch {
+//                    debugLog { "clear cart error ${it.localizedMessage}" }
+//                    uiStateListener.value =
+//                        state.copy(error = it.toErrorState(), loadingPage = false)
+//                }
+//                .collect()
+//        }
     }
 
     fun isLoginAlready() = accountManager.isAlreadyLogin()
@@ -247,7 +364,7 @@ class CartFlowViewModel @Inject constructor(
             if (id == null) {
                 eventListener.emit(CartEvents.NavigateToProfile)
             } else {
-                eventListener.emit(CartEvents.NavigateToGifts(state.data.giftProductUI))
+                //eventListener.emit(CartEvents.NavigateToGifts(state.data.giftProductUI))
             }
         }
     }
@@ -287,6 +404,124 @@ class CartFlowViewModel @Inject constructor(
         uiStateListener.value = state.copy(data = state.data.copy(coupon = ""))
     }
 
+    fun navigateToProductDetails(cartItem: CartItemUi) = viewModelScope.launch {
+        eventListener.emit(CartEvents.GoToProductDetails(cartItem.productId))
+    }
+
+    fun incrementCartItem(cartItem: CartItemUi) = viewModelScope.launch {
+        cartManager.change(cartItem.productId, cartItem.quantity + 1)
+    }
+
+    fun decrementCartItem(cartItem: CartItemUi) = viewModelScope.launch {
+        cartManager.change(cartItem.productId, cartItem.quantity - 1)
+    }
+
+    fun changeFavorite(cartItem: CartItemUi) = viewModelScope.launch {
+        likeManager.changeFavorite(cartItem.productId, !cartItem.isFavorite)
+    }
+
+    fun navigateToCatalog() = viewModelScope.launch {
+        eventListener.emit(CartEvents.GoToCatalog)
+    }
+
+    fun closeClearCartDialog() = viewModelScope.launch {
+        uiStateListener.updateData { s -> s.copy(showClearCartDialog = false) }
+    }
+
+    fun showTrashDialog(cartItem: CartItemUi) = viewModelScope.launch {
+        //todo - update delete logic by ZAPRET_FISHKAM
+        uiStateListener.updateData { s ->
+            s.copy(
+                showRemoveItemDialog = true,
+                currentRemoveItem = cartItem
+            )
+        }
+    }
+
+    fun closeTrashDialog() = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(showRemoveItemDialog = false)
+        }
+    }
+
+    fun removeCartItem(currentRemoveItem: CartItemUi) = viewModelScope.launch {
+        uiStateListener.updateData { s -> s.copy(blockCart = true, showRemoveItemDialog = false) }
+
+        vodovozServiceRepository.updateProductInCart(currentRemoveItem.productId, 0).singleResult()
+        fetchCartDetails().join()
+
+        uiStateListener.updateData { s ->
+            s.copy(blockCart = false)
+        }
+    }
+
+    fun showPromotionCodeBottomSheet() = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(showPromotionCodeBottomSheet = true)
+        }
+    }
+
+    fun changePromoCode(newValue: String) = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+
+            val promoButton = s.promotionalCodeButton
+            s.copy(
+                promoCode = newValue,
+                promotionalCodeButton = promoButton?.copy(
+                    popupWindow = promoButton.popupWindow.copy(
+                        errorText = null
+                    )
+                )
+            )
+        }
+    }
+
+    fun closePromoCodeBottomSheet() = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(showPromotionCodeBottomSheet = false, promoCode = "")
+        }
+    }
+
+    fun applyPromoCode() = viewModelScope.launch {
+        fetchCartDetails().join()
+
+        val correctCoupon = dataState.promotionalCodeButton?.coupon
+        if (correctCoupon.isNullOrEmpty()) {
+            return@launch
+        }
+
+        uiStateListener.updateData { s ->
+            s.copy(showPromotionCodeBottomSheet = false, promoCode = correctCoupon)
+        }
+    }
+
+    fun navigateToGifts() = viewModelScope.launch {
+        val userId = accountManager.fetchAccountId()
+        if (userId == null) {
+            eventListener.emit(CartEvents.NavigateToProfile)
+        } else {
+            val popupWindow = dataState.present?.popupWindow ?: return@launch
+            if(popupWindow.items.isEmpty()) return@launch
+
+            eventListener.emit(CartEvents.NavigateToGifts(popupWindow))
+        }
+    }
+
+    fun addGiftToCart(presentItem: CartPresentItemUi) = viewModelScope.launch {
+        uiStateListener.updateData { s -> s.copy(blockCart = true) }
+
+        vodovozServiceRepository.addProductToCart(presentItem.id, 1).singleResult()
+        fetchCartDetails().join()
+
+        uiStateListener.updateData { s -> s.copy(blockCart = false) }
+
+    }
+
+    fun navigateToAllBottles() = viewModelScope.launch {
+        eventListener.emit(CartEvents.GoToAllBottles)
+    }
+
+    @Immutable
     data class CartState(
         val coupon: String = "",
         val infoMessage: MessageTextBasket? = null,
@@ -298,7 +533,32 @@ class CartFlowViewModel @Inject constructor(
         val bestForYouTitle: HomeTitle? = null,
         val bestForYouProducts: CategoryDetailUI? = null,
         val cartEmpty: CartEmpty = CartEmpty(CART_EMPTY_ID),
-    ) : State
+
+        val title: String = "",
+        val countText: String = "",
+        val uiState: CartUiState = CartUiState.Loading,
+        val cartItems: List<CartItemUi> = emptyList(),
+        val present: CartPresentUi? = null,
+        val bottlesButton: CartButtonUi? = null,
+        val promotionalCodeButton: CartPromoButtonUi? = null,
+        val presentButton: CartButtonUi? = null,
+        val showClearCartDialog: Boolean = false,
+        val showRemoveItemDialog: Boolean = false,
+        val currentRemoveItem: CartItemUi? = null,
+        val showRefreshIndicator: Boolean = false,
+        val blockCart: Boolean = false,
+        val orderSummary: CartOrderSummaryUi = CartOrderSummaryUi.Empty,
+        val showPromotionCodeBottomSheet: Boolean = false,
+        val promoCode: String = "",
+    ) : State {
+    }
+
+    sealed interface CartUiState {
+        data object Loading : CartUiState
+        data object Cart : CartUiState
+        data class Empty(val errorData: ErrorDataUi) : CartUiState
+        data object Error : CartUiState
+    }
 
 
     sealed class CartEvents : Event {
@@ -309,10 +569,15 @@ class CartFlowViewModel @Inject constructor(
             val coupon: String,
         ) : CartEvents()
 
-        data class NavigateToGifts(val giftProducts: GiftProductUI?) : CartEvents()
-        object NavigateToProfile : CartEvents()
+        data class NavigateToGifts(val popupWindow: CartPresentPopupWindowUi) : CartEvents()
+        data object NavigateToProfile : CartEvents()
+        data object GoToCatalog : CartEvents()
+        data object GoToAllBottles : CartEvents()
+
         data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) :
             CartEvents()
+
+        data class GoToProductDetails(val productId: Long) : CartEvents()
     }
 
     companion object {

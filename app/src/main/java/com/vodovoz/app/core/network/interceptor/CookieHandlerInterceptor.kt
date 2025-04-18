@@ -34,7 +34,7 @@ class CookieHandlerInterceptor @Inject constructor(
             val setCookie = originalResponse.headers.values("Set-Cookie")
             if (setCookie.isNotEmpty()) {
                 cookieManager.updateCookieSessionId(
-                    originalResponse.headers.values("Set-Cookie").firstOrNull { it.contains("PHPSESSID") }
+                    setCookie.firstOrNull { s -> s.startsWith("PHPSESSID=") }
                 )
             }
         }

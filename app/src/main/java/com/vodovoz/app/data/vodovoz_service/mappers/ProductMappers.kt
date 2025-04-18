@@ -76,7 +76,7 @@ fun TOVAR_DATA_DTO.toDomain(): ProductModel? {
         coefficient = KOFFICIENT?.toFloat() ?: 1f,
         quantity = CATALOG_QUANTITY ?: 0,
         firstPrice = EXTENDED_PRICE?.firstOrNull()?.toDomain() ?: return null,
-        prices = EXTENDED_PRICE.mapNotNull { it?.toDomain() } ?: return null,
+        prices = EXTENDED_PRICE.mapNotNull { it?.toDomain() },
         labels = NALICHIE_MORE?.mapToDomain() ?: emptyList(),
         cartQuantity = 0
     )
@@ -97,7 +97,17 @@ fun List<NALICHIE_MORE_DTO?>.mapToDomain(): List<LabelModel> {
         labelDTO ?: return@mapNotNull null
         LabelModel(
             name = labelDTO.NAME ?: return@mapNotNull null,
-            colorHex = labelDTO.CVET ?: return@mapNotNull null
+            colorHex = labelDTO.CVET ?: return@mapNotNull null,
+            backgroundHex = labelDTO.BACKGROUND ?: return@mapNotNull null
         )
     }
+}
+
+fun NALICHIE_MORE_DTO.toDomain(): LabelModel{
+    return LabelModel(
+        name = NAME ?: "",
+        colorHex = CVET ?: "",
+        backgroundHex = BACKGROUND ?: ""
+    )
+
 }

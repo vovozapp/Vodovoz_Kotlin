@@ -1,22 +1,22 @@
 package com.vodovoz.app.domain.general.respository
 
 import com.vodovoz.app.domain.general.model.CartBatchOperation
-import com.vodovoz.app.domain.general.model.CartItemModel
+import com.vodovoz.app.domain.general.model.CartManagerItemModel
 import com.vodovoz.app.domain.general.model.CartOperation
 
 interface CartManagerRepository {
 
-    suspend fun getCartItems(): List<CartItemModel>
+    suspend fun getCartItems(): List<CartManagerItemModel>
 
     suspend fun getCartVersion(): Long
 
     suspend fun addItems(
-        items: List<CartItemModel>,
+        items: List<CartManagerItemModel>,
         updateVersion: Boolean = true,
     ): CartBatchOperation
 
     suspend fun replaceItems(
-        items: List<CartItemModel>,
+        items: List<CartManagerItemModel>,
         updateVersion: Boolean = true,
     ): CartBatchOperation
 

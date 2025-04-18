@@ -1,6 +1,7 @@
 package com.vodovoz.app.domain.general.respository
 
 import androidx.paging.PagingData
+import com.vodovoz.app.domain.general.AllBottlesDetailsModel
 import com.vodovoz.app.domain.general.model.BannerModel
 import com.vodovoz.app.domain.general.model.BrandModel
 import com.vodovoz.app.domain.general.model.BrandSectionModel
@@ -16,6 +17,7 @@ import com.vodovoz.app.domain.general.model.ParentCategoryModel
 import com.vodovoz.app.domain.general.model.PopularCategoryModel
 import com.vodovoz.app.domain.general.model.PopupWindowInfoModel
 import com.vodovoz.app.domain.general.model.PreOrderSectionModel
+import com.vodovoz.app.domain.general.model.PresentInfoModel
 import com.vodovoz.app.domain.general.model.ProductCommentsInfoModel
 import com.vodovoz.app.domain.general.model.ProductDetailsScreenModel
 import com.vodovoz.app.domain.general.model.ProductModel
@@ -33,6 +35,7 @@ import com.vodovoz.app.domain.general.model.StoryModel
 import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
 import com.vodovoz.app.domain.general.model.UnratedProductsSectionModel
 import com.vodovoz.app.domain.general.model.UserDataModel
+import com.vodovoz.app.domain.general.model.cart.CartDetailsModel
 import com.vodovoz.app.domain.general.model.login.AuthDetailsModel
 import com.vodovoz.app.domain.general.model.login.UserAuthInfoModel
 import com.vodovoz.app.feature.preorder.model.FieldUi
@@ -40,6 +43,8 @@ import kotlinx.coroutines.flow.Flow
 import java.io.File
 
 interface VodovozServiceRepository {
+
+    fun getAllBottles(): Flow<Result<AllBottlesDetailsModel>>
 
     fun getBrands(
         searchQuery: String = ""
@@ -185,6 +190,10 @@ interface VodovozServiceRepository {
         productId: Long,
     ): Flow<Result<String>>
 
+    suspend fun getCartDetails(
+        coupon: String? = null
+    ): Flow<Result<CartDetailsModel>>
+
     suspend fun addProductToCart(
         productId: Long,
         quantity: Int,
@@ -221,6 +230,8 @@ interface VodovozServiceRepository {
     ): Flow<PagingData<CommentModel>>
 
     fun getProductDetails(productId: Long): Flow<Result<ProductDetailsScreenModel>>
+
+    fun getPresentInfo(): Flow<Result<PresentInfoModel>>
 
     fun getPopupWindowInfo(): Flow<Result<PopupWindowInfoModel>>
 

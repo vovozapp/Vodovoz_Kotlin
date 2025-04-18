@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -23,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -149,7 +149,12 @@ fun VodovozColorChip(modifier: Modifier = Modifier, color: Color, text: String) 
 }
 
 @Composable
-fun VodovozColorChipSmall(modifier: Modifier = Modifier, color: Color, text: String) {
+fun VodovozColorChipSmall(
+    modifier: Modifier = Modifier,
+    color: Color,
+    text: String,
+    textColor: Color = Color.Unspecified,
+) {
     Box(
         modifier = modifier
             .widthIn(30.dp)
@@ -165,7 +170,7 @@ fun VodovozColorChipSmall(modifier: Modifier = Modifier, color: Color, text: Str
             text = text,
             modifier = Modifier.padding(horizontal = 5.dp),
             style = textStyle.copy(lineHeight = textStyle.fontSize),
-            color = MaterialTheme.colorScheme.background
+            color = textColor.takeOrElse { MaterialTheme.colorScheme.background }
         )
     }
 }

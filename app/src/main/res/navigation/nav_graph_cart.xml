@@ -6,6 +6,17 @@
     app:startDestination="@id/cartFragment">
 
     <fragment
+        android:id="@+id/giftsFragment"
+        android:name="com.vodovoz.app.feature.cart.gifts.GiftsFragment"
+        android:label="GiftsFragment">
+
+        <argument
+            android:name="popupWindow"
+            app:argType="com.vodovoz.app.feature.cart.model.CartPresentPopupWindowUi" />
+
+    </fragment>
+
+    <fragment
         android:id="@+id/preOrderFragment"
         android:name="com.vodovoz.app.feature.preorder.PreOrderFragment"
         android:label="PreOrderFragment">

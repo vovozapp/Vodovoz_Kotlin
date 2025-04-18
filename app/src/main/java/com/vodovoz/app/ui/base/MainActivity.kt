@@ -17,6 +17,7 @@ import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.databinding.ActivityMainBinding
 import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.util.extensions.debugLog
+import com.vodovoz.app.util.extensions.enableFullScreen
 import com.vodovoz.app.util.extensions.snack
 import com.yandex.mapkit.MapKitFactory
 import dagger.hilt.android.AndroidEntryPoint
