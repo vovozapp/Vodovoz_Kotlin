@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.cart.gifts
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.design_system.composables.button.VodovozButton
 import com.vodovoz.app.design_system.composables.button.VodovozRadioButton
 import com.vodovoz.app.design_system.composables.top_bar.VodovozTopBar
+import com.vodovoz.app.feature.cart.composables.CartPresentCard
 import com.vodovoz.app.feature.cart.gifts.model.GiftsState
 import com.vodovoz.app.feature.cart.model.CartPresentItemUi
 
@@ -52,26 +54,38 @@ fun GiftsScreen(viewModel: GiftsViewModel, viewState: GiftsState) {
             modifier = Modifier
                 .weight(1f)
                 .verticalScroll(rememberScrollState())
-                .padding(vertical = 24.dp)
+                .padding(bottom = 24.dp, top = 8.dp)
         ) {
+            val present = viewState.present
+            if (present != null && present.button == null) {
+                CartPresentCard(
+                    modifier = Modifier
+                        .padding(bottom = 24.dp, start = 16.dp, end = 16.dp)
+                        .animateContentSize(),
+                    currentCartPrice = present.maxPresentPrice,
+                    present = present,
+                    onChoosePresentClick = {}
+                )
+            }
+
             viewState.gifts.forEachIndexed { index, gift ->
-                Column {
-                    key(gift.name + gift.id) {
+                key(gift.name + gift.id) {
+                    Column {
                         GiftItem(
                             item = gift,
                             selected = viewState.currentGift == gift
                         ) { presentItem ->
                             viewModel.selectGift(presentItem)
                         }
-                    }
-                    if (viewState.gifts.lastIndex != index) {
-                        HorizontalDivider(
-                            modifier = Modifier.padding(vertical = 16.dp),
-                            thickness = 1.dp,
-                            color = MaterialTheme.colorScheme.surfaceVariant
-                        )
-                    }
 
+                        if (viewState.gifts.lastIndex != index) {
+                            HorizontalDivider(
+                                modifier = Modifier.padding(vertical = 16.dp),
+                                thickness = 1.dp,
+                                color = MaterialTheme.colorScheme.surfaceVariant
+                            )
+                        }
+                    }
                 }
             }
         }

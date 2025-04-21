@@ -180,7 +180,10 @@ class CartFragment : Fragment() {
                     }
 
                     is CartFlowViewModel.CartEvents.NavigateToGifts -> {
-                        findNavController().navigateToGifts(event.popupWindow)
+                        findNavController().navigateToGifts(
+                            event.present,
+                            event.popupWindow
+                        )
                     }
 
                     is CartFlowViewModel.CartEvents.NavigateToProfile -> {

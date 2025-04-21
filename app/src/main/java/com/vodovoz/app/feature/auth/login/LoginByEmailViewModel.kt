@@ -18,6 +18,9 @@ import com.vodovoz.app.feature.auth.login.composables.LoginByEmailUiState
 import com.vodovoz.app.feature.auth.login.model.LoginByEmailEvent
 import com.vodovoz.app.feature.auth.login.model.LoginByEmailState
 import com.vodovoz.app.feature.preorder.model.FieldUi
+import com.vodovoz.app.feature.preorder.model.KeyboardTypeValidator
+import com.vodovoz.app.feature.preorder.model.NameValidator
+import com.vodovoz.app.feature.preorder.model.NoRequiredValidator
 import com.vodovoz.app.feature.preorder.model.checkFields
 import com.vodovoz.app.feature.preorder.model.mapToDomain
 import com.vodovoz.app.feature.preorder.model.mapToUi

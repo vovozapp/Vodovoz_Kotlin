@@ -53,7 +53,7 @@ fun DataAllAction.activate(
         }
 
         DataAllAction.Delivery -> {
-            navController.navigateToWebView(VodovozWebConfig.ABOUT_PAYMENT_URL, "О доставке")
+            navController.navigateToWebView(VodovozWebConfig.ABOUT_PAYMENT_URL, " ")
         }
 
         DataAllAction.Profile -> {

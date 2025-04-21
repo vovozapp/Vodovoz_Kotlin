@@ -11,6 +11,12 @@
         android:label="GiftsFragment">
 
         <argument
+            android:name="present"
+            app:argType="com.vodovoz.app.feature.cart.model.CartPresentUi"
+            app:nullable="true"
+            />
+
+        <argument
             android:name="popupWindow"
             app:argType="com.vodovoz.app.feature.cart.model.CartPresentPopupWindowUi" />
 

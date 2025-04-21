@@ -47,7 +47,7 @@ class LikeManager @Inject constructor(
 
     fun observeLikes() = likesStateListener.asSharedFlow()
 
-    //todo - review method
+    //todo - review this method
     suspend fun changeCategory(categoryId: Long? = null, newFavorites: Map<Long, Boolean>) = mutex.withLock {
         selectedCategoryId = categoryId
         likes.clear()
@@ -59,7 +59,7 @@ class LikeManager @Inject constructor(
 
         val (likeVersion, userId) = mutex.withLock {
             if(selectedCategoryId == null && categoryId != selectedCategoryId){
-                //implement re
+                //implement realization
             }
             if(selectedCategoryId != null) {
                 updateFavoritesLocal(productId, newValue)

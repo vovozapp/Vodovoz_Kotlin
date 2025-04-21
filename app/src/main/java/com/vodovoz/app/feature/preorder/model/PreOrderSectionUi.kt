@@ -85,7 +85,7 @@ val EmptyTextValidator = FieldValidator { field ->
 
 val NoRequiredValidator = FieldValidator { field ->
     return@FieldValidator when {
-        field.isRequired && field.value.isBlank() -> FieldValidationResult.VALID
+        !field.isRequired && field.value.isBlank() -> FieldValidationResult.VALID
         else -> FieldValidationResult.NOT_APPLICABLE
     }
 }

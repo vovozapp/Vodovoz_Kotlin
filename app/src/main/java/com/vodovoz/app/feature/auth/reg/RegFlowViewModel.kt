@@ -132,12 +132,8 @@ class RegFlowViewModel @Inject constructor(
             accountManager.updateUserId(userId)
             likeManager.updateLikesAfterLogin(userId)
             firebaseTokenManager.sendFirebaseToken()
-            eventListener.emit(RegEvents.RegSuccess)
             accountManager.updateLastLoginSetting(
-                AccountManager.UserSettings(
-                    email,
-                    password
-                )
+                AccountManager.UserSettings(email, password)
             )
 
             uiStateListener.updateData { s ->
@@ -160,7 +156,7 @@ class RegFlowViewModel @Inject constructor(
             uiStateListener.updateData { s ->
                 s.copy(
                     buttons = s.buttons.updateButton(REGISTER_BUTTON) { btn ->
-                        btn.copy(loading = false, enabled = true)
+                        btn.copy(loading = false, enabled = t !is ValidationException)
                     }
                 )
             }

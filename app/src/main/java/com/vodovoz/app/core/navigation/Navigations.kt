@@ -10,6 +10,7 @@ import com.vodovoz.app.design_system.model.filters.FilterUi
 import com.vodovoz.app.design_system.model.filters.FiltersUi
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
 import com.vodovoz.app.feature.cart.model.CartPresentPopupWindowUi
+import com.vodovoz.app.feature.cart.model.CartPresentUi
 import com.vodovoz.app.feature.home.model.CategoryUi
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 
@@ -21,8 +22,7 @@ private val ProfileNavOptions = NavOptions.Builder()
     .build()
 
 
-
-fun NavController.navigateToAllBottles(){
+fun NavController.navigateToAllBottles() {
     navigate(
         R.id.allBottlesFragment,
         Bundle.EMPTY,
@@ -34,10 +34,13 @@ fun NavController.navigateToAllBottles(){
     )
 }
 
-fun NavController.navigateToGifts(popupWindow: CartPresentPopupWindowUi) {
+fun NavController.navigateToGifts(
+    present: CartPresentUi? = null,
+    popupWindow: CartPresentPopupWindowUi
+) {
     navigate(
         R.id.giftsFragment,
-        bundleOf("popupWindow" to popupWindow),
+        bundleOf("present" to present, "popupWindow" to popupWindow),
         NavOptions.Builder()
             .setEnterAnim(R.anim.slide_in_right)
             .setExitAnim(R.anim.fade_out)

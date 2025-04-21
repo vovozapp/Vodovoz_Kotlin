@@ -15,6 +15,7 @@ import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.cart.MessageTextBasket
+import com.vodovoz.app.design_system.model.ColorfulButtonUi
 import com.vodovoz.app.design_system.model.ErrorDataUi
 import com.vodovoz.app.design_system.model.toUi
 import com.vodovoz.app.domain.general.model.EmptyResultException
@@ -127,7 +128,9 @@ class CartFlowViewModel @Inject constructor(
 
 
             cartManager.syncCart(
-                cartItems.associate { item -> item.productId to item.quantity }
+                cartItems.associate { item ->
+                    item.productId to item.quantity
+                }
             )
 
         }.onFailure { t ->
@@ -500,10 +503,11 @@ class CartFlowViewModel @Inject constructor(
         if (userId == null) {
             eventListener.emit(CartEvents.NavigateToProfile)
         } else {
+            val present = dataState.present ?: return@launch
             val popupWindow = dataState.present?.popupWindow ?: return@launch
-            if(popupWindow.items.isEmpty()) return@launch
+            if (popupWindow.items.isEmpty()) return@launch
 
-            eventListener.emit(CartEvents.NavigateToGifts(popupWindow))
+            eventListener.emit(CartEvents.NavigateToGifts(present, popupWindow))
         }
     }
 
@@ -569,7 +573,11 @@ class CartFlowViewModel @Inject constructor(
             val coupon: String,
         ) : CartEvents()
 
-        data class NavigateToGifts(val popupWindow: CartPresentPopupWindowUi) : CartEvents()
+        data class NavigateToGifts(
+            val present: CartPresentUi? = null,
+            val popupWindow: CartPresentPopupWindowUi,
+        ) : CartEvents()
+
         data object NavigateToProfile : CartEvents()
         data object GoToCatalog : CartEvents()
         data object GoToAllBottles : CartEvents()

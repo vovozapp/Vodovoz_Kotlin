@@ -292,7 +292,7 @@
     <string name="supporting_text_email">Введите корректный email.</string>
     <string name="supporting_text_name">Имя должно содержать от 3 до 30 символов и не быть пустым.</string>
     <string name="supporting_text_lastname">Фамилия должна содержать от 3 до 30 символов и не быть пустой.</string>
-    <string name="supporting_text_password">Пароль должен содержать более 6 символов.</string>
+    <string name="supporting_text_password">Пароль должен содержать 6 или более символов.</string>
 
     <string name="clear_cart">Очистить корзину</string>
     <string name="product_end">Товар закончился</string>

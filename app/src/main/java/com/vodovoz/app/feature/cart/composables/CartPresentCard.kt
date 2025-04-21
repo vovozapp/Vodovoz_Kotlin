@@ -53,12 +53,12 @@ fun CartPresentCard(
 ) {
     val context = LocalContext.current
 
-    BoxWithConstraints {
+    BoxWithConstraints(modifier = modifier) {
         val maxWidth = maxWidth
         val horizontalPadding = 16.dp
 
         Row(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .clip(MaterialTheme.shapes.large)
                 .background(MaterialTheme.colorScheme.primaryContainer)

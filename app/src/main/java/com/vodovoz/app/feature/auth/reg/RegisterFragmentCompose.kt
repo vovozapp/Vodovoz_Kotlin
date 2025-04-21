@@ -94,7 +94,9 @@ class RegisterFragment : Fragment() {
                 }
 
                 is RegFlowViewModel.RegEvents.RegSuccess -> {
-                    findNavController().popBackStack()
+                    findNavController().popBackStack(
+                        R.id.profileFragment, false
+                    )
                 }
 
                 is RegFlowViewModel.RegEvents.ShowSnackbar -> {

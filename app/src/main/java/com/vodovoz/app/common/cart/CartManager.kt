@@ -91,8 +91,8 @@ class CartManager @Inject constructor(
         kotlin.runCatching {
             withTimeout(5000) {
                 updateCartOnline(cartChanges, currentFirstCart)
+                updateCartListState(true)
             }
-            updateCartListState(true)
         }.onFailure {
             cartMutex.withLock {
                 val cartWithoutChanges = carts.keys.associateWith { key ->
@@ -105,7 +105,7 @@ class CartManager @Inject constructor(
         }
 
         cartMutex.withLock {
-            _blockedProductsState.update { it - cartChanges.keys }
+            _blockedProductsState.update { productIds -> productIds - cartChanges.keys }
         }
     }
 
@@ -161,8 +161,6 @@ class CartManager @Inject constructor(
         needUpdate: Map<Long, Int>,
         firstCart: Map<Long, Int>,
     ) = coroutineScope {
-        if (needUpdate.isEmpty()) return@coroutineScope
-
         needUpdate.map { (productId, quantity) ->
             async {
                 val exists = (firstCart[productId] ?: 0) > 0

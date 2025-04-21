@@ -36,7 +36,6 @@ import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.android.activate
-import com.vodovoz.app.core.android.createDataAllActivator
 import com.vodovoz.app.core.navigation.navigateToAnalogs
 import com.vodovoz.app.core.navigation.navigateToCategoryProductList
 import com.vodovoz.app.core.navigation.navigateToOrderDetails
@@ -51,7 +50,6 @@ import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.placeholders.NetworkErrorPlaceholder
 import com.vodovoz.app.design_system.effects.LifecycleEffect
-import com.vodovoz.app.domain.general.model.DataAllAction
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
 import com.vodovoz.app.feature.home.popup.NewsClickListener
 import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment
@@ -59,7 +57,6 @@ import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWitho
 import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -226,7 +223,7 @@ class HomeFragment : Fragment() {
                 HomeFragmentDirections.actionToPromotionDetailFragment(this.promotionId)
 
             is ActionEntity.Promotions -> HomeFragmentDirections.actionToAllPromotionsFragment(
-                AllPromotionsFragment.DataSource.ByBanner(-1,-1) //todo - put actual realization
+                AllPromotionsFragment.DataSource.ByBanner(-1, -1) //todo - put actual realization
             )
 
             is ActionEntity.AllPromotions -> HomeFragmentDirections.actionToAllPromotionsFragment(
@@ -341,12 +338,7 @@ class HomeFragment : Fragment() {
                 is HomeFlowViewModel.HomeEvents.ActivateButtonAction -> {
                     event.action.activate(
                         navController = findNavController(),
-                        tabManager = tabManager,
-                        activators = listOf(
-                            createDataAllActivator(DataAllAction.Unknown) {
-                                //TODO("Implement snackbar")
-                            },
-                        ),
+                        tabManager = tabManager
                     )
                 }
 
@@ -386,12 +378,18 @@ class HomeFragment : Fragment() {
                 HomeFlowViewModel.HomeEvents.GoToOrdersHistory -> {
                     findNavController().navigateToOrdersHistory()
                 }
+
                 is HomeFlowViewModel.HomeEvents.GoToOrderDetails -> {
                     findNavController().navigateToOrderDetails(event.orderId)
                 }
 
                 is HomeFlowViewModel.HomeEvents.GoToWebView -> {
-                    findNavController().navigateToWebView(event.url, event.title)
+                    findNavController().navigateToWebView(
+                        event.url,
+                        event.title.ifEmpty {
+                            requireContext().getString(R.string.space)
+                        }
+                    )
                 }
 
                 is HomeFlowViewModel.HomeEvents.GoToProductAnalogs -> {

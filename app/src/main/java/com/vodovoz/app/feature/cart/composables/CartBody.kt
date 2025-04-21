@@ -57,7 +57,7 @@ fun CartBody(
                     modifier = Modifier
                         .padding(bottom = 24.dp)
                         .animateContentSize(),
-                    currentCartPrice = cartOrderSummary.finalPriceText.filter { c ->
+                    currentCartPrice = cartOrderSummary.productsPriceText.filter { c ->
                         c.isDigit()
                     }.toIntOrNull() ?: 0,
                     present = cartPresent,
@@ -129,7 +129,7 @@ fun CartBody(
                     modifier = Modifier.padding(top = 24.dp),
                     image = image,
                     name = coupon.ifEmpty { title },
-                    label = text.takeIf { it.isNotEmpty() },
+                    label = text.takeIf { txt -> txt.isNotEmpty() },
                     onClick = { onPromotionCodeButtonClick(promotionCodeButton) }
                 )
             }

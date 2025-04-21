@@ -40,7 +40,7 @@ fun VodovozSnackbar(
             .dropShadow(shape = MaterialTheme.shapes.large, blur = 10.dp, offsetY = 4.dp)
             .background(MaterialTheme.colorScheme.primaryContainer, MaterialTheme.shapes.large)
             .padding(horizontal = 16.dp, vertical = 8.dp),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.CenterStart
     ) {
         Text(
             text = snackbarData.visuals.message,
