@@ -3,6 +3,7 @@ package com.vodovoz.app.feature.profile.userdata
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.viewModelScope
+import com.vodovoz.app.R
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.content.Event
@@ -11,6 +12,7 @@ import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.content.updateData
 import com.vodovoz.app.common.media.MediaManager
+import com.vodovoz.app.common.resources.ResourcesProvider
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.domain.general.model.UserNotLoginException
@@ -19,6 +21,7 @@ import com.vodovoz.app.feature.preorder.model.FieldUi
 import com.vodovoz.app.feature.preorder.model.checkFields
 import com.vodovoz.app.feature.preorder.model.mapToDomain
 import com.vodovoz.app.feature.preorder.model.toUi
+import com.vodovoz.app.feature.preorder.model.updateFieldAndResetErrors
 import com.vodovoz.app.feature.preorder.model.updateFieldValueAndResetErrors
 import com.vodovoz.app.mapper.UserDataMapper.mapToUI
 import com.vodovoz.app.ui.model.UserDataUI
@@ -33,6 +36,8 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.io.File
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @Stable
@@ -42,9 +47,11 @@ class UserDataFlowViewModel @Inject constructor(
     private val accountManager: AccountManager,
     private val mediaManager: MediaManager,
     private val vodovozServiceRepository: VodovozServiceRepository,
+    private val resourcesProvider: ResourcesProvider,
 ) : PagingContractViewModel<UserDataFlowViewModel.UserDataState, UserDataFlowViewModel.UserDataEvents>(
     UserDataState()
 ) {
+
 
     init {
         viewModelScope.launch {
@@ -53,11 +60,6 @@ class UserDataFlowViewModel @Inject constructor(
                 .collect { imageFile ->
                     imageFile ?: return@collect
 
-                    uiStateListener.updateData { s ->
-                        s.copy(photo = imageFile.path)
-                    }
-
-                    //addAvatar(imageFile)
                     updateUserAvatar(imageFile)
                     mediaManager.removeAvatarImage()
                 }
@@ -281,10 +283,14 @@ class UserDataFlowViewModel @Inject constructor(
         }
     }
 
-    fun updateUserAvatar(imageFile: File) = viewModelScope.launch {
+    private fun updateUserAvatar(imageFile: File) = viewModelScope.launch {
         val updateUserAvatarResult =
             vodovozServiceRepository.updateUserAvatar(imageFile).singleResult()
         updateUserAvatarResult.onSuccess { message ->
+            uiStateListener.updateData { s ->
+                s.copy(photo = imageFile.path)
+            }
+            eventListener.emit(UserDataEvents.UpdateProfile)
             eventListener.emit(UserDataEvents.ShowSnackbar(message))
         }.onFailure {
             val message = it.message ?: return@onFailure
@@ -302,24 +308,83 @@ class UserDataFlowViewModel @Inject constructor(
                 s.copy(buttonEnabled = false)
             }
         }.onFailure {
-            //TODO - handle exception normally
-            eventListener.emit(UserDataEvents.ShowSnackbar(it.message ?: ""))
+            eventListener.emit(
+                UserDataEvents.ShowSnackbar(resourcesProvider.getString(R.string.update_user_data_error))
+            )
             uiStateListener.updateData { s ->
                 s.copy(buttonEnabled = false)
             }
         }
     }
 
+    fun logout() = viewModelScope.launch {
+        //todo - make logout
+    }
+
     fun deleteAccount() = viewModelScope.launch {
-        TODO("Not yet implemented")
+        //todo - make delete
     }
 
     fun chooseImage() = viewModelScope.launch {
         eventListener.emit(UserDataEvents.OpenImagePicker)
     }
 
-    fun logout() = viewModelScope.launch {
 
+    fun showDeleteAccountDialog() = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(showDeleteAccountDialog = true)
+        }
+    }
+
+    fun showLogoutDialog() = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(showLogoutDialog = true)
+        }
+    }
+
+    fun closeLogoutDialog() = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(showLogoutDialog = false)
+        }
+
+    }
+
+    fun closeDeleteAccountDialog() = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(showDeleteAccountDialog = false)
+        }
+    }
+
+    fun checkDatePicker(field: FieldUi) = viewModelScope.launch {
+        if (field.id != "data") return@launch
+
+        uiStateListener.updateData { s ->
+            s.copy(showDatePicker = true)
+        }
+    }
+
+    fun closeDatePicker() = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(showDatePicker = false)
+        }
+    }
+
+    fun changeDate(date: LocalDate) = viewModelScope.launch {
+        val dateField = dataState.fields.firstOrNull { it.id == "data" } ?: return@launch
+        uiStateListener.updateData { s ->
+            val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+            val formattedDate = date.format(formatter)
+            val updatedFields = s.fields.updateFieldAndResetErrors(
+                dateField,
+                dateField.copy(value = formattedDate)
+            )
+
+            s.copy(
+                fields = updatedFields,
+                showDatePicker = false,
+                buttonEnabled = updatedFields.checkFields()
+            )
+        }
     }
 
 
@@ -332,7 +397,7 @@ class UserDataFlowViewModel @Inject constructor(
         data object UpdateProfile : UserDataEvents()
         data object Logout : UserDataEvents()
         data object GoBack : UserDataEvents()
-        data object OpenImagePicker: UserDataEvents()
+        data object OpenImagePicker : UserDataEvents()
     }
 
     sealed interface UserDataUiState {
@@ -354,6 +419,9 @@ class UserDataFlowViewModel @Inject constructor(
         val photoDescription: String = "",
         val uiState: UserDataUiState = UserDataUiState.Loading,
         val buttonEnabled: Boolean = false,
+        val showLogoutDialog: Boolean = false,
+        val showDeleteAccountDialog: Boolean = false,
+        val showDatePicker: Boolean = false,
     ) : State
 
 }

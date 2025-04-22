@@ -319,4 +319,7 @@
     <string name="zero_with_rub">0 ₽</string>
     <string name="bottles_brand">Бренд бутылей</string>
     <string name="add_to_cart">Добавить в корзину</string>
+
+    <string name="update_user_data_error">Не удалось обновить данные. Попробуйте позже.</string>
+    <string name="choose_date">Выбрать дату</string>
 </resources>

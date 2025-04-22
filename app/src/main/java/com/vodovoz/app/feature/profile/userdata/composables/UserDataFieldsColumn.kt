@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.profile.userdata.composables
 
+import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -7,6 +8,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
@@ -21,6 +24,7 @@ fun UserDataFieldsColumn(
     modifier: Modifier = Modifier,
     fields: List<FieldUi>,
     onFieldValueChange: (FieldUi, String) -> Unit,
+    onFieldClick: (FieldUi) -> Unit = {},
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -29,7 +33,14 @@ fun UserDataFieldsColumn(
         fields.forEachIndexed { index, field ->
             key(field.id) {
                 VodovozTextField(
-                    modifier = Modifier.padding(horizontal = 16.dp),
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .pointerInput(Unit) {
+                            awaitEachGesture {
+                                awaitPointerEvent(PointerEventPass.Initial)
+                                onFieldClick(field)
+                            }
+                        },
                     value = field.value,
                     onValueChange = { newValue ->
                         onFieldValueChange(field, newValue)

@@ -157,8 +157,9 @@ fun UnratedProductsBottomSheet(
                 )
                 .dropShadow(
                     shape = shape,
-                    color = MaterialTheme.colorScheme.onBackground.copy(0.3f),
-                    blur = 5.dp
+                    color = MaterialTheme.colorScheme.onBackground.copy(0.2f),
+                    blur = 15.dp,
+                    offsetY = (-3).dp
                 )
                 .background(MaterialTheme.colorScheme.background, shape),
             horizontalAlignment = Alignment.CenterHorizontally

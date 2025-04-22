@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.vodovoz.app.design_system.composables.bottom_sheet.InfoBottomSheet
 import com.vodovoz.app.design_system.composables.decoration.AdvertisingChip
 import com.vodovoz.app.feature.all.promotions.composables.AdvertisingInfoBottomSheet
 import com.vodovoz.app.feature.home.composables.AuthScrollImagePager
@@ -65,8 +66,8 @@ fun ProfileScreen(
             ProfileWalletItemsRow(
                 modifier = Modifier.padding(top = 16.dp),
                 walletItems = viewState.walletItems,
-                onCardClick = {
-
+                onCardClick = { walletItem ->
+                    viewModel.activateWalletItem(walletItem)
                 }
             )
 
@@ -138,6 +139,20 @@ fun ProfileScreen(
             },
             onDismissRequest = {
                 viewModel.closeSupportingBottomSheet()
+            }
+        )
+    }
+
+    val currentBalanceBSData = viewState.currentBalanceBSData
+    if(viewState.showBalanceBS && currentBalanceBSData !=null){
+        InfoBottomSheet(
+            title = currentBalanceBSData.title,
+            text = currentBalanceBSData.text,
+            onDismissRequest = {
+                viewModel.closeBalanceBottomSheet()
+            },
+            onApply = {
+                viewModel.closeBalanceBottomSheet()
             }
         )
     }

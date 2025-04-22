@@ -159,9 +159,11 @@ interface VodovozService {
     /**
      * Search requests
      * */
+    //todo - mb put tracking
     @GET("searching/index.php?action=glav")
     suspend fun getSearchRecommendations(): Response<VodovozResponseDTO<SearchRecommendationsDTO>>
 
+    //todo - mb put tracking
     @GET("searching/minipoisk.php?action=glav")
     suspend fun getMiniSearchRecommendations(
         @Query("search") query: String,

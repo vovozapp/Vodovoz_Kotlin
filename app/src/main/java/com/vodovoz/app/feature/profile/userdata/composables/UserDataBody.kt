@@ -29,6 +29,7 @@ fun UserDataBody(
     fields: List<FieldUi>,
     buttonEnabled: Boolean,
     onFieldValueChange: (FieldUi, String) -> Unit,
+    onFieldClick: (FieldUi) -> Unit,
     onSaveDataClick: () -> Unit,
     onDeleteAccountClick: () -> Unit,
     onAvatarClick: () -> Unit
@@ -50,7 +51,8 @@ fun UserDataBody(
         UserDataFieldsColumn(
             modifier = Modifier.padding(top = 16.dp),
             fields = fields,
-            onFieldValueChange = onFieldValueChange
+            onFieldValueChange = onFieldValueChange,
+            onFieldClick = onFieldClick
         )
 
         VodovozButton(

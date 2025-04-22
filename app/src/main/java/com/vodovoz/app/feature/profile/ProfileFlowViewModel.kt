@@ -36,6 +36,7 @@ import com.vodovoz.app.feature.profile.model.ProfileChatItemUi
 import com.vodovoz.app.feature.profile.model.ProfileChatsPopupWindowUi
 import com.vodovoz.app.feature.profile.model.ProfileMenuItemUi
 import com.vodovoz.app.feature.profile.model.ProfileWalletItemUi
+import com.vodovoz.app.feature.profile.model.ProfileWalletPopupWindowUi
 import com.vodovoz.app.feature.profile.model.UserInfoBlockUi
 import com.vodovoz.app.feature.profile.model.mapToUi
 import com.vodovoz.app.feature.profile.model.toUi
@@ -468,6 +469,7 @@ class ProfileFlowViewModel @Inject constructor(
             .onEach {
                 cookieManager.removeCookieSessionId()
             }.firstOrNull()
+
         accountManager.removeUserId()
         accountManager.removeUserToken()
         tabManager.clearBottomNavProfileState()
@@ -657,6 +659,35 @@ class ProfileFlowViewModel @Inject constructor(
         eventListener.emit(ProfileEvents.GoByChatItemId(chatItem.id, chatItem.navigationData))
     }
 
+    fun activateWalletItem(walletItem: ProfileWalletItemUi) = viewModelScope.launch {
+        when (walletItem.id) {
+            "balance" -> {
+                showBalanceBottomSheet(walletItem)
+            }
+
+            "bonus" -> {
+
+            }
+
+            else -> {}
+        }
+    }
+
+    private fun showBalanceBottomSheet(walletItem: ProfileWalletItemUi) = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(
+                showBalanceBS = true,
+                currentBalanceBSData = walletItem.popupWindow
+            )
+        }
+    }
+
+    fun closeBalanceBottomSheet() = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(showBalanceBS = false)
+        }
+    }
+
 
     @Immutable
     data class ProfileState(
@@ -674,9 +705,13 @@ class ProfileFlowViewModel @Inject constructor(
         val normalMenu: List<ProfileMenuItemUi> = emptyList(),
         val showAdvertisingBS: Boolean = false,
         val showSupportingBS: Boolean = false,
+        val showBalanceBS: Boolean = false,
+
+        val currentBalanceBSData: ProfileWalletPopupWindowUi? = null,
         val currentSupportingBSData: ProfileChatsPopupWindowUi = ProfileChatsPopupWindowUi.Empty,
         val currentAdvertising: AboutAdvertisingUi = AboutAdvertisingUi.Empty,
-    ) : State {
+
+        ) : State {
         companion object {
             fun idle(): ProfileState {
                 return ProfileState(

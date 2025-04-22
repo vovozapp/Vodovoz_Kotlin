@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.fragment.findNavController
+import com.vodovoz.app.R
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.navigation.navigateToWebView
 import com.vodovoz.app.design_system.VodovozTheme
@@ -27,6 +27,7 @@ import javax.inject.Inject
 class CertificateActivationFragment : Fragment() {
 
     internal val viewModel: CertificateActivationViewModel by viewModels()
+
     @Inject
     internal lateinit var tabManager: TabManager
 
@@ -86,7 +87,10 @@ class CertificateActivationFragment : Fragment() {
                                 }
 
                                 is CertificateActivationEvent.GoToWebView -> {
-                                    findNavController().navigateToWebView(event.url, "")
+                                    findNavController().navigateToWebView(
+                                        event.url,
+                                        requireContext().getString(R.string.space)
+                                    )
                                 }
                             }
 
