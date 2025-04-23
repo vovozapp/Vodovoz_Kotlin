@@ -3,7 +3,6 @@ package com.vodovoz.app.design_system.composables.card
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
@@ -37,7 +36,7 @@ import com.vodovoz.app.design_system.composables.button.QuantityButtonSmall
 import com.vodovoz.app.design_system.composables.button.VodovozButtonDefaults
 import com.vodovoz.app.design_system.composables.button.VodovozButtonSmall
 import com.vodovoz.app.design_system.composables.chip.VodovozColorChipSmall
-import com.vodovoz.app.design_system.model.LabelWithColorUi
+import com.vodovoz.app.design_system.model.LabelUi
 import com.vodovoz.app.design_system.model.ProductUi
 import com.vodovoz.app.util.formatPrice
 import java.util.Locale
@@ -231,8 +230,8 @@ private fun GridProductCardPreview() {
             cartLoading = false,
             image = "https://vodovoz.net/upload/iblock/9ed/ec5cfujet9sztz077mtdzofrzjqzn0zj.jpeg",
             labels = listOf(
-                LabelWithColorUi("Новинка", Color.Red),
-                LabelWithColorUi("Хит продаж", Color.Green)
+                LabelUi("Новинка", Color.Red),
+                LabelUi("Хит продаж", Color.Green)
             ),
             isAvailable = false,
             pricePerUnit = null,

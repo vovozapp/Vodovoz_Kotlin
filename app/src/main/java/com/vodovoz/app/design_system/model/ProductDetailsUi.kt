@@ -85,7 +85,7 @@ data class ProductDetailsUi(
     val isAvailable: Boolean,
     val quantity: Int,
     val cartQuantity: Int = 0,
-    val labels: List<LabelWithColorUi>,
+    val labels: List<LabelUi>,
     val rating: Float,
     val deposit: DepositUi?,
 

@@ -116,9 +116,6 @@ fun UnratedProductsBottomSheet(
         120.dp.toPx()
     }
 
-
-
-
     BoxWithConstraints(
         modifier = modifier.fillMaxSize()
     ) {

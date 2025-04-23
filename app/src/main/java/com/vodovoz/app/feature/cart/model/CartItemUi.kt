@@ -1,7 +1,7 @@
 package com.vodovoz.app.feature.cart.model
 
 import androidx.compose.runtime.Immutable
-import com.vodovoz.app.design_system.model.LabelWithColorUi
+import com.vodovoz.app.design_system.model.LabelUi
 import com.vodovoz.app.design_system.model.toUi
 import com.vodovoz.app.domain.general.model.cart.CartItemModel
 
@@ -23,7 +23,7 @@ data class CartItemUi(
     val articleText: String,
     val image: String,
     val leftItems: Int,
-    val label: LabelWithColorUi?,
+    val label: LabelUi?,
     val hasDiscount: Boolean,
     val restriction: ProductRestrictionUi
 )

@@ -63,6 +63,7 @@ import com.vodovoz.app.domain.general.model.cart.CartDetailsModel
 import com.vodovoz.app.domain.general.model.format
 import com.vodovoz.app.domain.general.model.login.AuthDetailsModel
 import com.vodovoz.app.domain.general.model.login.UserAuthInfoModel
+import com.vodovoz.app.domain.general.model.order.OrderDetailsModel
 import com.vodovoz.app.domain.general.model.toQueries
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.preorder.model.FieldUi
@@ -88,6 +89,21 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     private val cookieManager: CookieManager,
     private val trackingManager: TrackingManager,
 ) : VodovozServiceRepository {
+
+    override fun getOrderDetails(orderId: Long): Flow<Result<OrderDetailsModel>> {
+        return executeRequest(
+            request = {
+                val userId = accountManager.fetchAccountId()
+                vodovozService.getOrderDetails(userId, orderId)
+            },
+            mapper = { request ->
+                request.checkError { errorDataModel ->
+                    throw UserNotLoginException(errorData = errorDataModel)
+                }
+                request.data!!.toDomain()
+            }
+        )
+    }
 
     override fun getAllBottles(): Flow<Result<AllBottlesDetailsModel>> {
         return executeRequest(
@@ -210,15 +226,6 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                 it.data!!.toDomain()
             }
         )
-    }
-
-    override fun getBannerPromotionsPaged(
-        bannerId: Long,
-        blockId: Long,
-        categoryId: Int,
-    ): Flow<PagingData<PromotionModel>> {
-
-        TODO("Not yet implemented")
     }
 
     override fun getBannerProducts(

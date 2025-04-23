@@ -19,6 +19,7 @@ import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.decoration.SkeletonBox
+import com.vodovoz.app.design_system.composables.decoration.VodovozHorizontalDivider
 
 
 @Composable
@@ -60,7 +61,7 @@ fun HomeLoadingPlaceholder(modifier: Modifier = Modifier) {
                 )
             }
         }
-        HomeDivider(
+        VodovozHorizontalDivider(
             modifier = Modifier.padding(top = 4.dp)
         )
 

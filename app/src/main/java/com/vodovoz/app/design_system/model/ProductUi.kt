@@ -8,9 +8,7 @@ import com.vodovoz.app.domain.general.model.CategoryWithProductsModel
 import com.vodovoz.app.domain.general.model.LabelModel
 import com.vodovoz.app.domain.general.model.ProductModel
 import com.vodovoz.app.domain.general.model.SectionModel
-import com.vodovoz.app.util.fromHexOrNull
 import com.vodovoz.app.util.fromHexOrUnspecified
-import com.yandex.mapkit.search.Advertisement.Product
 
 
 @JvmName("withUpdatedFavoritesSectionProduct")
@@ -185,7 +183,7 @@ data class ProductUi(
     val cartQuantity: Int,
     val cartLoading: Boolean,
     val image: String,
-    val labels: List<LabelWithColorUi>,
+    val labels: List<LabelUi>,
     val isAvailable: Boolean,
     val pricePerUnit: Int?,
     val unitOfMeasurement: String?
@@ -215,20 +213,20 @@ fun ProductModel.toUi(): ProductUi {
 
 
 @Immutable
-data class LabelWithColorUi(
+data class LabelUi(
     val name: String,
     val color: Color,
     val background: Color = Color.Unspecified
 )
 
-fun List<LabelModel>.toUi(): List<LabelWithColorUi> {
+fun List<LabelModel>.toUi(): List<LabelUi> {
     return mapNotNull { labelModel ->
         labelModel.toUi()
     }
 }
 
-fun LabelModel.toUi(): LabelWithColorUi {
-    return LabelWithColorUi(
+fun LabelModel.toUi(): LabelUi {
+    return LabelUi(
         name,
         Color.fromHexOrUnspecified(colorHex),
         Color.fromHexOrUnspecified(backgroundHex)

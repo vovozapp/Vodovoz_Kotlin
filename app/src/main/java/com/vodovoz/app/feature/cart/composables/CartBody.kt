@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.composables.button.VodovozButton
 import com.vodovoz.app.domain.general.model.cart.CartOrderSummaryUi
+import com.vodovoz.app.feature.all.orders.detail.composables.ExampleOfProgressBar
 import com.vodovoz.app.feature.cart.model.CartButtonUi
 import com.vodovoz.app.feature.cart.model.CartItemUi
 import com.vodovoz.app.feature.cart.model.CartPresentUi

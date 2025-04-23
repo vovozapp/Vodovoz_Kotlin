@@ -36,7 +36,7 @@ import com.vodovoz.app.design_system.composables.button.QuantityButtonSmall
 import com.vodovoz.app.design_system.composables.button.VodovozButtonDefaults
 import com.vodovoz.app.design_system.composables.button.VodovozButtonSmall
 import com.vodovoz.app.design_system.composables.chip.VodovozColorChipSmall
-import com.vodovoz.app.design_system.model.LabelWithColorUi
+import com.vodovoz.app.design_system.model.LabelUi
 import com.vodovoz.app.design_system.model.ProductUi
 import com.vodovoz.app.util.formatPrice
 import java.util.Locale
@@ -253,8 +253,8 @@ private fun LinearProductCardPreview() {
             cartLoading = false,
             image = "https://vodovoz.net/upload/iblock/9ed/ec5cfujet9sztz077mtdzofrzjqzn0zj.jpeg",
             labels = listOf(
-                LabelWithColorUi("Новинка", Color.Red),
-                LabelWithColorUi("Хит продаж", Color.Green)
+                LabelUi("Новинка", Color.Red),
+                LabelUi("Хит продаж", Color.Green)
             ),
             isAvailable = true,
             pricePerUnit = null,

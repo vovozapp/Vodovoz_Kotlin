@@ -13,14 +13,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.vodovoz.app.design_system.model.LabelWithColorUi
+import com.vodovoz.app.design_system.model.LabelUi
 
 
 @Suppress("NonSkippableComposable")
 @Composable
 fun ProductDetailsLabels(
     modifier: Modifier = Modifier,
-    labels: List<LabelWithColorUi>,
+    labels: List<LabelUi>,
 ) {
     Row(
         modifier = modifier

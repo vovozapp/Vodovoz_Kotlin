@@ -44,7 +44,7 @@ data class PromotionDetailsUi(
     val description: String,
     val timeLeft: String,
     val advertising: AboutAdvertisingUi?,
-    val label: LabelWithColorUi?,
+    val label: LabelUi?,
 ) {
     companion object {
         val Empty = PromotionDetailsUi(
@@ -76,7 +76,7 @@ fun PromotionDetailsModel.toUi(): PromotionDetailsUi {
 data class PromotionUi(
     val id: Long,
     val picture: String,
-    val label: LabelWithColorUi?,
+    val label: LabelUi?,
     val categoryId: Int,
     val blockId: Int,
     val timeLeft: String,

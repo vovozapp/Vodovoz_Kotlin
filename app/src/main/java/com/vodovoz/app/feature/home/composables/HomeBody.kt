@@ -11,6 +11,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.vodovoz.app.design_system.composables.decoration.VodovozHorizontalDivider
 import com.vodovoz.app.design_system.model.AboutAdvertisingUi
 import com.vodovoz.app.design_system.model.BannerUi
 import com.vodovoz.app.design_system.model.CategoryWithProductsUi
@@ -85,7 +86,7 @@ fun HomeBody(
             )
         }
 
-        HomeDivider(modifier = Modifier.padding(top = 4.dp))
+        VodovozHorizontalDivider(modifier = Modifier.padding(top = 4.dp))
 
         HomePopularCategories(
             modifier = Modifier.padding(top = 4.dp),

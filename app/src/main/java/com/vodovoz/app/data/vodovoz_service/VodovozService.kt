@@ -32,6 +32,7 @@ import com.vodovoz.app.data.vodovoz_service.model.auth.UserAuthInfoDTO
 import com.vodovoz.app.data.vodovoz_service.model.cart.CartDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.catalog.CatalogDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.filters.FiltersDTO
+import com.vodovoz.app.data.vodovoz_service.model.order_details.OrderDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.ProductDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.profile.ProfileDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.unrated_products.UnratedProductsSectionDTO
@@ -48,6 +49,14 @@ import retrofit2.http.QueryMap
 
 interface VodovozService {
 
+
+
+
+    @GET("profile/historyorder/detailzakaz.php?action=detail")
+    suspend fun getOrderDetails(
+        @Query("userid") userId: Long?,
+        @Query("id") orderId: Long
+    ): Response<VodovozResponseDTO<OrderDetailsDTO>>
 
     /**
      * Brand requests

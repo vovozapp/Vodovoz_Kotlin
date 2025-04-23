@@ -221,7 +221,7 @@ private fun StaticSearchTopBarPreview() {
             value = "",
             onFocus = { },
             onMicClick = {},
-            onScanClick = { /*TODO*/ },
+            onScanClick = { },
             onNavigationClick = {}
         )
     }

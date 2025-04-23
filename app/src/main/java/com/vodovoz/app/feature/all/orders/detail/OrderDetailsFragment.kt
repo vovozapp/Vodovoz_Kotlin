@@ -29,8 +29,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class OrderDetailsFragment : BaseFragment() {
-
+class OrderDetailsFragment1 : BaseFragment() {
     override fun layout(): Int = R.layout.fragment_order_details_flow
 
     private val binding: FragmentOrderDetailsFlowBinding by viewBinding {
@@ -39,8 +38,6 @@ class OrderDetailsFragment : BaseFragment() {
         )
     }
     internal val viewModel: OrderDetailsFlowViewModel by viewModels()
-
-//    private val args: OrderDetailsFragmentArgs by navArgs()
 
     @Inject
     lateinit var cartManager: CartManager

@@ -1,6 +1,7 @@
 package com.vodovoz.app.data.vodovoz_service.mappers
 
 import com.vodovoz.app.core.network.ApiConfig
+import com.vodovoz.app.core.network.VodovozWebConfig
 import com.vodovoz.app.data.vodovoz_service.di.toFullUrl
 import com.vodovoz.app.data.vodovoz_service.model.profile.CHAT_MENU_DTO
 import com.vodovoz.app.data.vodovoz_service.model.profile.DENIGI_DTO
@@ -121,8 +122,7 @@ fun PROFILE_MENO_OKNO_DTO.toDomain(): ProfileChatsPopupWindowModel {
 fun CHAT_MENU_DTO.toDomain(): ProfileChatItemModel {
     return ProfileChatItemModel(
         name = this.TEXT ?: "",
-        //todo - prepend actual url
-        imageUrl = ApiConfig.VODOVOZ_URL + (this.IMAGE ?: ""),
+        imageUrl = VodovozWebConfig.VODOVOZ_URL + (this.IMAGE ?: ""),
         transitionData = this.CHATDAN ?: "",
         id = this.ID ?: ""
     )

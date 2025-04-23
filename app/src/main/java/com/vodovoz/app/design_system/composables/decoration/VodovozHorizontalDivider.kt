@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.home.composables
+package com.vodovoz.app.design_system.composables.decoration
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.vodovoz.app.design_system.VodovozTheme
 
 @Composable
-fun HomeDivider(modifier: Modifier = Modifier) {
+fun VodovozHorizontalDivider(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .height(32.dp)
@@ -61,6 +61,6 @@ fun HomeDivider(modifier: Modifier = Modifier) {
 private fun PreviewHomeDivider() {
     VodovozTheme {
 
-        HomeDivider()
+        VodovozHorizontalDivider()
     }
 }

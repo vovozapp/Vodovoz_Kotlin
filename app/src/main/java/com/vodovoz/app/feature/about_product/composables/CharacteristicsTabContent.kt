@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.vodovoz.app.design_system.model.CharacteristicsBlockUi
 import com.vodovoz.app.design_system.model.ContentBlockUi
-import com.vodovoz.app.feature.home.composables.HomeDivider
+import com.vodovoz.app.design_system.composables.decoration.VodovozHorizontalDivider
 import com.vodovoz.app.feature.productdetail.composables.CharacteristicItem
 
 @Composable
@@ -40,7 +40,7 @@ fun CharacteristicsTabContent(
 
             if (characteristics.content.indexOf(block) != characteristics.content.lastIndex) {
                 Spacer(modifier = Modifier.height(8.dp))
-                HomeDivider()
+                VodovozHorizontalDivider()
                 Spacer(modifier = Modifier.height(8.dp))
             }
         }

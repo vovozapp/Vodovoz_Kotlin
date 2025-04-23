@@ -31,10 +31,15 @@ fun VNYTRENNOST_DTO.toDomain(): ActionWithButtonModel? {
     )
 }
 
+fun List<COLORFUL_KNOPKA_DTO>.mapToDomain(): List<ColorfulButtonModel>{
+    return map { it.toDomain() }
+}
+
 fun COLORFUL_KNOPKA_DTO.toDomain(): ColorfulButtonModel {
     return ColorfulButtonModel(
         name = NAME ?: "",
         backgroundColor = COLOR_BACKGROUND ?: "",
-        textColor = COLOR_TEXT ?: ""
+        textColor = COLOR_TEXT ?: "",
+        id = ID ?: ""
     )
 }

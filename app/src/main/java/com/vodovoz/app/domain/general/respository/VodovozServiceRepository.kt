@@ -38,11 +38,14 @@ import com.vodovoz.app.domain.general.model.UserDataModel
 import com.vodovoz.app.domain.general.model.cart.CartDetailsModel
 import com.vodovoz.app.domain.general.model.login.AuthDetailsModel
 import com.vodovoz.app.domain.general.model.login.UserAuthInfoModel
+import com.vodovoz.app.domain.general.model.order.OrderDetailsModel
 import com.vodovoz.app.feature.preorder.model.FieldUi
 import kotlinx.coroutines.flow.Flow
 import java.io.File
 
 interface VodovozServiceRepository {
+
+    fun getOrderDetails(orderId: Long): Flow<Result<OrderDetailsModel>>
 
     fun getAllBottles(): Flow<Result<AllBottlesDetailsModel>>
 
@@ -72,12 +75,6 @@ interface VodovozServiceRepository {
         blockId: Long,
         categoryId: Int = -1,
     ): Flow<Result<PromotionsSectionModel>>
-
-    fun getBannerPromotionsPaged(
-        bannerId: Long,
-        blockId: Long,
-        categoryId: Int = -1,
-    ): Flow<PagingData<PromotionModel>>
 
 
     fun getBannerProducts(
