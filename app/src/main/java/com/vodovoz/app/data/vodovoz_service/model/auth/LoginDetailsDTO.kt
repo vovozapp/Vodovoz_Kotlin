@@ -3,7 +3,7 @@ package com.vodovoz.app.data.vodovoz_service.model.auth
 
 import com.squareup.moshi.Json
 import androidx.annotation.Keep
-import com.vodovoz.app.data.vodovoz_service.model.user_data.PROFILE_POLE_DTO
+import com.vodovoz.app.data.vodovoz_service.model.user_data.POLE_DTO
 
 @Keep
 data class LoginDetailsDTO(
@@ -12,7 +12,7 @@ data class LoginDetailsDTO(
     @Json(name = "OPISANIE")
     val OPISANIE: String?,
     @Json(name = "DATA")
-    val DATA: List<PROFILE_POLE_DTO>?,
+    val DATA: List<POLE_DTO>?,
     @Json(name = "SOGLASHENIE")
     val SOGLASHENIE: String?,
     @Json(name = "KNOPKA")

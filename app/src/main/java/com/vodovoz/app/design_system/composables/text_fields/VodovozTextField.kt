@@ -120,7 +120,7 @@ private fun VodovozTextField(
                         maxLines = maxLines
                     )
                 }
-                Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
+                Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.TopStart) {
                     //todo - mb do animation
 //                    this@Row.AnimatedVisibility(
 //                        visible = value.text.isEmpty(),

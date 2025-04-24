@@ -11,5 +11,5 @@ data class UserDataDTO(
     @Json(name = "FOTO")
     val FOTO: FOTO_DTO?,
     @Json(name = "POLYA")
-    val POLYA: List<PROFILE_POLE_DTO>?
+    val POLYA: List<POLE_DTO>?
 )

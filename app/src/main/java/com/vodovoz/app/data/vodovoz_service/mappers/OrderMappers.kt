@@ -1,6 +1,8 @@
 package com.vodovoz.app.data.vodovoz_service.mappers
 
 import com.vodovoz.app.data.vodovoz_service.di.toFullUrl
+import com.vodovoz.app.data.vodovoz_service.model.KNOPKA_ORDER_DTO
+import com.vodovoz.app.data.vodovoz_service.model.OrderQuestionDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.order_details.ABOUT_ORDER_ITEM_DTO
 import com.vodovoz.app.data.vodovoz_service.model.order_details.ABOUT_ORDER_OKNO_DTO
 import com.vodovoz.app.data.vodovoz_service.model.order_details.ORDER_DETAILS_ITOG_DTO
@@ -9,6 +11,7 @@ import com.vodovoz.app.data.vodovoz_service.model.order_details.ORDER_DETAILS_TO
 import com.vodovoz.app.data.vodovoz_service.model.order_details.ORDER_PRODUCT_PODAROK_DTO
 import com.vodovoz.app.data.vodovoz_service.model.order_details.ORDER_STATUS_DTO
 import com.vodovoz.app.data.vodovoz_service.model.order_details.OrderDetailsDTO
+import com.vodovoz.app.domain.general.model.ColorfulButtonModel
 import com.vodovoz.app.domain.general.model.order.AboutOrderItemModel
 import com.vodovoz.app.domain.general.model.order.AboutOrderPopupWindowModel
 import com.vodovoz.app.domain.general.model.order.OrderDetailsButtonModel
@@ -16,6 +19,7 @@ import com.vodovoz.app.domain.general.model.order.OrderDetailsModel
 import com.vodovoz.app.domain.general.model.order.OrderDetailsSummaryModel
 import com.vodovoz.app.domain.general.model.order.OrderProductModel
 import com.vodovoz.app.domain.general.model.order.OrderProductPresentModel
+import com.vodovoz.app.domain.general.model.order.OrderQuestionDetailsModel
 import com.vodovoz.app.domain.general.model.order.OrderStatusModel
 
 fun OrderDetailsDTO.toDomain(): OrderDetailsModel {
@@ -29,10 +33,29 @@ fun OrderDetailsDTO.toDomain(): OrderDetailsModel {
         products = TOVARY?.TOVAR?.mapToDomain() ?: emptyList(),
         productsTitle = TOVARY?.TITLE ?: "",
         bottomButtons = KNOPKI_NIZ?.mapToDomain() ?: emptyList(),
-        orderSummary = ITOG?.toDomain() ?: throw IllegalArgumentException("Order details summary can't be null")
+        orderSummary = ITOG?.toDomain()
+            ?: throw IllegalArgumentException("Order details summary can't be null")
     )
 }
 
+fun OrderQuestionDetailsDTO.toDomain(): OrderQuestionDetailsModel {
+    return OrderQuestionDetailsModel(
+        title = TITLE ?: "",
+        description = INFORMIROVANIE ?: "",
+        fields = LISTADATA?.mapToDomain() ?: emptyList(),
+        button = KNOPKA?.toDomain()
+            ?: throw IllegalArgumentException("Order question details can't be null")
+    )
+}
+
+fun KNOPKA_ORDER_DTO.toDomain(): ColorfulButtonModel{
+    return ColorfulButtonModel(
+        name = NAME ?: "",
+        backgroundColor = BACKGROUND ?: "",
+        textColor = COLOR ?: "",
+        id = ID ?: ""
+    )
+}
 
 
 fun ORDER_DETAILS_ITOG_DTO.toDomain(): OrderDetailsSummaryModel {
@@ -41,12 +64,12 @@ fun ORDER_DETAILS_ITOG_DTO.toDomain(): OrderDetailsSummaryModel {
         productsPriceText = productsPrice ?: "",
         depositText = deposit ?: "",
         deliveryText = delivery ?: "",
-        parkingText =parking ?: "",
+        parkingText = parking ?: "",
     )
 }
 
 @JvmName("mapToOrderProductModelList")
-fun List<ORDER_DETAILS_TOVAR_DTO>.mapToDomain(): List<OrderProductModel>{
+fun List<ORDER_DETAILS_TOVAR_DTO>.mapToDomain(): List<OrderProductModel> {
     return mapNotNull { it.toDomain() }
 }
 

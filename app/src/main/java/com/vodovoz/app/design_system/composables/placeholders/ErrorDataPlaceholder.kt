@@ -1,6 +1,7 @@
 package com.vodovoz.app.design_system.composables.placeholders
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,7 +27,7 @@ import com.vodovoz.app.design_system.model.ErrorDataUi
 
 @Composable
 fun ErrorDataPlaceholder(modifier: Modifier = Modifier, errorData: ErrorDataUi, onButtonClick: () -> Unit = {}) {
-    Column(modifier = modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(modifier = modifier.fillMaxSize().background(MaterialTheme.colorScheme.background), horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(modifier = Modifier.weight(1f))
 
         Column(

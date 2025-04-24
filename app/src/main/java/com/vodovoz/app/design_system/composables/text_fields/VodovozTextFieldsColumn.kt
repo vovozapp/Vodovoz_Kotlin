@@ -14,13 +14,11 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import com.vodovoz.app.R
 import com.vodovoz.app.design_system.composables.decoration.PasswordIcon
 import com.vodovoz.app.design_system.text.PhoneNumberVisualTransformation
 import com.vodovoz.app.feature.preorder.model.FieldUi
@@ -39,7 +37,7 @@ fun VodovozTextFieldsColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         fields.forEachIndexed { index, field ->
-            val isMessage = field.id.contains("message", true)
+            val isMessage = field.id.contains("message", true) || field.id == "dr127"
 
             key(field.id) {
                 val interactionSource = remember {
@@ -47,9 +45,9 @@ fun VodovozTextFieldsColumn(
                 }
                 val isFocused by interactionSource.collectIsFocusedAsState()
 
-                if(field.id == "phone"){
+                if (field.id == "phone") {
                     LaunchedEffect(isFocused) {
-                        if(isFocused) onFieldChange(field, field)
+                        if (isFocused) onFieldChange(field, field)
                     }
                 }
 

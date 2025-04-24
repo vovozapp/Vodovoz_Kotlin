@@ -42,7 +42,7 @@ fun VodovozButton(
         enabled = enabled,
         elevation = null
     ) {
-        if (isLoading && enabled) {
+        if (isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier.size(24.dp),
                 strokeWidth = 2.dp,

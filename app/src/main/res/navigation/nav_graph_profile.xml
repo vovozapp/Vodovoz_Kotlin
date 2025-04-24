@@ -5,6 +5,11 @@
     android:id="@+id/graph_profile"
     app:startDestination="@id/profileFragment">
 
+    <fragment
+        android:id="@+id/orderQuestionFragment"
+        android:name="com.vodovoz.app.feature.order_question_fragment.OrderQuestionFragment"
+        android:label="OrderQuestionFragment"
+        />
 
     <fragment
         android:id="@+id/changePasswordFragment"

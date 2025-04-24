@@ -14,6 +14,7 @@ import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
+import com.vodovoz.app.core.navigation.navigateToOrderQuestion
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.effects.LifecycleEffect
 import com.vodovoz.app.feature.all.orders.detail.composables.AboutOrderBottomSheet
@@ -58,7 +59,7 @@ class OrderDetailsFragment : Fragment() {
                     )
 
                     val currentAboutOrder = viewState.currentAboutOrderBS
-                    if(viewState.showAboutOrderBS && currentAboutOrder != null){
+                    if (viewState.showAboutOrderBS && currentAboutOrder != null) {
                         AboutOrderBottomSheet(data = currentAboutOrder) {
                             viewModel.closeAboutOrderBottomSheet()
                         }
@@ -74,6 +75,10 @@ class OrderDetailsFragment : Fragment() {
 
                                 OrderDetailsFlowViewModel.OrderDetailsEvent.GoBack -> {
                                     findNavController().popBackStack()
+                                }
+
+                                is OrderDetailsFlowViewModel.OrderDetailsEvent.GoToOrderQuestion -> {
+                                    findNavController().navigateToOrderQuestion(event.orderId)
                                 }
                             }
                         }

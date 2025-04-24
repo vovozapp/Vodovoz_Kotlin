@@ -322,4 +322,10 @@
 
     <string name="update_user_data_error">Не удалось обновить данные. Попробуйте позже.</string>
     <string name="choose_date">Выбрать дату</string>
+
+    <string name="supporting_text_message">Длина сообщения должна быть от 15 до 1000 символов.</string>
+    <string name="order_question_send_error">
+        Не удалось отправить вопрос. Проверьте подключение к интернету и попробуйте ещё раз.
+    </string>
+
 </resources>

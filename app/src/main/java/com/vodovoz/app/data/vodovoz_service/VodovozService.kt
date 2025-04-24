@@ -10,6 +10,7 @@ import com.vodovoz.app.data.vodovoz_service.model.CertificateActivationDetailsDT
 import com.vodovoz.app.data.vodovoz_service.model.FieldsDTO
 import com.vodovoz.app.data.vodovoz_service.model.MiniSearchRecommendationsDTO
 import com.vodovoz.app.data.vodovoz_service.model.OrderMenuDTO
+import com.vodovoz.app.data.vodovoz_service.model.OrderQuestionDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.PopularCategoriesDTO
 import com.vodovoz.app.data.vodovoz_service.model.PopupWindowDTO
 import com.vodovoz.app.data.vodovoz_service.model.PreOrderDTO
@@ -50,12 +51,24 @@ import retrofit2.http.QueryMap
 interface VodovozService {
 
 
+    @GET("osnova/form/voprosozakaze.php?action=otpravka&userid=515&idzakaz=1652215")
+    suspend fun sendOrderQuestion(
+        @Query("userid") userId: Long?,
+        @Query("idzakaz") orderId: Long,
+        @QueryMap queryMap: Map<String, String>
+    ): Response<VodovozResponseDTO<String>>
+
+    @GET("osnova/form/voprosozakaze.php?action=detail")
+    suspend fun getOrderQuestionDetails(
+        @Query("userid") userId: Long?,
+        @Query("idzakaz") orderId: Long,
+    ): Response<VodovozResponseDTO<OrderQuestionDetailsDTO>>
 
 
     @GET("profile/historyorder/detailzakaz.php?action=detail")
     suspend fun getOrderDetails(
         @Query("userid") userId: Long?,
-        @Query("id") orderId: Long
+        @Query("id") orderId: Long,
     ): Response<VodovozResponseDTO<OrderDetailsDTO>>
 
     /**
@@ -246,7 +259,7 @@ interface VodovozService {
     @GET("korzina/index.php?action=getbasket")
     suspend fun getCartDetails(
         @Query("userid") userId: Long? = null,
-        @Query("coupon") coupon: String? = null
+        @Query("coupon") coupon: String? = null,
     ): Response<VodovozResponseDTO<CartDetailsDTO>>
 
     @GET("korzina/function/add/index.php?action=add")

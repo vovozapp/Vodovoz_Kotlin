@@ -29,6 +29,7 @@ import com.vodovoz.app.domain.general.model.CertificateActivationDetailsModel
 import com.vodovoz.app.domain.general.model.ChangePasswordDetailsModel
 import com.vodovoz.app.domain.general.model.CommentModel
 import com.vodovoz.app.domain.general.model.EmptyResultException
+import com.vodovoz.app.domain.general.model.ErrorDataModel
 import com.vodovoz.app.domain.general.model.FavoritesNotFoundException
 import com.vodovoz.app.domain.general.model.FieldModel
 import com.vodovoz.app.domain.general.model.FilterValueModel
@@ -64,6 +65,7 @@ import com.vodovoz.app.domain.general.model.format
 import com.vodovoz.app.domain.general.model.login.AuthDetailsModel
 import com.vodovoz.app.domain.general.model.login.UserAuthInfoModel
 import com.vodovoz.app.domain.general.model.order.OrderDetailsModel
+import com.vodovoz.app.domain.general.model.order.OrderQuestionDetailsModel
 import com.vodovoz.app.domain.general.model.toQueries
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.preorder.model.FieldUi
@@ -89,6 +91,30 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     private val cookieManager: CookieManager,
     private val trackingManager: TrackingManager,
 ) : VodovozServiceRepository {
+
+    override fun sendOrderQuestion(orderId: Long, fields: List<FieldModel>): Flow<Result<ErrorDataModel>> {
+        return executeRequest(
+            request = {
+                val userId = accountManager.fetchAccountId()
+                vodovozService.sendOrderQuestion(userId, orderId, fields.toQueries())
+            },
+            mapper = {
+                it.error!!.toDomain()
+            }
+        )
+    }
+
+    override fun getOrderQuestionDetails(orderId: Long): Flow<Result<OrderQuestionDetailsModel>> {
+        return executeRequest(
+            request = {
+                val userId = accountManager.fetchAccountId()
+                vodovozService.getOrderQuestionDetails(userId, orderId)
+            },
+            mapper = {
+                it.data!!.toDomain()
+            }
+        )
+    }
 
     override fun getOrderDetails(orderId: Long): Flow<Result<OrderDetailsModel>> {
         return executeRequest(

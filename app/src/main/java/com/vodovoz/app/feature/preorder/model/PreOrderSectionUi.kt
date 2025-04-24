@@ -75,10 +75,19 @@ fun interface FieldValidator {
     fun isValid(field: FieldUi): FieldValidationResult
 }
 
+val vodovozValidators
+    get() = listOf(
+        NoRequiredValidator,
+        PhoneNumberValidator,
+        MessageValidator,
+        NameValidator,
+        KeyboardTypeValidator
+    )
+
 val EmptyTextValidator = FieldValidator { field ->
     return@FieldValidator when {
         field.value.isNotBlank() -> FieldValidationResult.VALID
-        field.isRequired -> FieldValidationResult.INVALID
+        field.isRequired && field.value.isEmpty() -> FieldValidationResult.INVALID
         else -> FieldValidationResult.NOT_APPLICABLE
     }
 }
@@ -127,8 +136,19 @@ val KeyboardTypeValidator = FieldValidator { field ->
 val NameValidator = FieldValidator { field ->
     val value = field.value
     when {
-        value.contains("name") -> {
+        field.id.contains("name") -> {
             FieldValidationResult.from(value.length in 3..30 && value.isNotBlank())
+        }
+
+        else -> FieldValidationResult.NOT_APPLICABLE
+    }
+}
+
+val MessageValidator = FieldValidator { field ->
+    val value = field.value
+    when {
+        field.id == "dr127" || field.id.contains("message") -> {
+            FieldValidationResult.from(value.length in 15..1000 && value.isNotBlank())
         }
 
         else -> FieldValidationResult.NOT_APPLICABLE
@@ -162,7 +182,7 @@ fun FieldUi.getErrorText(getStringResource: (Int) -> String): String {
             getStringResource(R.string.supporting_text_email)
         }
 
-        id == "name" -> {
+        id == "name" || id == "dr123" -> {
             getStringResource(R.string.supporting_text_name)
         }
 
@@ -172,6 +192,10 @@ fun FieldUi.getErrorText(getStringResource: (Int) -> String): String {
 
         keyboardType == KeyboardType.Password -> {
             getStringResource(R.string.supporting_text_password)
+        }
+
+        id == "message" || id == "d127" -> {
+            getStringResource(R.string.supporting_text_message)
         }
 
         else -> ""
@@ -222,6 +246,14 @@ fun FieldModel.toUi(): FieldUi {
     val keyboardType = when (id) {
         "email" -> {
             KeyboardType.Email
+        }
+
+        "dr125" -> {
+            KeyboardType.Email
+        }
+
+        "dr124" -> {
+            KeyboardType.Phone
         }
 
         "phone" -> {

@@ -9,6 +9,7 @@ import com.vodovoz.app.domain.general.model.CatalogDetailsModel
 import com.vodovoz.app.domain.general.model.CertificateActivationDetailsModel
 import com.vodovoz.app.domain.general.model.ChangePasswordDetailsModel
 import com.vodovoz.app.domain.general.model.CommentModel
+import com.vodovoz.app.domain.general.model.ErrorDataModel
 import com.vodovoz.app.domain.general.model.FieldModel
 import com.vodovoz.app.domain.general.model.FilterValueModel
 import com.vodovoz.app.domain.general.model.FiltersModel
@@ -39,11 +40,16 @@ import com.vodovoz.app.domain.general.model.cart.CartDetailsModel
 import com.vodovoz.app.domain.general.model.login.AuthDetailsModel
 import com.vodovoz.app.domain.general.model.login.UserAuthInfoModel
 import com.vodovoz.app.domain.general.model.order.OrderDetailsModel
+import com.vodovoz.app.domain.general.model.order.OrderQuestionDetailsModel
 import com.vodovoz.app.feature.preorder.model.FieldUi
 import kotlinx.coroutines.flow.Flow
 import java.io.File
 
 interface VodovozServiceRepository {
+
+    fun sendOrderQuestion(orderId: Long, fields: List<FieldModel>) : Flow<Result<ErrorDataModel>>
+
+    fun getOrderQuestionDetails(orderId: Long): Flow<Result<OrderQuestionDetailsModel>>
 
     fun getOrderDetails(orderId: Long): Flow<Result<OrderDetailsModel>>
 

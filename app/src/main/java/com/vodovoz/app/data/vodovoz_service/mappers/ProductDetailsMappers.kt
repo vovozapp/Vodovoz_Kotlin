@@ -240,7 +240,7 @@ private fun KNOPKA_DESHEVLE_DTO.toDomain(): ColorfulButtonModel {
     )
 }
 
-private fun KNOPKA_ANALOG_DTO.toDomain(): ColorfulButtonModel {
+fun KNOPKA_ANALOG_DTO.toDomain(): ColorfulButtonModel {
     return ColorfulButtonModel(
         name = NAME ?: "",
         backgroundColor = BACKGROUND ?: "",

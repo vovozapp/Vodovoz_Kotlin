@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.preorder.composables
+package com.vodovoz.app.design_system.composables.top_bar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.vodovoz.app.R
 
 @Composable
-fun PreOrderTopBar(modifier: Modifier = Modifier, title: String, onCloseClick: () -> Unit) {
+fun ClosingTopBar(modifier: Modifier = Modifier, title: String, onCloseClick: () -> Unit) {
     Row(
         modifier = modifier
             .fillMaxWidth()

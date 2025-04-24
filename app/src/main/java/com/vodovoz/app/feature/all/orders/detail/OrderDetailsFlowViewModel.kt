@@ -313,7 +313,15 @@ class OrderDetailsFlowViewModel @Inject constructor(
 
 
     fun activateBottomButton(button: ColorfulButtonUi) = viewModelScope.launch {
+        orderId ?: return@launch
+        when(button.id){
+            "voproszakaz" -> {
+                eventListener.emit(OrderDetailsEvent.GoToOrderQuestion(orderId))
+            }
+            "otmena" -> {
 
+            }
+        }
     }
 
     fun changeProductFavorite(orderProduct: OrderProductUi) = viewModelScope.launch {
@@ -364,5 +372,6 @@ class OrderDetailsFlowViewModel @Inject constructor(
         data object GoBack : OrderDetailsEvent()
 
         data class CopyText(val text: String) : OrderDetailsEvent()
+        data class GoToOrderQuestion(val orderId: Long) : OrderDetailsEvent()
     }
 }

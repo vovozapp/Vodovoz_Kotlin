@@ -2,7 +2,7 @@ package com.vodovoz.app.data.vodovoz_service.mappers
 
 import com.vodovoz.app.data.vodovoz_service.di.toFullUrl
 import com.vodovoz.app.data.vodovoz_service.model.user_data.FOTO_DTO
-import com.vodovoz.app.data.vodovoz_service.model.user_data.PROFILE_POLE_DTO
+import com.vodovoz.app.data.vodovoz_service.model.user_data.POLE_DTO
 import com.vodovoz.app.data.vodovoz_service.model.user_data.UserDataDTO
 import com.vodovoz.app.domain.general.model.FieldModel
 import com.vodovoz.app.domain.general.model.UserDataModel
@@ -26,14 +26,14 @@ fun FOTO_DTO.toDomain(): UserDataPhotoModel {
     )
 }
 
-fun List<PROFILE_POLE_DTO>.mapToDomain(): List<FieldModel> {
+fun List<POLE_DTO>.mapToDomain(): List<FieldModel> {
     return mapNotNull { it.toDomain() }
 }
 
-fun PROFILE_POLE_DTO.toDomain(): FieldModel? {
+fun POLE_DTO.toDomain(): FieldModel? {
     return FieldModel(
         id = CODE ?: return null,
-        label = TEXT ?: "",
+        label = TEXT ?: NAME ?: "",
         value = VALUE ?: "",
         valueType = POLE ?: "text",
         isRequired = OBYZATELNO == "Y",
