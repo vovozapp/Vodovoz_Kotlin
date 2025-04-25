@@ -10,6 +10,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.app.ActivityCompat
 import androidx.core.os.bundleOf
@@ -68,6 +69,7 @@ class PromotionDetailsFragment : Fragment() {
                 VodovozTheme {
                     val pagingState by viewModel.observeUiState().collectAsStateWithLifecycle()
                     val viewState by rememberUpdatedState(pagingState.data)
+                    val context = LocalContext.current
 
 
                     when (viewState.uiState) {
@@ -105,7 +107,10 @@ class PromotionDetailsFragment : Fragment() {
                                 }
 
                                 is PromotionDetailFlowViewModel.PromotionDetailEvent.GoToWebView -> {
-                                    findNavController().navigateToWebView(event.url, "")
+                                    findNavController().navigateToWebView(
+                                        event.url,
+                                        context.getString(R.string.space)
+                                    )
                                 }
 
                                 is PromotionDetailFlowViewModel.PromotionDetailEvent.GoToProductAnalogs -> {

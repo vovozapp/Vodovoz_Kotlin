@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
-import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.layout.Column
@@ -15,14 +14,20 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.vodovoz.app.common.webview.model.WebViewState
 import com.vodovoz.app.common.webview.model.WebViewUiState
 import com.vodovoz.app.design_system.composables.placeholders.NetworkErrorPlaceholder
 import com.vodovoz.app.design_system.composables.top_bar.VodovozTopBar
+import kotlinx.coroutines.launch
 
 @Composable
 fun WebViewScreen(viewModel: WebViewViewModel, viewState: WebViewState) {
@@ -71,40 +76,54 @@ private fun WebView(
     onLoadingFinished: () -> Unit,
     onError: () -> Unit,
 ) {
-    AndroidView(
-        modifier = modifier,
-        factory = { context ->
-            WebView(context).apply {
-                layoutParams = ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT
-                )
-                settings.javaScriptEnabled = true
-                webViewClient = WebClient(onError = onError)
-                webChromeClient = ProgressWebChromeClient(onPageVisible = onLoadingFinished)
-            }
+    val context = LocalContext.current
 
-        },
-        update = { webView ->
-            if (url.contains("#")) {
-                webView.loadDataWithBaseURL(
-                    url.substringBefore("#"),
-                    "",
-                    "text/html",
-                    "utf-8",
-                    null
-                )
-            } else if (!url.contains("#")) {
-                webView.loadUrl(url)
-            }
+    val webView = remember {
+        WebView(context).apply {
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+            settings.javaScriptEnabled = true
+            settings.domStorageEnabled = true
         }
+    }
+
+    val webClient = remember { WebClient(onError = onError) }
+    val chromeClient = remember { ProgressWebChromeClient(onPageVisible = onLoadingFinished) }
+
+    DisposableEffect(Unit) {
+        webView.webViewClient = webClient
+        webView.webChromeClient = chromeClient
+        onDispose { webView.destroy() }
+
+    }
+
+    AndroidView(
+        factory = { webView },
+        modifier = modifier
     )
+
+    LaunchedEffect(url) {
+        if (url.contains("#")) {
+            webView.loadDataWithBaseURL(
+                url.substringBefore("#"),
+                "",
+                "text/html",
+                "utf-8",
+                null
+            )
+        } else {
+            webView.loadUrl(url)
+        }
+    }
+
+
 }
 
 private class WebClient(
     private val onError: () -> Unit,
 ) : WebViewClient() {
-
 
     override fun onReceivedError(
         view: WebView?,
@@ -112,7 +131,9 @@ private class WebClient(
         error: WebResourceError?,
     ) {
         super.onReceivedError(view, request, error)
-        onError()
+        if (error != null) {
+            onError()
+        }
     }
 
 }

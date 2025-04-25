@@ -30,8 +30,8 @@ fun KNOPKA_AUTH_DTO.toDomain(): ColorfulButtonModel {
 
 fun UserAuthInfoDTO.toDomain(): UserAuthInfoModel {
     return UserAuthInfoModel(
-        userId = userId ?: throw IllegalArgumentException("userId is required"),
-        authStatus = authStatus ?: throw IllegalArgumentException("authStatus is required"),
+        userId = userId ?: userId2 ?: throw IllegalArgumentException("userId is required"),
+        authStatus = authStatus ?: true,
         token = token ?: throw IllegalArgumentException("token is required")
     )
 }

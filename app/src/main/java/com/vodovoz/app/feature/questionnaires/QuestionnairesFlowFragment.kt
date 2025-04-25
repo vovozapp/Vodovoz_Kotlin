@@ -16,6 +16,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.network.ApiConfig
+import com.vodovoz.app.core.network.interceptor.BaseUrlInterceptor
 import com.vodovoz.app.core.network.interceptor.ChangeUrlInterceptor
 import com.vodovoz.app.databinding.FragmentQuestionnairesBinding
 import com.vodovoz.app.feature.cart.CartFlowViewModel
@@ -74,6 +75,9 @@ class QuestionnairesFlowFragment : BaseFragment() {
     lateinit var changeUrlInterceptor: ChangeUrlInterceptor
 
     @Inject
+    lateinit var baseUrlInterceptor: BaseUrlInterceptor
+
+    @Inject
     lateinit var siteStateManager: SiteStateManager
 
     private var threeFingerTouchCount = 0
@@ -113,7 +117,7 @@ class QuestionnairesFlowFragment : BaseFragment() {
                             .setMessage("Выберете текущий путь к серверу")
                             .setNegativeButton("Рабочий") { dialog, _ ->
                                 dialog.dismiss()
-                                loadHomeFragmentWithNewServerURL("https://m.vodovoz.ru/")
+                                loadHomeFragmentWithNewServerURL(null)
                             }
                             .setPositiveButton("Тестовый") { dialog, _ ->
                                 dialog.dismiss()
@@ -121,13 +125,12 @@ class QuestionnairesFlowFragment : BaseFragment() {
                                     siteStateManager.requestSiteState()
                                     siteStateManager.siteStateFlow.collect{ state ->
                                         if (state != null) {
-                                            val newLink = "${state.secondUrl}/"
+                                            val newLink = "${state.testUrl}/"
                                             loadHomeFragmentWithNewServerURL(newLink)
                                         }
                                     }
                                 }
-                            }
-                            .show()
+                            }.show()
                     }
                 }
             }
@@ -135,11 +138,16 @@ class QuestionnairesFlowFragment : BaseFragment() {
         }
     }
 
-    private fun loadHomeFragmentWithNewServerURL(serverUrl: String) {
-//        ApiConfig.VODOVOZ_URL = serverUrl
-        val url = serverUrl.toHttpUrlOrNull() ?: return
-        ApiConfig.VODOVOZ_URL = serverUrl
-        changeUrlInterceptor.setInterceptor(url.toString())
+    private fun loadHomeFragmentWithNewServerURL(serverUrl: String?) {
+        ApiConfig.VODOVOZ_URL = serverUrl ?: ""
+
+        changeUrlInterceptor.setInterceptor(serverUrl)
+        if(serverUrl == null){
+            baseUrlInterceptor.clear()
+        }else{
+            baseUrlInterceptor.updateBaseUrl(serverUrl)
+        }
+
         lifecycleScope.launch {
             delay(1000)
             homeViewModel.refresh()

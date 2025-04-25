@@ -21,6 +21,20 @@ private val ProfileNavOptions = NavOptions.Builder()
     .setPopExitAnim(R.anim.slide_out_right)
     .build()
 
+fun NavController.navigateToCancelOrder(orderId: Long) {
+    navigate(
+        R.id.cancelOrderFragment,
+        bundleOf("orderId" to orderId),
+        NavOptions.Builder()
+            .setEnterAnim(R.anim.slide_in_botton)
+            .setExitAnim(R.anim.fade_out)
+            .setPopExitAnim(R.anim.slide_out_botton)
+            .setPopEnterAnim(R.anim.fade_in)
+            .build()
+    )
+}
+
+
 fun NavController.navigateToOrderQuestion(orderId: Long) {
     navigate(
         R.id.orderQuestionFragment,

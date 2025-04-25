@@ -3,6 +3,9 @@ package com.vodovoz.app.data.vodovoz_service.di
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.vodovoz.app.core.network.VodovozWebConfig
+import com.vodovoz.app.core.network.interceptor.BaseUrlInterceptor
+import com.vodovoz.app.core.network.interceptor.ChangeUrlInterceptor
 import com.vodovoz.app.core.network.interceptor.CookieHandlerInterceptor
 import com.vodovoz.app.data.vodovoz_service.VodovozService
 import com.vodovoz.app.data.vodovoz_service.model.VodovozResponseDTO
@@ -13,6 +16,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import dagger.multibindings.IntoSet
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -30,6 +35,12 @@ abstract class VodovozServiceModule {
     @Singleton
     abstract fun providesVodovozServiceRepository(vodovozServiceRepository: VodovozServiceRepositoryImpl): VodovozServiceRepository
 
+    @Binds
+    @Singleton
+    abstract fun providerBaseUrlInterceptor(
+        baseUrlInterceptor: BaseUrlInterceptor
+    ): Interceptor
+
 
     companion object {
 
@@ -41,7 +52,7 @@ abstract class VodovozServiceModule {
         @Named("vodovoz")
         fun providesVodovozRetrofit(@Named("vodovoz") okHttpClient: OkHttpClient, moshi: Moshi): Retrofit {
             return Retrofit.Builder()
-                .baseUrl(URL)
+                .baseUrl(VodovozWebConfig.VODOVOZ_URL + VodovozWebConfig.VODOVOZ_PATH)
                 .addConverterFactory(MoshiConverterFactory.create(moshi))
                 .client(okHttpClient)
                 .build()
@@ -58,9 +69,11 @@ abstract class VodovozServiceModule {
         @Named("vodovoz")
         fun providesOkHttpClient(
             cookieHandlerInterceptor: CookieHandlerInterceptor,
+            baseUrlInterceptor: BaseUrlInterceptor
         ): OkHttpClient {
             return OkHttpClient.Builder()
                 .addInterceptor(cookieHandlerInterceptor)
+                .addInterceptor(baseUrlInterceptor)
                 .addInterceptor(HttpLoggingInterceptor())
                 .connectTimeout(25, TimeUnit.SECONDS)
                 .readTimeout(25, TimeUnit.SECONDS)

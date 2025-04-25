@@ -14,6 +14,7 @@ import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
+import com.vodovoz.app.core.navigation.navigateToCancelOrder
 import com.vodovoz.app.core.navigation.navigateToOrderQuestion
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.effects.LifecycleEffect
@@ -79,6 +80,10 @@ class OrderDetailsFragment : Fragment() {
 
                                 is OrderDetailsFlowViewModel.OrderDetailsEvent.GoToOrderQuestion -> {
                                     findNavController().navigateToOrderQuestion(event.orderId)
+                                }
+
+                                is OrderDetailsFlowViewModel.OrderDetailsEvent.GoToCancelOrder -> {
+                                    findNavController().navigateToCancelOrder(event.orderId)
                                 }
                             }
                         }

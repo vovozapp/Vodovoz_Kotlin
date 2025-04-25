@@ -5,6 +5,7 @@ import com.vodovoz.app.domain.general.AllBottlesDetailsModel
 import com.vodovoz.app.domain.general.model.BannerModel
 import com.vodovoz.app.domain.general.model.BrandModel
 import com.vodovoz.app.domain.general.model.BrandSectionModel
+import com.vodovoz.app.domain.general.model.CancelOrderDetailsModel
 import com.vodovoz.app.domain.general.model.CatalogDetailsModel
 import com.vodovoz.app.domain.general.model.CertificateActivationDetailsModel
 import com.vodovoz.app.domain.general.model.ChangePasswordDetailsModel
@@ -46,6 +47,8 @@ import kotlinx.coroutines.flow.Flow
 import java.io.File
 
 interface VodovozServiceRepository {
+
+    fun getCancelOrderDetails(orderId: Long): Flow<Result<CancelOrderDetailsModel>>
 
     fun sendOrderQuestion(orderId: Long, fields: List<FieldModel>) : Flow<Result<ErrorDataModel>>
 
@@ -126,7 +129,7 @@ interface VodovozServiceRepository {
 
     fun relogin(): Flow<Result<Boolean>>
 
-    fun register(fields: List<FieldModel>): Flow<Result<Long>>
+    fun register(fields: List<FieldModel>): Flow<Result<UserAuthInfoModel>>
 
     fun loginByEmail(
         fields: List<FieldModel>

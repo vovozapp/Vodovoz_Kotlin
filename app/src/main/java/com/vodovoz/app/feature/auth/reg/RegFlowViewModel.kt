@@ -124,13 +124,15 @@ class RegFlowViewModel @Inject constructor(
             dataState.fields.map { fieldUi -> fieldUi.toDomain() }
         ).singleResult()
 
-        registerResult.onSuccess { userId ->
+        registerResult.onSuccess { authInfo ->
 
             val email = dataState.fields.firstOrNull { it.id == "email" }?.value ?: ""
             val password = dataState.fields.firstOrNull { it.id == "pass" }?.value ?: ""
 
-            accountManager.updateUserId(userId)
-            likeManager.updateLikesAfterLogin(userId)
+
+            accountManager.updateUserToken(authInfo.token)
+            accountManager.updateUserId(authInfo.userId)
+            likeManager.updateLikesAfterLogin(authInfo.userId)
             firebaseTokenManager.sendFirebaseToken()
             accountManager.updateLastLoginSetting(
                 AccountManager.UserSettings(email, password)

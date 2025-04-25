@@ -319,7 +319,7 @@ class OrderDetailsFlowViewModel @Inject constructor(
                 eventListener.emit(OrderDetailsEvent.GoToOrderQuestion(orderId))
             }
             "otmena" -> {
-
+                eventListener.emit(OrderDetailsEvent.GoToCancelOrder(orderId))
             }
         }
     }
@@ -373,5 +373,6 @@ class OrderDetailsFlowViewModel @Inject constructor(
 
         data class CopyText(val text: String) : OrderDetailsEvent()
         data class GoToOrderQuestion(val orderId: Long) : OrderDetailsEvent()
+        data class GoToCancelOrder(val orderId: Long) : OrderDetailsEvent()
     }
 }

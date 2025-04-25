@@ -1,6 +1,7 @@
 package com.vodovoz.app.data.vodovoz_service.mappers
 
 import com.vodovoz.app.data.vodovoz_service.di.toFullUrl
+import com.vodovoz.app.data.vodovoz_service.model.CancelOrderDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.KNOPKA_ORDER_DTO
 import com.vodovoz.app.data.vodovoz_service.model.OrderQuestionDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.order_details.ABOUT_ORDER_ITEM_DTO
@@ -11,6 +12,7 @@ import com.vodovoz.app.data.vodovoz_service.model.order_details.ORDER_DETAILS_TO
 import com.vodovoz.app.data.vodovoz_service.model.order_details.ORDER_PRODUCT_PODAROK_DTO
 import com.vodovoz.app.data.vodovoz_service.model.order_details.ORDER_STATUS_DTO
 import com.vodovoz.app.data.vodovoz_service.model.order_details.OrderDetailsDTO
+import com.vodovoz.app.domain.general.model.CancelOrderDetailsModel
 import com.vodovoz.app.domain.general.model.ColorfulButtonModel
 import com.vodovoz.app.domain.general.model.order.AboutOrderItemModel
 import com.vodovoz.app.domain.general.model.order.AboutOrderPopupWindowModel
@@ -48,7 +50,7 @@ fun OrderQuestionDetailsDTO.toDomain(): OrderQuestionDetailsModel {
     )
 }
 
-fun KNOPKA_ORDER_DTO.toDomain(): ColorfulButtonModel{
+fun KNOPKA_ORDER_DTO.toDomain(): ColorfulButtonModel {
     return ColorfulButtonModel(
         name = NAME ?: "",
         backgroundColor = BACKGROUND ?: "",
@@ -57,6 +59,17 @@ fun KNOPKA_ORDER_DTO.toDomain(): ColorfulButtonModel{
     )
 }
 
+fun CancelOrderDetailsDTO.toDomain(): CancelOrderDetailsModel {
+    return CancelOrderDetailsModel(
+        title = TITLE ?: "",
+        description = OPISANIE ?: "",
+        warningText = DOPOPISANIE ?: "",
+        checkboxesNames = STATYS?.ZNACHWNIYA?.mapNotNull { it.VALUE } ?: emptyList<String>(),
+        field = SOOBSHENIE?.toDomain(),
+        button = KNOPKA?.toDomain()
+            ?: throw IllegalArgumentException("CancelOrderDetails button can't be null")
+    )
+}
 
 fun ORDER_DETAILS_ITOG_DTO.toDomain(): OrderDetailsSummaryModel {
     return OrderDetailsSummaryModel(

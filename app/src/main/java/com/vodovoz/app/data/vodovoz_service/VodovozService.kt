@@ -6,6 +6,7 @@ import com.vodovoz.app.data.vodovoz_service.model.AnalogsSectionDTO
 import com.vodovoz.app.data.vodovoz_service.model.BannerDTO
 import com.vodovoz.app.data.vodovoz_service.model.BrandSectionDTO
 import com.vodovoz.app.data.vodovoz_service.model.CATEGORY_NODE_DTO
+import com.vodovoz.app.data.vodovoz_service.model.CancelOrderDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.CertificateActivationDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.FieldsDTO
 import com.vodovoz.app.data.vodovoz_service.model.MiniSearchRecommendationsDTO
@@ -50,6 +51,12 @@ import retrofit2.http.QueryMap
 
 interface VodovozService {
 
+
+    @GET("osnova/form/otmenazakaz.php?action=detail")
+    suspend fun getCancelOrderDetails(
+        @Query("userid") userId: Long?,
+        @Query("idzakaz") orderId: Long,
+    ): Response<VodovozResponseDTO<CancelOrderDetailsDTO>>
 
     @GET("osnova/form/voprosozakaze.php?action=otpravka&userid=515&idzakaz=1652215")
     suspend fun sendOrderQuestion(
@@ -221,7 +228,7 @@ interface VodovozService {
     @GET("reg.php?action=otpravka")
     suspend fun register(
         @QueryMap queries: Map<String, String>,
-    ): Response<RegisterDTO>
+    ): Response<VodovozResponseDTO<UserAuthInfoDTO>>
 
 
     @Headers("Cookie: ")

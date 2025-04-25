@@ -24,6 +24,7 @@ import com.vodovoz.app.domain.general.VodovozPagingSource
 import com.vodovoz.app.domain.general.model.BannerModel
 import com.vodovoz.app.domain.general.model.BrandModel
 import com.vodovoz.app.domain.general.model.BrandSectionModel
+import com.vodovoz.app.domain.general.model.CancelOrderDetailsModel
 import com.vodovoz.app.domain.general.model.CatalogDetailsModel
 import com.vodovoz.app.domain.general.model.CertificateActivationDetailsModel
 import com.vodovoz.app.domain.general.model.ChangePasswordDetailsModel
@@ -92,7 +93,24 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     private val trackingManager: TrackingManager,
 ) : VodovozServiceRepository {
 
-    override fun sendOrderQuestion(orderId: Long, fields: List<FieldModel>): Flow<Result<ErrorDataModel>> {
+    override fun getCancelOrderDetails(
+        orderId: Long,
+    ): Flow<Result<CancelOrderDetailsModel>> {
+        return executeRequest(
+            request = {
+                val userId = accountManager.fetchAccountId()
+                vodovozService.getCancelOrderDetails(userId, orderId)
+            },
+            mapper = {
+                it.data!!.toDomain()
+            }
+        )
+    }
+
+    override fun sendOrderQuestion(
+        orderId: Long,
+        fields: List<FieldModel>,
+    ): Flow<Result<ErrorDataModel>> {
         return executeRequest(
             request = {
                 val userId = accountManager.fetchAccountId()
@@ -553,13 +571,13 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         )
     }
 
-    override fun register(fields: List<FieldModel>): Flow<Result<Long>> {
+    override fun register(fields: List<FieldModel>): Flow<Result<UserAuthInfoModel>> {
         return executeRequest(
             request = {
                 vodovozService.register(fields.toQueries())
             },
             mapper = { registerDTO ->
-                registerDTO.userId!!
+                registerDTO.data!!.toDomain()
             },
             onFail = { response ->
                 val jsonBody = response.stringBody()

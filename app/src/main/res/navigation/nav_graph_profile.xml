@@ -6,16 +6,33 @@
     app:startDestination="@id/profileFragment">
 
     <fragment
+        android:id="@+id/cancelOrderFragment"
+        android:name="com.vodovoz.app.feature.cancel_order_fragment.CancelOrderFragment"
+        android:label="CancelOrderFragment">
+
+        <argument
+            android:name="orderId"
+            app:argType="long" />
+
+    </fragment>
+
+
+    <fragment
         android:id="@+id/orderQuestionFragment"
         android:name="com.vodovoz.app.feature.order_question_fragment.OrderQuestionFragment"
-        android:label="OrderQuestionFragment"
-        />
+        android:label="OrderQuestionFragment">
+
+        <argument
+            android:name="orderId"
+            app:argType="long" />
+
+    </fragment>
+
 
     <fragment
         android:id="@+id/changePasswordFragment"
         android:name="com.vodovoz.app.feature.profile.change_password.ChangePasswordFragment"
-        android:label="ChangePasswordFragment"
-        />
+        android:label="ChangePasswordFragment" />
 
     <fragment
         android:id="@+id/certificateActivationFragment"
@@ -43,7 +60,8 @@
             app:argType="com.vodovoz.app.feature.home.model.CategoryUi" />
     </fragment>
 
-    <fragment android:id="@+id/productsCollectionFragment"
+    <fragment
+        android:id="@+id/productsCollectionFragment"
         android:name="com.vodovoz.app.feature.products_collection.ProductsCollectionFragment"
         android:label="fragment_product_collection">
 
@@ -251,7 +269,7 @@
     <fragment
         android:id="@+id/aboutProductFragment"
         android:name="com.vodovoz.app.feature.about_product.AboutProductFragment"
-        android:label="AboutProductFragment"/>
+        android:label="AboutProductFragment" />
 
     <fragment
         android:id="@+id/productDetailFragment"
@@ -612,9 +630,7 @@
 
         <argument
             android:name="filters"
-            app:argType="com.vodovoz.app.design_system.model.filters.FiltersUi"/>
-
-
+            app:argType="com.vodovoz.app.design_system.model.filters.FiltersUi" />
 
 
     </fragment>
@@ -856,8 +872,12 @@
         android:name="com.vodovoz.app.feature.alert_dialog.AlertDialogFragment"
         android:label="AlertDialogFragment">
 
-        <argument android:name="title" android:defaultValue="String" />
-        <argument android:name="description" android:defaultValue="String"/>
+        <argument
+            android:name="title"
+            android:defaultValue="String" />
+        <argument
+            android:name="description"
+            android:defaultValue="String" />
 
     </dialog>
 

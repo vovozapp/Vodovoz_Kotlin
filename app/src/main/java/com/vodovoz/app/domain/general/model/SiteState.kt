@@ -2,7 +2,7 @@ package com.vodovoz.app.domain.general.model
 
 data class SiteState(
     val isActive: Boolean,
-    val secondUrl: String,
+    val testUrl: String,
     val smsUrl: String,
     val isSmsEnabled: Boolean,
     val showComments: Boolean,

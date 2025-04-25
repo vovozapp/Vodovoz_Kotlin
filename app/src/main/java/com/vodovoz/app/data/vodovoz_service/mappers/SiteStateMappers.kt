@@ -13,7 +13,7 @@ fun SiteStateResponseDTO.toDomain(): SiteState {
     return SiteState(
         //TODO - mb replace to "Y"
         isActive = ACTIVE == "N",
-        secondUrl = TESTSAITSSILKA ?: "",
+        testUrl = TESTSAITSSILKA ?: "",
         smsUrl = SMSRASSILKA ?: "",
         isSmsEnabled = REGISTRACION_SMS == "Y",
         jivoChat = CHATJIVO?.toJivoChatModel() ?: JivoChatModel(isActive = false, url = ""),

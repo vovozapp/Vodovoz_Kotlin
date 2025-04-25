@@ -194,7 +194,7 @@ fun FieldUi.getErrorText(getStringResource: (Int) -> String): String {
             getStringResource(R.string.supporting_text_password)
         }
 
-        id == "message" || id == "d127" -> {
+        id == "message" || id == "dr127" -> {
             getStringResource(R.string.supporting_text_message)
         }
 

@@ -9,6 +9,8 @@ import com.squareup.moshi.JsonClass
 data class UserAuthInfoDTO(
     @Json(name = "user_id")
     val userId: Long?,
+    @Json(name = "userid")
+    val userId2: Long?,
     @Json(name = "auth_status")
     val authStatus: Boolean?,
     @Json(name = "token")
