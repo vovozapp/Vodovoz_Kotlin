@@ -30,7 +30,7 @@ import com.vodovoz.app.domain.general.model.CertificateActivationDetailsModel
 import com.vodovoz.app.domain.general.model.ChangePasswordDetailsModel
 import com.vodovoz.app.domain.general.model.CommentModel
 import com.vodovoz.app.domain.general.model.EmptyResultException
-import com.vodovoz.app.domain.general.model.ErrorDataModel
+import com.vodovoz.app.domain.general.model.VodovozPlaceholderModel
 import com.vodovoz.app.domain.general.model.FavoritesNotFoundException
 import com.vodovoz.app.domain.general.model.FieldModel
 import com.vodovoz.app.domain.general.model.FilterValueModel
@@ -62,6 +62,8 @@ import com.vodovoz.app.domain.general.model.UserDataModel
 import com.vodovoz.app.domain.general.model.UserNotLoginException
 import com.vodovoz.app.domain.general.model.ValidationException
 import com.vodovoz.app.domain.general.model.cart.CartDetailsModel
+import com.vodovoz.app.domain.general.model.certificate.BuyCertificateDetailsModel
+import com.vodovoz.app.domain.general.model.certificate.BuyCertificateModel
 import com.vodovoz.app.domain.general.model.format
 import com.vodovoz.app.domain.general.model.login.AuthDetailsModel
 import com.vodovoz.app.domain.general.model.login.UserAuthInfoModel
@@ -110,7 +112,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     override fun sendOrderQuestion(
         orderId: Long,
         fields: List<FieldModel>,
-    ): Flow<Result<ErrorDataModel>> {
+    ): Flow<Result<VodovozPlaceholderModel>> {
         return executeRequest(
             request = {
                 val userId = accountManager.fetchAccountId()
@@ -503,6 +505,26 @@ class VodovozServiceRepositoryImpl @Inject constructor(
             },
             mapper = {
                 it.data!!.map { filterValue -> FilterValueModel(filterValue, filterValue) }
+            }
+        )
+    }
+
+    override fun buyCertificate(params: Map<String, String>): Flow<Result<BuyCertificateModel>> {
+        return executeRequest(
+            request = {
+                vodovozService.buyCertificate(accountManager.fetchAccountId(), params)
+            },
+            mapper = { it.data!!.toDomain() }
+        )
+    }
+
+    override fun getBuyCertificateDetails(): Flow<Result<BuyCertificateDetailsModel>> {
+        return executeRequest(
+            request = {
+                vodovozService.getBuyCertificateDetails(accountManager.fetchAccountId())
+            },
+            mapper = {
+                it.data!!.toDomain()
             }
         )
     }

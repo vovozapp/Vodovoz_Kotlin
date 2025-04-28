@@ -103,8 +103,8 @@ class LoginByEmailFragment : Fragment() {
                                 LoginByEmailEvent.RefreshAll -> {
                                     profileViewModel.refresh()
                                     homeViewModel.refresh()
-                                    cartFlowViewModel.refreshIdle()
-                                    favoriteViewModel.refreshIdle()
+                                    cartFlowViewModel.refresh()
+                                    favoriteViewModel.refresh()
 
                                     val redirect = tabManager.fetchAuthRedirect()
                                     if (redirect == TabManager.DEFAULT_AUTH_REDIRECT) {
@@ -112,6 +112,9 @@ class LoginByEmailFragment : Fragment() {
                                             R.id.profileFragment, false
                                         )
                                     } else {
+                                        findNavController().popBackStack(
+                                            R.id.profileFragment, false
+                                        )
                                         tabManager.selectTab(redirect)
                                         tabManager.setDefaultAuthRedirect()
                                     }

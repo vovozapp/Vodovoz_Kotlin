@@ -1,8 +1,8 @@
 package com.vodovoz.app.design_system.model
 
-import com.vodovoz.app.domain.general.model.ErrorDataModel
+import com.vodovoz.app.domain.general.model.VodovozPlaceholderModel
 
-data class ErrorDataUi(
+data class VodovozPlaceholderUi(
     val title: String,
     val headerHtml: String,
     val descriptionHtml: String,
@@ -10,12 +10,12 @@ data class ErrorDataUi(
     val button: ColorfulButtonUi? = null,
 ){
     companion object{
-        val Empty = ErrorDataUi("", "","","")
+        val Empty = VodovozPlaceholderUi("", "","","")
     }
 }
 
-fun ErrorDataModel.toUi(): ErrorDataUi{
-    return ErrorDataUi(
+fun VodovozPlaceholderModel.toUi(): VodovozPlaceholderUi{
+    return VodovozPlaceholderUi(
         title, headerHtml, descriptionHtml, imageUrl, button?.toUi()
     )
 }

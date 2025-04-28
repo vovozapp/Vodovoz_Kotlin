@@ -14,6 +14,8 @@ data class POLE_DTO(
     val CODE: String?,
     @Json(name = "OBYZATELNO")
     val OBYZATELNO: String?,
+    @Json(name = "OBAZATELEN")
+    val OBAZATELEN: String?,
     @Json(name = "ZABLOCKPOLE")
     val ZABLOCKPOLE: String?,
     @Json(name = "POLE")
@@ -27,5 +29,7 @@ data class POLE_DTO(
     @Json(name = "OPIS")
     val OPIS: String?,
     @Json(name = "TEXT_V_POLE")
-    val TEXT_V_POLE: String?
+    val TEXT_V_POLE: String?,
+    @Json(name = "TEXTVPOLE")
+    val TEXTVPOLE: String?
 )

@@ -17,26 +17,24 @@ fun VodovozButtonsColumn(
     modifier: Modifier = Modifier,
     onButtonClick: (ColorfulButtonUi) -> Unit,
 ) {
-
-
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         buttons.forEach { button ->
             val contentColor =
-                button.backgroundColor.takeOrElse { MaterialTheme.colorScheme.primary }
+                button.textColor.takeOrElse { MaterialTheme.colorScheme.primary }
             val containerColor =
-                button.textColor.takeOrElse { MaterialTheme.colorScheme.background }
+                button.backgroundColor.takeOrElse { MaterialTheme.colorScheme.background }
 
             VodovozButton(
                 text = button.name,
                 onClick = { onButtonClick(button) },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = contentColor,
-                    contentColor = containerColor,
+                colors = ButtonDefaults.filledTonalButtonColors(
+                    containerColor = containerColor,
+                    contentColor = contentColor,
                     disabledContentColor = contentColor.copy(0.4f),
-                    disabledContainerColor = contentColor.copy(0.4f)
+                    disabledContainerColor = containerColor.copy(0.4f)
                 ),
                 enabled = button.enabled,
                 isLoading = button.loading,

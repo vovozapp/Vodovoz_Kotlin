@@ -89,6 +89,7 @@ class ProfileFlowViewModel @Inject constructor(
         viewModelScope.launch {
             siteStateManager.requestSiteState()
         }
+        //todo - check user auth else logout
         fetchProfileDetails()
 
     }

@@ -5,6 +5,20 @@
     android:id="@+id/graph_profile"
     app:startDestination="@id/profileFragment">
 
+
+    <fragment
+        android:id="@+id/faqFragment"
+        android:name="com.vodovoz.app.feature.faq.FAQFragment"
+        android:label="fragment_faq">
+
+        <argument
+            android:name="faq"
+            app:argType="com.vodovoz.app.feature.buy_certificate.model.FAQUi"
+            />
+
+    </fragment>
+
+
     <fragment
         android:id="@+id/cancelOrderFragment"
         android:name="com.vodovoz.app.feature.cancel_order_fragment.CancelOrderFragment"

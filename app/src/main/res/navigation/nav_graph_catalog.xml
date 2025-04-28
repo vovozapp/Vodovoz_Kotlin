@@ -6,6 +6,18 @@
     app:startDestination="@id/catalogFragment">
 
     <fragment
+        android:id="@+id/faqFragment"
+        android:name="com.vodovoz.app.feature.faq.FAQFragment"
+        android:label="fragment_faq">
+
+        <argument
+            android:name="faq"
+            app:argType="com.vodovoz.app.feature.buy_certificate.model.FAQUi"
+            />
+
+    </fragment>
+
+    <fragment
         android:id="@+id/subCategoriesFragment"
         android:name="com.vodovoz.app.feature.sub_categories.SubCategoriesFragment"
         android:label="fragment_sub_categories">

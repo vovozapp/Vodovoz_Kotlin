@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.os.Parcelable
 import android.provider.Settings
@@ -355,6 +356,14 @@ inline fun <T : View> T.preDraw(crossinline callBack: (isReady: Boolean) -> Unit
             return true
         }
     })
+}
+
+
+fun Context.openUrl(url: String){
+    kotlin.runCatching {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        startActivity(intent)
+    }
 }
 
 /*

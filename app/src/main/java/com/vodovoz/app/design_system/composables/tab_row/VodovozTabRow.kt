@@ -16,13 +16,11 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -40,7 +38,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.vodovoz.app.design_system.VodovozTheme
-import kotlinx.coroutines.delay
 
 
 @Composable
@@ -49,7 +46,7 @@ fun VodovozTabRow(
     contentPadding: PaddingValues = PaddingValues(4.dp),
     tabSpacing: Dp = 4.dp,
     selectedTabPosition: Int = 0,
-    animationSpec: AnimationSpec<Dp> = tween(durationMillis = 300, easing = LinearEasing),
+    animationSpec: AnimationSpec<Dp> = tween(durationMillis = 200, easing = LinearEasing),
     tabItems: @Composable () -> Unit,
 ) {
     Surface(
@@ -107,7 +104,10 @@ fun VodovozTabRow(
                 subcompose("Indicator") {
                     Box(
                         Modifier
-                            .tabIndicator(tabPositions[selectedTabPosition], animationSpec)
+                            .tabIndicator(
+                                tabPositions.getOrNull(selectedTabPosition) ?: TabPosition.Empty,
+                                animationSpec
+                            )
                             .fillMaxWidth()
                             .height(maxItemHeight.toDp())
                             .background(

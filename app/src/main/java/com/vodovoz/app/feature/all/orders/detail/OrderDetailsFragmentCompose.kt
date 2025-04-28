@@ -17,6 +17,8 @@ import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.core.navigation.navigateToCancelOrder
 import com.vodovoz.app.core.navigation.navigateToOrderQuestion
 import com.vodovoz.app.design_system.VodovozTheme
+import com.vodovoz.app.design_system.composables.placeholders.LoadingPlaceholder
+import com.vodovoz.app.design_system.composables.placeholders.NetworkErrorPlaceholder
 import com.vodovoz.app.design_system.effects.LifecycleEffect
 import com.vodovoz.app.feature.all.orders.detail.composables.AboutOrderBottomSheet
 import com.vodovoz.app.util.extensions.copyText
@@ -54,10 +56,23 @@ class OrderDetailsFragment : Fragment() {
                     val pagingState by viewModel.observeUiState().collectAsStateWithLifecycle()
                     val viewState by rememberUpdatedState(newValue = pagingState.data)
 
-                    OrderDetailsScreen(
-                        viewModel = viewModel,
-                        viewState = viewState
-                    )
+                    when(viewState.uiState){
+                        OrderDetailsFlowViewModel.OrderDetailsUiState.Body -> {
+                            OrderDetailsScreen(
+                                viewModel = viewModel,
+                                viewState = viewState
+                            )
+
+                        }
+                        OrderDetailsFlowViewModel.OrderDetailsUiState.Error -> {
+                            NetworkErrorPlaceholder {
+                                viewModel.fetchOrderDetails()
+                            }
+                        }
+                        OrderDetailsFlowViewModel.OrderDetailsUiState.Loading -> {
+                            LoadingPlaceholder()
+                        }
+                    }
 
                     val currentAboutOrder = viewState.currentAboutOrderBS
                     if (viewState.showAboutOrderBS && currentAboutOrder != null) {

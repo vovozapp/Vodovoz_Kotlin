@@ -10,7 +10,6 @@ import com.vodovoz.app.domain.general.model.CatalogDetailsModel
 import com.vodovoz.app.domain.general.model.CertificateActivationDetailsModel
 import com.vodovoz.app.domain.general.model.ChangePasswordDetailsModel
 import com.vodovoz.app.domain.general.model.CommentModel
-import com.vodovoz.app.domain.general.model.ErrorDataModel
 import com.vodovoz.app.domain.general.model.FieldModel
 import com.vodovoz.app.domain.general.model.FilterValueModel
 import com.vodovoz.app.domain.general.model.FiltersModel
@@ -37,7 +36,10 @@ import com.vodovoz.app.domain.general.model.StoryModel
 import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
 import com.vodovoz.app.domain.general.model.UnratedProductsSectionModel
 import com.vodovoz.app.domain.general.model.UserDataModel
+import com.vodovoz.app.domain.general.model.VodovozPlaceholderModel
 import com.vodovoz.app.domain.general.model.cart.CartDetailsModel
+import com.vodovoz.app.domain.general.model.certificate.BuyCertificateDetailsModel
+import com.vodovoz.app.domain.general.model.certificate.BuyCertificateModel
 import com.vodovoz.app.domain.general.model.login.AuthDetailsModel
 import com.vodovoz.app.domain.general.model.login.UserAuthInfoModel
 import com.vodovoz.app.domain.general.model.order.OrderDetailsModel
@@ -50,7 +52,10 @@ interface VodovozServiceRepository {
 
     fun getCancelOrderDetails(orderId: Long): Flow<Result<CancelOrderDetailsModel>>
 
-    fun sendOrderQuestion(orderId: Long, fields: List<FieldModel>) : Flow<Result<ErrorDataModel>>
+    fun sendOrderQuestion(
+        orderId: Long,
+        fields: List<FieldModel>,
+    ): Flow<Result<VodovozPlaceholderModel>>
 
     fun getOrderQuestionDetails(orderId: Long): Flow<Result<OrderQuestionDetailsModel>>
 
@@ -59,12 +64,12 @@ interface VodovozServiceRepository {
     fun getAllBottles(): Flow<Result<AllBottlesDetailsModel>>
 
     fun getBrands(
-        searchQuery: String = ""
+        searchQuery: String = "",
     ): Flow<Result<BrandSectionModel>>
 
 
     fun getBrandsPaged(
-        searchQuery: String = ""
+        searchQuery: String = "",
     ): Flow<PagingData<BrandModel>>
 
     fun getBrandProducts(
@@ -121,6 +126,10 @@ interface VodovozServiceRepository {
 
     fun getFilterValues(categoryId: Int, filterId: String): Flow<Result<List<FilterValueModel>>>
 
+    fun buyCertificate(params: Map<String, String>): Flow<Result<BuyCertificateModel>>
+
+    fun getBuyCertificateDetails(): Flow<Result<BuyCertificateDetailsModel>>
+
     fun getCertificateActivationDetails(): Flow<Result<CertificateActivationDetailsModel>>
 
     fun activateCertificate(field: FieldUi): Flow<Result<String>>
@@ -132,7 +141,7 @@ interface VodovozServiceRepository {
     fun register(fields: List<FieldModel>): Flow<Result<UserAuthInfoModel>>
 
     fun loginByEmail(
-        fields: List<FieldModel>
+        fields: List<FieldModel>,
     ): Flow<Result<UserAuthInfoModel>>
 
     fun getCatalogDetails(): Flow<Result<CatalogDetailsModel>>
@@ -197,7 +206,7 @@ interface VodovozServiceRepository {
     ): Flow<Result<String>>
 
     suspend fun getCartDetails(
-        coupon: String? = null
+        coupon: String? = null,
     ): Flow<Result<CartDetailsModel>>
 
     suspend fun addProductToCart(

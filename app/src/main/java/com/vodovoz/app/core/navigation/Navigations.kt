@@ -9,17 +9,28 @@ import com.vodovoz.app.design_system.model.ParentCategoryUi
 import com.vodovoz.app.design_system.model.filters.FilterUi
 import com.vodovoz.app.design_system.model.filters.FiltersUi
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
+import com.vodovoz.app.feature.buy_certificate.model.FAQUi
 import com.vodovoz.app.feature.cart.model.CartPresentPopupWindowUi
 import com.vodovoz.app.feature.cart.model.CartPresentUi
 import com.vodovoz.app.feature.home.model.CategoryUi
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 
 
-private val ProfileNavOptions = NavOptions.Builder()
+private val SlideNavOptions = NavOptions.Builder()
     .setEnterAnim(R.anim.slide_in_right)
     .setExitAnim(R.anim.fade_out)
     .setPopExitAnim(R.anim.slide_out_right)
     .build()
+
+
+fun NavController.navigateToFAQ(faq: FAQUi) {
+    navigate(
+        R.id.faqFragment,
+        bundleOf("faq" to faq),
+        SlideNavOptions
+    )
+
+}
 
 fun NavController.navigateToCancelOrder(orderId: Long) {
     navigate(
@@ -76,11 +87,11 @@ fun NavController.navigateToGifts(
 }
 
 fun NavController.navigateToAddresses() {
-    navigate(R.id.savedAddressesDialogFragment, Bundle.EMPTY, ProfileNavOptions)
+    navigate(R.id.savedAddressesDialogFragment, Bundle.EMPTY, SlideNavOptions)
 }
 
 fun NavController.navigateToRecoverPassword() {
-    navigate(R.id.recoverPasswordFragment, Bundle.EMPTY, ProfileNavOptions)
+    navigate(R.id.recoverPasswordFragment, Bundle.EMPTY, SlideNavOptions)
 }
 
 fun NavController.navigateToButtonProductList(buttonId: Int) {
@@ -95,27 +106,27 @@ fun NavController.navigateToButtonProductList(buttonId: Int) {
 }
 
 fun NavController.navigateToAboutApp() {
-    navigate(R.id.aboutAppDialogFragment, Bundle.EMPTY, ProfileNavOptions)
+    navigate(R.id.aboutAppDialogFragment, Bundle.EMPTY, SlideNavOptions)
 }
 
 
 fun NavController.navigateToNotificationSettings() {
-    navigate(R.id.notificationSettingsFragment, Bundle.EMPTY, ProfileNavOptions)
+    navigate(R.id.notificationSettingsFragment, Bundle.EMPTY, SlideNavOptions)
 }
 
 
 fun NavController.navigateToQuestionnaires() {
-    navigate(R.id.questionnairesFragment2, Bundle.EMPTY, ProfileNavOptions)
+    navigate(R.id.questionnairesFragment2, Bundle.EMPTY, SlideNavOptions)
 }
 
 fun NavController.navigateToPastPurchases() {
     navigate(
-        R.id.pastPurchasesFragment, Bundle.EMPTY, ProfileNavOptions
+        R.id.pastPurchasesFragment, Bundle.EMPTY, SlideNavOptions
     )
 }
 
 fun NavController.navigateToOrdersHistory() {
-    navigate(R.id.allOrdersFragment, Bundle.EMPTY, ProfileNavOptions)
+    navigate(R.id.allOrdersFragment, Bundle.EMPTY, SlideNavOptions)
 }
 
 fun NavController.navigateToOrderDetails(orderId: Int) {

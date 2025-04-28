@@ -15,8 +15,7 @@ import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.cart.MessageTextBasket
-import com.vodovoz.app.design_system.model.ColorfulButtonUi
-import com.vodovoz.app.design_system.model.ErrorDataUi
+import com.vodovoz.app.design_system.model.VodovozPlaceholderUi
 import com.vodovoz.app.design_system.model.toUi
 import com.vodovoz.app.domain.general.model.EmptyResultException
 import com.vodovoz.app.domain.general.model.cart.CartOrderSummaryUi
@@ -136,7 +135,7 @@ class CartFlowViewModel @Inject constructor(
         }.onFailure { t ->
             val uiState = when (t) {
                 is EmptyResultException -> {
-                    CartUiState.Empty(errorData = t.errorData?.toUi() ?: ErrorDataUi.Empty)
+                    CartUiState.Empty(errorData = t.errorData?.toUi() ?: VodovozPlaceholderUi.Empty)
                 }
 
                 else -> {
@@ -560,7 +559,7 @@ class CartFlowViewModel @Inject constructor(
     sealed interface CartUiState {
         data object Loading : CartUiState
         data object Cart : CartUiState
-        data class Empty(val errorData: ErrorDataUi) : CartUiState
+        data class Empty(val errorData: VodovozPlaceholderUi) : CartUiState
         data object Error : CartUiState
     }
 

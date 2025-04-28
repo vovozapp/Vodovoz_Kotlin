@@ -11,6 +11,7 @@ import com.vodovoz.app.data.vodovoz_service.model.CertificateActivationDetailsDT
 import com.vodovoz.app.data.vodovoz_service.model.FieldsDTO
 import com.vodovoz.app.data.vodovoz_service.model.MiniSearchRecommendationsDTO
 import com.vodovoz.app.data.vodovoz_service.model.OrderMenuDTO
+import com.vodovoz.app.data.vodovoz_service.model.OrderPlaceholderDTO
 import com.vodovoz.app.data.vodovoz_service.model.OrderQuestionDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.PopularCategoriesDTO
 import com.vodovoz.app.data.vodovoz_service.model.PopupWindowDTO
@@ -21,7 +22,6 @@ import com.vodovoz.app.data.vodovoz_service.model.ProductsSectionDTO
 import com.vodovoz.app.data.vodovoz_service.model.PromotionDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.PromotionsDTO
 import com.vodovoz.app.data.vodovoz_service.model.RAZDEL_DTO
-import com.vodovoz.app.data.vodovoz_service.model.RegisterDTO
 import com.vodovoz.app.data.vodovoz_service.model.RegistrationDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.SearchRecommendationsDTO
 import com.vodovoz.app.data.vodovoz_service.model.SiteStateResponseDTO
@@ -33,6 +33,7 @@ import com.vodovoz.app.data.vodovoz_service.model.auth.LoginDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.auth.UserAuthInfoDTO
 import com.vodovoz.app.data.vodovoz_service.model.cart.CartDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.catalog.CatalogDetailsDTO
+import com.vodovoz.app.data.vodovoz_service.model.certificate.BuyCertificateDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.filters.FiltersDTO
 import com.vodovoz.app.data.vodovoz_service.model.order_details.OrderDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.ProductDetailsDTO
@@ -58,11 +59,11 @@ interface VodovozService {
         @Query("idzakaz") orderId: Long,
     ): Response<VodovozResponseDTO<CancelOrderDetailsDTO>>
 
-    @GET("osnova/form/voprosozakaze.php?action=otpravka&userid=515&idzakaz=1652215")
+    @GET("osnova/form/voprosozakaze.php?action=otpravka")
     suspend fun sendOrderQuestion(
         @Query("userid") userId: Long?,
         @Query("idzakaz") orderId: Long,
-        @QueryMap queryMap: Map<String, String>
+        @QueryMap queryMap: Map<String, String>,
     ): Response<VodovozResponseDTO<String>>
 
     @GET("osnova/form/voprosozakaze.php?action=detail")
@@ -156,16 +157,27 @@ interface VodovozService {
     ): Response<VodovozResponseDTO<List<String>>>
 
     /**
-     *  Certificate activation screen
+     *  Certificate requests
      * */
     @GET("osnova/sertificat/activaciya.php?action=glav")
     suspend fun getCertificateActivationDetails(): Response<VodovozResponseDTO<CertificateActivationDetailsDTO>>
+
+    @GET("osnova/sertificat/index.php?action=oformlenie")
+    suspend fun buyCertificate(
+        @Query("userid") userId: Long?,
+        @QueryMap queries: Map<String, String>,
+    ): Response<VodovozResponseDTO<OrderPlaceholderDTO>>
 
     @GET("osnova/sertificat/activaciya.php?action=detail")
     suspend fun activateCertificate(
         @Query("userid") userId: Long,
         @QueryMap queries: Map<String, String>,
     ): Response<VodovozResponseDTO<String>>
+
+    @GET("osnova/sertificat/index.php?action=glav")
+    suspend fun getBuyCertificateDetails(
+        @Query("userid") userId: Long?,
+    ): Response<VodovozResponseDTO<BuyCertificateDetailsDTO>>
 
     /**
      * Catalog screen
@@ -326,7 +338,7 @@ interface VodovozService {
     /**
      * ProductsCollection screen
      */
-    @GET("details/analog.php?id=105622")
+    @GET("details/analog.php")
     suspend fun getProductAnalogs(
         @Query("id") productId: Long,
         @Query("sort") sort: String = "",
@@ -385,6 +397,7 @@ interface VodovozService {
     @GET("glavnaya/stories/index.php?iblock_id=12&action=stories&platforma=android")
     suspend fun getStories(): Response<VodovozResponseDTO<StoriesDTO>>
 
+    //todo - delete and use new realization
     @GET("glavnaya/stories/index.php?iblock_id=12&action=storisdetailtovary&platforma=android")
     suspend fun getStoriesProducts(
         @Query("id") productsId: Long,
@@ -394,6 +407,7 @@ interface VodovozService {
         @Query("ascdesc") order: String = "",
     ): Response<VodovozResponseDTO<ProductsSectionDTO>>
 
+    //todo - delete and use new realization
     @GET("glavnaya/stories/index.php?iblock_id=12&action=storisdetailactions&platforma=android")
     suspend fun getStoriesPromotions(
         @Query("id") promotionsId: Long,

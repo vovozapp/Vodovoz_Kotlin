@@ -105,9 +105,7 @@ class LoginByEmailFragment1 : BaseFragment() {
                                 favoriteViewModel.refreshIdle()
                                 val redirect = tabManager.fetchAuthRedirect()
                                 if (redirect == TabManager.DEFAULT_AUTH_REDIRECT) {
-                                    repeat(2) {
-                                        findNavController().popBackStack()
-                                    }
+                                    findNavController().popBackStack(R.id.profileFragment, false)
                                 } else {
                                     tabManager.selectTab(redirect)
                                     tabManager.setDefaultAuthRedirect()
@@ -157,6 +155,7 @@ class LoginByEmailFragment1 : BaseFragment() {
                             LoginFlowViewModel.LoginEvents.GoBack -> {
                                 findNavController().popBackStack()
                             }
+
                             else -> {
 
                             }

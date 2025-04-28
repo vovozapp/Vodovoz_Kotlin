@@ -43,7 +43,7 @@ fun CatalogLoadingPlaceholder(modifier: Modifier = Modifier) {
             shimmerState = shimmerState,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(150.dp)
+                .height(80.dp)
         )
 
         repeat(4) {

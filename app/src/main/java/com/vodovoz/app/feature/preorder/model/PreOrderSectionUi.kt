@@ -136,7 +136,7 @@ val KeyboardTypeValidator = FieldValidator { field ->
 val NameValidator = FieldValidator { field ->
     val value = field.value
     when {
-        field.id.contains("name") -> {
+        field.id =="name" || field.id == "lastname" -> {
             FieldValidationResult.from(value.length in 3..30 && value.isNotBlank())
         }
 
@@ -194,7 +194,7 @@ fun FieldUi.getErrorText(getStringResource: (Int) -> String): String {
             getStringResource(R.string.supporting_text_password)
         }
 
-        id == "message" || id == "dr127" -> {
+        id == "message" || id == "dr127"-> {
             getStringResource(R.string.supporting_text_message)
         }
 
@@ -202,7 +202,7 @@ fun FieldUi.getErrorText(getStringResource: (Int) -> String): String {
     }
 }
 
-fun List<FieldUi>.checkFields(
+inline fun List<FieldUi>.checkFields(
     putErrors: Boolean = false,
     validators: List<FieldValidator> = listOf(
         NoRequiredValidator,
@@ -245,6 +245,10 @@ fun FieldModel.toUi(): FieldUi {
 
     val keyboardType = when (id) {
         "email" -> {
+            KeyboardType.Email
+        }
+
+        "emaildryg" -> {
             KeyboardType.Email
         }
 
@@ -294,7 +298,8 @@ fun FieldModel.toUi(): FieldUi {
         isError = false,
         readOnly = readOnly,
         supportingText = supportingText,
-        hint = hint
+        hint = hint,
+        isValueVisible = keyboardType != KeyboardType.Password
     )
 }
 

@@ -6,7 +6,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectableGroup
@@ -124,9 +123,10 @@ private fun VodovozScrollableTabRowImp(
         }
 
         val spacingInPx = spacing.roundToPx()
-        val layoutWidth = tabPlaceables.fastFold(initial = padding * 2 - spacingInPx) { curr, measurable ->
-            curr + measurable.width + spacingInPx
-        }
+        val layoutWidth =
+            tabPlaceables.fastFold(initial = padding * 2 - spacingInPx) { curr, measurable ->
+                curr + measurable.width + spacingInPx
+            }
 
         layout(layoutWidth, layoutHeight) {
             val tabPositions = mutableListOf<TabPosition>()
@@ -153,15 +153,7 @@ private fun VodovozScrollableTabRowImp(
     }
 }
 
-/**
- * Data class that contains information about a tab's position on screen, used for calculating
- * where to place the indicator that shows which tab is selected.
- *
- * @property left the left edge's x position from the start of the [VodovozTabRow]
- * @property right the right edge's x position from the start of the [VodovozTabRow]
- * @property width the width of this tab
- * @property contentWidth the content width of this tab. Should be a minimum of 24.dp
- */
+
 @Immutable
 class TabPosition internal constructor(val left: Dp, val width: Dp, val contentWidth: Dp) {
 
@@ -187,6 +179,10 @@ class TabPosition internal constructor(val left: Dp, val width: Dp, val contentW
 
     override fun toString(): String {
         return "TabPosition(left=$left, right=$right, width=$width, contentWidth=$contentWidth)"
+    }
+
+    companion object {
+        val Empty = TabPosition(0.dp, 0.dp, 0.dp)
     }
 }
 

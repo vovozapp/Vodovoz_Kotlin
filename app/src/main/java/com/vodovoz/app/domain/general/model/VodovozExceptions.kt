@@ -4,7 +4,7 @@ package com.vodovoz.app.domain.general.model
 open class RequestException(
     message: String = "",
     cause: Throwable? = null,
-    val errorData: ErrorDataModel? = null,
+    val errorData: VodovozPlaceholderModel? = null,
 ) : IllegalStateException(
     message, cause
 )
@@ -26,14 +26,14 @@ class ValidationException(
 class FavoritesNotFoundException(
     message: String = "",
     cause: Throwable? = null,
-    errorData: ErrorDataModel? = null,
+    errorData: VodovozPlaceholderModel? = null,
 ) : RequestException(
     message, cause, errorData
 )
 
 class EmptyResultException(
     message: String = "",
-    errorData: ErrorDataModel? = null,
+    errorData: VodovozPlaceholderModel? = null,
     cause: Throwable? = null,
 ) : RequestException(
     message, cause, errorData
@@ -42,12 +42,12 @@ class EmptyResultException(
 class UserNotLoginException(
     message: String = "",
     cause: Throwable? = null,
-    errorData: ErrorDataModel? = null,
+    errorData: VodovozPlaceholderModel? = null,
 ) : RequestException(
     message, cause, errorData
 )
 
-data class ErrorDataModel(
+data class VodovozPlaceholderModel(
     val title: String,
     val headerHtml: String,
     val descriptionHtml: String,
@@ -55,7 +55,7 @@ data class ErrorDataModel(
     val button: ColorfulButtonModel? = null,
 ) {
     companion object {
-        val Empty = ErrorDataModel(
+        val Empty = VodovozPlaceholderModel(
             "", "", "", ""
         )
     }

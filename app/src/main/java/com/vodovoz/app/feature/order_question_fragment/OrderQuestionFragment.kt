@@ -16,7 +16,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.fragment.findNavController
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.design_system.VodovozTheme
-import com.vodovoz.app.design_system.composables.placeholders.ErrorDataPlaceholder
+import com.vodovoz.app.design_system.composables.placeholders.VodovozPlaceholder
 import com.vodovoz.app.design_system.composables.placeholders.LoadingPlaceholder
 import com.vodovoz.app.design_system.composables.placeholders.NetworkErrorPlaceholder
 import com.vodovoz.app.design_system.effects.LifecycleEffect
@@ -83,8 +83,8 @@ class OrderQuestionFragment : Fragment() {
                         }
 
                         is OrderQuestionUiState.Success -> {
-                            ErrorDataPlaceholder(
-                                errorData = uiState.placeholderData,
+                            VodovozPlaceholder(
+                                data = uiState.placeholderData,
                                 onButtonClick = {
                                     viewModel.navigateBack()
                                 }

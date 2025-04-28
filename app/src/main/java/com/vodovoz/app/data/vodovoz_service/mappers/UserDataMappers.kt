@@ -33,12 +33,12 @@ fun List<POLE_DTO>.mapToDomain(): List<FieldModel> {
 fun POLE_DTO.toDomain(): FieldModel? {
     return FieldModel(
         id = CODE ?: return null,
-        label = TEXT ?: NAME ?: "",
+        label = NAME ?: TEXT ?: "",
         value = VALUE ?: "",
         valueType = POLE ?: "text",
-        isRequired = OBYZATELNO == "Y",
+        isRequired = (OBYZATELNO ?: OBAZATELEN) == "Y",
         readOnly = ZABLOCKPOLE == "Y",
-        supportingText = OPIS ?: "",
-        hint = TEXTOPIS ?: TEXT_V_POLE ?: ""
+        supportingText = TEXT ?: OPIS ?: "",
+        hint = TEXTOPIS ?: TEXT_V_POLE ?: TEXTVPOLE ?:  "",
     )
 }

@@ -3,6 +3,8 @@ package com.vodovoz.app.data.vodovoz_service.mappers
 import com.vodovoz.app.data.vodovoz_service.di.toFullUrl
 import com.vodovoz.app.data.vodovoz_service.model.CancelOrderDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.KNOPKA_ORDER_DTO
+import com.vodovoz.app.data.vodovoz_service.model.OPLATA_DTO
+import com.vodovoz.app.data.vodovoz_service.model.OrderPlaceholderDTO
 import com.vodovoz.app.data.vodovoz_service.model.OrderQuestionDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.order_details.ABOUT_ORDER_ITEM_DTO
 import com.vodovoz.app.data.vodovoz_service.model.order_details.ABOUT_ORDER_OKNO_DTO
@@ -14,6 +16,9 @@ import com.vodovoz.app.data.vodovoz_service.model.order_details.ORDER_STATUS_DTO
 import com.vodovoz.app.data.vodovoz_service.model.order_details.OrderDetailsDTO
 import com.vodovoz.app.domain.general.model.CancelOrderDetailsModel
 import com.vodovoz.app.domain.general.model.ColorfulButtonModel
+import com.vodovoz.app.domain.general.model.PaymentInfoModel
+import com.vodovoz.app.domain.general.model.VodovozPlaceholderModel
+import com.vodovoz.app.domain.general.model.certificate.BuyCertificateModel
 import com.vodovoz.app.domain.general.model.order.AboutOrderItemModel
 import com.vodovoz.app.domain.general.model.order.AboutOrderPopupWindowModel
 import com.vodovoz.app.domain.general.model.order.OrderDetailsButtonModel
@@ -23,6 +28,40 @@ import com.vodovoz.app.domain.general.model.order.OrderProductModel
 import com.vodovoz.app.domain.general.model.order.OrderProductPresentModel
 import com.vodovoz.app.domain.general.model.order.OrderQuestionDetailsModel
 import com.vodovoz.app.domain.general.model.order.OrderStatusModel
+
+
+fun OrderPlaceholderDTO.toDomain(): BuyCertificateModel{
+
+    return BuyCertificateModel(
+        placeholder = toVodovozPlaceholder(),
+        payment = button?.oplate?.toDomain() ?: throw IllegalArgumentException("Payment cannot be null")
+    )
+}
+
+fun OPLATA_DTO.toDomain(): PaymentInfoModel {
+    return PaymentInfoModel(
+        id = ID ?: throw IllegalArgumentException("Payment ID cannot be null"),
+        name = NAME ?: "",
+        browser = BRAYZER == "Y",
+        url = URL ?: throw IllegalArgumentException("Payment URL cannot be null")
+    )
+}
+
+
+fun OrderPlaceholderDTO.toVodovozPlaceholder(): VodovozPlaceholderModel {
+
+    return VodovozPlaceholderModel(
+        title = title ?: "",
+        headerHtml = header ?: "",
+        descriptionHtml = message ?: "",
+        imageUrl = imageUrl?.toFullUrl() ?: "",
+        button = ColorfulButtonModel(
+            name = button?.text ?: "",
+            backgroundColor = button?.background ?: "",
+            textColor = button?.color ?: "",
+        )
+    )
+}
 
 fun OrderDetailsDTO.toDomain(): OrderDetailsModel {
     return OrderDetailsModel(
@@ -52,7 +91,7 @@ fun OrderQuestionDetailsDTO.toDomain(): OrderQuestionDetailsModel {
 
 fun KNOPKA_ORDER_DTO.toDomain(): ColorfulButtonModel {
     return ColorfulButtonModel(
-        name = NAME ?: "",
+        name = NAME ?: TEXT ?: "",
         backgroundColor = BACKGROUND ?: "",
         textColor = COLOR ?: "",
         id = ID ?: ""

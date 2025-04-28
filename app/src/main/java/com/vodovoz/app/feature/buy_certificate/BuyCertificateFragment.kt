@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class BuyCertificateFragment : BaseFragment() {
+class BuyCertificateFragment1 : BaseFragment() {
     override fun layout(): Int {
         return 0
     }
@@ -70,6 +70,13 @@ class BuyCertificateFragment : BaseFragment() {
                     is BuyCertificateViewModel.BuyCertificateEvents.OpenLink -> {
                         view?.openLink(it.url)
                     }
+
+                    BuyCertificateViewModel.BuyCertificateEvents.GoBack -> {
+                        findNavController().popBackStack()
+                    }
+                    else -> {
+
+                    }
                 }
             }
         }
@@ -106,7 +113,7 @@ class BuyCertificateFragment : BaseFragment() {
             if (data != null) {
                 initToolbar(data.title)
 
-                BuyCertificateScreen(
+                BuyCertificateScreenOld(
                     state = data,
                     onAction = viewModel::onAction
                 )

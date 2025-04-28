@@ -71,8 +71,8 @@ class OrdersHistoryFragment : BaseFragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 accountManager
                     .observeAccountId()
-                    .collect {
-                        if (it == null) {
+                    .collect { userId ->
+                        if (userId == null) {
                             findNavController().popBackStack()
                             tabManager.setAuthRedirect(findNavController().graph.id)
                             tabManager.selectTab(R.id.graph_profile)

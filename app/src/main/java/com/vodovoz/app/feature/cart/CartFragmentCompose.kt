@@ -27,7 +27,7 @@ import com.vodovoz.app.core.navigation.navigateToGifts
 import com.vodovoz.app.core.navigation.navigateToProductDetails
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.dialogs.VodovozDialog
-import com.vodovoz.app.design_system.composables.placeholders.ErrorDataPlaceholder
+import com.vodovoz.app.design_system.composables.placeholders.VodovozPlaceholder
 import com.vodovoz.app.design_system.composables.placeholders.LoadingPlaceholder
 import com.vodovoz.app.design_system.composables.placeholders.NetworkErrorPlaceholder
 import com.vodovoz.app.design_system.effects.LifecycleEffect
@@ -92,8 +92,8 @@ class CartFragment : Fragment() {
                         }
 
                         is CartFlowViewModel.CartUiState.Empty -> {
-                            ErrorDataPlaceholder(
-                                errorData = uiState.errorData,
+                            VodovozPlaceholder(
+                                data = uiState.errorData,
                                 onButtonClick = { viewModel.navigateToCatalog() }
                             )
                         }

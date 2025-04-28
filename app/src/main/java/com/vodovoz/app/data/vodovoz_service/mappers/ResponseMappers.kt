@@ -3,7 +3,7 @@ package com.vodovoz.app.data.vodovoz_service.mappers
 import com.vodovoz.app.core.network.messageWithCode
 import com.vodovoz.app.data.vodovoz_service.model.VodovozResponseDTO
 import com.vodovoz.app.domain.general.model.EmptyResultException
-import com.vodovoz.app.domain.general.model.ErrorDataModel
+import com.vodovoz.app.domain.general.model.VodovozPlaceholderModel
 import com.vodovoz.app.domain.general.model.RequestException
 import com.vodovoz.app.util.extensions.catchResult
 import com.vodovoz.app.util.extensions.debugLog
@@ -89,7 +89,7 @@ inline fun <T, R> executeVodovozRequest(
 
 
 inline fun <T> VodovozResponseDTO<T>.checkError(
-    throwError: (ErrorDataModel) -> Nothing = { it ->
+    throwError: (VodovozPlaceholderModel) -> Nothing = { it ->
         throw EmptyResultException(errorData = it, message = message ?: "")
     }
 ) {

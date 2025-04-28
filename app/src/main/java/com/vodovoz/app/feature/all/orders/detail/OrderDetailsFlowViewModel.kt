@@ -79,6 +79,9 @@ class OrderDetailsFlowViewModel @Inject constructor(
     }
 
     fun fetchOrderDetails() = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(uiState = OrderDetailsUiState.Loading)
+        }
 
         val orderDetailsResult =
             vodovozServiceRepository.getOrderDetails(orderId ?: return@launch).singleResult()
@@ -97,12 +100,15 @@ class OrderDetailsFlowViewModel @Inject constructor(
                     statuses = orderDetails.statuses.mapToUi(),
                     currentStatus = orderDetails.currentStatus.toUi(),
                     productsTitle = orderDetails.productsTitle,
-                    products = orderDetails.products.mapToUi()
+                    products = orderDetails.products.mapToUi(),
+                    uiState = OrderDetailsUiState.Body
                 )
             }
 
-        }.onFailure { t ->
-            //todo - handle error
+        }.onFailure {
+            uiStateListener.updateData { s ->
+                s.copy(uiState = OrderDetailsUiState.Error)
+            }
         }
     }
 
@@ -299,12 +305,15 @@ class OrderDetailsFlowViewModel @Inject constructor(
             is OrderDetailsButtonUi.ImageButton -> {
 
             }
+
             is OrderDetailsButtonUi.PayButton -> {
 
             }
+
             is OrderDetailsButtonUi.TipsButton -> {
 
             }
+
             is OrderDetailsButtonUi.WhereOrderButton -> {
 
             }
@@ -314,10 +323,11 @@ class OrderDetailsFlowViewModel @Inject constructor(
 
     fun activateBottomButton(button: ColorfulButtonUi) = viewModelScope.launch {
         orderId ?: return@launch
-        when(button.id){
+        when (button.id) {
             "voproszakaz" -> {
                 eventListener.emit(OrderDetailsEvent.GoToOrderQuestion(orderId))
             }
+
             "otmena" -> {
                 eventListener.emit(OrderDetailsEvent.GoToCancelOrder(orderId))
             }
@@ -366,6 +376,7 @@ class OrderDetailsFlowViewModel @Inject constructor(
         val products: List<OrderProductUi> = emptyList(),
         val currentAboutOrderBS: AboutOrderPopupWindowUi? = null,
         val showAboutOrderBS: Boolean = false,
+        val uiState: OrderDetailsUiState = OrderDetailsUiState.Loading,
     ) : State
 
     sealed class OrderDetailsEvent : Event {
@@ -374,5 +385,11 @@ class OrderDetailsFlowViewModel @Inject constructor(
         data class CopyText(val text: String) : OrderDetailsEvent()
         data class GoToOrderQuestion(val orderId: Long) : OrderDetailsEvent()
         data class GoToCancelOrder(val orderId: Long) : OrderDetailsEvent()
+    }
+
+    sealed interface OrderDetailsUiState {
+        data object Loading : OrderDetailsUiState
+        data object Error : OrderDetailsUiState
+        data object Body : OrderDetailsUiState
     }
 }
