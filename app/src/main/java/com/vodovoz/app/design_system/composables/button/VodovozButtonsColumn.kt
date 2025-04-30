@@ -23,9 +23,9 @@ fun VodovozButtonsColumn(
     ) {
         buttons.forEach { button ->
             val contentColor =
-                button.textColor.takeOrElse { MaterialTheme.colorScheme.primary }
+                button.textColor.takeOrElse { MaterialTheme.colorScheme.background }
             val containerColor =
-                button.backgroundColor.takeOrElse { MaterialTheme.colorScheme.background }
+                button.backgroundColor.takeOrElse { MaterialTheme.colorScheme.primary }
 
             VodovozButton(
                 text = button.name,

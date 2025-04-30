@@ -18,6 +18,7 @@ import com.vodovoz.app.data.vodovoz_service.mappers.executeVodovozRequest
 import com.vodovoz.app.data.vodovoz_service.mappers.mapToDomain
 import com.vodovoz.app.data.vodovoz_service.mappers.toDomain
 import com.vodovoz.app.data.vodovoz_service.model.VodovozErrorResponseDTO
+import com.vodovoz.app.data.vodovoz_service.model.VodovozPlaceholderDTO
 import com.vodovoz.app.data.vodovoz_service.model.VodovozResponseDTO
 import com.vodovoz.app.domain.general.AllBottlesDetailsModel
 import com.vodovoz.app.domain.general.VodovozPagingSource
@@ -30,8 +31,6 @@ import com.vodovoz.app.domain.general.model.CertificateActivationDetailsModel
 import com.vodovoz.app.domain.general.model.ChangePasswordDetailsModel
 import com.vodovoz.app.domain.general.model.CommentModel
 import com.vodovoz.app.domain.general.model.EmptyResultException
-import com.vodovoz.app.domain.general.model.VodovozPlaceholderModel
-import com.vodovoz.app.domain.general.model.FavoritesNotFoundException
 import com.vodovoz.app.domain.general.model.FieldModel
 import com.vodovoz.app.domain.general.model.FilterValueModel
 import com.vodovoz.app.domain.general.model.FiltersModel
@@ -50,6 +49,8 @@ import com.vodovoz.app.domain.general.model.ProfileDetailsModel
 import com.vodovoz.app.domain.general.model.PromotionDetailsModel
 import com.vodovoz.app.domain.general.model.PromotionModel
 import com.vodovoz.app.domain.general.model.PromotionsSectionModel
+import com.vodovoz.app.domain.general.model.QuestionnairesDetailsModel
+import com.vodovoz.app.domain.general.model.QuestionnairesWelcomeDetailsModel
 import com.vodovoz.app.domain.general.model.RequestException
 import com.vodovoz.app.domain.general.model.SearchRecommendationsModel
 import com.vodovoz.app.domain.general.model.SectionModel
@@ -61,6 +62,7 @@ import com.vodovoz.app.domain.general.model.UnratedProductsSectionModel
 import com.vodovoz.app.domain.general.model.UserDataModel
 import com.vodovoz.app.domain.general.model.UserNotLoginException
 import com.vodovoz.app.domain.general.model.ValidationException
+import com.vodovoz.app.domain.general.model.VodovozPlaceholderModel
 import com.vodovoz.app.domain.general.model.cart.CartDetailsModel
 import com.vodovoz.app.domain.general.model.certificate.BuyCertificateDetailsModel
 import com.vodovoz.app.domain.general.model.certificate.BuyCertificateModel
@@ -72,6 +74,7 @@ import com.vodovoz.app.domain.general.model.order.OrderQuestionDetailsModel
 import com.vodovoz.app.domain.general.model.toQueries
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.preorder.model.FieldUi
+import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.singleResult
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -94,6 +97,44 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     private val cookieManager: CookieManager,
     private val trackingManager: TrackingManager,
 ) : VodovozServiceRepository {
+
+    override fun getQuestionnairesWelcomeDetails(): Flow<Result<QuestionnairesWelcomeDetailsModel>> {
+        return executeRequest(
+            request = {
+                vodovozService.getQuestionnairesWelcomeDetails(accountManager.fetchAccountId())
+            },
+            mapper = {
+                it.data!!.toDomain()
+            }
+        )
+    }
+
+    override fun getQuestionnairesDetails(who: String): Flow<Result<QuestionnairesDetailsModel>> {
+        return executeRequest(
+            request = {
+                vodovozService.getQuestionnairesDetails(accountManager.fetchAccountId(), who)
+            },
+            mapper = {
+                it.data!!.toDomain()
+            }
+        )
+    }
+
+    override fun sendQuestionnairesAnswers(who: String, answers: String): Flow<Result<String>> {
+        return executeRequest(
+            request = {
+                vodovozService.sendQuestionnaires(
+                    who = who,
+                    userId = accountManager.fetchAccountId(),
+                    answers = answers
+                )
+            },
+            mapper = {
+                it.data ?: ""
+            }
+        )
+    }
+
 
     override fun getCancelOrderDetails(
         orderId: Long,
@@ -876,10 +917,20 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                 )
             },
             mapper = { responseDTO ->
-                responseDTO.checkError { errorData -> throw FavoritesNotFoundException(errorData = errorData) }
-                responseDTO.data?.toDomain()
-                    ?: throw IllegalArgumentException("Favorite products can't be null")
+                val result = responseDTO.data!!.toDomain()
+                result.products.ifEmpty { throw IllegalArgumentException("Products can't be empty") }
+                result
             },
+            onFail = { response ->
+                val body = response.stringBody()
+                val vodovozResponse = moshi.fromJson<VodovozResponseDTO<VodovozPlaceholderDTO>>(
+                    body, Types.newParameterizedType(
+                        VodovozResponseDTO::class.java,
+                        VodovozPlaceholderDTO::class.java
+                    )
+                )
+                throw EmptyResultException(errorData = vodovozResponse.data!!.toDomain())
+            }
         )
 
     override fun getFavoriteProductsPaged(

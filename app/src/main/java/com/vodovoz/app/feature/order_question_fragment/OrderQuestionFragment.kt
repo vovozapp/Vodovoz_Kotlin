@@ -19,6 +19,7 @@ import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.placeholders.VodovozPlaceholder
 import com.vodovoz.app.design_system.composables.placeholders.LoadingPlaceholder
 import com.vodovoz.app.design_system.composables.placeholders.NetworkErrorPlaceholder
+import com.vodovoz.app.design_system.composables.placeholders.VodovozLongPlaceholder
 import com.vodovoz.app.design_system.effects.LifecycleEffect
 import com.vodovoz.app.feature.order_question_fragment.model.OrderQuestionEvent
 import com.vodovoz.app.feature.order_question_fragment.model.OrderQuestionUiState
@@ -83,8 +84,11 @@ class OrderQuestionFragment : Fragment() {
                         }
 
                         is OrderQuestionUiState.Success -> {
-                            VodovozPlaceholder(
+                            VodovozLongPlaceholder(
                                 data = uiState.placeholderData,
+                                onCloseClick = {
+                                    viewModel.navigateBack()
+                                },
                                 onButtonClick = {
                                     viewModel.navigateBack()
                                 }

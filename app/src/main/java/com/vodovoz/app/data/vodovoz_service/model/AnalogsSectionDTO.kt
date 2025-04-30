@@ -28,7 +28,7 @@ data class ProductsSectionDTO(
     @Json(name = "RAZDEL")
     val RAZDEL: CategoriesDTO? = null,
     @Json(name = "DATA")
-    val DATA: List<TOVAR_DATA_DTO>? = null,
+    val DATA: List<TOVAR_DATA_DTO>?,
     @Json(name = "TOVAR")
     val TOVAR: List<TOVAR_DATA_DTO>? = null,
     @Json(name = "PODELITCA")

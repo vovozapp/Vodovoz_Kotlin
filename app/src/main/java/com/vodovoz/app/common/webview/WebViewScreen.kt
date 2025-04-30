@@ -7,6 +7,7 @@ import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
@@ -40,17 +41,19 @@ fun WebViewScreen(viewModel: WebViewViewModel, viewState: WebViewState) {
                 title = viewState.title
             )
         }
-        when (viewState.uiState) {
-            WebViewUiState.Error -> {
-                NetworkErrorPlaceholder { viewModel.setUiState(WebViewUiState.Loading) }
-            }
+        Box {
+            when (viewState.uiState) {
+                WebViewUiState.Error -> {
+                    NetworkErrorPlaceholder { viewModel.setUiState(WebViewUiState.Loading) }
+                }
 
-            else -> {
-                WebView(
-                    url = viewState.url,
-                    onLoadingFinished = { viewModel.setUiState(WebViewUiState.NotLoading) },
-                    onError = { viewModel.setUiState(WebViewUiState.Error) }
-                )
+                else -> {
+                    WebView(
+                        url = viewState.url,
+                        onLoadingFinished = { viewModel.setUiState(WebViewUiState.NotLoading) },
+                        onError = { viewModel.setUiState(WebViewUiState.Error) }
+                    )
+                }
             }
         }
     }
@@ -67,6 +70,7 @@ fun WebViewScreen(viewModel: WebViewViewModel, viewState: WebViewState) {
         )
     }
 }
+
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable

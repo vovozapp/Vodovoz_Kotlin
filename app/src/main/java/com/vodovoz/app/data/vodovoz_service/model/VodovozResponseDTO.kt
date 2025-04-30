@@ -38,6 +38,4 @@ data class VodovozButtonDTO(
     val background: String?,
     @Json(name = "ID")
     val id: String?,
-    @Json(name = "OPLATA")
-    val oplata: OPLATA_DTO
 )

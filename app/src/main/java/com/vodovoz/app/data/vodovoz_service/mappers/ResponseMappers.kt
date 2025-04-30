@@ -3,8 +3,8 @@ package com.vodovoz.app.data.vodovoz_service.mappers
 import com.vodovoz.app.core.network.messageWithCode
 import com.vodovoz.app.data.vodovoz_service.model.VodovozResponseDTO
 import com.vodovoz.app.domain.general.model.EmptyResultException
-import com.vodovoz.app.domain.general.model.VodovozPlaceholderModel
 import com.vodovoz.app.domain.general.model.RequestException
+import com.vodovoz.app.domain.general.model.VodovozPlaceholderModel
 import com.vodovoz.app.util.extensions.catchResult
 import com.vodovoz.app.util.extensions.debugLog
 import kotlinx.coroutines.Dispatchers
@@ -18,20 +18,26 @@ import retrofit2.Response
 inline fun <T, R> executeRequest(
     crossinline request: suspend () -> Response<T>,
     crossinline mapper: (T) -> R,
-    noinline onFail: ((Response<T>) -> Result<R>)? = null,
+    noinline onFail: ((Response<T>) -> Result<R>) = { response ->
+        val exception = RequestException(response.messageWithCode() ?: "")
+        Result.failure(exception)
+    },
 ): Flow<Result<R>> {
     return flow {
         val response = request()
-        val body = response.body()
+        val body = kotlin.runCatching { response.body() }.getOrNull()
 
         if (response.isSuccessful && body != null) {
-            val result = mapper(body)
-            emit(Result.success(result))
-        } else if (onFail != null) {
-            emit(onFail(response))
+            val result = kotlin.runCatching {
+                mapper(body)
+            }
+            if (result.isFailure) {
+                emit(onFail(response))
+            } else {
+                emit(result)
+            }
         } else {
-            val exception = RequestException(response.messageWithCode())
-            emit(Result.failure(exception))
+            emit(onFail(response))
         }
     }.catchResult().take(1).onEach { result ->
         result.onFailure { throwable -> debugLog { throwable.stackTraceToString() } }
@@ -50,8 +56,15 @@ inline fun <T, R> executeRequest(
 
         onResponse(response)
         if (response.isSuccessful && body != null) {
-            val result = mapper(body)
-            emit(Result.success(result))
+            val result = kotlin.runCatching {
+                mapper(body)
+            }
+
+            if (result.isFailure && onFail != null) {
+                emit(onFail(response))
+            } else {
+                emit(result)
+            }
         } else if (onFail != null) {
             emit(onFail(response))
         } else {
@@ -74,8 +87,14 @@ inline fun <T, R> executeVodovozRequest(
         val body = response.body()
 
         if (response.isSuccessful) {
-            val result = mapper(body)
-            emit(Result.success(result))
+            val result = kotlin.runCatching {
+                mapper(body)
+            }
+            if (result.isFailure && onFail != null) {
+                emit(onFail(response))
+            } else {
+                emit(result)
+            }
         } else if (onFail != null) {
             emit(onFail(response))
         } else {
@@ -91,7 +110,7 @@ inline fun <T, R> executeVodovozRequest(
 inline fun <T> VodovozResponseDTO<T>.checkError(
     throwError: (VodovozPlaceholderModel) -> Nothing = { it ->
         throw EmptyResultException(errorData = it, message = message ?: "")
-    }
+    },
 ) {
     val errorModel = this.error?.toDomain() ?: return
     throwError(errorModel)

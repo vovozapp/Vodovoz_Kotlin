@@ -37,7 +37,7 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class QuestionnairesFlowFragment : BaseFragment() {
+class QuestionnairesFlowFragment1 : BaseFragment() {
 
     override fun layout() = R.layout.fragment_questionnaires
 

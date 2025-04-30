@@ -1,10 +1,6 @@
 package com.vodovoz.app.design_system.composables.text_fields
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.snap
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
@@ -18,6 +14,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
@@ -36,6 +33,8 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
@@ -43,8 +42,72 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.VodovozTheme
+import com.vodovoz.app.design_system.composables.decoration.PasswordIcon
 import com.vodovoz.app.design_system.text.PhoneNumberVisualTransformation
+import com.vodovoz.app.feature.preorder.model.FieldUi
 import com.vodovoz.app.util.formatRussianPhoneNumber
+
+@Composable
+fun VodovozTextField(
+    modifier: Modifier = Modifier,
+    field: FieldUi,
+    onFieldChange: (currentField: FieldUi, newField: FieldUi) -> Unit,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    onDone: KeyboardActionScope.() -> Unit = {},
+) {
+    val interactionSource = remember {
+        MutableInteractionSource()
+    }
+    val isFocused by interactionSource.collectIsFocusedAsState()
+    val isMessage = field.id.contains("message", true) || field.id == "dr127"
+
+    if (field.id == "phone") {
+        LaunchedEffect(isFocused) {
+            if (isFocused) onFieldChange(field, field)
+        }
+    }
+
+    VodovozTextField(
+        modifier = modifier,
+        value = field.value,
+        onValueChange = { newValue ->
+            onFieldChange(field, field.copy(value = newValue))
+        },
+        isError = field.isError,
+        keyboardOptions = keyboardOptions,
+        keyboardActions = KeyboardActions(
+            onDone = onDone,
+        ),
+        readOnly = field.readOnly,
+        label = field.label,
+        hint = field.hint,
+        singleLine = !isMessage,
+        maxLines = if (isMessage) 3 else 1,
+        minLines = if (isMessage) 2 else 1,
+        supportingText = field.supportingText,
+        visualTransformation = when (field.keyboardType) {
+            KeyboardType.Phone -> PhoneNumberVisualTransformation()
+            KeyboardType.Password -> if (!field.isValueVisible) {
+                PasswordVisualTransformation('•')
+            } else VisualTransformation.None
+
+            else -> VisualTransformation.None
+        },
+        trailingIcon = {
+            if (field.keyboardType == KeyboardType.Password) {
+                PasswordIcon(valueIsVisible = field.isValueVisible) {
+                    onFieldChange(
+                        field,
+                        field.copy(isValueVisible = !field.isValueVisible)
+                    )
+                }
+            }
+        },
+        prefix = null,
+        interactionSource = interactionSource
+    )
+
+}
 
 @Composable
 private fun VodovozTextField(
@@ -136,7 +199,7 @@ private fun VodovozTextField(
 //                        )
 //
 //                    }
-                    if(value.text.isEmpty()){
+                    if (value.text.isEmpty()) {
                         Text(
                             text = hint,
                             color = MaterialTheme.colorScheme.surfaceTint,

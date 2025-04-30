@@ -16,6 +16,7 @@ import coil3.compose.rememberAsyncImagePainter
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.composables.bottom_sheet.SortOptionsBottomSheet
 import com.vodovoz.app.design_system.composables.placeholders.LoadingPlaceholder
+import com.vodovoz.app.design_system.composables.placeholders.VodovozPlaceholder
 import com.vodovoz.app.feature.favorite.composables.FavoriteBody
 import com.vodovoz.app.feature.favorite.composables.FavoriteEmptyPlaceholder
 import com.vodovoz.app.feature.favorite.composables.FavoriteTopBar
@@ -62,17 +63,7 @@ fun FavoriteScreen(
 
             when (val uiState = viewState.uiState) {
                 is FavoriteFlowViewModel.FavoriteUiState.Empty -> {
-                    FavoriteEmptyPlaceholder(
-                        button = uiState.button,
-                        imagePainter = if (uiState.image.isEmpty()) {
-                            painterResource(id = R.drawable.pic_heart)
-                        } else {
-                            rememberAsyncImagePainter(model = uiState.image)
-                        },
-                        titleHtml = uiState.title,
-                        descriptionHtml = uiState.description,
-                        onButtonClick = { viewModel.navigateToCatalog() }
-                    )
+                    VodovozPlaceholder(data = uiState.placeholder)
                 }
 
                 FavoriteFlowViewModel.FavoriteUiState.Loading -> {

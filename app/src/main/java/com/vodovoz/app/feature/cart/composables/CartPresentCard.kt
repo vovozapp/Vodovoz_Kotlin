@@ -56,6 +56,8 @@ fun CartPresentCard(
     BoxWithConstraints(modifier = modifier) {
         val maxWidth = maxWidth
         val horizontalPadding = 16.dp
+        val button = present.button
+
 
         Row(
             modifier = Modifier
@@ -91,7 +93,6 @@ fun CartPresentCard(
                     style = MaterialTheme.typography.bodySmall
                 )
 
-                val button = present.button
                 if (button != null) {
                     VodovozButtonSmall(
                         modifier = Modifier
@@ -163,7 +164,7 @@ fun CartPresentCard(
 
             AsyncImage(
                 modifier = Modifier
-                    .heightIn(max = 80.dp)
+                    .heightIn(min = if (button != null) 110.dp else 80.dp)
                     .widthIn(max = 80.dp)
                     .zIndex(0f),
                 model = ImageRequest.Builder(context).data(present.image).crossfade(true).build(),

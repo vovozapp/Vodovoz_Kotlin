@@ -21,3 +21,16 @@ fun List<FieldModel>.toQueries(): Map<String, String> {
     return filter { fieldModel -> fieldModel.value.isNotEmpty() }
         .associate { field -> field.id to field.value.trim() }
 }
+
+fun QuestionnairesItemModel.toFieldModel(): FieldModel {
+    return FieldModel(
+        id = code,
+        label = name,
+        value = value,
+        valueType = type,
+        isRequired = required,
+        readOnly = code == "DR",
+        supportingText = "",
+        hint = hint
+    )
+}

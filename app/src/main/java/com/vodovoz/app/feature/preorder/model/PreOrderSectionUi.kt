@@ -136,7 +136,7 @@ val KeyboardTypeValidator = FieldValidator { field ->
 val NameValidator = FieldValidator { field ->
     val value = field.value
     when {
-        field.id =="name" || field.id == "lastname" -> {
+        field.id == "name" || field.id == "lastname" -> {
             FieldValidationResult.from(value.length in 3..30 && value.isNotBlank())
         }
 
@@ -194,7 +194,7 @@ fun FieldUi.getErrorText(getStringResource: (Int) -> String): String {
             getStringResource(R.string.supporting_text_password)
         }
 
-        id == "message" || id == "dr127"-> {
+        id == "message" || id == "dr127" -> {
             getStringResource(R.string.supporting_text_message)
         }
 
@@ -243,49 +243,19 @@ fun List<FieldModel>.mapToUi(): List<FieldUi> {
 
 fun FieldModel.toUi(): FieldUi {
 
-    val keyboardType = when (id) {
-        "email" -> {
-            KeyboardType.Email
-        }
-
-        "emaildryg" -> {
-            KeyboardType.Email
-        }
-
-        "dr125" -> {
-            KeyboardType.Email
-        }
-
-        "dr124" -> {
-            KeyboardType.Phone
-        }
-
-        "phone" -> {
-            KeyboardType.Phone
-        }
-
-        "pass" -> {
-            KeyboardType.Password
-        }
-
-        "parol" -> {
-            KeyboardType.Password
-        }
-
-        "data", "date" -> {
-            KeyboardType.Decimal
-        }
-
-        else -> {
-            when (valueType.lowercase()) {
-                "text" -> KeyboardType.Text
-                "phone" -> KeyboardType.Phone
-                "email" -> KeyboardType.Email
-                "number" -> KeyboardType.Number
-                "password" -> KeyboardType.Password
-                "date" -> KeyboardType.Decimal
-                else -> KeyboardType.Unspecified
-            }
+    val keyboardType = when (id.lowercase()) {
+        "email", "emaildryg", "dr125" -> KeyboardType.Email
+        "tel", "dr124", "phone" -> KeyboardType.Phone
+        "pass", "parol" -> KeyboardType.Password
+        "data", "date" -> KeyboardType.Decimal
+        else -> when (valueType.lowercase()) {
+            "text" -> KeyboardType.Text
+            "phone" -> KeyboardType.Phone
+            "email" -> KeyboardType.Email
+            "number" -> KeyboardType.Number
+            "password" -> KeyboardType.Password
+            "date" -> KeyboardType.Decimal
+            else -> KeyboardType.Unspecified
         }
     }
 

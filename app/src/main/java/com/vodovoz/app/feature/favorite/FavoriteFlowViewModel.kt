@@ -21,6 +21,7 @@ import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.design_system.model.ColorfulButtonUi
 import com.vodovoz.app.design_system.model.ProductUi
+import com.vodovoz.app.design_system.model.VodovozPlaceholderUi
 import com.vodovoz.app.design_system.model.toUi
 import com.vodovoz.app.design_system.model.withUpdatedCart
 import com.vodovoz.app.design_system.model.withUpdatedFavorites
@@ -234,10 +235,7 @@ class FavoriteFlowViewModel @Inject constructor(
             val uiState = when (fail) {
                 is FavoritesNotFoundException -> fail.errorData?.run {
                     FavoriteUiState.Empty(
-                        image = imageUrl,
-                        title = title,
-                        description = descriptionHtml,
-                        button = button?.toUi()
+                        placeholder = toUi(),
                     )
                 } ?: FavoriteUiState.Error
 
@@ -695,10 +693,7 @@ class FavoriteFlowViewModel @Inject constructor(
         data object Loading : FavoriteUiState
         data object Success : FavoriteUiState
         data class Empty(
-            val image: String,
-            val title: String,
-            val description: String,
-            val button: ColorfulButtonUi?,
+            val placeholder: VodovozPlaceholderUi,
         ) : FavoriteUiState
 
         data object Error : FavoriteUiState

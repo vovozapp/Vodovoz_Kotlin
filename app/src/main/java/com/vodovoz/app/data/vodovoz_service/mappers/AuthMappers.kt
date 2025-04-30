@@ -21,8 +21,8 @@ fun LoginDetailsDTO.toDomain(): AuthDetailsModel {
 
 fun KNOPKA_AUTH_DTO.toDomain(): ColorfulButtonModel {
     return ColorfulButtonModel(
-        name = TITLE ?: "",
-        backgroundColor = BACKGROUND ?: "",
+        name = TITLE ?: NAME ?: "",
+        backgroundColor = BACKGROUND ?: BACGROUND ?: "",
         textColor = TEXTCOLOR ?: "",
         id = ID ?: ""
     )

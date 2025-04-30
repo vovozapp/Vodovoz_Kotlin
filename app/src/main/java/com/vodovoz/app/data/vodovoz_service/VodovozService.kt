@@ -21,6 +21,8 @@ import com.vodovoz.app.data.vodovoz_service.model.ProductCommentsDTO
 import com.vodovoz.app.data.vodovoz_service.model.ProductsSectionDTO
 import com.vodovoz.app.data.vodovoz_service.model.PromotionDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.PromotionsDTO
+import com.vodovoz.app.data.vodovoz_service.model.QuestionnairesDetailsDTO
+import com.vodovoz.app.data.vodovoz_service.model.QuestionnairesWelcomeDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.RAZDEL_DTO
 import com.vodovoz.app.data.vodovoz_service.model.RegistrationDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.SearchRecommendationsDTO
@@ -52,6 +54,16 @@ import retrofit2.http.QueryMap
 
 interface VodovozService {
 
+    /**
+     * Order requests
+     * */
+
+    @GET("profile/historyorder/voditel.php")
+    suspend fun getWhereMyOrderDetails(
+        @Query("userid") userId: Long?,
+        @Query("id") orderId: Long,
+        @Query("vodila") driver: String
+    )
 
     @GET("osnova/form/otmenazakaz.php?action=detail")
     suspend fun getCancelOrderDetails(
@@ -503,4 +515,24 @@ interface VodovozService {
         @Query("userid") userId: Long,
     ): Response<VodovozResponseDTO<String>>
 
+    /**
+     * Questionnaires screen
+     * */
+    @GET("profile/anketa/index.php")
+    suspend fun getQuestionnairesWelcomeDetails(
+        @Query("userid") userId: Long?,
+    ): Response<VodovozResponseDTO<QuestionnairesWelcomeDetailsDTO>>
+
+    @GET("profile/anketa/index.php")
+    suspend fun getQuestionnairesDetails(
+        @Query("userid") userId: Long?,
+        @Query("action") who: String
+    ): Response<VodovozResponseDTO<QuestionnairesDetailsDTO>>
+
+    @GET("profile/anketa/index.php")
+    suspend fun sendQuestionnaires(
+        @Query("action") who: String,
+        @Query("userid") userId: Long?,
+        @Query("filtervalue") answers: String
+    ): Response<VodovozResponseDTO<String>>
 }

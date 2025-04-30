@@ -28,6 +28,8 @@ import com.vodovoz.app.domain.general.model.ProfileDetailsModel
 import com.vodovoz.app.domain.general.model.PromotionDetailsModel
 import com.vodovoz.app.domain.general.model.PromotionModel
 import com.vodovoz.app.domain.general.model.PromotionsSectionModel
+import com.vodovoz.app.domain.general.model.QuestionnairesDetailsModel
+import com.vodovoz.app.domain.general.model.QuestionnairesWelcomeDetailsModel
 import com.vodovoz.app.domain.general.model.SearchRecommendationsModel
 import com.vodovoz.app.domain.general.model.SectionModel
 import com.vodovoz.app.domain.general.model.SiteState
@@ -49,6 +51,12 @@ import kotlinx.coroutines.flow.Flow
 import java.io.File
 
 interface VodovozServiceRepository {
+
+    fun getQuestionnairesWelcomeDetails(): Flow<Result<QuestionnairesWelcomeDetailsModel>>
+
+    fun getQuestionnairesDetails(who: String): Flow<Result<QuestionnairesDetailsModel>>
+
+    fun sendQuestionnairesAnswers(who: String, answers: String): Flow<Result<String>>
 
     fun getCancelOrderDetails(orderId: Long): Flow<Result<CancelOrderDetailsModel>>
 
